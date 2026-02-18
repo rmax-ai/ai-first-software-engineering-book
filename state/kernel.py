@@ -1,0 +1,933 @@
+#!/usr/bin/env python3
+"""Deterministic refinement kernel.
+
+This is a minimal orchestration layer that enforces:
+- Planner -> Writer -> Critic sequencing
+- Iteration caps
+- Deterministic evaluation gates (per evals/*.yaml)
+- State persistence to state/ledger.json and state/metrics.json
+- Guardrails: immutable governance files, heading preservation, diff-size cap
+
+The kernel is sovereign: it controls transitions and stop conditions.
+Roles are non-autonomous: role outputs are provided via files.
+"""
+
+from __future__ import annotations
+
+import argparse
+import dataclasses
+import datetime as _dt
+import json
+import re
+import subprocess
+import sys
+from collections import Counter
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Iterable, Literal
+
+import yaml
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+LEDGER_PATH = REPO_ROOT / "state" / "ledger.json"
+METRICS_PATH = REPO_ROOT / "state" / "metrics.json"
+VERSION_MAP_PATH = REPO_ROOT / "state" / "version_map.json"
+ROADMAP_PATH = REPO_ROOT / "ROADMAP.md"
+EVAL_CHAPTER_QUALITY_PATH = REPO_ROOT / "evals" / "chapter-quality.yaml"
+EVAL_STYLE_GUARD_PATH = REPO_ROOT / "evals" / "style-guard.yaml"
+EVAL_DRIFT_DETECTION_PATH = REPO_ROOT / "evals" / "drift-detection.yaml"
+
+IMMUTABLE_GOVERNANCE_FILES = {"AGENTS.md", "CONSTITUTION.md"}
+
+
+class KernelError(RuntimeError):
+    pass
+
+
+def _utc_now_iso() -> str:
+    return _dt.datetime.now(tz=_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _load_json(path: Path) -> dict[str, Any]:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise KernelError(f"Missing JSON file: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise KernelError(f"Invalid JSON: {path}: {exc}") from exc
+
+
+def _save_json(path: Path, data: Any) -> None:
+    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _load_yaml(path: Path) -> dict[str, Any]:
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise KernelError(f"Missing YAML file: {path}") from exc
+    if not isinstance(data, dict):
+        raise KernelError(f"Expected YAML mapping at {path}")
+    return data
+
+
+def _run_git(args: list[str]) -> str:
+    proc = subprocess.run(
+        ["git", *args],
+        cwd=REPO_ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise KernelError(f"git {' '.join(args)} failed:\n{proc.stdout}")
+    return proc.stdout
+
+
+def _ensure_immutable_governance_files_unchanged() -> None:
+    changed = _run_git(["diff", "--name-only"]).splitlines()
+    blocked = sorted(set(changed) & IMMUTABLE_GOVERNANCE_FILES)
+    if blocked:
+        raise KernelError(
+            "Immutable governance files modified; kernel refuses to proceed: " + ", ".join(blocked)
+        )
+
+
+def _read_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise KernelError(f"Missing file: {path}") from exc
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def _markdown_headings(text: str) -> list[str]:
+    return [line.rstrip("\n") for line in text.splitlines() if line.startswith("#")]
+
+
+def _split_h2_sections(text: str) -> dict[str, str]:
+    """Return a mapping of `## Heading` -> section body (excluding the heading line)."""
+
+    lines = text.splitlines(keepends=True)
+    sections: dict[str, list[str]] = {}
+    current: str | None = None
+    for line in lines:
+        if line.startswith("## "):
+            current = line.strip("\n")
+            sections.setdefault(current, [])
+            continue
+        if current is not None:
+            sections[current].append(line)
+    return {k: "".join(v).strip() for k, v in sections.items()}
+
+
+def _diff_size_ratio(old: str, new: str) -> float:
+    """Approximate diff-size ratio as changed lines / original lines."""
+
+    old_lines = old.splitlines()
+    new_lines = new.splitlines()
+
+    # Deterministic line-based comparison.
+    # Count deletions + insertions as changed.
+    import difflib
+
+    sm = difflib.SequenceMatcher(a=old_lines, b=new_lines)
+    changed = 0
+    for tag, i1, i2, j1, j2 in sm.get_opcodes():
+        if tag == "equal":
+            continue
+        changed += (i2 - i1) + (j2 - j1)
+    denom = max(1, len(old_lines))
+    return min(1.0, changed / denom)
+
+
+def _extract_roadmap_hypothesis(roadmap_md: str, chapter_id: str) -> str:
+    """Best-effort extract of the chapter research hypothesis block from ROADMAP.md."""
+
+    # ROADMAP uses headings like: "## Chapter 01 — Paradigm Shift"
+    # Ledger chapter_id uses: "01-paradigm-shift".
+    # We'll match on chapter number prefix.
+    match = re.match(r"^(\d{2})-", chapter_id)
+    if not match:
+        return ""
+    num = match.group(1)
+    start_pat = re.compile(rf"^##\s+Chapter\s+{re.escape(num)}\b", re.MULTILINE)
+    m = start_pat.search(roadmap_md)
+    if not m:
+        return ""
+    start = m.start()
+    # Next chapter or EOF
+    next_m = re.search(r"^##\s+Chapter\s+\d{2}\b", roadmap_md[m.end() :], flags=re.MULTILINE)
+    end = (m.end() + next_m.start()) if next_m else len(roadmap_md)
+    block = roadmap_md[start:end]
+
+    hypo_m = re.search(r"^###\s+Research hypothesis\s*$", block, flags=re.MULTILINE)
+    if not hypo_m:
+        return ""
+    after = block[hypo_m.end() :]
+    # Hypothesis is typically the next paragraph until the next ###
+    stop = re.search(r"^###\s+", after, flags=re.MULTILINE)
+    hypo = after[: stop.start()] if stop else after
+    return hypo.strip()
+
+
+def _tokenize(text: str) -> list[str]:
+    return re.findall(r"[a-z0-9]+", text.lower())
+
+
+def _cosine_sim(a: Counter[str], b: Counter[str]) -> float:
+    if not a or not b:
+        return 0.0
+    dot = sum(v * b.get(k, 0) for k, v in a.items())
+    import math
+
+    na = math.sqrt(sum(v * v for v in a.values()))
+    nb = math.sqrt(sum(v * v for v in b.values()))
+    if na == 0.0 or nb == 0.0:
+        return 0.0
+    return float(dot / (na * nb))
+
+
+def _sentence_split(text: str) -> list[str]:
+    # Deterministic, simple segmentation.
+    parts = re.split(r"(?<=[.!?])\s+", re.sub(r"\s+", " ", text.strip()))
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _duplicate_sentence_ratio(text: str) -> float:
+    sents = [s.lower() for s in _sentence_split(text) if len(s) >= 20]
+    if not sents:
+        return 0.0
+    total = len(sents)
+    unique = len(set(sents))
+    return float((total - unique) / total)
+
+
+def _ngram_ratio(text: str, n: int = 5) -> float:
+    toks = _tokenize(text)
+    if len(toks) < n:
+        return 0.0
+    grams = [tuple(toks[i : i + n]) for i in range(0, len(toks) - n + 1)]
+    total = len(grams)
+    unique = len(set(grams))
+    return float((total - unique) / total)
+
+
+def _approx_adjective_density(text: str) -> float:
+    """A deterministic heuristic (not POS-tagging).
+
+    Approximates adjectives by common suffixes. This is intentionally conservative and stable.
+    """
+
+    toks = _tokenize(text)
+    if not toks:
+        return 0.0
+    suffixes = ("ive", "ous", "ful", "less", "ic", "ical", "al", "ary", "y")
+    hits = sum(1 for t in toks if len(t) >= 4 and t.endswith(suffixes))
+    return float(hits / len(toks))
+
+
+def _anchor_neighbors(text: str, term: str, window: int = 6) -> set[str]:
+    toks = _tokenize(text)
+    neighbors: set[str] = set()
+    for i, tok in enumerate(toks):
+        if tok != term:
+            continue
+        lo = max(0, i - window)
+        hi = min(len(toks), i + window + 1)
+        neighbors.update(toks[lo:hi])
+    neighbors.discard(term)
+    return neighbors
+
+
+@dataclass(frozen=True)
+class PlannerPlan:
+    focus_areas: list[str]
+    structural_changes: list[str]
+    risk_flags: list[str]
+    target_word_delta: str
+
+
+@dataclass(frozen=True)
+class CriticReport:
+    structure_score: float
+    clarity_score: float
+    example_density: float
+    tradeoff_presence: bool
+    failure_modes_present: bool
+    drift_score: float
+    violations: list[str]
+    decision: Literal["approve", "refine"]
+
+
+def _require_exact_keys(obj: dict[str, Any], keys: set[str], ctx: str) -> None:
+    extra = set(obj.keys()) - keys
+    missing = keys - set(obj.keys())
+    if missing:
+        raise KernelError(f"{ctx}: missing keys: {sorted(missing)}")
+    if extra:
+        raise KernelError(f"{ctx}: extra keys not allowed: {sorted(extra)}")
+
+
+def _load_planner_plan(path: Path) -> PlannerPlan:
+    raw = _load_json(path)
+    if not isinstance(raw, dict):
+        raise KernelError("Planner output must be a JSON object")
+    _require_exact_keys(raw, {"focus_areas", "structural_changes", "risk_flags", "target_word_delta"}, "planner")
+
+    def _require_str_list(v: Any, name: str) -> list[str]:
+        if not isinstance(v, list) or not all(isinstance(x, str) for x in v):
+            raise KernelError(f"planner.{name} must be an array of strings")
+        return list(v)
+
+    focus = _require_str_list(raw["focus_areas"], "focus_areas")
+    structural = _require_str_list(raw["structural_changes"], "structural_changes")
+    risk = _require_str_list(raw["risk_flags"], "risk_flags")
+    target = raw["target_word_delta"]
+    if not isinstance(target, str) or not re.match(r"^[+-]\d+$", target.strip()):
+        raise KernelError("planner.target_word_delta must look like '+400' or '-100'")
+
+    if len(focus) < 1:
+        raise KernelError("planner.focus_areas must not be empty")
+
+    return PlannerPlan(focus_areas=focus, structural_changes=structural, risk_flags=risk, target_word_delta=target.strip())
+
+
+def _load_critic_report(path: Path) -> CriticReport:
+    raw = _load_json(path)
+    if not isinstance(raw, dict):
+        raise KernelError("Critic output must be a JSON object")
+    _require_exact_keys(
+        raw,
+        {
+            "structure_score",
+            "clarity_score",
+            "example_density",
+            "tradeoff_presence",
+            "failure_modes_present",
+            "drift_score",
+            "violations",
+            "decision",
+        },
+        "critic",
+    )
+
+    def _require_float_01(v: Any, name: str) -> float:
+        try:
+            f = float(v)
+        except (TypeError, ValueError):
+            raise KernelError(f"critic.{name} must be a number")
+        if f < 0.0 or f > 1.0:
+            raise KernelError(f"critic.{name} must be in [0,1]")
+        return f
+
+    violations = raw["violations"]
+    if not isinstance(violations, list) or not all(isinstance(x, str) for x in violations):
+        raise KernelError("critic.violations must be an array of strings")
+
+    decision = raw["decision"]
+    if decision not in {"approve", "refine"}:
+        raise KernelError("critic.decision must be 'approve' or 'refine'")
+
+    return CriticReport(
+        structure_score=_require_float_01(raw["structure_score"], "structure_score"),
+        clarity_score=_require_float_01(raw["clarity_score"], "clarity_score"),
+        example_density=_require_float_01(raw["example_density"], "example_density"),
+        tradeoff_presence=bool(raw["tradeoff_presence"]),
+        failure_modes_present=bool(raw["failure_modes_present"]),
+        drift_score=_require_float_01(raw["drift_score"], "drift_score"),
+        violations=list(violations),
+        decision=decision,
+    )
+
+
+@dataclass(frozen=True)
+class DeterministicEval:
+    passed: bool
+    chapter_quality: dict[str, Any]
+    style_guard: dict[str, Any]
+    drift_detection: dict[str, Any]
+    drift_score: float
+    similarity_max: float
+
+
+def _eval_chapter_quality(text: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    required_sections = [
+        "## Thesis",
+        "## Why This Matters",
+        "## System Breakdown",
+        "## Concrete Example 1",
+        "## Concrete Example 2",
+        "## Trade-offs",
+        "## Failure Modes",
+        "## Research Directions",
+    ]
+
+    required_missing = [h for h in required_sections if h not in text]
+
+    sections = _split_h2_sections(text)
+    def nontrivial(heading: str, min_chars: int) -> bool:
+        body = sections.get(heading, "")
+        return len(body.strip()) >= min_chars
+
+    scores: dict[str, float] = {
+        "thesis_clarity": 1.0 if nontrivial("## Thesis", 120) else 0.0,
+        "system_breakdown": 1.0 if nontrivial("## System Breakdown", 120) else 0.0,
+        "examples_count": 1.0 if (nontrivial("## Concrete Example 1", 120) and nontrivial("## Concrete Example 2", 120)) else 0.0,
+        "tradeoffs": 1.0 if nontrivial("## Trade-offs", 120) else 0.0,
+        "failure_modes": 1.0 if nontrivial("## Failure Modes", 120) else 0.0,
+    }
+
+    # Forbidden hits (minimal, deterministic)
+    forbidden_hits: list[str] = []
+    forbidden_marketing = ["best-in-class", "world-class", "revolutionary", "effortless"]
+    forbidden_anthro = ["the model thinks", "the agent wants", "the system feels"]
+    forbidden_vague = ["obviously", "clearly", "just trust", "everyone knows"]
+    lower = text.lower()
+    for kw in forbidden_marketing:
+        if kw in lower:
+            forbidden_hits.append(f"marketing_language:{kw}")
+    for kw in forbidden_anthro:
+        if kw in lower:
+            forbidden_hits.append(f"anthropomorphism:{kw}")
+    for kw in forbidden_vague:
+        if kw in lower:
+            forbidden_hits.append(f"vague_claims:{kw}")
+
+    total = sum(scores.values()) / max(1, len(scores))
+    thresholds = cfg.get("thresholds", {}) if isinstance(cfg.get("thresholds"), dict) else {}
+    refine_min = float(thresholds.get("refine_min_total", 0.65))
+
+    passed = (not required_missing) and (not forbidden_hits) and (total >= refine_min)
+
+    return {
+        "pass": bool(passed),
+        "required_missing": required_missing,
+        "forbidden_hits": forbidden_hits,
+        "scores": scores,
+        "total": total,
+        "timestamp": _utc_now_iso(),
+    }
+
+
+def _eval_style_guard(text: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    limits = cfg.get("limits", {}) if isinstance(cfg.get("limits"), dict) else {}
+    sent_cfg = limits.get("sentence_length", {}) if isinstance(limits.get("sentence_length"), dict) else {}
+    max_words = int(sent_cfg.get("max_words", 28))
+    hard_fail_over = int(sent_cfg.get("hard_fail_over", 40))
+    adj_cfg = limits.get("adjective_density", {}) if isinstance(limits.get("adjective_density"), dict) else {}
+    max_adj_ratio = float(adj_cfg.get("max_ratio", 0.12))
+
+    sentences = _sentence_split(text)
+    violations: list[dict[str, Any]] = []
+    for s in sentences:
+        words = re.findall(r"\b\w+\b", s)
+        if len(words) > max_words:
+            violations.append({"sentence": s[:200], "words": len(words)})
+
+    adjective_density = _approx_adjective_density(text)
+
+    forbidden = cfg.get("forbidden", {}) if isinstance(cfg.get("forbidden"), dict) else {}
+    forbidden_hits: list[str] = []
+    for bucket, info in forbidden.items():
+        if not isinstance(info, dict):
+            continue
+        examples = info.get("examples")
+        if not isinstance(examples, list):
+            continue
+        for ex in examples:
+            if isinstance(ex, str) and ex.lower() in text.lower():
+                forbidden_hits.append(f"{bucket}:{ex}")
+
+    # Pass/fail: hard-fail if any sentence exceeds hard_fail_over or forbidden hits.
+    hard_fail = any(v["words"] > hard_fail_over for v in violations)
+    passed = (not hard_fail) and (adjective_density <= max_adj_ratio) and (not forbidden_hits)
+
+    return {
+        "pass": bool(passed),
+        "sentence_length_violations": violations,
+        "adjective_density": adjective_density,
+        "forbidden_hits": forbidden_hits,
+        "timestamp": _utc_now_iso(),
+    }
+
+
+def _eval_drift_detection(
+    text: str,
+    cfg: dict[str, Any],
+    *,
+    baseline_text: str | None,
+    other_chapters: dict[str, str],
+) -> tuple[dict[str, Any], float, float]:
+    rules = cfg.get("rules", {}) if isinstance(cfg.get("rules"), dict) else {}
+
+    hype_hits: list[str] = []
+    hype = rules.get("stylistic_hype", {}) if isinstance(rules.get("stylistic_hype"), dict) else {}
+    keywords = hype.get("keywords", []) if isinstance(hype.get("keywords"), list) else []
+    patterns = hype.get("patterns", []) if isinstance(hype.get("patterns"), list) else []
+    lower = text.lower()
+    for kw in keywords:
+        if isinstance(kw, str) and kw.lower() in lower:
+            hype_hits.append(kw)
+    for pat in patterns:
+        if isinstance(pat, str) and re.search(pat, text):
+            hype_hits.append(pat)
+
+    repetition_metrics = {
+        "duplicate_sentence_ratio": _duplicate_sentence_ratio(text),
+        "near_duplicate_ngram_ratio": _ngram_ratio(text, n=5),
+    }
+
+    conceptual = rules.get("conceptual_drift", {}) if isinstance(rules.get("conceptual_drift"), dict) else {}
+    anchors = conceptual.get("anchors", []) if isinstance(conceptual.get("anchors"), list) else []
+
+    drift_metrics: dict[str, Any] = {"anchor_deltas": {}}
+    max_delta = 0.0
+    for a in anchors:
+        if not isinstance(a, dict):
+            continue
+        term = a.get("term")
+        if not isinstance(term, str) or not term:
+            continue
+        base_neighbors = _anchor_neighbors(baseline_text or "", term) if baseline_text else set()
+        now_neighbors = _anchor_neighbors(text, term)
+        if not base_neighbors and not now_neighbors:
+            delta = 0.0
+        else:
+            jacc = 1.0 - (len(base_neighbors & now_neighbors) / max(1, len(base_neighbors | now_neighbors)))
+            delta = float(jacc)
+        drift_metrics["anchor_deltas"][term] = delta
+        max_delta = max(max_delta, delta)
+
+    # Cross-chapter similarity (bag-of-words cosine)
+    this_vec = Counter(_tokenize(text))
+    similarity_max = 0.0
+    similarity_hits: list[dict[str, Any]] = []
+    for other_id, other_text in other_chapters.items():
+        sim = _cosine_sim(this_vec, Counter(_tokenize(other_text)))
+        similarity_max = max(similarity_max, sim)
+        if sim >= 0.85:
+            similarity_hits.append({"chapter_id": other_id, "cosine": sim})
+
+    drift_metrics["cross_chapter_similarity_hits"] = similarity_hits
+
+    # Drift score: aggregate of hype + repetition + conceptual drift.
+    dup_ratio = float(repetition_metrics["duplicate_sentence_ratio"])
+    ng_ratio = float(repetition_metrics["near_duplicate_ngram_ratio"])
+    hype_flag = 1.0 if hype_hits else 0.0
+
+    # Normalize repetition against YAML tolerances when present.
+    rep_cfg = rules.get("repetition", {}) if isinstance(rules.get("repetition"), dict) else {}
+    max_dup = float(rep_cfg.get("max_duplicate_sentence_ratio", 0.08))
+    max_ng = float(rep_cfg.get("max_near_duplicate_ngram_ratio", 0.12))
+    rep_component = 0.5 * min(1.0, dup_ratio / max(1e-9, max_dup)) + 0.5 * min(1.0, ng_ratio / max(1e-9, max_ng))
+
+    concept_cfg = rules.get("conceptual_drift", {}) if isinstance(rules.get("conceptual_drift"), dict) else {}
+    max_neighbor_delta = float(concept_cfg.get("max_neighbor_jaccard_delta", 0.35))
+    concept_component = min(1.0, max_delta / max(1e-9, max_neighbor_delta))
+
+    sim_component = 1.0 if similarity_hits else 0.0
+    drift_score = min(1.0, 0.25 * hype_flag + 0.35 * rep_component + 0.30 * concept_component + 0.10 * sim_component)
+
+    report = {
+        "pass": bool(drift_score <= 0.30 and not hype_hits),
+        "hype_hits": hype_hits,
+        "repetition_metrics": repetition_metrics,
+        "drift_metrics": drift_metrics,
+        "timestamp": _utc_now_iso(),
+    }
+    return report, float(drift_score), float(similarity_max)
+
+
+def run_deterministic_evals(
+    chapter_text: str,
+    *,
+    baseline_text: str | None,
+    other_chapters: dict[str, str],
+) -> DeterministicEval:
+    q_cfg = _load_yaml(EVAL_CHAPTER_QUALITY_PATH)
+    s_cfg = _load_yaml(EVAL_STYLE_GUARD_PATH)
+    d_cfg = _load_yaml(EVAL_DRIFT_DETECTION_PATH)
+
+    chapter_quality = _eval_chapter_quality(chapter_text, q_cfg)
+    style_guard = _eval_style_guard(chapter_text, s_cfg)
+    drift_detection, drift_score, similarity_max = _eval_drift_detection(
+        chapter_text,
+        d_cfg,
+        baseline_text=baseline_text,
+        other_chapters=other_chapters,
+    )
+
+    passed = bool(chapter_quality.get("pass") and style_guard.get("pass") and drift_detection.get("pass"))
+    return DeterministicEval(
+        passed=passed,
+        chapter_quality=chapter_quality,
+        style_guard=style_guard,
+        drift_detection=drift_detection,
+        drift_score=float(drift_score),
+        similarity_max=float(similarity_max),
+    )
+
+
+def _declared_section_set(plan: PlannerPlan, headings: Iterable[str]) -> set[str]:
+    available = {h for h in headings if h.startswith("## ")}
+    declared: set[str] = set()
+    hay = "\n".join(plan.focus_areas + plan.structural_changes + plan.risk_flags)
+    for h in available:
+        if h in hay:
+            declared.add(h)
+    return declared
+
+
+def _changed_sections(old: str, new: str) -> set[str]:
+    a = _split_h2_sections(old)
+    b = _split_h2_sections(new)
+    changed: set[str] = set()
+    for h in set(a.keys()) | set(b.keys()):
+        if a.get(h, "") != b.get(h, ""):
+            changed.add(h)
+    return changed
+
+
+def _critic_score(report: CriticReport) -> float:
+    return float((report.structure_score + report.clarity_score + report.example_density) / 3.0)
+
+
+def _load_other_chapters_text(ledger: dict[str, Any], current_chapter_id: str) -> dict[str, str]:
+    chapters = ledger.get("chapters")
+    if not isinstance(chapters, dict):
+        return {}
+    out: dict[str, str] = {}
+    for cid, meta in chapters.items():
+        if cid == current_chapter_id:
+            continue
+        if not isinstance(meta, dict):
+            continue
+        p = meta.get("path")
+        if not isinstance(p, str) or not p:
+            continue
+        try:
+            out[cid] = _read_text(REPO_ROOT / p)
+        except KernelError:
+            continue
+    return out
+
+
+def _kernel_iteration_dir(io_dir: Path, chapter_id: str, iteration: int) -> Path:
+    return io_dir / chapter_id / f"iter_{iteration:02d}"
+
+
+def _prepare_iteration_inputs(
+    *,
+    io_dir: Path,
+    chapter_id: str,
+    iteration: int,
+    chapter_text: str,
+    ledger_chapter: dict[str, Any],
+    previous_critic: dict[str, Any] | None,
+) -> None:
+    itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
+    (itdir / "in").mkdir(parents=True, exist_ok=True)
+    (itdir / "out").mkdir(parents=True, exist_ok=True)
+
+    roadmap_text = _read_text(ROADMAP_PATH)
+    hypothesis = _extract_roadmap_hypothesis(roadmap_text, chapter_id)
+    planner_input = {
+        "chapter_id": chapter_id,
+        "chapter_content": chapter_text,
+        "quality_metrics": ledger_chapter.get("quality_metrics", {}),
+        "previous_critic_feedback": previous_critic,
+        "chapter_hypothesis": hypothesis,
+    }
+    _write_text(itdir / "in" / "planner_input.json", json.dumps(planner_input, indent=2, sort_keys=True) + "\n")
+
+    # Writer input is chapter + planner output (planner output will be produced in out/planner.json).
+    _write_text(itdir / "in" / "writer_chapter.md", chapter_text)
+    _write_text(
+        itdir / "in" / "writer_instructions.txt",
+        "Writer must use out/planner.json as the plan and write full revised chapter to out/writer.md\n",
+    )
+
+    _write_text(
+        itdir / "in" / "critic_instructions.txt",
+        "Critic must evaluate out/writer.md and write JSON report to out/critic.json\n",
+    )
+
+
+def run_kernel(
+    *,
+    chapter_id: str,
+    io_dir: Path,
+    max_iterations: int,
+    max_diff_ratio: float,
+    max_drift_score: float,
+    require_two_consecutive_passes: bool,
+    commit_on_refine: bool,
+) -> int:
+    _ensure_immutable_governance_files_unchanged()
+
+    ledger = _load_json(LEDGER_PATH)
+    chapters = ledger.get("chapters")
+    if not isinstance(chapters, dict) or chapter_id not in chapters or not isinstance(chapters[chapter_id], dict):
+        raise KernelError(f"Unknown chapter_id: {chapter_id}")
+    chapter_meta: dict[str, Any] = chapters[chapter_id]
+    status = chapter_meta.get("status")
+    lifecycle = chapter_meta.get("lifecycle")
+    if status in {"locked", "hold"}:
+        raise KernelError(f"Chapter is not eligible (status={status!r}).")
+    if lifecycle == "frozen":
+        raise KernelError("Chapter is frozen.")
+
+    chapter_path = chapter_meta.get("path")
+    if not isinstance(chapter_path, str) or not chapter_path:
+        raise KernelError("Chapter is missing a valid path")
+    chapter_file = REPO_ROOT / chapter_path
+    baseline_text = _read_text(chapter_file)
+
+    previous_critic: dict[str, Any] | None = None
+    # If ledger has last_eval and it is critic-like, pass through.
+    if isinstance(chapter_meta.get("last_eval"), dict):
+        previous_critic = chapter_meta.get("last_eval")  # type: ignore[assignment]
+
+    other_chapters = _load_other_chapters_text(ledger, chapter_id)
+    original_headings = _markdown_headings(baseline_text)
+
+    consecutive_passes = int(chapter_meta.get("stability", {}).get("consecutive_passes", 0) or 0)
+    current_iteration = int(chapter_meta.get("current_iteration", 0) or 0)
+
+    for i in range(1, max_iterations + 1):
+        iteration = current_iteration + i
+        _prepare_iteration_inputs(
+            io_dir=io_dir,
+            chapter_id=chapter_id,
+            iteration=iteration,
+            chapter_text=_read_text(chapter_file),
+            ledger_chapter=chapter_meta,
+            previous_critic=previous_critic,
+        )
+
+        itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
+        planner_out = itdir / "out" / "planner.json"
+        writer_out = itdir / "out" / "writer.md"
+        critic_out = itdir / "out" / "critic.json"
+
+        if not planner_out.exists() or not writer_out.exists() or not critic_out.exists():
+            sys.stderr.write(
+                "Role outputs missing for this iteration. Produce these files and re-run:\n"
+                f"- {planner_out.relative_to(REPO_ROOT)}\n"
+                f"- {writer_out.relative_to(REPO_ROOT)}\n"
+                f"- {critic_out.relative_to(REPO_ROOT)}\n"
+            )
+            return 2
+
+        plan = _load_planner_plan(planner_out)
+        revised = _read_text(writer_out)
+        critic = _load_critic_report(critic_out)
+
+        revised_headings = _markdown_headings(revised)
+        if revised_headings != original_headings:
+            raise KernelError("Writer changed headings; this is forbidden.")
+
+        diff_ratio = _diff_size_ratio(_read_text(chapter_file), revised)
+        if diff_ratio > max_diff_ratio:
+            raise KernelError(f"Writer diff size too large ({diff_ratio:.2f} > {max_diff_ratio:.2f}).")
+
+        declared = _declared_section_set(plan, original_headings)
+        if not declared:
+            raise KernelError("Planner did not explicitly reference any existing '##' headings.")
+        changed = _changed_sections(_read_text(chapter_file), revised)
+        illegal = sorted(changed - declared)
+        if illegal:
+            raise KernelError("Writer modified undeclared sections: " + ", ".join(illegal))
+
+        det = run_deterministic_evals(revised, baseline_text=baseline_text, other_chapters=other_chapters)
+        if det.drift_score > max_drift_score:
+            det_pass = False
+        else:
+            det_pass = det.passed
+
+        pass_now = (critic.decision == "approve") and det_pass
+
+        if pass_now:
+            consecutive_passes += 1
+        else:
+            consecutive_passes = 0
+
+        # Persist chapter content only after validations and eval run.
+        _write_text(chapter_file, revised)
+
+        # Update chapter state
+        chapter_meta["current_iteration"] = iteration
+        chapter_meta["revision_count"] = int(chapter_meta.get("revision_count", 0) or 0) + 1
+        chapter_meta["last_eval"] = {
+            "critic": dataclasses.asdict(critic),
+            "deterministic": {
+                "passed": det.passed,
+                "drift_score": det.drift_score,
+                "similarity_max": det.similarity_max,
+                "chapter_quality": det.chapter_quality,
+                "style_guard": det.style_guard,
+                "drift_detection": det.drift_detection,
+            },
+        }
+        chapter_meta["quality_metrics"] = {
+            "structure_score": critic.structure_score,
+            "clarity_score": critic.clarity_score,
+            "example_density": critic.example_density,
+            "tradeoff_presence": bool(critic.tradeoff_presence),
+            "failure_mode_presence": bool(critic.failure_modes_present),
+            "drift_score": float(det.drift_score),
+        }
+        chapter_meta.setdefault("stability", {})
+        chapter_meta["stability"]["consecutive_passes"] = consecutive_passes
+        chapter_meta["stability"]["last_modified_iteration"] = iteration
+
+        chapter_meta.setdefault("iteration_log", [])
+        chapter_meta["iteration_log"].append(
+            {
+                "iteration": iteration,
+                "planner_focus": list(plan.focus_areas),
+                "critic_score": _critic_score(critic),
+                "drift_score": float(det.drift_score),
+                "diff_size": float(diff_ratio),
+            }
+        )
+
+        # Update metrics.json (minimal, per schema)
+        metrics = _load_json(METRICS_PATH)
+        metrics.setdefault("chapters", {})
+        ch_metrics = metrics["chapters"].setdefault(chapter_id, {})
+        ch_metrics.setdefault("history", [])
+        ch_metrics["history"].append(
+            {
+                "timestamp": _utc_now_iso(),
+                "iteration": iteration,
+                "critic": dataclasses.asdict(critic),
+                "deterministic": {
+                    "passed": det.passed,
+                    "drift_score": det.drift_score,
+                    "similarity_max": det.similarity_max,
+                },
+            }
+        )
+        _save_json(METRICS_PATH, metrics)
+
+        # Update repo_iteration_log (minimal entry)
+        ledger.setdefault("repo_iteration_log", [])
+        repo_log = ledger["repo_iteration_log"]
+        if isinstance(repo_log, list):
+            repo_iter = (max((int(e.get("iteration", 0) or 0) for e in repo_log if isinstance(e, dict)), default=0) + 1)
+            repo_log.append(
+                {
+                    "iteration": repo_iter,
+                    "timestamp": _utc_now_iso(),
+                    "agent_task": "kernel_refine",
+                    "inputs": {
+                        "changed_files": [chapter_path, "state/ledger.json", "state/metrics.json"],
+                        "notes": f"Kernel refinement iteration {iteration} for {chapter_id}",
+                    },
+                    "scope": {
+                        "chapters_modified": [chapter_id],
+                        "patterns_modified": [],
+                        "governance_modified": False,
+                    },
+                    "resource_usage": {
+                        "prompt_tokens": 0,
+                        "completion_tokens": 0,
+                        "eval_runtime_ms": 0,
+                    },
+                    "evals": {
+                        "chapter_quality": det.chapter_quality,
+                        "style_guard": det.style_guard,
+                        "drift_detection": det.drift_detection,
+                    },
+                    "outcome": {
+                        "status": "passed" if pass_now else "refine",
+                        "decision": "approve" if pass_now else "refine",
+                        "rationale": "Deterministic eval + critic decision gating.",
+                    },
+                    "artifacts": {
+                        "commit_hash": None,
+                        "diff_summary": f"diff_ratio={diff_ratio:.2f}; drift_score={det.drift_score:.2f}",
+                    },
+                }
+            )
+
+        _save_json(LEDGER_PATH, ledger)
+
+        # Transition logic
+        if pass_now:
+            if (not require_two_consecutive_passes) or consecutive_passes >= 2:
+                chapter_meta["lifecycle"] = "refined"
+                _save_json(LEDGER_PATH, ledger)
+
+                if commit_on_refine:
+                    _run_git(["add", chapter_path, "state/ledger.json", "state/metrics.json"])
+                    _run_git(["commit", "-m", f"refine: {chapter_id} (iter {iteration})"])
+                    commit_hash = _run_git(["rev-parse", "HEAD"]).strip()
+                    version_map = _load_json(VERSION_MAP_PATH)
+                    version_map.setdefault("chapters", {})
+                    version_map["chapters"][chapter_id] = commit_hash
+                    version_map["generated_at"] = _utc_now_iso()
+                    _save_json(VERSION_MAP_PATH, version_map)
+
+                return 0
+
+        previous_critic = dataclasses.asdict(critic)
+
+    # Max iterations reached
+    chapter_meta["status"] = "hold"
+    _save_json(LEDGER_PATH, ledger)
+    return 1
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="kernel", description="Deterministic Planner→Writer→Critic refinement kernel")
+    parser.add_argument("--chapter-id", required=True)
+    parser.add_argument("--io-dir", type=Path, default=REPO_ROOT / "state" / "role_io")
+    parser.add_argument("--max-iterations", type=int, default=3)
+    parser.add_argument("--max-diff-ratio", type=float, default=0.35)
+    parser.add_argument("--max-drift-score", type=float, default=0.30)
+    passes_group = parser.add_mutually_exclusive_group()
+    passes_group.add_argument(
+        "--require-two-consecutive-passes",
+        action="store_true",
+        default=None,
+        help="Require 2 consecutive clean passes before promoting to refined (default).",
+    )
+    passes_group.add_argument(
+        "--no-require-two-consecutive-passes",
+        action="store_false",
+        dest="require_two_consecutive_passes",
+        default=None,
+        help="Promote to refined after a single clean pass.",
+    )
+    parser.add_argument("--commit", action="store_true", help="Commit on promote-to-refined")
+
+    args = parser.parse_args(argv)
+    require_two_consecutive_passes = True if args.require_two_consecutive_passes is None else bool(args.require_two_consecutive_passes)
+    try:
+        return int(
+            run_kernel(
+                chapter_id=str(args.chapter_id),
+                io_dir=Path(args.io_dir),
+                max_iterations=int(args.max_iterations),
+                max_diff_ratio=float(args.max_diff_ratio),
+                max_drift_score=float(args.max_drift_score),
+                require_two_consecutive_passes=require_two_consecutive_passes,
+                commit_on_refine=bool(args.commit),
+            )
+        )
+    except KernelError as exc:
+        sys.stderr.write(f"KernelError: {exc}\n")
+        return 3
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
