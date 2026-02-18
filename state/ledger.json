@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "generated_at": "2026-02-18T23:05:36Z",
+  "version": 2,
+  "generated_at": "2026-02-19T00:00:00Z",
   "repo_iteration_log": [
     {
       "iteration": 1,
@@ -35,6 +35,31 @@
         ],
         "notes": "Initial repository bootstrap per prompts/bootstrap.md. Evidence collected: chapter heading structural check passed; hype keyword scan found hits only inside eval configuration."
       },
+      "scope": {
+        "chapters_modified": [
+          "preface",
+          "01-paradigm-shift",
+          "02-harness-engineering",
+          "03-autonomous-kernels",
+          "04-memory-systems",
+          "05-evaluation-and-traces",
+          "06-agent-governance",
+          "07-production-ai-infrastructure",
+          "99-future-directions"
+        ],
+        "patterns_modified": [
+          "minimal-agent-loop",
+          "self-verification-loop",
+          "harness-design-patterns",
+          "memory-architectures"
+        ],
+        "governance_modified": true
+      },
+      "resource_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0
+      },
       "evals": {
         "chapter_quality": {
           "structural_headings": "pass"
@@ -53,77 +78,333 @@
       }
     }
   ],
+  "chapter_lifecycle_rules": {
+    "lifecycle_order": [
+      "draft",
+      "refined",
+      "approved",
+      "frozen"
+    ],
+    "transitions": {
+      "draft_to_refined": {
+        "required_consecutive_passes": 2
+      },
+      "refined_to_approved": {
+        "requires_human_validation": true
+      },
+      "approved_to_frozen": {
+        "requires_no_modifications": true
+      },
+      "frozen_override": {
+        "requires_manual_override": true
+      }
+    }
+  },
+  "chapter_selection_strategy": {
+    "priority_order": [
+      "lifecycle:draft",
+      "quality_metrics:lowest_structure_score",
+      "quality_metrics:highest_drift_score",
+      "stability:oldest_last_modified_iteration"
+    ],
+    "notes": "Deterministic ordering: draft lifecycle first, then lowest structure_score, then highest drift_score, then oldest last_modified_iteration. Locked/frozen chapters are not eligible."
+  },
   "chapters": {
     "preface": {
       "path": "book/preface.md",
-      "status": "drafted",
+      "status": "locked",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": false,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     },
     "01-paradigm-shift": {
       "path": "book/chapters/01-paradigm-shift.md",
-      "status": "drafted",
+      "status": "active_refinement",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": true,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     },
     "02-harness-engineering": {
       "path": "book/chapters/02-harness-engineering.md",
-      "status": "drafted",
+      "status": "locked",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": true,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     },
     "03-autonomous-kernels": {
       "path": "book/chapters/03-autonomous-kernels.md",
-      "status": "drafted",
+      "status": "locked",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": true,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     },
     "04-memory-systems": {
       "path": "book/chapters/04-memory-systems.md",
-      "status": "drafted",
+      "status": "locked",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": true,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     },
     "05-evaluation-and-traces": {
       "path": "book/chapters/05-evaluation-and-traces.md",
-      "status": "drafted",
+      "status": "locked",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": true,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     },
     "06-agent-governance": {
       "path": "book/chapters/06-agent-governance.md",
-      "status": "drafted",
+      "status": "locked",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": true,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     },
     "07-production-ai-infrastructure": {
       "path": "book/chapters/07-production-ai-infrastructure.md",
-      "status": "drafted",
+      "status": "locked",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": true,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     },
     "99-future-directions": {
       "path": "book/chapters/99-future-directions.md",
-      "status": "drafted",
+      "status": "locked",
+      "lifecycle": "draft",
       "current_iteration": 1,
       "revision_count": 1,
       "last_eval": null,
+      "quality_metrics": {
+        "structure_score": 0.0,
+        "clarity_score": 0.0,
+        "example_density": 0.0,
+        "tradeoff_presence": false,
+        "failure_mode_presence": false,
+        "drift_score": 0.0
+      },
+      "stability": {
+        "consecutive_passes": 0,
+        "last_modified_iteration": 1,
+        "frozen_candidate": false
+      },
+      "drift_history": [],
+      "research": {
+        "hypothesis": "",
+        "falsifiable": true,
+        "validation_status": "untested"
+      },
+      "human_validation": {
+        "approved": false,
+        "approved_by": "",
+        "approved_at": null
+      },
       "iteration_log": []
     }
   },
@@ -135,13 +416,23 @@
       "changed_files": "array<string>",
       "notes": "string"
     },
+    "scope": {
+      "chapters_modified": "array<string>",
+      "patterns_modified": "array<string>",
+      "governance_modified": "boolean"
+    },
+    "resource_usage": {
+      "prompt_tokens": "integer",
+      "completion_tokens": "integer",
+      "eval_runtime_ms": "integer"
+    },
     "evals": {
       "chapter_quality": "object|null",
       "style_guard": "object|null",
       "drift_detection": "object|null"
     },
     "outcome": {
-      "status": "drafted|refined|approved",
+      "status": "drafted|refined|approved|frozen",
       "decision": "refine|approve|hold",
       "rationale": "string"
     },

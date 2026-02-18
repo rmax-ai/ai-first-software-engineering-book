@@ -1,0 +1,376 @@
+#!/usr/bin/env python3
+"""Operational governance utilities for state/ledger.json.
+
+This repo uses the ledger as a control surface, not a passive log.
+The engine here is intentionally minimal:
+- Deterministic chapter selection (prevents oscillation)
+- Invariant checks (locks, schema, governance file modifications)
+- Lifecycle transition computation (draft -> refined)
+
+It does not attempt to run evals or write content.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Iterable
+
+
+LEDGER_DEFAULT_PATH = Path(__file__).resolve().parent / "ledger.json"
+IMMUTABLE_GOVERNANCE_FILES = {"AGENTS.md", "CONSTITUTION.md"}
+
+
+class GovernanceError(RuntimeError):
+    pass
+
+
+def _load_json(path: Path) -> dict[str, Any]:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise GovernanceError(f"Ledger not found: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise GovernanceError(f"Invalid JSON in ledger: {path}: {exc}") from exc
+
+
+def _dump_json(data: Any) -> str:
+    return json.dumps(data, indent=2, sort_keys=True)
+
+
+def _get_chapters(ledger: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    chapters = ledger.get("chapters")
+    if not isinstance(chapters, dict):
+        raise GovernanceError("ledger.chapters must be an object")
+    return chapters  # type: ignore[return-value]
+
+
+def _require_fields(obj: dict[str, Any], fields: Iterable[str], ctx: str) -> None:
+    for field in fields:
+        if field not in obj:
+            raise GovernanceError(f"Missing required field {ctx}.{field}")
+
+
+def validate_ledger(ledger: dict[str, Any]) -> list[str]:
+    """Return a list of validation errors (empty means pass)."""
+
+    errors: list[str] = []
+
+    def capture(fn, *args, **kwargs):
+        try:
+            fn(*args, **kwargs)
+        except GovernanceError as exc:
+            errors.append(str(exc))
+
+    capture(_validate_top_level, ledger)
+    capture(_validate_repo_iteration_log, ledger)
+    capture(_validate_chapters, ledger)
+
+    return errors
+
+
+def _validate_top_level(ledger: dict[str, Any]) -> None:
+    version = ledger.get("version")
+    if version != 2:
+        raise GovernanceError(f"ledger.version must be 2 (found {version!r})")
+
+    if "chapter_lifecycle_rules" not in ledger:
+        raise GovernanceError("Missing ledger.chapter_lifecycle_rules")
+    if "chapter_selection_strategy" not in ledger:
+        raise GovernanceError("Missing ledger.chapter_selection_strategy")
+
+
+def _validate_repo_iteration_log(ledger: dict[str, Any]) -> None:
+    repo_log = ledger.get("repo_iteration_log")
+    if not isinstance(repo_log, list):
+        raise GovernanceError("ledger.repo_iteration_log must be an array")
+
+    for entry in repo_log:
+        if not isinstance(entry, dict):
+            raise GovernanceError("repo_iteration_log entries must be objects")
+
+        _require_fields(entry, ["iteration", "timestamp", "agent_task", "inputs", "evals", "outcome", "artifacts"], "repo_iteration_log[]")
+
+        scope = entry.get("scope")
+        if not isinstance(scope, dict):
+            raise GovernanceError("repo_iteration_log[].scope must be an object")
+        _require_fields(scope, ["chapters_modified", "patterns_modified", "governance_modified"], "repo_iteration_log[].scope")
+
+        resource_usage = entry.get("resource_usage")
+        if not isinstance(resource_usage, dict):
+            raise GovernanceError("repo_iteration_log[].resource_usage must be an object")
+        _require_fields(resource_usage, ["prompt_tokens", "completion_tokens", "eval_runtime_ms"], "repo_iteration_log[].resource_usage")
+
+        changed_files = entry.get("inputs", {}).get("changed_files")
+        if not isinstance(changed_files, list):
+            raise GovernanceError("repo_iteration_log[].inputs.changed_files must be an array")
+
+        iteration = entry.get("iteration")
+        if isinstance(iteration, int) and iteration > 1:
+            if any(f in IMMUTABLE_GOVERNANCE_FILES for f in changed_files):
+                raise GovernanceError(
+                    "Immutable governance files were modified after iteration 1: "
+                    + ", ".join(sorted(set(changed_files) & IMMUTABLE_GOVERNANCE_FILES))
+                )
+
+        governance_modified = scope.get("governance_modified")
+        if any(f in IMMUTABLE_GOVERNANCE_FILES for f in changed_files) and governance_modified is not True:
+            raise GovernanceError("governance_modified must be true when governance files are in changed_files")
+
+
+def _validate_chapters(ledger: dict[str, Any]) -> None:
+    chapters = _get_chapters(ledger)
+    if not chapters:
+        raise GovernanceError("ledger.chapters must not be empty")
+
+    for chapter_id, chapter in chapters.items():
+        if not isinstance(chapter, dict):
+            raise GovernanceError(f"chapters.{chapter_id} must be an object")
+
+        _require_fields(
+            chapter,
+            [
+                "path",
+                "status",
+                "lifecycle",
+                "current_iteration",
+                "revision_count",
+                "last_eval",
+                "quality_metrics",
+                "stability",
+                "drift_history",
+                "research",
+                "human_validation",
+                "iteration_log",
+            ],
+            f"chapters.{chapter_id}",
+        )
+
+        quality_metrics = chapter.get("quality_metrics")
+        if not isinstance(quality_metrics, dict):
+            raise GovernanceError(f"chapters.{chapter_id}.quality_metrics must be an object")
+        _require_fields(
+            quality_metrics,
+            [
+                "structure_score",
+                "clarity_score",
+                "example_density",
+                "tradeoff_presence",
+                "failure_mode_presence",
+                "drift_score",
+            ],
+            f"chapters.{chapter_id}.quality_metrics",
+        )
+
+        stability = chapter.get("stability")
+        if not isinstance(stability, dict):
+            raise GovernanceError(f"chapters.{chapter_id}.stability must be an object")
+        _require_fields(stability, ["consecutive_passes", "last_modified_iteration", "frozen_candidate"], f"chapters.{chapter_id}.stability")
+
+        research = chapter.get("research")
+        if not isinstance(research, dict):
+            raise GovernanceError(f"chapters.{chapter_id}.research must be an object")
+        _require_fields(research, ["hypothesis", "falsifiable", "validation_status"], f"chapters.{chapter_id}.research")
+        if research.get("validation_status") not in {"untested", "validated", "falsified"}:
+            raise GovernanceError(
+                f"chapters.{chapter_id}.research.validation_status must be one of untested|validated|falsified"
+            )
+
+        human_validation = chapter.get("human_validation")
+        if not isinstance(human_validation, dict):
+            raise GovernanceError(f"chapters.{chapter_id}.human_validation must be an object")
+        _require_fields(human_validation, ["approved", "approved_by", "approved_at"], f"chapters.{chapter_id}.human_validation")
+
+
+@dataclass(frozen=True)
+class ChapterKey:
+    chapter_id: str
+    lifecycle: str
+    structure_score: float
+    drift_score: float
+    last_modified_iteration: int
+
+
+def _is_chapter_eligible(chapter: dict[str, Any]) -> bool:
+    status = chapter.get("status")
+    lifecycle = chapter.get("lifecycle")
+
+    if status in {"locked"}:
+        return False
+    if lifecycle == "frozen":
+        return False
+    return True
+
+
+def select_next_chapter_id(ledger: dict[str, Any]) -> str:
+    """Select the next chapter deterministically per ledger.chapter_selection_strategy."""
+
+    chapters = _get_chapters(ledger)
+    candidates: list[ChapterKey] = []
+
+    for chapter_id, chapter in chapters.items():
+        if not _is_chapter_eligible(chapter):
+            continue
+
+        quality = chapter.get("quality_metrics", {})
+        stability = chapter.get("stability", {})
+
+        lifecycle = str(chapter.get("lifecycle") or "draft")
+        try:
+            structure_score = float(quality.get("structure_score", 0.0))
+        except (TypeError, ValueError):
+            structure_score = 0.0
+        try:
+            drift_score = float(quality.get("drift_score", 0.0))
+        except (TypeError, ValueError):
+            drift_score = 0.0
+
+        last_modified_iteration_raw = stability.get("last_modified_iteration", 0)
+        try:
+            last_modified_iteration = int(last_modified_iteration_raw)
+        except (TypeError, ValueError):
+            last_modified_iteration = 0
+
+        candidates.append(
+            ChapterKey(
+                chapter_id=chapter_id,
+                lifecycle=lifecycle,
+                structure_score=structure_score,
+                drift_score=drift_score,
+                last_modified_iteration=last_modified_iteration,
+            )
+        )
+
+    if not candidates:
+        raise GovernanceError("No eligible chapters found (all locked/frozen?)")
+
+    def lifecycle_rank(lifecycle: str) -> int:
+        if lifecycle == "draft":
+            return 0
+        if lifecycle == "refined":
+            return 1
+        if lifecycle == "approved":
+            return 2
+        if lifecycle == "frozen":
+            return 3
+        return 99
+
+    # Priority:
+    # 1) lifecycle == draft
+    # 2) lowest structure_score
+    # 3) highest drift_score
+    # 4) oldest last_modified_iteration
+    candidates.sort(
+        key=lambda c: (
+            lifecycle_rank(c.lifecycle),
+            c.structure_score,
+            -c.drift_score,
+            c.last_modified_iteration,
+            c.chapter_id,
+        )
+    )
+
+    return candidates[0].chapter_id
+
+
+def compute_lifecycle_promotions(ledger: dict[str, Any]) -> dict[str, str]:
+    """Compute draft->refined promotions from consecutive passes.
+
+    Returns a mapping of chapter_id -> new_lifecycle for chapters that should change.
+    """
+
+    rules = ledger.get("chapter_lifecycle_rules", {})
+    transitions = rules.get("transitions", {}) if isinstance(rules, dict) else {}
+    draft_to_refined = transitions.get("draft_to_refined", {}) if isinstance(transitions, dict) else {}
+    required_passes = draft_to_refined.get("required_consecutive_passes", 2)
+
+    try:
+        required_passes_int = int(required_passes)
+    except (TypeError, ValueError):
+        required_passes_int = 2
+
+    chapters = _get_chapters(ledger)
+    promotions: dict[str, str] = {}
+
+    for chapter_id, chapter in chapters.items():
+        if chapter.get("lifecycle") != "draft":
+            continue
+
+        stability = chapter.get("stability", {})
+        consecutive_passes = stability.get("consecutive_passes", 0)
+        try:
+            consecutive_passes_int = int(consecutive_passes)
+        except (TypeError, ValueError):
+            consecutive_passes_int = 0
+
+        if consecutive_passes_int >= required_passes_int:
+            promotions[chapter_id] = "refined"
+
+    return promotions
+
+
+def _cmd_validate(args: argparse.Namespace) -> int:
+    ledger = _load_json(args.ledger)
+    errors = validate_ledger(ledger)
+    if errors:
+        sys.stderr.write("Ledger validation failed:\n")
+        for err in errors:
+            sys.stderr.write(f"- {err}\n")
+        return 1
+
+    sys.stdout.write("Ledger validation: pass\n")
+    return 0
+
+
+def _cmd_select(args: argparse.Namespace) -> int:
+    ledger = _load_json(args.ledger)
+    errors = validate_ledger(ledger)
+    if errors:
+        sys.stderr.write("Ledger validation failed; refusing to select.\n")
+        for err in errors:
+            sys.stderr.write(f"- {err}\n")
+        return 1
+
+    chapter_id = select_next_chapter_id(ledger)
+    sys.stdout.write(chapter_id + "\n")
+    return 0
+
+
+def _cmd_promotions(args: argparse.Namespace) -> int:
+    ledger = _load_json(args.ledger)
+    errors = validate_ledger(ledger)
+    if errors:
+        sys.stderr.write("Ledger validation failed; refusing to compute promotions.\n")
+        for err in errors:
+            sys.stderr.write(f"- {err}\n")
+        return 1
+
+    promotions = compute_lifecycle_promotions(ledger)
+    sys.stdout.write(_dump_json(promotions) + "\n")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="governance_engine", description="Operational governance utilities for state/ledger.json")
+    parser.add_argument("--ledger", type=Path, default=LEDGER_DEFAULT_PATH, help="Path to ledger.json")
+
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    p_validate = sub.add_parser("validate", help="Validate ledger invariants")
+    p_validate.set_defaults(func=_cmd_validate)
+
+    p_select = sub.add_parser("select", help="Select next eligible chapter deterministically")
+    p_select.set_defaults(func=_cmd_select)
+
+    p_promotions = sub.add_parser("promotions", help="Compute lifecycle promotions (draft->refined)")
+    p_promotions.set_defaults(func=_cmd_promotions)
+
+    args = parser.parse_args(argv)
+    return int(args.func(args))
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
