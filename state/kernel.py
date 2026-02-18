@@ -18,6 +18,7 @@ import argparse
 import dataclasses
 import datetime as _dt
 import json
+import os
 import re
 import subprocess
 import sys
@@ -41,8 +42,38 @@ EVAL_DRIFT_DETECTION_PATH = REPO_ROOT / "evals" / "drift-detection.yaml"
 IMMUTABLE_GOVERNANCE_FILES = {"AGENTS.md", "CONSTITUTION.md"}
 
 
+try:
+    from llm_client import LLMClient, LLMClientError, LLMUsage, Provider
+except Exception:  # pragma: no cover
+    # Kernel can run in file-driven mode without any LLM wiring.
+    LLMClient = None  # type: ignore[assignment]
+    LLMClientError = RuntimeError  # type: ignore[assignment]
+    Provider = str  # type: ignore[assignment]
+
+    @dataclass(frozen=True)
+    class LLMUsage:  # type: ignore[no-redef]
+        prompt_tokens: int = 0
+        completion_tokens: int = 0
+
+
 class KernelError(RuntimeError):
     pass
+
+
+@dataclass(frozen=True)
+class LLMConfig:
+    enabled: bool
+    provider: Provider
+    model: str
+    base_url: str | None
+    api_key_env: str
+    timeout_s: int
+
+
+@dataclass
+class LLMRun:
+    client: Any
+    usage: Any
 
 
 def _utc_now_iso() -> str:
@@ -105,6 +136,170 @@ def _read_text(path: Path) -> str:
 def _write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
+
+
+def _read_prompt(path: Path) -> str:
+    txt = _read_text(path)
+    # Prompts are authored as markdown files; keep as-is.
+    return txt.strip() + "\n"
+
+
+def _strip_wrapping_code_fence(text: str) -> str:
+    t = text.strip()
+    if not t.startswith("```"):
+        return t
+    # Accept ```json / ```markdown, etc.
+    first_nl = t.find("\n")
+    if first_nl == -1:
+        return t
+    if not t.endswith("```"):
+        return t
+    inner = t[first_nl + 1 : -3]
+    return inner.strip("\n")
+
+
+def _extract_json_object(text: str) -> dict[str, Any]:
+    """Best-effort parse of a JSON object from an LLM response."""
+
+    t = _strip_wrapping_code_fence(text).strip()
+    try:
+        obj = json.loads(t)
+    except json.JSONDecodeError:
+        # Try to locate the first {...} block.
+        lo = t.find("{")
+        hi = t.rfind("}")
+        if lo == -1 or hi == -1 or hi <= lo:
+            raise KernelError("LLM response did not contain a JSON object")
+        try:
+            obj = json.loads(t[lo : hi + 1])
+        except json.JSONDecodeError as exc:
+            raise KernelError(f"LLM response contained invalid JSON: {exc}") from exc
+
+    if not isinstance(obj, dict):
+        raise KernelError("LLM response JSON must be an object")
+    return obj
+
+
+def _extract_markdown(text: str) -> str:
+    # Some models wrap markdown in ``` fences; unwrap if present.
+    return _strip_wrapping_code_fence(text).rstrip() + "\n"
+
+
+def _llm_trace_dir(itdir: Path) -> Path:
+    return itdir / "out" / "_llm_trace"
+
+
+def _llm_write_trace(itdir: Path, *, name: str, prompt: str, response: str) -> None:
+    tdir = _llm_trace_dir(itdir)
+    tdir.mkdir(parents=True, exist_ok=True)
+    _write_text(tdir / f"{name}.prompt.txt", prompt)
+    _write_text(tdir / f"{name}.response.txt", response)
+
+
+def _llm_add_usage(a: Any, b: Any) -> Any:
+    if a is None:
+        return b
+    if b is None:
+        return a
+    try:
+        return type(a)(
+            prompt_tokens=int(getattr(a, "prompt_tokens", 0) or 0) + int(getattr(b, "prompt_tokens", 0) or 0),
+            completion_tokens=int(getattr(a, "completion_tokens", 0) or 0) + int(getattr(b, "completion_tokens", 0) or 0),
+        )
+    except Exception:
+        return a
+
+
+def _maybe_init_llm(cfg: LLMConfig) -> LLMRun | None:
+    if not cfg.enabled:
+        return None
+    if LLMClient is None:
+        raise KernelError("LLM mode requested but LLMClient is unavailable")
+    try:
+        client = LLMClient(
+            provider=cfg.provider,
+            model=cfg.model,
+            base_url=cfg.base_url,
+            api_key_env=cfg.api_key_env,
+            timeout_s=cfg.timeout_s,
+        )
+    except Exception as exc:
+        raise KernelError(f"Failed to initialize LLM client: {exc}") from exc
+    usage = LLMUsage(prompt_tokens=0, completion_tokens=0)
+    return LLMRun(client=client, usage=usage)
+
+
+def _llm_generate_planner(itdir: Path, llm: LLMRun) -> Any:
+    contract = _read_prompt(REPO_ROOT / "prompts" / "planner.md")
+    planner_input = _read_text(itdir / "in" / "planner_input.json")
+    user = "Return JSON only. No code fences. No commentary.\n\n" + "Planner input (JSON):\n" + planner_input
+    messages = [{"role": "system", "content": contract}, {"role": "user", "content": user}]
+    try:
+        resp = llm.client.chat(messages=messages, temperature=0.0)
+    except LLMClientError as exc:
+        raise KernelError(f"Planner LLM call failed: {exc}") from exc
+
+    _llm_write_trace(itdir, name="planner", prompt=f"SYSTEM\n{contract}\n\nUSER\n{user}\n", response=resp.content)
+    obj = _extract_json_object(resp.content)
+    _write_text(itdir / "out" / "planner.json", json.dumps(obj, indent=2, sort_keys=True) + "\n")
+    llm.usage = _llm_add_usage(llm.usage, resp.usage)
+    return obj
+
+
+def _llm_generate_writer(itdir: Path, llm: LLMRun, *, chapter_text: str, planner_json: str) -> str:
+    contract = _read_prompt(REPO_ROOT / "prompts" / "writer.md")
+    user = (
+        "Output the full revised chapter markdown only. No code fences.\n\n"
+        + "===CHAPTER_START===\n"
+        + chapter_text.rstrip()
+        + "\n===CHAPTER_END===\n\n"
+        + "===PLANNER_JSON_START===\n"
+        + planner_json.strip()
+        + "\n===PLANNER_JSON_END===\n"
+    )
+    messages = [{"role": "system", "content": contract}, {"role": "user", "content": user}]
+    try:
+        resp = llm.client.chat(messages=messages, temperature=0.0)
+    except LLMClientError as exc:
+        raise KernelError(f"Writer LLM call failed: {exc}") from exc
+
+    _llm_write_trace(itdir, name="writer", prompt=f"SYSTEM\n{contract}\n\nUSER\n{user}\n", response=resp.content)
+    md = _extract_markdown(resp.content)
+    _write_text(itdir / "out" / "writer.md", md)
+    llm.usage = _llm_add_usage(llm.usage, resp.usage)
+    return md
+
+
+def _llm_generate_critic(itdir: Path, llm: LLMRun, *, revised_md: str) -> Any:
+    contract = _read_prompt(REPO_ROOT / "prompts" / "critic.md")
+    cq = _read_text(EVAL_CHAPTER_QUALITY_PATH)
+    sg = _read_text(EVAL_STYLE_GUARD_PATH)
+    dd = _read_text(EVAL_DRIFT_DETECTION_PATH)
+    user = (
+        "Return JSON only. No code fences. No commentary.\n\n"
+        + "evals/chapter-quality.yaml:\n"
+        + cq
+        + "\n\n"
+        + "evals/style-guard.yaml:\n"
+        + sg
+        + "\n\n"
+        + "evals/drift-detection.yaml:\n"
+        + dd
+        + "\n\n"
+        + "Revised chapter markdown:\n"
+        + revised_md
+    )
+    messages = [{"role": "system", "content": contract}, {"role": "user", "content": user}]
+    try:
+        resp = llm.client.chat(messages=messages, temperature=0.0)
+    except LLMClientError as exc:
+        raise KernelError(f"Critic LLM call failed: {exc}") from exc
+
+    _llm_write_trace(itdir, name="critic", prompt=f"SYSTEM\n{contract}\n\nUSER\n{user}\n", response=resp.content)
+    obj = _extract_json_object(resp.content)
+    _write_text(itdir / "out" / "critic.json", json.dumps(obj, indent=2, sort_keys=True) + "\n")
+    llm.usage = _llm_add_usage(llm.usage, resp.usage)
+    return obj
 
 
 def _markdown_headings(text: str) -> list[str]:
@@ -669,8 +864,22 @@ def run_kernel(
     max_drift_score: float,
     require_two_consecutive_passes: bool,
     commit_on_refine: bool,
+    llm_config: LLMConfig | None = None,
 ) -> int:
     _ensure_immutable_governance_files_unchanged()
+
+    llm = _maybe_init_llm(
+        llm_config
+        if llm_config is not None
+        else LLMConfig(
+            enabled=False,
+            provider="mock",
+            model="",
+            base_url=None,
+            api_key_env="OPENAI_API_KEY",
+            timeout_s=90,
+        )
+    )
 
     ledger = _load_json(LEDGER_PATH)
     chapters = ledger.get("chapters")
@@ -716,6 +925,37 @@ def run_kernel(
         planner_out = itdir / "out" / "planner.json"
         writer_out = itdir / "out" / "writer.md"
         critic_out = itdir / "out" / "critic.json"
+
+        llm_iter_usage = None
+        if llm is not None:
+            before_prompt = int(getattr(llm.usage, "prompt_tokens", 0) or 0)
+            before_completion = int(getattr(llm.usage, "completion_tokens", 0) or 0)
+
+            # Generate any missing role outputs in dependency order.
+            if not planner_out.exists():
+                _llm_generate_planner(itdir, llm)
+
+            planner_json_text = _read_text(planner_out) if planner_out.exists() else ""
+
+            if not writer_out.exists():
+                _llm_generate_writer(
+                    itdir,
+                    llm,
+                    chapter_text=_read_text(chapter_file),
+                    planner_json=planner_json_text,
+                )
+
+            revised_md = _read_text(writer_out) if writer_out.exists() else ""
+
+            if not critic_out.exists():
+                _llm_generate_critic(itdir, llm, revised_md=revised_md)
+
+            after_prompt = int(getattr(llm.usage, "prompt_tokens", 0) or 0)
+            after_completion = int(getattr(llm.usage, "completion_tokens", 0) or 0)
+            llm_iter_usage = LLMUsage(
+                prompt_tokens=max(0, after_prompt - before_prompt),
+                completion_tokens=max(0, after_completion - before_completion),
+            )
 
         if not planner_out.exists() or not writer_out.exists() or not critic_out.exists():
             sys.stderr.write(
@@ -838,8 +1078,8 @@ def run_kernel(
                         "governance_modified": False,
                     },
                     "resource_usage": {
-                        "prompt_tokens": 0,
-                        "completion_tokens": 0,
+                        "prompt_tokens": int(getattr(llm_iter_usage, "prompt_tokens", 0) or 0) if llm_iter_usage is not None else 0,
+                        "completion_tokens": int(getattr(llm_iter_usage, "completion_tokens", 0) or 0) if llm_iter_usage is not None else 0,
                         "eval_runtime_ms": 0,
                     },
                     "evals": {
@@ -910,8 +1150,59 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--commit", action="store_true", help="Commit on promote-to-refined")
 
+    parser.add_argument(
+        "--llm",
+        action="store_true",
+        help="Auto-generate missing Planner/Writer/Critic outputs via an LLM (writes the same out/*.json/md files).",
+    )
+    parser.add_argument(
+        "--llm-provider",
+        default=os.environ.get("KERNEL_LLM_PROVIDER", "openai_compatible"),
+        help="LLM provider: openai_compatible | ollama | mock (default: env KERNEL_LLM_PROVIDER or openai_compatible)",
+    )
+    parser.add_argument(
+        "--llm-model",
+        default=os.environ.get("KERNEL_LLM_MODEL", ""),
+        help="LLM model name (default: env KERNEL_LLM_MODEL). Required when --llm is set.",
+    )
+    parser.add_argument(
+        "--llm-base-url",
+        default=os.environ.get("KERNEL_LLM_BASE_URL", None),
+        help="Override provider base URL (default: env KERNEL_LLM_BASE_URL).",
+    )
+    parser.add_argument(
+        "--llm-api-key-env",
+        default=os.environ.get("KERNEL_LLM_API_KEY_ENV", "OPENAI_API_KEY"),
+        help="Env var name containing API key (openai_compatible only). Default: OPENAI_API_KEY.",
+    )
+    parser.add_argument(
+        "--llm-timeout-s",
+        type=int,
+        default=int(os.environ.get("KERNEL_LLM_TIMEOUT_S", "90")),
+        help="LLM HTTP timeout seconds (default: env KERNEL_LLM_TIMEOUT_S or 90).",
+    )
+
     args = parser.parse_args(argv)
     require_two_consecutive_passes = True if args.require_two_consecutive_passes is None else bool(args.require_two_consecutive_passes)
+
+    llm_cfg: LLMConfig | None = None
+    if bool(args.llm):
+        provider = str(args.llm_provider)
+        allowed = {"openai_compatible", "ollama", "mock"}
+        if provider not in allowed:
+            raise KernelError(f"--llm-provider must be one of {sorted(allowed)}")
+        model = str(args.llm_model).strip()
+        if not model and provider != "mock":
+            raise KernelError("--llm-model (or env KERNEL_LLM_MODEL) is required when --llm is set")
+
+        llm_cfg = LLMConfig(
+            enabled=True,
+            provider=provider,  # type: ignore[arg-type]
+            model=model or "mock",
+            base_url=(str(args.llm_base_url) if args.llm_base_url else None),
+            api_key_env=str(args.llm_api_key_env),
+            timeout_s=int(args.llm_timeout_s),
+        )
     try:
         return int(
             run_kernel(
@@ -922,6 +1213,7 @@ def main(argv: list[str] | None = None) -> int:
                 max_drift_score=float(args.max_drift_score),
                 require_two_consecutive_passes=require_two_consecutive_passes,
                 commit_on_refine=bool(args.commit),
+                llm_config=llm_cfg,
             )
         )
     except KernelError as exc:

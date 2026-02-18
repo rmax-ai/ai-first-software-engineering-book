@@ -77,6 +77,48 @@ PY
 
 This check is intentionally narrow; the stricter requirements (tone, drift, evidence, and “no vague claims”) are captured in the YAML rules and are expected to be enforced by the harness.
 
+## Deterministic kernel (Planner → Writer → Critic)
+
+The repository includes a deterministic refinement kernel at `state/kernel.py`.
+
+By default, the kernel is **file-driven**: it prepares inputs under `state/role_io/<chapter-id>/iter_XX/in/` and expects role outputs under `.../out/`:
+
+```bash
+# 1) Scaffold the next iteration I/O files
+python state/role_io_templates.py --chapter-id 01-paradigm-shift
+
+# 2) Fill these outputs (by hand or with your own tooling)
+# - state/role_io/01-paradigm-shift/iter_XX/out/planner.json
+# - state/role_io/01-paradigm-shift/iter_XX/out/writer.md
+# - state/role_io/01-paradigm-shift/iter_XX/out/critic.json
+
+# 3) Run the kernel (it will refuse to proceed if outputs are missing)
+python state/kernel.py --chapter-id 01-paradigm-shift
+```
+
+### Optional: LLM-powered role outputs
+
+If you pass `--llm`, the kernel will auto-generate any missing `out/planner.json`, `out/writer.md`, and `out/critic.json` using an LLM client (and it will also write raw prompt/response traces under `out/_llm_trace/`). The deterministic eval gates still apply.
+
+OpenAI-compatible example:
+
+```bash
+export OPENAI_API_KEY=...               # or set KERNEL_LLM_API_KEY_ENV to a different env var name
+export KERNEL_LLM_PROVIDER=openai_compatible
+export KERNEL_LLM_MODEL=YOUR_MODEL_NAME
+
+python state/kernel.py --chapter-id 01-paradigm-shift --llm
+```
+
+Local Ollama example:
+
+```bash
+export KERNEL_LLM_PROVIDER=ollama
+export KERNEL_LLM_MODEL=llama3.1
+
+python state/kernel.py --chapter-id 01-paradigm-shift --llm
+```
+
 ## Diagrams
 
 ### Agent loop
