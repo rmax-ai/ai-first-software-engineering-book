@@ -1,76 +1,128 @@
 {
   "version": 1,
-  "generated_at": "TBD",
+  "generated_at": "2026-02-18T23:05:36Z",
+  "repo_iteration_log": [
+    {
+      "iteration": 1,
+      "timestamp": "2026-02-18T23:05:36Z",
+      "agent_task": "bootstrap scaffolding",
+      "inputs": {
+        "changed_files": [
+          "README.md",
+          "CONSTITUTION.md",
+          "AGENTS.md",
+          "ROADMAP.md",
+          "book/preface.md",
+          "book/glossary.md",
+          "book/chapters/01-paradigm-shift.md",
+          "book/chapters/02-harness-engineering.md",
+          "book/chapters/03-autonomous-kernels.md",
+          "book/chapters/04-memory-systems.md",
+          "book/chapters/05-evaluation-and-traces.md",
+          "book/chapters/06-agent-governance.md",
+          "book/chapters/07-production-ai-infrastructure.md",
+          "book/chapters/99-future-directions.md",
+          "book/patterns/minimal-agent-loop.md",
+          "book/patterns/self-verification-loop.md",
+          "book/patterns/harness-design-patterns.md",
+          "book/patterns/memory-architectures.md",
+          "evals/chapter-quality.yaml",
+          "evals/style-guard.yaml",
+          "evals/drift-detection.yaml",
+          "state/ledger.json",
+          "state/version_map.json",
+          "state/metrics.json"
+        ],
+        "notes": "Initial repository bootstrap per prompts/bootstrap.md. Evidence collected: chapter heading structural check passed; hype keyword scan found hits only inside eval configuration."
+      },
+      "evals": {
+        "chapter_quality": {
+          "structural_headings": "pass"
+        },
+        "style_guard": null,
+        "drift_detection": null
+      },
+      "outcome": {
+        "status": "drafted",
+        "decision": "approve",
+        "rationale": "All required scaffold files exist; chapter skeletons include the required sections; governance and eval definitions are in place."
+      },
+      "artifacts": {
+        "commit_hash": "f1788002ca447aab456e314381c5e69fac4d9be7",
+        "diff_summary": "Created governance, roadmap, chapter skeletons, patterns, eval definitions, and state scaffolding; refined README and preface."
+      }
+    }
+  ],
   "chapters": {
     "preface": {
       "path": "book/preface.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     },
     "01-paradigm-shift": {
       "path": "book/chapters/01-paradigm-shift.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     },
     "02-harness-engineering": {
       "path": "book/chapters/02-harness-engineering.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     },
     "03-autonomous-kernels": {
       "path": "book/chapters/03-autonomous-kernels.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     },
     "04-memory-systems": {
       "path": "book/chapters/04-memory-systems.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     },
     "05-evaluation-and-traces": {
       "path": "book/chapters/05-evaluation-and-traces.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     },
     "06-agent-governance": {
       "path": "book/chapters/06-agent-governance.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     },
     "07-production-ai-infrastructure": {
       "path": "book/chapters/07-production-ai-infrastructure.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     },
     "99-future-directions": {
       "path": "book/chapters/99-future-directions.md",
       "status": "drafted",
-      "current_iteration": 0,
-      "revision_count": 0,
+      "current_iteration": 1,
+      "revision_count": 1,
       "last_eval": null,
       "iteration_log": []
     }

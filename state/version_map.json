@@ -1,15 +1,15 @@
 {
   "version": 1,
-  "generated_at": "TBD",
+  "generated_at": "2026-02-18T23:05:36Z",
   "chapters": {
-    "preface": null,
-    "01-paradigm-shift": null,
-    "02-harness-engineering": null,
-    "03-autonomous-kernels": null,
-    "04-memory-systems": null,
-    "05-evaluation-and-traces": null,
-    "06-agent-governance": null,
-    "07-production-ai-infrastructure": null,
-    "99-future-directions": null
+    "preface": "f1788002ca447aab456e314381c5e69fac4d9be7",
+    "01-paradigm-shift": "f1788002ca447aab456e314381c5e69fac4d9be7",
+    "02-harness-engineering": "f1788002ca447aab456e314381c5e69fac4d9be7",
+    "03-autonomous-kernels": "f1788002ca447aab456e314381c5e69fac4d9be7",
+    "04-memory-systems": "f1788002ca447aab456e314381c5e69fac4d9be7",
+    "05-evaluation-and-traces": "f1788002ca447aab456e314381c5e69fac4d9be7",
+    "06-agent-governance": "f1788002ca447aab456e314381c5e69fac4d9be7",
+    "07-production-ai-infrastructure": "f1788002ca447aab456e314381c5e69fac4d9be7",
+    "99-future-directions": "f1788002ca447aab456e314381c5e69fac4d9be7"
   }
 }
