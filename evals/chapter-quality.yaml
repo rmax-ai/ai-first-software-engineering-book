@@ -1,0 +1,44 @@
+# Evaluation rules for chapter completeness and tone
+# Used by agents/harness to gate refine/approve transitions.
+
+version: 1
+scope:
+  applies_to: "book/chapters/*.md"
+
+criteria:
+  thesis_clarity: required
+  system_breakdown: required
+  ">=2_examples": required
+  tradeoffs_discussed: required
+  failure_modes_present: required
+
+  marketing_language: forbidden
+  anthropomorphism: forbidden
+  vague_claims: forbidden
+
+signals:
+  # Optional numeric scoring hooks for harnesses.
+  # If implemented, they should produce values in [0,1].
+  scores:
+    thesis_clarity: { enabled: true }
+    system_breakdown: { enabled: true }
+    examples_count: { enabled: true }
+    tradeoffs: { enabled: true }
+    failure_modes: { enabled: true }
+
+thresholds:
+  # Minimum total score for an "approve" recommendation.
+  # Harness may compute total as average of enabled score signals.
+  approve_min_total: 0.85
+  refine_min_total: 0.65
+
+outputs:
+  # Canonical output contract for a single chapter evaluation.
+  fields:
+    - chapter_id
+    - pass
+    - required_missing
+    - forbidden_hits
+    - scores
+    - notes
+    - timestamp

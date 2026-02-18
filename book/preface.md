@@ -1,45 +1,42 @@
 # Preface
 
-**AI-First Software Engineering**
+This book treats AI-first software engineering as an engineering discipline rather than a product feature.
 
-Software engineering is undergoing a structural shift.
+## Scope
 
-For decades, we treated code as the primary artifact and developers as the primary reasoning engine. Tools assisted. Frameworks abstracted. CI/CD automated. But intelligence—the act of interpreting intent, navigating ambiguity, generating solutions—remained human-centered.
+This book focuses on *system design for AI-assisted and agentic development*:
 
-That assumption is now obsolete.
+- Harness design: tool contracts, constraints, budgets, evaluation gates, and traces.
+- Operational reliability: reproducibility, attribution, rollback, and incident response.
+- Governance: permissions, protected surfaces, and enforcement via tooling/CI.
+- Memory as an engineered subsystem: provenance, retention, correction, and drift control.
 
-AI-First Software Engineering is not about adding LLMs to existing workflows. It is about reorganizing the entire development lifecycle around machine reasoning as a first-class participant. The model is no longer autocomplete. It is planner, reviewer, synthesizer, simulator, debugger, and sometimes architect.
+This book does **not** attempt to:
 
-This book emerges from hands-on experimentation with autonomous loops, microkernel agents, harness engineering, and Git-governed knowledge systems. It reflects a transition from prompt tinkering to system design—where the harness, memory structure, tool interface, evaluation pipeline, and observability layer matter more than the model itself.
+- Train foundation models or discuss model internals beyond what is necessary to reason about system behavior.
+- Provide a survey of all agent frameworks; patterns are described in terms of interfaces and invariants.
+- Substitute evaluation with plausibility; “done” requires evidence.
 
-Three principles define the AI-first paradigm:
+## Key distinction: model vs harness
 
-1. **The Harness Is the Product**
-   Models are general-purpose intelligence. Performance comes from shaping them—through system prompts, tool schemas, verification loops, trace analysis, and iteration control. Benchmarks improve more from harness engineering than from model swaps.
+- **Model**: the reasoning component that proposes plans and edits.
+- **Harness**: the execution and control environment (tools, policies, evaluation, tracing, state).
 
-2. **Software Becomes Orchestrated Cognition**
-   Applications evolve into layered reasoning systems: control planes, execution kernels, tool runtimes, and persistent state backends. The architecture resembles an operating system for machine cognition rather than a monolithic app.
+A recurring hypothesis in the chapters is that many reliability gains in practice are harness-induced: schema design, verification discipline, and traceability change outcomes even when the model is unchanged.
 
-3. **Engineers Become System Governors**
-   The role shifts from writing most code manually to designing feedback loops, evaluation suites, guardrails, and adaptive pipelines. The engineer curates constraints, incentives, and observability.
+## What the repository demonstrates
 
-AI-First does not eliminate craftsmanship. It demands deeper rigor. Without structure, agents drift. Without traceability, failures compound. Without evaluation, autonomy degrades.
+The repository is structured to make book development itself a reproducible agent loop:
 
-This book is written for engineers who want to build agentic systems deliberately—under resource constraints, in production environments, and with clear architectural boundaries. It assumes you care about reproducibility, state management, performance metrics, and governance. It assumes you are willing to think in systems rather than scripts.
+- Governance is defined in `CONSTITUTION.md` and `AGENTS.md`.
+- Chapter quality, drift signals, and style guardrails are declared in `evals/`.
+- Iteration state is recorded in `state/`.
 
-We will move from foundational mental models to practical implementation:
+The intention is to make each chapter a testable unit: clear thesis, system breakdown, concrete examples, trade-offs, failure modes, and research directions.
 
-* Designing minimal autonomous kernels
-* Building predictable harnesses
-* Structuring persistent memory
-* Engineering self-verification loops
-* Governing multi-agent orchestration
-* Measuring capability drift
-* Deploying AI-native infrastructure
+## How to read
 
-AI-First Software Engineering is not a trend. It is an architectural inversion.
-
-The question is no longer *“How do I use AI in my code?”*
-
-The question is *“How do I design software where AI is the primary execution substrate?”*
+1. Start with the chapter that matches your immediate constraint (evaluation, governance, infra).
+2. Use `book/glossary.md` to disambiguate terms.
+3. Treat pattern documents in `book/patterns/` as reusable design primitives.
 

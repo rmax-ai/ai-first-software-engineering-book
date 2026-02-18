@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "generated_at": "TBD",
+  "chapters": {},
+  "schema": {
+    "chapter_metrics": {
+      "eval_scores": {
+        "chapter_quality_total": "number|null",
+        "style_guard": "number|null",
+        "drift_detection": "number|null"
+      },
+      "revision_counts": {
+        "total": "integer",
+        "since_last_approve": "integer"
+      },
+      "drift_signals": {
+        "hype_hits": "integer",
+        "duplicate_sentence_ratio": "number",
+        "conceptual_drift": "number"
+      },
+      "history": "array<object>"
+    }
+  }
+}

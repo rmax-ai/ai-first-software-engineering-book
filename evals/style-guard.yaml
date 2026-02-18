@@ -1,0 +1,44 @@
+# Style guardrails to prevent overly rhetorical prose.
+
+version: 1
+scope:
+  applies_to:
+    - "book/preface.md"
+    - "book/chapters/*.md"
+
+limits:
+  sentence_length:
+    max_words: 28
+    hard_fail_over: 40
+
+  adjective_density:
+    # adjectives / total tokens
+    max_ratio: 0.12
+
+  metaphor_policy:
+    metaphors_allowed: false
+    allow_if_justified_with: "explicit justification sentence"
+
+forbidden:
+  anthropomorphism:
+    examples:
+      - "the model thinks"
+      - "the agent wants"
+      - "the system feels"
+
+  marketing_language:
+    examples:
+      - "best-in-class"
+      - "world-class"
+      - "revolutionary"
+      - "effortless"
+
+outputs:
+  fields:
+    - target
+    - pass
+    - sentence_length_violations
+    - adjective_density
+    - forbidden_hits
+    - notes
+    - timestamp

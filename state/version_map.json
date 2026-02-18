@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "generated_at": "TBD",
+  "chapters": {
+    "preface": null,
+    "01-paradigm-shift": null,
+    "02-harness-engineering": null,
+    "03-autonomous-kernels": null,
+    "04-memory-systems": null,
+    "05-evaluation-and-traces": null,
+    "06-agent-governance": null,
+    "07-production-ai-infrastructure": null,
+    "99-future-directions": null
+  }
+}

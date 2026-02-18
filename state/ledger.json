@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "generated_at": "TBD",
+  "chapters": {
+    "preface": {
+      "path": "book/preface.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    },
+    "01-paradigm-shift": {
+      "path": "book/chapters/01-paradigm-shift.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    },
+    "02-harness-engineering": {
+      "path": "book/chapters/02-harness-engineering.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    },
+    "03-autonomous-kernels": {
+      "path": "book/chapters/03-autonomous-kernels.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    },
+    "04-memory-systems": {
+      "path": "book/chapters/04-memory-systems.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    },
+    "05-evaluation-and-traces": {
+      "path": "book/chapters/05-evaluation-and-traces.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    },
+    "06-agent-governance": {
+      "path": "book/chapters/06-agent-governance.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    },
+    "07-production-ai-infrastructure": {
+      "path": "book/chapters/07-production-ai-infrastructure.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    },
+    "99-future-directions": {
+      "path": "book/chapters/99-future-directions.md",
+      "status": "drafted",
+      "current_iteration": 0,
+      "revision_count": 0,
+      "last_eval": null,
+      "iteration_log": []
+    }
+  },
+  "iteration_trace_schema": {
+    "iteration": "integer",
+    "timestamp": "ISO-8601 string",
+    "agent_task": "string",
+    "inputs": {
+      "changed_files": "array<string>",
+      "notes": "string"
+    },
+    "evals": {
+      "chapter_quality": "object|null",
+      "style_guard": "object|null",
+      "drift_detection": "object|null"
+    },
+    "outcome": {
+      "status": "drafted|refined|approved",
+      "decision": "refine|approve|hold",
+      "rationale": "string"
+    },
+    "artifacts": {
+      "commit_hash": "string|null",
+      "diff_summary": "string"
+    }
+  }
+}

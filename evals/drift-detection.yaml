@@ -1,0 +1,72 @@
+# Drift detection rules across iterations.
+# Goal: detect hype, repetition, and conceptual drift as the book evolves.
+
+version: 1
+scope:
+  applies_to:
+    - "book/preface.md"
+    - "book/chapters/*.md"
+
+rules:
+  stylistic_hype:
+    description: "Detect hype or influencer-style language."
+    mode: "keyword_and_pattern"
+    keywords:
+      - "game-changer"
+      - "revolutionary"
+      - "unprecedented"
+      - "world-class"
+      - "best-in-class"
+      - "breakthrough"
+      - "magic"
+      - "insane"
+      - "crush"
+      - "10x"
+    patterns:
+      - "(?i)\bjust\b.*\b(ask|tell)\b"
+      - "(?i)\b(guarantee|guaranteed)\b"
+    severity: "high"
+
+  repetition:
+    description: "Detect repeated sentences/phrases beyond a tolerance."
+    mode: "similarity"
+    similarity_metric: "minhash"
+    window: "document"
+    max_duplicate_sentence_ratio: 0.08
+    max_near_duplicate_ngram_ratio: 0.12
+    severity: "medium"
+
+  conceptual_drift:
+    description: "Detect when key terms change meaning across versions."
+    mode: "term_anchor"
+    anchors:
+      - term: "harness"
+        expected_neighbors:
+          - "evaluation"
+          - "orchestration"
+          - "tooling"
+          - "constraints"
+          - "reproducibility"
+      - term: "model"
+        expected_neighbors:
+          - "capability"
+          - "limits"
+          - "distribution"
+      - term: "agent"
+        expected_neighbors:
+          - "loop"
+          - "state"
+          - "governance"
+          - "trace"
+    max_neighbor_jaccard_delta: 0.35
+    severity: "high"
+
+outputs:
+  fields:
+    - target
+    - pass
+    - hype_hits
+    - repetition_metrics
+    - drift_metrics
+    - notes
+    - timestamp
