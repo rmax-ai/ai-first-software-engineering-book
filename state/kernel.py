@@ -881,250 +881,262 @@ def run_kernel(
         )
     )
 
-    ledger = _load_json(LEDGER_PATH)
-    chapters = ledger.get("chapters")
-    if not isinstance(chapters, dict) or chapter_id not in chapters or not isinstance(chapters[chapter_id], dict):
-        raise KernelError(f"Unknown chapter_id: {chapter_id}")
-    chapter_meta: dict[str, Any] = chapters[chapter_id]
-    status = chapter_meta.get("status")
-    lifecycle = chapter_meta.get("lifecycle")
-    if status in {"locked", "hold"}:
-        raise KernelError(f"Chapter is not eligible (status={status!r}).")
-    if lifecycle == "frozen":
-        raise KernelError("Chapter is frozen.")
+    try:
+        ledger = _load_json(LEDGER_PATH)
+        chapters = ledger.get("chapters")
+        if not isinstance(chapters, dict) or chapter_id not in chapters or not isinstance(chapters[chapter_id], dict):
+            raise KernelError(f"Unknown chapter_id: {chapter_id}")
+        chapter_meta: dict[str, Any] = chapters[chapter_id]
+        status = chapter_meta.get("status")
+        lifecycle = chapter_meta.get("lifecycle")
+        if status in {"locked", "hold"}:
+            raise KernelError(f"Chapter is not eligible (status={status!r}).")
+        if lifecycle == "frozen":
+            raise KernelError("Chapter is frozen.")
 
-    chapter_path = chapter_meta.get("path")
-    if not isinstance(chapter_path, str) or not chapter_path:
-        raise KernelError("Chapter is missing a valid path")
-    chapter_file = REPO_ROOT / chapter_path
-    baseline_text = _read_text(chapter_file)
+        chapter_path = chapter_meta.get("path")
+        if not isinstance(chapter_path, str) or not chapter_path:
+            raise KernelError("Chapter is missing a valid path")
+        chapter_file = REPO_ROOT / chapter_path
+        baseline_text = _read_text(chapter_file)
 
-    previous_critic: dict[str, Any] | None = None
-    # If ledger has last_eval and it is critic-like, pass through.
-    if isinstance(chapter_meta.get("last_eval"), dict):
-        previous_critic = chapter_meta.get("last_eval")  # type: ignore[assignment]
+        previous_critic: dict[str, Any] | None = None
+        # If ledger has last_eval and it is critic-like, pass through.
+        if isinstance(chapter_meta.get("last_eval"), dict):
+            previous_critic = chapter_meta.get("last_eval")  # type: ignore[assignment]
 
-    other_chapters = _load_other_chapters_text(ledger, chapter_id)
-    original_headings = _markdown_headings(baseline_text)
+        other_chapters = _load_other_chapters_text(ledger, chapter_id)
+        original_headings = _markdown_headings(baseline_text)
 
-    consecutive_passes = int(chapter_meta.get("stability", {}).get("consecutive_passes", 0) or 0)
-    current_iteration = int(chapter_meta.get("current_iteration", 0) or 0)
+        consecutive_passes = int(chapter_meta.get("stability", {}).get("consecutive_passes", 0) or 0)
+        current_iteration = int(chapter_meta.get("current_iteration", 0) or 0)
 
-    for i in range(1, max_iterations + 1):
-        iteration = current_iteration + i
-        _prepare_iteration_inputs(
-            io_dir=io_dir,
-            chapter_id=chapter_id,
-            iteration=iteration,
-            chapter_text=_read_text(chapter_file),
-            ledger_chapter=chapter_meta,
-            previous_critic=previous_critic,
-        )
+        for i in range(1, max_iterations + 1):
+            iteration = current_iteration + i
+            _prepare_iteration_inputs(
+                io_dir=io_dir,
+                chapter_id=chapter_id,
+                iteration=iteration,
+                chapter_text=_read_text(chapter_file),
+                ledger_chapter=chapter_meta,
+                previous_critic=previous_critic,
+            )
 
-        itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
-        planner_out = itdir / "out" / "planner.json"
-        writer_out = itdir / "out" / "writer.md"
-        critic_out = itdir / "out" / "critic.json"
+            itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
+            planner_out = itdir / "out" / "planner.json"
+            writer_out = itdir / "out" / "writer.md"
+            critic_out = itdir / "out" / "critic.json"
 
-        llm_iter_usage = None
-        if llm is not None:
-            before_prompt = int(getattr(llm.usage, "prompt_tokens", 0) or 0)
-            before_completion = int(getattr(llm.usage, "completion_tokens", 0) or 0)
+            llm_iter_usage = None
+            if llm is not None:
+                before_prompt = int(getattr(llm.usage, "prompt_tokens", 0) or 0)
+                before_completion = int(getattr(llm.usage, "completion_tokens", 0) or 0)
 
-            # Generate any missing role outputs in dependency order.
-            if not planner_out.exists():
-                _llm_generate_planner(itdir, llm)
+                # Generate any missing role outputs in dependency order.
+                if not planner_out.exists():
+                    _llm_generate_planner(itdir, llm)
 
-            planner_json_text = _read_text(planner_out) if planner_out.exists() else ""
+                planner_json_text = _read_text(planner_out) if planner_out.exists() else ""
 
-            if not writer_out.exists():
-                _llm_generate_writer(
-                    itdir,
-                    llm,
-                    chapter_text=_read_text(chapter_file),
-                    planner_json=planner_json_text,
+                if not writer_out.exists():
+                    _llm_generate_writer(
+                        itdir,
+                        llm,
+                        chapter_text=_read_text(chapter_file),
+                        planner_json=planner_json_text,
+                    )
+
+                revised_md = _read_text(writer_out) if writer_out.exists() else ""
+
+                if not critic_out.exists():
+                    _llm_generate_critic(itdir, llm, revised_md=revised_md)
+
+                after_prompt = int(getattr(llm.usage, "prompt_tokens", 0) or 0)
+                after_completion = int(getattr(llm.usage, "completion_tokens", 0) or 0)
+                llm_iter_usage = LLMUsage(
+                    prompt_tokens=max(0, after_prompt - before_prompt),
+                    completion_tokens=max(0, after_completion - before_completion),
                 )
 
-            revised_md = _read_text(writer_out) if writer_out.exists() else ""
+            if not planner_out.exists() or not writer_out.exists() or not critic_out.exists():
+                sys.stderr.write(
+                    "Role outputs missing for this iteration. Produce these files and re-run:\n"
+                    f"- {planner_out.relative_to(REPO_ROOT)}\n"
+                    f"- {writer_out.relative_to(REPO_ROOT)}\n"
+                    f"- {critic_out.relative_to(REPO_ROOT)}\n"
+                )
+                return 2
 
-            if not critic_out.exists():
-                _llm_generate_critic(itdir, llm, revised_md=revised_md)
+            plan = _load_planner_plan(planner_out)
+            revised = _read_text(writer_out)
+            critic = _load_critic_report(critic_out)
 
-            after_prompt = int(getattr(llm.usage, "prompt_tokens", 0) or 0)
-            after_completion = int(getattr(llm.usage, "completion_tokens", 0) or 0)
-            llm_iter_usage = LLMUsage(
-                prompt_tokens=max(0, after_prompt - before_prompt),
-                completion_tokens=max(0, after_completion - before_completion),
-            )
+            revised_headings = _markdown_headings(revised)
+            if revised_headings != original_headings:
+                raise KernelError("Writer changed headings; this is forbidden.")
 
-        if not planner_out.exists() or not writer_out.exists() or not critic_out.exists():
-            sys.stderr.write(
-                "Role outputs missing for this iteration. Produce these files and re-run:\n"
-                f"- {planner_out.relative_to(REPO_ROOT)}\n"
-                f"- {writer_out.relative_to(REPO_ROOT)}\n"
-                f"- {critic_out.relative_to(REPO_ROOT)}\n"
-            )
-            return 2
+            diff_ratio = _diff_size_ratio(_read_text(chapter_file), revised)
+            if diff_ratio > max_diff_ratio:
+                raise KernelError(f"Writer diff size too large ({diff_ratio:.2f} > {max_diff_ratio:.2f}).")
 
-        plan = _load_planner_plan(planner_out)
-        revised = _read_text(writer_out)
-        critic = _load_critic_report(critic_out)
+            declared = _declared_section_set(plan, original_headings)
+            if not declared:
+                raise KernelError("Planner did not explicitly reference any existing '##' headings.")
+            changed = _changed_sections(_read_text(chapter_file), revised)
+            illegal = sorted(changed - declared)
+            if illegal:
+                raise KernelError("Writer modified undeclared sections: " + ", ".join(illegal))
 
-        revised_headings = _markdown_headings(revised)
-        if revised_headings != original_headings:
-            raise KernelError("Writer changed headings; this is forbidden.")
+            det = run_deterministic_evals(revised, baseline_text=baseline_text, other_chapters=other_chapters)
+            if det.drift_score > max_drift_score:
+                det_pass = False
+            else:
+                det_pass = det.passed
 
-        diff_ratio = _diff_size_ratio(_read_text(chapter_file), revised)
-        if diff_ratio > max_diff_ratio:
-            raise KernelError(f"Writer diff size too large ({diff_ratio:.2f} > {max_diff_ratio:.2f}).")
+            pass_now = (critic.decision == "approve") and det_pass
 
-        declared = _declared_section_set(plan, original_headings)
-        if not declared:
-            raise KernelError("Planner did not explicitly reference any existing '##' headings.")
-        changed = _changed_sections(_read_text(chapter_file), revised)
-        illegal = sorted(changed - declared)
-        if illegal:
-            raise KernelError("Writer modified undeclared sections: " + ", ".join(illegal))
+            if pass_now:
+                consecutive_passes += 1
+            else:
+                consecutive_passes = 0
 
-        det = run_deterministic_evals(revised, baseline_text=baseline_text, other_chapters=other_chapters)
-        if det.drift_score > max_drift_score:
-            det_pass = False
-        else:
-            det_pass = det.passed
+            # Persist chapter content only after validations and eval run.
+            _write_text(chapter_file, revised)
 
-        pass_now = (critic.decision == "approve") and det_pass
-
-        if pass_now:
-            consecutive_passes += 1
-        else:
-            consecutive_passes = 0
-
-        # Persist chapter content only after validations and eval run.
-        _write_text(chapter_file, revised)
-
-        # Update chapter state
-        chapter_meta["current_iteration"] = iteration
-        chapter_meta["revision_count"] = int(chapter_meta.get("revision_count", 0) or 0) + 1
-        chapter_meta["last_eval"] = {
-            "critic": dataclasses.asdict(critic),
-            "deterministic": {
-                "passed": det.passed,
-                "drift_score": det.drift_score,
-                "similarity_max": det.similarity_max,
-                "chapter_quality": det.chapter_quality,
-                "style_guard": det.style_guard,
-                "drift_detection": det.drift_detection,
-            },
-        }
-        chapter_meta["quality_metrics"] = {
-            "structure_score": critic.structure_score,
-            "clarity_score": critic.clarity_score,
-            "example_density": critic.example_density,
-            "tradeoff_presence": bool(critic.tradeoff_presence),
-            "failure_mode_presence": bool(critic.failure_modes_present),
-            "drift_score": float(det.drift_score),
-        }
-        chapter_meta.setdefault("stability", {})
-        chapter_meta["stability"]["consecutive_passes"] = consecutive_passes
-        chapter_meta["stability"]["last_modified_iteration"] = iteration
-
-        chapter_meta.setdefault("iteration_log", [])
-        chapter_meta["iteration_log"].append(
-            {
-                "iteration": iteration,
-                "planner_focus": list(plan.focus_areas),
-                "critic_score": _critic_score(critic),
-                "drift_score": float(det.drift_score),
-                "diff_size": float(diff_ratio),
-            }
-        )
-
-        # Update metrics.json (minimal, per schema)
-        metrics = _load_json(METRICS_PATH)
-        metrics.setdefault("chapters", {})
-        ch_metrics = metrics["chapters"].setdefault(chapter_id, {})
-        ch_metrics.setdefault("history", [])
-        ch_metrics["history"].append(
-            {
-                "timestamp": _utc_now_iso(),
-                "iteration": iteration,
+            # Update chapter state
+            chapter_meta["current_iteration"] = iteration
+            chapter_meta["revision_count"] = int(chapter_meta.get("revision_count", 0) or 0) + 1
+            chapter_meta["last_eval"] = {
                 "critic": dataclasses.asdict(critic),
                 "deterministic": {
                     "passed": det.passed,
                     "drift_score": det.drift_score,
                     "similarity_max": det.similarity_max,
+                    "chapter_quality": det.chapter_quality,
+                    "style_guard": det.style_guard,
+                    "drift_detection": det.drift_detection,
                 },
             }
-        )
-        _save_json(METRICS_PATH, metrics)
+            chapter_meta["quality_metrics"] = {
+                "structure_score": critic.structure_score,
+                "clarity_score": critic.clarity_score,
+                "example_density": critic.example_density,
+                "tradeoff_presence": bool(critic.tradeoff_presence),
+                "failure_mode_presence": bool(critic.failure_modes_present),
+                "drift_score": float(det.drift_score),
+            }
+            chapter_meta.setdefault("stability", {})
+            chapter_meta["stability"]["consecutive_passes"] = consecutive_passes
+            chapter_meta["stability"]["last_modified_iteration"] = iteration
 
-        # Update repo_iteration_log (minimal entry)
-        ledger.setdefault("repo_iteration_log", [])
-        repo_log = ledger["repo_iteration_log"]
-        if isinstance(repo_log, list):
-            repo_iter = (max((int(e.get("iteration", 0) or 0) for e in repo_log if isinstance(e, dict)), default=0) + 1)
-            repo_log.append(
+            chapter_meta.setdefault("iteration_log", [])
+            chapter_meta["iteration_log"].append(
                 {
-                    "iteration": repo_iter,
-                    "timestamp": _utc_now_iso(),
-                    "agent_task": "kernel_refine",
-                    "inputs": {
-                        "changed_files": [chapter_path, "state/ledger.json", "state/metrics.json"],
-                        "notes": f"Kernel refinement iteration {iteration} for {chapter_id}",
-                    },
-                    "scope": {
-                        "chapters_modified": [chapter_id],
-                        "patterns_modified": [],
-                        "governance_modified": False,
-                    },
-                    "resource_usage": {
-                        "prompt_tokens": int(getattr(llm_iter_usage, "prompt_tokens", 0) or 0) if llm_iter_usage is not None else 0,
-                        "completion_tokens": int(getattr(llm_iter_usage, "completion_tokens", 0) or 0) if llm_iter_usage is not None else 0,
-                        "eval_runtime_ms": 0,
-                    },
-                    "evals": {
-                        "chapter_quality": det.chapter_quality,
-                        "style_guard": det.style_guard,
-                        "drift_detection": det.drift_detection,
-                    },
-                    "outcome": {
-                        "status": "passed" if pass_now else "refine",
-                        "decision": "approve" if pass_now else "refine",
-                        "rationale": "Deterministic eval + critic decision gating.",
-                    },
-                    "artifacts": {
-                        "commit_hash": None,
-                        "diff_summary": f"diff_ratio={diff_ratio:.2f}; drift_score={det.drift_score:.2f}",
-                    },
+                    "iteration": iteration,
+                    "planner_focus": list(plan.focus_areas),
+                    "critic_score": _critic_score(critic),
+                    "drift_score": float(det.drift_score),
+                    "diff_size": float(diff_ratio),
                 }
             )
 
+            # Update metrics.json (minimal, per schema)
+            metrics = _load_json(METRICS_PATH)
+            metrics.setdefault("chapters", {})
+            ch_metrics = metrics["chapters"].setdefault(chapter_id, {})
+            ch_metrics.setdefault("history", [])
+            ch_metrics["history"].append(
+                {
+                    "timestamp": _utc_now_iso(),
+                    "iteration": iteration,
+                    "critic": dataclasses.asdict(critic),
+                    "deterministic": {
+                        "passed": det.passed,
+                        "drift_score": det.drift_score,
+                        "similarity_max": det.similarity_max,
+                    },
+                }
+            )
+            _save_json(METRICS_PATH, metrics)
+
+            # Update repo_iteration_log (minimal entry)
+            ledger.setdefault("repo_iteration_log", [])
+            repo_log = ledger["repo_iteration_log"]
+            if isinstance(repo_log, list):
+                repo_iter = (max((int(e.get("iteration", 0) or 0) for e in repo_log if isinstance(e, dict)), default=0) + 1)
+                repo_log.append(
+                    {
+                        "iteration": repo_iter,
+                        "timestamp": _utc_now_iso(),
+                        "agent_task": "kernel_refine",
+                        "inputs": {
+                            "changed_files": [chapter_path, "state/ledger.json", "state/metrics.json"],
+                            "notes": f"Kernel refinement iteration {iteration} for {chapter_id}",
+                        },
+                        "scope": {
+                            "chapters_modified": [chapter_id],
+                            "patterns_modified": [],
+                            "governance_modified": False,
+                        },
+                        "resource_usage": {
+                            "prompt_tokens": int(getattr(llm_iter_usage, "prompt_tokens", 0) or 0) if llm_iter_usage is not None else 0,
+                            "completion_tokens": int(getattr(llm_iter_usage, "completion_tokens", 0) or 0) if llm_iter_usage is not None else 0,
+                            "eval_runtime_ms": 0,
+                        },
+                        "evals": {
+                            "chapter_quality": det.chapter_quality,
+                            "style_guard": det.style_guard,
+                            "drift_detection": det.drift_detection,
+                        },
+                        "outcome": {
+                            "status": "passed" if pass_now else "refine",
+                            "decision": "approve" if pass_now else "refine",
+                            "rationale": "Deterministic eval + critic decision gating.",
+                        },
+                        "artifacts": {
+                            "commit_hash": None,
+                            "diff_summary": f"diff_ratio={diff_ratio:.2f}; drift_score={det.drift_score:.2f}",
+                        },
+                    }
+                )
+
+            _save_json(LEDGER_PATH, ledger)
+
+            # Transition logic
+            if pass_now:
+                if (not require_two_consecutive_passes) or consecutive_passes >= 2:
+                    chapter_meta["lifecycle"] = "refined"
+                    _save_json(LEDGER_PATH, ledger)
+
+                    if commit_on_refine:
+                        _run_git(["add", chapter_path, "state/ledger.json", "state/metrics.json"])
+                        _run_git(["commit", "-m", f"refine: {chapter_id} (iter {iteration})"])
+                        commit_hash = _run_git(["rev-parse", "HEAD"]).strip()
+                        version_map = _load_json(VERSION_MAP_PATH)
+                        version_map.setdefault("chapters", {})
+                        version_map["chapters"][chapter_id] = commit_hash
+                        version_map["generated_at"] = _utc_now_iso()
+                        _save_json(VERSION_MAP_PATH, version_map)
+
+                    return 0
+
+            previous_critic = dataclasses.asdict(critic)
+
+        # Max iterations reached
+        chapter_meta["status"] = "hold"
         _save_json(LEDGER_PATH, ledger)
-
-        # Transition logic
-        if pass_now:
-            if (not require_two_consecutive_passes) or consecutive_passes >= 2:
-                chapter_meta["lifecycle"] = "refined"
-                _save_json(LEDGER_PATH, ledger)
-
-                if commit_on_refine:
-                    _run_git(["add", chapter_path, "state/ledger.json", "state/metrics.json"])
-                    _run_git(["commit", "-m", f"refine: {chapter_id} (iter {iteration})"])
-                    commit_hash = _run_git(["rev-parse", "HEAD"]).strip()
-                    version_map = _load_json(VERSION_MAP_PATH)
-                    version_map.setdefault("chapters", {})
-                    version_map["chapters"][chapter_id] = commit_hash
-                    version_map["generated_at"] = _utc_now_iso()
-                    _save_json(VERSION_MAP_PATH, version_map)
-
-                return 0
-
-        previous_critic = dataclasses.asdict(critic)
-
-    # Max iterations reached
-    chapter_meta["status"] = "hold"
-    _save_json(LEDGER_PATH, ledger)
-    return 1
+        return 1
+    finally:
+        if llm is not None:
+            client = getattr(llm, "client", None)
+            if client is not None:
+                close_fn = getattr(client, "close", None)
+                if callable(close_fn):
+                    close_fn()
+                else:
+                    stop_fn = getattr(client, "stop", None)
+                    if callable(stop_fn):
+                        stop_fn()
 
 
 def main(argv: list[str] | None = None) -> int:
