@@ -14,6 +14,8 @@ sovereign and should decide stop/iterate behavior.
 
 from __future__ import annotations
 
+import asyncio
+import importlib
 import json
 import os
 import urllib.error
@@ -57,6 +59,8 @@ class LLMClient:
         self._base_url = (base_url or "").rstrip("/")
         self._api_key_env = api_key_env
         self._timeout_s = int(timeout_s)
+        self._sdk_client: Any | None = None
+        self._sdk_session: Any | None = None
 
         if self._provider == "openai_compatible" and not self._base_url:
             self._base_url = "https://api.openai.com/v1"
@@ -69,6 +73,13 @@ class LLMClient:
 
     def close(self) -> None:
         """Compatibility shutdown hook for kernel-managed lifecycle."""
+        if self._sdk_client is not None:
+            stop_fn = getattr(self._sdk_client, "stop", None)
+            if callable(stop_fn):
+                self._run_async(stop_fn())
+            force_stop_fn = getattr(self._sdk_client, "force_stop", None)
+            if callable(force_stop_fn):
+                self._run_async(force_stop_fn())
         return None
 
     def chat(
@@ -78,13 +89,113 @@ class LLMClient:
         temperature: float = 0.0,
         max_tokens: int | None = None,
     ) -> LLMResponse:
+        if self._provider == "mock":
+            return self._chat_mock(messages=messages)
+        sdk_response = self._chat_copilot_sdk(messages=messages, temperature=temperature, max_tokens=max_tokens)
+        if sdk_response is not None:
+            return sdk_response
         if self._provider == "openai_compatible":
             return self._chat_openai_compatible(messages=messages, temperature=temperature, max_tokens=max_tokens)
         if self._provider == "ollama":
             return self._chat_ollama(messages=messages, temperature=temperature, max_tokens=max_tokens)
-        if self._provider == "mock":
-            return self._chat_mock(messages=messages)
         raise LLMClientError(f"Unknown provider: {self._provider}")
+
+    def _run_async(self, awaitable: Any) -> Any:
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            return asyncio.run(awaitable)
+        if not loop.is_running():
+            return loop.run_until_complete(awaitable)
+        fresh = asyncio.new_event_loop()
+        try:
+            return fresh.run_until_complete(awaitable)
+        finally:
+            fresh.close()
+
+    def _chat_copilot_sdk(
+        self,
+        *,
+        messages: list[dict[str, str]],
+        temperature: float,
+        max_tokens: int | None,
+    ) -> LLMResponse | None:
+        if os.environ.get("KERNEL_LLM_USE_COPILOT_SDK", "1").strip().lower() in {"0", "false", "no"}:
+            return None
+        try:
+            sdk_mod = importlib.import_module("copilot")
+        except ImportError:
+            return None
+
+        copilot_client_cls = getattr(sdk_mod, "CopilotClient", None)
+        client_options_cls = getattr(sdk_mod, "CopilotClientOptions", None)
+        session_config_cls = getattr(sdk_mod, "SessionConfig", None)
+        if not callable(copilot_client_cls):
+            return None
+
+        async def _send() -> LLMResponse:
+            if self._sdk_client is None:
+                options: Any | None = None
+                if callable(client_options_cls):
+                    options_kwargs: dict[str, Any] = {}
+                    if self._base_url:
+                        options_kwargs["base_url"] = self._base_url
+                    if self._provider:
+                        options_kwargs["provider"] = self._provider
+                    api_key = os.environ.get(self._api_key_env, "").strip()
+                    if api_key:
+                        options_kwargs["api_key"] = api_key
+                    options = client_options_cls(**options_kwargs)
+                self._sdk_client = copilot_client_cls(options) if options is not None else copilot_client_cls()
+                await self._sdk_client.start()
+            if self._sdk_session is None:
+                session_cfg = session_config_cls(model=self._model, provider=self._provider) if callable(session_config_cls) else None
+                create_session = getattr(self._sdk_client, "create_session", None)
+                if not callable(create_session):
+                    raise LLMClientError("Copilot SDK client does not expose create_session()")
+                self._sdk_session = (
+                    await create_session(session_cfg) if session_cfg is not None else await create_session()
+                )
+            payload: dict[str, Any] = {"messages": messages, "temperature": float(temperature)}
+            if max_tokens is not None:
+                payload["max_tokens"] = int(max_tokens)
+            send = getattr(self._sdk_session, "send", None)
+            if not callable(send):
+                raise LLMClientError("Copilot SDK session does not expose send()")
+            result = await send(**payload)
+            return self._normalize_sdk_response(result)
+
+        try:
+            return self._run_async(_send())
+        except Exception as exc:
+            raise LLMClientError(f"Copilot SDK chat failed: {exc}") from exc
+
+    def _normalize_sdk_response(self, result: Any) -> LLMResponse:
+        raw: dict[str, Any] | None = result if isinstance(result, dict) else None
+        content = ""
+        usage = LLMUsage()
+        if isinstance(result, dict):
+            if isinstance(result.get("content"), str):
+                content = result["content"]
+            elif isinstance(result.get("message"), dict):
+                content = str(result["message"].get("content", ""))
+            usage_raw = result.get("usage")
+            if isinstance(usage_raw, dict):
+                usage = LLMUsage(
+                    prompt_tokens=int(usage_raw.get("prompt_tokens", 0) or 0),
+                    completion_tokens=int(usage_raw.get("completion_tokens", 0) or 0),
+                )
+        if not content:
+            content_attr = getattr(result, "content", None)
+            if isinstance(content_attr, str):
+                content = content_attr
+        usage_attr = getattr(result, "usage", None)
+        if usage == LLMUsage() and isinstance(usage_attr, dict):
+            usage = LLMUsage(
+                prompt_tokens=int(usage_attr.get("prompt_tokens", 0) or 0),
+                completion_tokens=int(usage_attr.get("completion_tokens", 0) or 0),
+            )
+        return LLMResponse(content=str(content), usage=usage, raw=raw)
 
     def _http_json(self, *, url: str, payload: dict[str, Any], headers: dict[str, str] | None = None) -> dict[str, Any]:
         body = json.dumps(payload).encode("utf-8")
