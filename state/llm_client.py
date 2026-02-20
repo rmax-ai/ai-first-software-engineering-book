@@ -67,6 +67,10 @@ class LLMClient:
     def provider(self) -> Provider:
         return self._provider
 
+    def close(self) -> None:
+        """Compatibility shutdown hook for kernel-managed lifecycle."""
+        return None
+
     def chat(
         self,
         *,
