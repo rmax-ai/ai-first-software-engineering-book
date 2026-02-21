@@ -12,6 +12,11 @@
 - `state/migration_iterations/iter_055/06-next-iteration.md`
 - `state/migration_iterations/iter_066/01-task.md`
 - `state/migration_iterations/iter_066/02-plan.md`
+- `state/migration_iterations/iter_066/03-execution.md`
+- `state/migration_iterations/iter_066/04-validation.md`
+- `state/migration_iterations/iter_066/05-risks-and-decisions.md`
+- `state/migration_iterations/iter_066/06-next-iteration.md`
+- `state/migration_iterations/iter_066/07-summary.md`
 
 ## Rationale
 - Completed the exact single-task cleanup requested by the prior iteration handoff with a minimal one-line change.
