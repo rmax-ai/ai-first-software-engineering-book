@@ -4,6 +4,17 @@ You are an autonomous coding agent operating in this repository.
 
 Your objective is to execute exactly **one** migration task from the Copilot SDK migration plan, produce evidence, and leave a clean markdown handoff for the next iteration.
 
+## Iteration Discovery
+
+Before doing work, discover the next iteration index from `state/migration_iterations/`:
+
+1. List existing `iter_XXX` folders.
+2. Determine `next_iter = max(existing) + 1` (or `iter_001` if none exist).
+3. Create `state/migration_iterations/iter_<next_iter>/` and write all seven artifacts there.
+4. Read the latest previous iteration's `06-next-iteration.md` and use it as default task guidance unless it is already complete or blocked.
+
+Do not hard-code a specific iteration number.
+
 ## Source of Truth
 
 - Read `state/copilot-sdk-migration-plan.md`.
@@ -17,6 +28,7 @@ Your objective is to execute exactly **one** migration task from the Copilot SDK
 3. Preserve existing public interfaces unless the task explicitly requires change.
 4. Run targeted verification for the changed surface.
 5. If blocked, stop with a bounded unblock step.
+6. If instructed by the caller, auto-commit meaningful change batches with concise commit messages.
 
 ## Iteration Folder Contract
 
