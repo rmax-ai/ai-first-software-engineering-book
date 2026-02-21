@@ -16,6 +16,8 @@ import asyncio
 import importlib
 import json
 import os
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -121,9 +123,9 @@ class LLMClient:
         if self._provider != "copilot":
             raise LLMClientError(f"Unknown provider: {self._provider}")
         sdk_response = self._chat_copilot_sdk(messages=messages, temperature=temperature, max_tokens=max_tokens)
-        if sdk_response is None:
-            raise LLMClientError("Copilot SDK unavailable (install github-copilot-sdk or disable --llm)")
-        return sdk_response
+        if sdk_response is not None:
+            return sdk_response
+        return self._chat_copilot_http(messages=messages, temperature=temperature, max_tokens=max_tokens)
 
     def _run_async(self, awaitable: Any) -> Any:
         try:
@@ -236,6 +238,60 @@ class LLMClient:
             raise
         except Exception as exc:
             raise LLMClientError(f"Copilot SDK chat failed: {exc}") from exc
+
+    def _chat_copilot_http(
+        self,
+        *,
+        messages: list[dict[str, str]],
+        temperature: float,
+        max_tokens: int | None,
+    ) -> LLMResponse:
+        if not self._base_url:
+            raise LLMClientError("Copilot SDK unavailable and no --llm-base-url provided for HTTP fallback")
+        url = f"{self._base_url}/v1/chat/completions"
+        payload: dict[str, Any] = {
+            "model": self._model,
+            "messages": messages,
+            "temperature": float(temperature),
+        }
+        if max_tokens is not None:
+            payload["max_tokens"] = int(max_tokens)
+        body = json.dumps(payload).encode("utf-8")
+        headers = {"Content-Type": "application/json"}
+        api_key = os.environ.get(self._api_key_env, "").strip()
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
+        request = urllib.request.Request(url=url, data=body, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(request, timeout=float(self._timeout_s)) as response:
+                raw_body = response.read().decode("utf-8")
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace").strip()
+            raise LLMClientError(f"HTTP fallback failed ({exc.code}): {detail or exc.reason}") from exc
+        except urllib.error.URLError as exc:
+            reason = getattr(exc, "reason", exc)
+            raise LLMClientError(f"HTTP fallback connection failed: {reason}") from exc
+        except TimeoutError as exc:
+            raise LLMClientError(f"HTTP fallback timed out after {self._timeout_s}s") from exc
+        try:
+            data = json.loads(raw_body)
+        except json.JSONDecodeError as exc:
+            raise LLMClientError(f"HTTP fallback returned invalid JSON: {exc}") from exc
+
+        if not isinstance(data, dict):
+            raise LLMClientError("HTTP fallback returned non-object payload")
+        choices = data.get("choices")
+        content = ""
+        if isinstance(choices, list) and choices:
+            first = choices[0]
+            if isinstance(first, dict):
+                message = first.get("message")
+                if isinstance(message, dict):
+                    content = str(message.get("content", "") or "")
+                else:
+                    content = str(first.get("text", "") or "")
+        usage = self._usage_from_any(data) or LLMUsage()
+        return LLMResponse(content=content, usage=usage, raw=data)
 
     def _sdk_stage_error(self, stage: str, exc: Exception) -> LLMClientError:
         detail = str(exc).strip() or exc.__class__.__name__
