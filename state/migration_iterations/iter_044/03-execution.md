@@ -2,7 +2,7 @@
 
 ## Commands/tools run
 - `apply_patch` on `state/copilot_sdk_smoke_test.py` to add the dual-failure close-idempotency mode and CLI wiring.
-- Task agent command to run `python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency`.
+- Task agent command to run `uv run python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency`.
 - Task agent command to run deterministic non-live smoke matrix:
   - `stub`
   - `sdk-unavailable`

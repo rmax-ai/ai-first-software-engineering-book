@@ -1,7 +1,7 @@
 # Execution
 
 ## Commands/tools run
-- `python state/copilot_sdk_smoke_test.py --mode live`
+- `uv run python state/copilot_sdk_smoke_test.py --mode live`
 
 ## Files changed
 - `state/migration_iterations/iter_046/01-task.md`

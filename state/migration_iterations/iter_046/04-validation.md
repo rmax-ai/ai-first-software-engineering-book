@@ -1,7 +1,7 @@
 # Validation
 
 ## Verification commands run
-- `python state/copilot_sdk_smoke_test.py --mode live`
+- `uv run python state/copilot_sdk_smoke_test.py --mode live`
 
 ## Observed outputs/results
 - `FAIL: copilot package is not installed`

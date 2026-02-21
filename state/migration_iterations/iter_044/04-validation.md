@@ -1,7 +1,7 @@
 # Validation
 
 ## Verification commands run
-- `python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency`
+- `uv run python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency`
 - Deterministic non-live matrix run covering:
   - `stub`, `sdk-unavailable`, `bootstrap-failure`, `shutdown-failure`
   - `stop-unavailable`, `destroy-unavailable`, `destroy-failure`

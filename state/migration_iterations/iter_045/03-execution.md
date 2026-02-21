@@ -2,7 +2,7 @@
 
 ## Commands/tools run
 - `apply_patch` on `state/copilot_sdk_smoke_test.py` to add mode `stop-unavailable-destroy-failure-close-idempotency` and CLI wiring.
-- `python state/copilot_sdk_smoke_test.py --mode stop-unavailable-destroy-failure-close-idempotency`
+- `uv run python state/copilot_sdk_smoke_test.py --mode stop-unavailable-destroy-failure-close-idempotency`
 - Deterministic non-live matrix:
   - `stub`
   - `sdk-unavailable`
