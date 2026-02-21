@@ -8,7 +8,7 @@ The current iteration is blocked only by missing runtime dependency; resolving i
 
 ## Concrete acceptance criteria
 - `python -c "import copilot"` succeeds in this repository environment.
-- `python state/copilot_sdk_smoke_test.py --mode live` executes and records pass/fail evidence.
+- `uv run python state/copilot_sdk_smoke_test.py --mode live` executes and records pass/fail evidence.
 - Update iteration artifacts with command output and response/usage extraction observations.
 
 ## Expected files to touch
