@@ -2,10 +2,10 @@
 
 ## Commands/tools run
 - `python -m py_compile state/llm_client.py state/copilot_sdk_smoke_test.py`
-- `python state/copilot_sdk_smoke_test.py --mode fallback-connection-error`
-- `python state/copilot_sdk_smoke_test.py --mode fallback`
-- `python state/copilot_sdk_smoke_test.py --mode fallback-error`
-- `python state/copilot_sdk_smoke_test.py --mode fallback-invalid-json`
+- `uv run python state/copilot_sdk_smoke_test.py --mode fallback-connection-error`
+- `uv run python state/copilot_sdk_smoke_test.py --mode fallback`
+- `uv run python state/copilot_sdk_smoke_test.py --mode fallback-error`
+- `uv run python state/copilot_sdk_smoke_test.py --mode fallback-invalid-json`
 
 ## Files changed
 - `state/copilot_sdk_smoke_test.py`

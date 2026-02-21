@@ -2,11 +2,11 @@
 
 ## Verification commands run
 1. `python -m py_compile state/llm_client.py state/copilot_sdk_smoke_test.py`
-2. `python state/copilot_sdk_smoke_test.py --mode stub`
-3. `python state/copilot_sdk_smoke_test.py --mode fallback`
-4. `python state/copilot_sdk_smoke_test.py --mode fallback-error`
-5. `python state/copilot_sdk_smoke_test.py --mode fallback-invalid-json`
-6. `for i in $(seq 1 10); do python state/copilot_sdk_smoke_test.py --mode fallback-error >/dev/null; done`
+2. `uv run python state/copilot_sdk_smoke_test.py --mode stub`
+3. `uv run python state/copilot_sdk_smoke_test.py --mode fallback`
+4. `uv run python state/copilot_sdk_smoke_test.py --mode fallback-error`
+5. `uv run python state/copilot_sdk_smoke_test.py --mode fallback-invalid-json`
+6. `for i in $(seq 1 10); do uv run python state/copilot_sdk_smoke_test.py --mode fallback-error >/dev/null; done`
 
 ## Observed outputs/results
 - Command 1: pass.
