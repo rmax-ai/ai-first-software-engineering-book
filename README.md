@@ -2,6 +2,7 @@
 
 This repository is a technical book and a working research artifact.
 The book is developed via an autonomous edit loop operating inside a Git repository under explicit governance and evaluation rules.
+Its state-runner objective is to use the Copilot Python SDK as the primary LLM integration while preserving deterministic kernel behavior, governance constraints, and ledger/resource accounting.
 
 ## What “AI-first software engineering” means (in this book)
 

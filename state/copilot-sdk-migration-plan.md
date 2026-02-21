@@ -2,7 +2,7 @@
 
 ## Goal
 
-Migrate the state runner from the custom HTTP-based LLM client in `state/llm_client.py` to the Copilot Python SDK while preserving existing kernel behavior, governance constraints, and ledger/resource accounting.
+Use the Copilot Python SDK as the primary LLM integration in `state/llm_client.py`, replacing the custom HTTP path for network providers while preserving existing kernel behavior, governance constraints, and ledger/resource accounting.
 
 ## Current Baseline
 
