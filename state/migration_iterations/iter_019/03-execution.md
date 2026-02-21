@@ -2,8 +2,8 @@
 
 ## Commands/tools run
 - `python -m py_compile state/llm_client.py state/copilot_sdk_smoke_test.py`
-- `python state/copilot_sdk_smoke_test.py --mode stub`
-- `python state/copilot_sdk_smoke_test.py --mode fallback`
+- `uv run python state/copilot_sdk_smoke_test.py --mode stub`
+- `uv run python state/copilot_sdk_smoke_test.py --mode fallback`
 
 ## Files changed
 - `state/copilot_sdk_smoke_test.py`
