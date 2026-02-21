@@ -1,6 +1,6 @@
 # Plan
 
-1. Run `python state/copilot_sdk_smoke_test.py --mode live`.
+1. Run `uv run python state/copilot_sdk_smoke_test.py --mode live`.
 2. Record exact output and evaluate acceptance criteria.
 3. If blocked, document bounded unblock work and hand off one next task.
 
