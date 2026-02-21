@@ -2,7 +2,7 @@
 
 ## Commands/tools run
 - `python -m py_compile state/llm_client.py`
-- `python state/copilot_sdk_smoke_test.py --mode stub`
+- `uv run python state/copilot_sdk_smoke_test.py --mode stub`
 - Inline Python harness with local HTTP server + patched `copilot` import failure to exercise fallback.
 
 ## Files changed
