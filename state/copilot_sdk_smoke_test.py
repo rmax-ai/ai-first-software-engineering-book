@@ -9,6 +9,7 @@ Usage:
   python state/copilot_sdk_smoke_test.py --mode stop-unavailable
   python state/copilot_sdk_smoke_test.py --mode destroy-failure
   python state/copilot_sdk_smoke_test.py --mode force-stop-unavailable
+  python state/copilot_sdk_smoke_test.py --mode stop-close-idempotency
   python state/copilot_sdk_smoke_test.py --mode close-idempotency
   python state/copilot_sdk_smoke_test.py --mode destroy-close-idempotency
   python state/copilot_sdk_smoke_test.py --mode live
@@ -22,6 +23,7 @@ Modes:
 - stop-unavailable: forces SDK client stop() to be unavailable and verifies shutdown error context.
 - destroy-failure: forces session.destroy() failure and verifies shutdown error context.
 - force-stop-unavailable: forces stop() failure with non-callable force_stop and verifies shutdown error context.
+- stop-close-idempotency: forces stop() to be unavailable, then verifies a second close() is a no-op.
 - close-idempotency: forces shutdown failure then verifies a second close() is a no-op.
 - destroy-close-idempotency: forces session.destroy() failure then verifies a second close() is a no-op.
 - live: uses the real installed `copilot` package and your configured provider.
@@ -388,6 +390,31 @@ def run_force_stop_unavailable_mode() -> int:
     return 0
 
 
+def run_stop_close_idempotency_mode() -> int:
+    client = _init_shutdown_mode_client("stop-close-idempotency")
+    first_message = ""
+    try:
+        sdk_client = client._sdk_client
+        assert sdk_client is not None, "expected SDK client to be initialized"
+        setattr(sdk_client, "stop", None)
+
+        try:
+            client.close()
+            raise AssertionError("expected stop unavailable failure")
+        except LLMClientError as exc:
+            first_message = str(exc)
+            assert "Copilot SDK shutdown failed:" in first_message, "missing shutdown failure context"
+            assert "stop() unavailable" in first_message, "missing stop() unavailable detail"
+
+        client.close()
+        assert first_message, "expected first close() failure message"
+    finally:
+        _teardown_shutdown_mode_client(client)
+
+    print("PASS: stop-close-idempotency mode validates repeated close() after stop() unavailable")
+    return 0
+
+
 def run_close_idempotency_mode() -> int:
     client = _init_shutdown_mode_client("close-idempotency")
     first_message = ""
@@ -461,12 +488,13 @@ def main() -> int:
             "stop-unavailable",
             "destroy-failure",
             "force-stop-unavailable",
+            "stop-close-idempotency",
             "close-idempotency",
             "destroy-close-idempotency",
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, live = real provider call",
+        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, live = real provider call",
     )
     args = parser.parse_args()
 
@@ -484,6 +512,8 @@ def main() -> int:
         return run_destroy_failure_mode()
     if args.mode == "force-stop-unavailable":
         return run_force_stop_unavailable_mode()
+    if args.mode == "stop-close-idempotency":
+        return run_stop_close_idempotency_mode()
     if args.mode == "close-idempotency":
         return run_close_idempotency_mode()
     if args.mode == "destroy-close-idempotency":
