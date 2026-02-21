@@ -6,6 +6,7 @@ Usage:
   python state/copilot_sdk_smoke_test.py --mode sdk-unavailable
   python state/copilot_sdk_smoke_test.py --mode bootstrap-failure
   python state/copilot_sdk_smoke_test.py --mode shutdown-failure
+  python state/copilot_sdk_smoke_test.py --mode stop-unavailable
   python state/copilot_sdk_smoke_test.py --mode destroy-failure
   python state/copilot_sdk_smoke_test.py --mode live
 
@@ -15,6 +16,7 @@ Modes:
 - sdk-unavailable: forces SDK import unavailability and verifies a clear SDK-required error.
 - bootstrap-failure: forces worker-loop bootstrap failure and verifies error context.
 - shutdown-failure: forces SDK shutdown failures and verifies stop/force_stop error context.
+- stop-unavailable: forces SDK client stop() to be unavailable and verifies shutdown error context.
 - destroy-failure: forces session.destroy() failure and verifies shutdown error context.
 - live: uses the real installed `copilot` package and your configured provider.
 """
@@ -337,6 +339,39 @@ def run_destroy_failure_mode() -> int:
     return 0
 
 
+def run_stop_unavailable_mode() -> int:
+    _install_stub_copilot_module()
+    client = LLMClient(provider="copilot", model="stub-model")
+    try:
+        client.chat(
+            messages=[
+                {"role": "system", "content": "Return a short answer."},
+                {"role": "user", "content": "stop-unavailable"},
+            ],
+            temperature=0.0,
+            max_tokens=16,
+        )
+
+        sdk_client = client._sdk_client
+        assert sdk_client is not None, "expected SDK client to be initialized"
+        setattr(sdk_client, "stop", None)
+
+        try:
+            client.close()
+            raise AssertionError("expected stop unavailable failure")
+        except LLMClientError as exc:
+            message = str(exc)
+            assert "Copilot SDK shutdown failed:" in message, "missing shutdown failure context"
+            assert "stop() unavailable" in message, "missing stop() unavailable detail"
+    finally:
+        client._sdk_session = None
+        client._sdk_client = None
+        client._close_sdk_loop()
+
+    print("PASS: stop unavailable mode validates stop() unavailable shutdown error context")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
     parser.add_argument(
@@ -346,11 +381,12 @@ def main() -> int:
             "sdk-unavailable",
             "bootstrap-failure",
             "shutdown-failure",
+            "stop-unavailable",
             "destroy-failure",
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, destroy-failure = forced session destroy error, live = real provider call",
+        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-failure = forced session destroy error, live = real provider call",
     )
     args = parser.parse_args()
 
@@ -362,6 +398,8 @@ def main() -> int:
         return run_bootstrap_failure_mode()
     if args.mode == "shutdown-failure":
         return run_shutdown_failure_mode()
+    if args.mode == "stop-unavailable":
+        return run_stop_unavailable_mode()
     if args.mode == "destroy-failure":
         return run_destroy_failure_mode()
     return run_live_mode()
