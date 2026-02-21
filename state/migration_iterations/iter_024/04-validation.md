@@ -2,7 +2,7 @@
 
 ## Verification commands run
 1. `python -m py_compile state/copilot_sdk_smoke_test.py state/llm_client.py`
-2. `python state/copilot_sdk_smoke_test.py --mode fallback-timeout`
+2. `uv run python state/copilot_sdk_smoke_test.py --mode fallback-timeout`
 
 ## Observed outputs/results
 - Command 1: pass.

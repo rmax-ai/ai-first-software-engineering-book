@@ -1,8 +1,8 @@
 # Validation
 
 ## Verification commands
-1. `python state/copilot_sdk_smoke_test.py --mode stub`
-2. `python state/copilot_sdk_smoke_test.py --mode fallback-non-object`
+1. `uv run python state/copilot_sdk_smoke_test.py --mode stub`
+2. `uv run python state/copilot_sdk_smoke_test.py --mode fallback-non-object`
 
 ## Observed results
 - Command 1 output: `PASS: stub Copilot SDK path works`.
@@ -13,4 +13,3 @@
 - New non-object fallback mode added: **PASS**
 - Error mapping assertion includes `HTTP fallback returned non-object payload`: **PASS**
 - Mode fails on regression via assertion path: **PASS**
-

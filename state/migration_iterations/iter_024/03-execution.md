@@ -4,7 +4,7 @@
 1. `view state/copilot_sdk_smoke_test.py`
 2. `rg "timed out|timeout|fallback" state/llm_client.py`
 3. `python -m py_compile state/copilot_sdk_smoke_test.py state/llm_client.py`
-4. `python state/copilot_sdk_smoke_test.py --mode fallback-timeout`
+4. `uv run python state/copilot_sdk_smoke_test.py --mode fallback-timeout`
 
 ## Files changed
 - `state/copilot_sdk_smoke_test.py`
