@@ -90,6 +90,7 @@ class LLMClient:
         try:
             if callable(stop_fn):
                 self._run_async(stop_fn())
+                self._sdk_client = None
                 if session_error is not None:
                     raise LLMClientError(f"Copilot SDK shutdown failed: session.destroy()={session_error}")
                 return None
@@ -100,6 +101,7 @@ class LLMClient:
             if callable(force_stop_fn):
                 try:
                     self._run_async(force_stop_fn())
+                    self._sdk_client = None
                     if session_error is not None:
                         raise LLMClientError(
                             f"Copilot SDK shutdown failed: session.destroy()={session_error}; stop()={stop_detail}; force_stop()=ok"
