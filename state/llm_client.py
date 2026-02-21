@@ -126,21 +126,37 @@ class LLMClient:
             return self._sdk_thread_loop
 
         ready = threading.Event()
-        loop_holder: dict[str, asyncio.AbstractEventLoop] = {}
+        startup: dict[str, Any] = {}
 
         def _runner() -> None:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop_holder["loop"] = loop
-            ready.set()
-            loop.run_forever()
-            loop.close()
+            loop: asyncio.AbstractEventLoop | None = None
+            try:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                startup["loop"] = loop
+            except Exception as exc:
+                startup["error"] = exc
+            finally:
+                ready.set()
+
+            if loop is not None:
+                loop.run_forever()
+                loop.close()
 
         thread = threading.Thread(target=_runner, name="llm-client-sdk-loop", daemon=True)
         thread.start()
-        ready.wait()
+        startup_timeout_s = max(1.0, min(float(self._timeout_s), 10.0))
+        if not ready.wait(timeout=startup_timeout_s):
+            raise LLMClientError(
+                f"Copilot SDK worker-loop bootstrap failed: startup timeout after {startup_timeout_s:.1f}s"
+            )
+        if "error" in startup:
+            raise self._sdk_stage_error("worker-loop bootstrap", startup["error"])
+        loop = startup.get("loop")
+        if not isinstance(loop, asyncio.AbstractEventLoop):
+            raise LLMClientError("Copilot SDK worker-loop bootstrap failed: loop was not created")
         self._sdk_thread = thread
-        self._sdk_thread_loop = loop_holder["loop"]
+        self._sdk_thread_loop = loop
         return self._sdk_thread_loop
 
     def chat(
