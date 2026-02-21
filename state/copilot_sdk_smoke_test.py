@@ -4,12 +4,14 @@
 Usage:
   python state/copilot_sdk_smoke_test.py
   python state/copilot_sdk_smoke_test.py --mode sdk-unavailable
+  python state/copilot_sdk_smoke_test.py --mode bootstrap-failure
   python state/copilot_sdk_smoke_test.py --mode live
 
 Modes:
 - stub (default): installs an in-process fake `copilot` module and verifies
   that LLMClient uses the SDK path end-to-end without network or credentials.
 - sdk-unavailable: forces SDK import unavailability and verifies a clear SDK-required error.
+- bootstrap-failure: forces worker-loop bootstrap failure and verifies error context.
 - live: uses the real installed `copilot` package and your configured provider.
 """
 
@@ -230,6 +232,30 @@ def run_sdk_unavailable_mode() -> int:
     return 0
 
 
+def run_bootstrap_failure_mode() -> int:
+    _install_stub_copilot_module()
+    original = LLMClient._ensure_sdk_thread_loop
+
+    def _patched_bootstrap_failure(self: LLMClient) -> Any:
+        raise LLMClientError("Copilot SDK worker-loop bootstrap failed: forced smoke-test failure")
+
+    LLMClient._ensure_sdk_thread_loop = _patched_bootstrap_failure
+    client = LLMClient(provider="copilot", model="stub-model")
+    try:
+        try:
+            client._ensure_sdk_thread_loop()
+            raise AssertionError("expected worker-loop bootstrap error")
+        except LLMClientError as exc:
+            message = str(exc)
+            assert "Copilot SDK worker-loop bootstrap" in message, "missing bootstrap context"
+    finally:
+        client.close()
+        LLMClient._ensure_sdk_thread_loop = original
+
+    print("PASS: bootstrap failure mode validates worker-loop bootstrap error context")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
     parser.add_argument(
@@ -237,10 +263,11 @@ def main() -> int:
         choices=[
             "stub",
             "sdk-unavailable",
+            "bootstrap-failure",
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, live = real provider call",
+        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, live = real provider call",
     )
     args = parser.parse_args()
 
@@ -248,6 +275,8 @@ def main() -> int:
         return run_stub_mode()
     if args.mode == "sdk-unavailable":
         return run_sdk_unavailable_mode()
+    if args.mode == "bootstrap-failure":
+        return run_bootstrap_failure_mode()
     return run_live_mode()
 
 
