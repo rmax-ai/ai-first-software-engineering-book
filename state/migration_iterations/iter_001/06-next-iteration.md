@@ -1,17 +1,16 @@
 # Next Iteration Recommendation
 
-## Recommended next task
-Wire bounded LLM client teardown into `run_kernel(...)` via `finally`.
+## Recommended next task (exactly one)
+Add a focused regression test for `send_and_wait` usage fallback behavior in the SDK adapter.
 
 ## Why this is next
-The close hook now exists; the next smallest step is to guarantee shutdown on success and failure paths.
+- The code path was hardened, but there is no explicit test proving event-based usage recovery when message usage is absent.
 
 ## Acceptance criteria
-- `state/kernel.py` ensures cleanup in a `finally` block when LLM mode is enabled.
-- Cleanup attempts `close()` (and/or `stop()` fallback) without changing planner/writer/critic behavior.
-- Existing kernel return codes and error mapping remain unchanged.
+- Test simulates `assistant.message` without usage plus separate `assistant.usage` event(s).
+- Test asserts `LLMResponse.usage.prompt_tokens` and `completion_tokens` are recovered correctly.
+- Test runs offline and deterministic.
 
 ## Expected files to touch
-- `state/kernel.py`
-- `state/migration_iterations/iter_002/*.md`
-
+- `state/copilot_sdk_smoke_test.py`
+- `state/llm_client.py` (only if test reveals gaps)

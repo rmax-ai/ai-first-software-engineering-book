@@ -1,11 +1,12 @@
 # Task
 
-## Selected task title
-Add a compatibility shutdown hook to `state/llm_client.py` (`LLMClient.close()`).
+## Selected task
+Stabilize Copilot SDK usage accounting when `send_and_wait` returns an `assistant.message` event without embedded usage tokens.
 
 ## Why this task now
-This is the smallest unfinished migration prerequisite for kernel-managed SDK/client lifecycle cleanup.
+- It is a small unfinished migration hardening item from M2 ("usage extraction fallback when usage events are absent").
+- It preserves current kernel interfaces while improving token accounting reliability.
 
 ## Acceptance criteria
-- `LLMClient` exposes a `close()` method without changing existing `chat(...)` behavior.
-- Existing providers (`copilot`, `copilot`, `mock`) remain unaffected.
+- `state/llm_client.py` falls back to session events for usage when message-level usage is missing.
+- Existing smoke test still passes.

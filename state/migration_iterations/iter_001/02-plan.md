@@ -1,10 +1,8 @@
 # Plan
 
-1. Add a minimal `LLMClient.close()` method in `state/llm_client.py`.
-2. Validate syntax and direct invocation of the new hook.
-3. Record evidence and handoff for the next iteration.
+1. Inspect `state/llm_client.py` normalization path for `send_and_wait` results.
+2. Add a minimal fallback: if `assistant.message` lacks usage, read `session.get_messages()` and derive usage from `assistant.usage` events.
+3. Run targeted validation via `uv run python state/copilot_sdk_smoke_test.py`.
 
-## Files expected to change
+## Expected files
 - `state/llm_client.py`
-- `state/migration_iterations/iter_001/*.md`
-

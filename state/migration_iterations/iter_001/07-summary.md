@@ -1,8 +1,9 @@
-# Summary
+# Iteration Summary
 
-This iteration completed one minimal migration prerequisite.
-`state/llm_client.py` now exposes `LLMClient.close()` as a compatibility lifecycle hook.
-No request/response paths were changed, so provider behavior remains stable.
-Validation confirmed syntax integrity and direct hook invocation.
-The main migration risk that remains is missing kernel-side guaranteed teardown.
-The next iteration should add `finally`-based cleanup in `state/kernel.py`.
+This iteration executed one migration hardening task from the Copilot SDK plan.  
+The SDK adapter in `state/llm_client.py` now backfills usage from session events when `send_and_wait` returns a message event without embedded usage metadata.  
+The change was intentionally minimal and preserved all public interfaces (`LLMClient.chat`, kernel integration flow).  
+Validation was run with `uv run python state/copilot_sdk_smoke_test.py`, which passed.  
+No kernel orchestration changes were made in this iteration.  
+A focused regression test for this fallback path remains as the next recommended task.  
+All seven required iteration artifacts were created under `state/migration_iterations/iter_001/`.
