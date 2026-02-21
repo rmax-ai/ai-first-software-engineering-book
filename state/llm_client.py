@@ -255,7 +255,14 @@ class LLMClient:
             data = getattr(result, "data", None)
             if event_type in {"assistant.message", "assistant_message"}:
                 content = str(getattr(data, "content", "") or "")
-                usage = self._usage_from_any(data) or LLMUsage()
+                usage = self._usage_from_any(data)
+                if usage is None:
+                    get_messages = getattr(session, "get_messages", None)
+                    if callable(get_messages):
+                        events = await get_messages()
+                        fallback = self._response_from_sdk_events(events, message_id=getattr(data, "message_id", None))
+                        usage = fallback.usage
+                usage = usage or LLMUsage()
                 return LLMResponse(content=content, usage=usage, raw=None)
             if event_type in {"session.error", "session_error"}:
                 message = str(getattr(data, "message", "unknown session error"))
