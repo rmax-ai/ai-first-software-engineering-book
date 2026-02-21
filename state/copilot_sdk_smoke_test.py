@@ -264,19 +264,29 @@ def run_bootstrap_failure_mode() -> int:
     return 0
 
 
-def run_shutdown_failure_mode() -> int:
+def _init_shutdown_mode_client(user_prompt: str) -> LLMClient:
     _install_stub_copilot_module()
     client = LLMClient(provider="copilot", model="stub-model")
-    try:
-        client.chat(
-            messages=[
-                {"role": "system", "content": "Return a short answer."},
-                {"role": "user", "content": "shutdown"},
-            ],
-            temperature=0.0,
-            max_tokens=16,
-        )
+    client.chat(
+        messages=[
+            {"role": "system", "content": "Return a short answer."},
+            {"role": "user", "content": user_prompt},
+        ],
+        temperature=0.0,
+        max_tokens=16,
+    )
+    return client
 
+
+def _teardown_shutdown_mode_client(client: LLMClient) -> None:
+    client._sdk_session = None
+    client._sdk_client = None
+    client._close_sdk_loop()
+
+
+def run_shutdown_failure_mode() -> int:
+    client = _init_shutdown_mode_client("shutdown")
+    try:
         async def _patched_stop_failure() -> None:
             raise RuntimeError("forced stop failure")
 
@@ -297,27 +307,15 @@ def run_shutdown_failure_mode() -> int:
             assert "stop()=forced stop failure" in message, "missing stop() failure detail"
             assert "force_stop()=forced force_stop failure" in message, "missing force_stop() failure detail"
     finally:
-        client._sdk_session = None
-        client._sdk_client = None
-        client._close_sdk_loop()
+        _teardown_shutdown_mode_client(client)
 
     print("PASS: shutdown failure mode validates stop()/force_stop() error context")
     return 0
 
 
 def run_destroy_failure_mode() -> int:
-    _install_stub_copilot_module()
-    client = LLMClient(provider="copilot", model="stub-model")
+    client = _init_shutdown_mode_client("destroy")
     try:
-        client.chat(
-            messages=[
-                {"role": "system", "content": "Return a short answer."},
-                {"role": "user", "content": "destroy"},
-            ],
-            temperature=0.0,
-            max_tokens=16,
-        )
-
         async def _patched_destroy_failure() -> None:
             raise RuntimeError("forced destroy failure")
 
@@ -333,27 +331,15 @@ def run_destroy_failure_mode() -> int:
             assert "Copilot SDK shutdown failed:" in message, "missing shutdown failure context"
             assert "session.destroy()=forced destroy failure" in message, "missing destroy() failure detail"
     finally:
-        client._sdk_session = None
-        client._sdk_client = None
-        client._close_sdk_loop()
+        _teardown_shutdown_mode_client(client)
 
     print("PASS: destroy failure mode validates session.destroy() error context")
     return 0
 
 
 def run_stop_unavailable_mode() -> int:
-    _install_stub_copilot_module()
-    client = LLMClient(provider="copilot", model="stub-model")
+    client = _init_shutdown_mode_client("stop-unavailable")
     try:
-        client.chat(
-            messages=[
-                {"role": "system", "content": "Return a short answer."},
-                {"role": "user", "content": "stop-unavailable"},
-            ],
-            temperature=0.0,
-            max_tokens=16,
-        )
-
         sdk_client = client._sdk_client
         assert sdk_client is not None, "expected SDK client to be initialized"
         setattr(sdk_client, "stop", None)
@@ -366,27 +352,15 @@ def run_stop_unavailable_mode() -> int:
             assert "Copilot SDK shutdown failed:" in message, "missing shutdown failure context"
             assert "stop() unavailable" in message, "missing stop() unavailable detail"
     finally:
-        client._sdk_session = None
-        client._sdk_client = None
-        client._close_sdk_loop()
+        _teardown_shutdown_mode_client(client)
 
     print("PASS: stop unavailable mode validates stop() unavailable shutdown error context")
     return 0
 
 
 def run_force_stop_unavailable_mode() -> int:
-    _install_stub_copilot_module()
-    client = LLMClient(provider="copilot", model="stub-model")
+    client = _init_shutdown_mode_client("force-stop-unavailable")
     try:
-        client.chat(
-            messages=[
-                {"role": "system", "content": "Return a short answer."},
-                {"role": "user", "content": "force-stop-unavailable"},
-            ],
-            temperature=0.0,
-            max_tokens=16,
-        )
-
         async def _patched_stop_failure() -> None:
             raise RuntimeError("forced stop failure")
 
@@ -404,9 +378,7 @@ def run_force_stop_unavailable_mode() -> int:
             assert "stop()=forced stop failure" in message, "missing stop() failure detail"
             assert "force_stop() unavailable" in message, "missing force_stop() unavailable detail"
     finally:
-        client._sdk_session = None
-        client._sdk_client = None
-        client._close_sdk_loop()
+        _teardown_shutdown_mode_client(client)
 
     print("PASS: force-stop-unavailable mode validates force_stop() unavailable shutdown error context")
     return 0
