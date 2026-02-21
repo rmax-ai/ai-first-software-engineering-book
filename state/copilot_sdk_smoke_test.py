@@ -8,6 +8,7 @@ Usage:
   python state/copilot_sdk_smoke_test.py --mode fallback-connection-error
   python state/copilot_sdk_smoke_test.py --mode fallback-invalid-json
   python state/copilot_sdk_smoke_test.py --mode fallback-timeout
+  python state/copilot_sdk_smoke_test.py --mode fallback-non-object
   python state/copilot_sdk_smoke_test.py --mode live
 
 Modes:
@@ -18,6 +19,7 @@ Modes:
 - fallback-connection-error: forces fallback transport failure and asserts connection error mapping.
 - fallback-invalid-json: forces fallback path with non-JSON payload and asserts error mapping.
 - fallback-timeout: forces fallback timeout and asserts timeout error mapping.
+- fallback-non-object: forces fallback path with non-object JSON and asserts error mapping.
 - live: uses the real installed `copilot` package and your configured provider.
 """
 
@@ -464,6 +466,61 @@ def run_fallback_timeout_mode() -> int:
     return 0
 
 
+def run_fallback_non_object_mode() -> int:
+    class _Handler(BaseHTTPRequestHandler):
+        def do_POST(self) -> None:  # noqa: N802
+            if self.path != "/v1/chat/completions":
+                self.send_response(404)
+                self.end_headers()
+                return
+            length = int(self.headers.get("Content-Length", "0"))
+            _ = self.rfile.read(length)
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(b'["not-an-object"]')
+
+        def log_message(self, _format: str, *_args: Any) -> None:
+            return
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    import_module = llm_client.importlib.import_module
+
+    def _patched_import(name: str, package: str | None = None) -> Any:
+        if name == "copilot":
+            raise ImportError("forced for fallback non-object test")
+        return import_module(name, package)
+
+    llm_client.importlib.import_module = _patched_import
+    client = LLMClient(provider="copilot", model="stub-model", base_url=f"http://127.0.0.1:{server.server_port}")
+    try:
+        try:
+            client.chat(
+                messages=[
+                    {"role": "system", "content": "Return a short answer."},
+                    {"role": "user", "content": "pong"},
+                ],
+                temperature=0.0,
+                max_tokens=16,
+            )
+            raise AssertionError("expected fallback non-object payload error")
+        except LLMClientError as exc:
+            message = str(exc)
+            assert "HTTP fallback returned non-object payload" in message, "missing non-object payload context"
+    finally:
+        client.close()
+        llm_client.importlib.import_module = import_module
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2.0)
+
+    print("PASS: deterministic HTTP fallback non-object payload mapping works")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
     parser.add_argument(
@@ -475,10 +532,11 @@ def main() -> int:
             "fallback-connection-error",
             "fallback-invalid-json",
             "fallback-timeout",
+            "fallback-non-object",
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, fallback = forced HTTP fallback, fallback-error = forced HTTP fallback error, fallback-connection-error = forced HTTP fallback connection error, fallback-invalid-json = forced HTTP fallback invalid JSON, fallback-timeout = forced HTTP fallback timeout, live = real provider call",
+        help="stub = offline synthetic test, fallback = forced HTTP fallback, fallback-error = forced HTTP fallback error, fallback-connection-error = forced HTTP fallback connection error, fallback-invalid-json = forced HTTP fallback invalid JSON, fallback-timeout = forced HTTP fallback timeout, fallback-non-object = forced HTTP fallback non-object JSON payload, live = real provider call",
     )
     args = parser.parse_args()
 
@@ -494,6 +552,8 @@ def main() -> int:
         return run_fallback_invalid_json_mode()
     if args.mode == "fallback-timeout":
         return run_fallback_timeout_mode()
+    if args.mode == "fallback-non-object":
+        return run_fallback_non_object_mode()
     return run_live_mode()
 
 
