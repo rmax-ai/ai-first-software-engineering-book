@@ -1,11 +1,482 @@
 {
-  "version": 2,
+  "chapter_lifecycle_rules": {
+    "lifecycle_order": [
+      "draft",
+      "refined",
+      "approved",
+      "frozen"
+    ],
+    "transitions": {
+      "approved_to_frozen": {
+        "requires_no_modifications": true
+      },
+      "draft_to_refined": {
+        "required_consecutive_passes": 2
+      },
+      "frozen_override": {
+        "requires_manual_override": true
+      },
+      "refined_to_approved": {
+        "requires_human_validation": true
+      }
+    }
+  },
+  "chapter_selection_strategy": {
+    "notes": "Deterministic ordering: draft lifecycle first, then lowest structure_score, then highest drift_score, then oldest last_modified_iteration. Locked/frozen chapters are not eligible.",
+    "priority_order": [
+      "lifecycle:draft",
+      "quality_metrics:lowest_structure_score",
+      "quality_metrics:highest_drift_score",
+      "stability:oldest_last_modified_iteration"
+    ]
+  },
+  "chapters": {
+    "01-paradigm-shift": {
+      "current_iteration": 5,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 2,
+          "planner_focus": [
+            "clarify scope in ## Thesis",
+            "add measurable outcomes in ## Concrete Example 1",
+            "add operational risk in ## Trade-offs"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 3,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 4,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 5,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        }
+      ],
+      "last_eval": {
+        "critic": {
+          "clarity_score": 0.0,
+          "decision": "refine",
+          "drift_score": 1.0,
+          "example_density": 0.0,
+          "failure_modes_present": false,
+          "structure_score": 0.0,
+          "tradeoff_presence": false,
+          "violations": [
+            "MOCK: not a real evaluation"
+          ]
+        },
+        "deterministic": {
+          "chapter_quality": {
+            "forbidden_hits": [],
+            "pass": true,
+            "required_missing": [],
+            "scores": {
+              "examples_count": 1.0,
+              "failure_modes": 1.0,
+              "system_breakdown": 1.0,
+              "thesis_clarity": 1.0,
+              "tradeoffs": 1.0
+            },
+            "timestamp": "2026-02-21T15:41:04Z",
+            "total": 1.0
+          },
+          "drift_detection": {
+            "drift_metrics": {
+              "anchor_deltas": {
+                "agent": 0.0,
+                "harness": 0.0,
+                "model": 0.0
+              },
+              "cross_chapter_similarity_hits": []
+            },
+            "hype_hits": [],
+            "pass": true,
+            "repetition_metrics": {
+              "duplicate_sentence_ratio": 0.0,
+              "near_duplicate_ngram_ratio": 0.0
+            },
+            "timestamp": "2026-02-21T15:41:04Z"
+          },
+          "drift_score": 0.0,
+          "passed": true,
+          "similarity_max": 0.609577106460783,
+          "style_guard": {
+            "adjective_density": 0.0893371757925072,
+            "forbidden_hits": [],
+            "pass": true,
+            "sentence_length_violations": [
+              {
+                "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
+                "words": 32
+              }
+            ],
+            "timestamp": "2026-02-21T15:41:04Z"
+          }
+        }
+      },
+      "lifecycle": "draft",
+      "path": "book/chapters/01-paradigm-shift.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": true,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 5,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 5
+      },
+      "status": "hold"
+    },
+    "02-harness-engineering": {
+      "current_iteration": 1,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [],
+      "last_eval": null,
+      "lifecycle": "draft",
+      "path": "book/chapters/02-harness-engineering.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": true,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 1,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 1
+      },
+      "status": "locked"
+    },
+    "03-autonomous-kernels": {
+      "current_iteration": 1,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [],
+      "last_eval": null,
+      "lifecycle": "draft",
+      "path": "book/chapters/03-autonomous-kernels.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": true,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 1,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 1
+      },
+      "status": "locked"
+    },
+    "04-memory-systems": {
+      "current_iteration": 1,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [],
+      "last_eval": null,
+      "lifecycle": "draft",
+      "path": "book/chapters/04-memory-systems.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": true,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 1,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 1
+      },
+      "status": "locked"
+    },
+    "05-evaluation-and-traces": {
+      "current_iteration": 1,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [],
+      "last_eval": null,
+      "lifecycle": "draft",
+      "path": "book/chapters/05-evaluation-and-traces.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": true,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 1,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 1
+      },
+      "status": "locked"
+    },
+    "06-agent-governance": {
+      "current_iteration": 1,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [],
+      "last_eval": null,
+      "lifecycle": "draft",
+      "path": "book/chapters/06-agent-governance.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": true,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 1,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 1
+      },
+      "status": "locked"
+    },
+    "07-production-ai-infrastructure": {
+      "current_iteration": 1,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [],
+      "last_eval": null,
+      "lifecycle": "draft",
+      "path": "book/chapters/07-production-ai-infrastructure.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": true,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 1,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 1
+      },
+      "status": "locked"
+    },
+    "99-future-directions": {
+      "current_iteration": 1,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [],
+      "last_eval": null,
+      "lifecycle": "draft",
+      "path": "book/chapters/99-future-directions.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": true,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 1,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 1
+      },
+      "status": "locked"
+    },
+    "preface": {
+      "current_iteration": 1,
+      "drift_history": [],
+      "human_validation": {
+        "approved": false,
+        "approved_at": null,
+        "approved_by": ""
+      },
+      "iteration_log": [],
+      "last_eval": null,
+      "lifecycle": "draft",
+      "path": "book/preface.md",
+      "quality_metrics": {
+        "clarity_score": 0.0,
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_mode_presence": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false
+      },
+      "research": {
+        "falsifiable": false,
+        "hypothesis": "",
+        "validation_status": "untested"
+      },
+      "revision_count": 1,
+      "stability": {
+        "consecutive_passes": 0,
+        "frozen_candidate": false,
+        "last_modified_iteration": 1
+      },
+      "status": "locked"
+    }
+  },
   "generated_at": "2026-02-19T00:00:00Z",
+  "iteration_trace_schema": {
+    "agent_task": "string",
+    "artifacts": {
+      "commit_hash": "string|null",
+      "diff_summary": "string"
+    },
+    "evals": {
+      "chapter_quality": "object|null",
+      "drift_detection": "object|null",
+      "style_guard": "object|null"
+    },
+    "inputs": {
+      "changed_files": "array<string>",
+      "notes": "string"
+    },
+    "iteration": "integer",
+    "outcome": {
+      "decision": "refine|approve|hold",
+      "rationale": "string",
+      "status": "drafted|refined|approved|frozen"
+    },
+    "resource_usage": {
+      "completion_tokens": "integer",
+      "eval_runtime_ms": "integer",
+      "prompt_tokens": "integer"
+    },
+    "scope": {
+      "chapters_modified": "array<string>",
+      "governance_modified": "boolean",
+      "patterns_modified": "array<string>"
+    },
+    "timestamp": "ISO-8601 string"
+  },
   "repo_iteration_log": [
     {
-      "iteration": 1,
-      "timestamp": "2026-02-18T23:05:36Z",
       "agent_task": "bootstrap scaffolding",
+      "artifacts": {
+        "commit_hash": "f1788002ca447aab456e314381c5e69fac4d9be7",
+        "diff_summary": "Created governance, roadmap, chapter skeletons, patterns, eval definitions, and state scaffolding; refined README and preface."
+      },
+      "evals": {
+        "chapter_quality": {
+          "structural_headings": "pass"
+        },
+        "drift_detection": null,
+        "style_guard": null
+      },
       "inputs": {
         "changed_files": [
           "README.md",
@@ -35,6 +506,17 @@
         ],
         "notes": "Initial repository bootstrap per prompts/bootstrap.md. Evidence collected: chapter heading structural check passed; hype keyword scan found hits only inside eval configuration."
       },
+      "iteration": 1,
+      "outcome": {
+        "decision": "approve",
+        "rationale": "All required scaffold files exist; chapter skeletons include the required sections; governance and eval definitions are in place.",
+        "status": "drafted"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
       "scope": {
         "chapters_modified": [
           "preface",
@@ -47,398 +529,332 @@
           "07-production-ai-infrastructure",
           "99-future-directions"
         ],
+        "governance_modified": true,
         "patterns_modified": [
           "minimal-agent-loop",
           "self-verification-loop",
           "harness-design-patterns",
           "memory-architectures"
-        ],
-        "governance_modified": true
+        ]
       },
-      "resource_usage": {
-        "prompt_tokens": 0,
-        "completion_tokens": 0,
-        "eval_runtime_ms": 0
+      "timestamp": "2026-02-18T23:05:36Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
       },
       "evals": {
         "chapter_quality": {
-          "structural_headings": "pass"
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-21T15:34:35Z",
+          "total": 1.0
         },
-        "style_guard": null,
-        "drift_detection": null
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-21T15:34:35Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.0893371757925072,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
+              "words": 32
+            }
+          ],
+          "timestamp": "2026-02-21T15:34:35Z"
+        }
       },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/01-paradigm-shift.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 2 for 01-paradigm-shift"
+      },
+      "iteration": 2,
       "outcome": {
-        "status": "drafted",
-        "decision": "approve",
-        "rationale": "All required scaffold files exist; chapter skeletons include the required sections; governance and eval definitions are in place."
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
       },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "01-paradigm-shift"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-21T15:34:35Z"
+    },
+    {
+      "agent_task": "kernel_refine",
       "artifacts": {
-        "commit_hash": "f1788002ca447aab456e314381c5e69fac4d9be7",
-        "diff_summary": "Created governance, roadmap, chapter skeletons, patterns, eval definitions, and state scaffolding; refined README and preface."
-      }
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-21T15:41:04Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-21T15:41:04Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.0893371757925072,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
+              "words": 32
+            }
+          ],
+          "timestamp": "2026-02-21T15:41:04Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/01-paradigm-shift.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 3 for 01-paradigm-shift"
+      },
+      "iteration": 3,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "01-paradigm-shift"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-21T15:41:04Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-21T15:41:04Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-21T15:41:04Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.0893371757925072,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
+              "words": 32
+            }
+          ],
+          "timestamp": "2026-02-21T15:41:04Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/01-paradigm-shift.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 4 for 01-paradigm-shift"
+      },
+      "iteration": 4,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "01-paradigm-shift"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-21T15:41:04Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-21T15:41:04Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-21T15:41:04Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.0893371757925072,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
+              "words": 32
+            }
+          ],
+          "timestamp": "2026-02-21T15:41:04Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/01-paradigm-shift.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 5 for 01-paradigm-shift"
+      },
+      "iteration": 5,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "01-paradigm-shift"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-21T15:41:04Z"
     }
   ],
-  "chapter_lifecycle_rules": {
-    "lifecycle_order": [
-      "draft",
-      "refined",
-      "approved",
-      "frozen"
-    ],
-    "transitions": {
-      "draft_to_refined": {
-        "required_consecutive_passes": 2
-      },
-      "refined_to_approved": {
-        "requires_human_validation": true
-      },
-      "approved_to_frozen": {
-        "requires_no_modifications": true
-      },
-      "frozen_override": {
-        "requires_manual_override": true
-      }
-    }
-  },
-  "chapter_selection_strategy": {
-    "priority_order": [
-      "lifecycle:draft",
-      "quality_metrics:lowest_structure_score",
-      "quality_metrics:highest_drift_score",
-      "stability:oldest_last_modified_iteration"
-    ],
-    "notes": "Deterministic ordering: draft lifecycle first, then lowest structure_score, then highest drift_score, then oldest last_modified_iteration. Locked/frozen chapters are not eligible."
-  },
-  "chapters": {
-    "preface": {
-      "path": "book/preface.md",
-      "status": "locked",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": false,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    },
-    "01-paradigm-shift": {
-      "path": "book/chapters/01-paradigm-shift.md",
-      "status": "active_refinement",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": true,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    },
-    "02-harness-engineering": {
-      "path": "book/chapters/02-harness-engineering.md",
-      "status": "locked",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": true,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    },
-    "03-autonomous-kernels": {
-      "path": "book/chapters/03-autonomous-kernels.md",
-      "status": "locked",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": true,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    },
-    "04-memory-systems": {
-      "path": "book/chapters/04-memory-systems.md",
-      "status": "locked",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": true,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    },
-    "05-evaluation-and-traces": {
-      "path": "book/chapters/05-evaluation-and-traces.md",
-      "status": "locked",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": true,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    },
-    "06-agent-governance": {
-      "path": "book/chapters/06-agent-governance.md",
-      "status": "locked",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": true,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    },
-    "07-production-ai-infrastructure": {
-      "path": "book/chapters/07-production-ai-infrastructure.md",
-      "status": "locked",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": true,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    },
-    "99-future-directions": {
-      "path": "book/chapters/99-future-directions.md",
-      "status": "locked",
-      "lifecycle": "draft",
-      "current_iteration": 1,
-      "revision_count": 1,
-      "last_eval": null,
-      "quality_metrics": {
-        "structure_score": 0.0,
-        "clarity_score": 0.0,
-        "example_density": 0.0,
-        "tradeoff_presence": false,
-        "failure_mode_presence": false,
-        "drift_score": 0.0
-      },
-      "stability": {
-        "consecutive_passes": 0,
-        "last_modified_iteration": 1,
-        "frozen_candidate": false
-      },
-      "drift_history": [],
-      "research": {
-        "hypothesis": "",
-        "falsifiable": true,
-        "validation_status": "untested"
-      },
-      "human_validation": {
-        "approved": false,
-        "approved_by": "",
-        "approved_at": null
-      },
-      "iteration_log": []
-    }
-  },
-  "iteration_trace_schema": {
-    "iteration": "integer",
-    "timestamp": "ISO-8601 string",
-    "agent_task": "string",
-    "inputs": {
-      "changed_files": "array<string>",
-      "notes": "string"
-    },
-    "scope": {
-      "chapters_modified": "array<string>",
-      "patterns_modified": "array<string>",
-      "governance_modified": "boolean"
-    },
-    "resource_usage": {
-      "prompt_tokens": "integer",
-      "completion_tokens": "integer",
-      "eval_runtime_ms": "integer"
-    },
-    "evals": {
-      "chapter_quality": "object|null",
-      "style_guard": "object|null",
-      "drift_detection": "object|null"
-    },
-    "outcome": {
-      "status": "drafted|refined|approved|frozen",
-      "decision": "refine|approve|hold",
-      "rationale": "string"
-    },
-    "artifacts": {
-      "commit_hash": "string|null",
-      "diff_summary": "string"
-    }
-  }
+  "version": 2
 }

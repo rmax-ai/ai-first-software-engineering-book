@@ -403,6 +403,14 @@ class LLMClient:
         # force the kernel to keep iterating (critic decision=refine).
         joined = "\n".join(m.get("content", "") for m in messages)
 
+        if "===CHAPTER_START===" in joined and "===CHAPTER_END===" in joined:
+            lo = joined.find("===CHAPTER_START===")
+            hi = joined.find("===CHAPTER_END===")
+            if lo != -1 and hi != -1 and hi > lo:
+                chapter = joined[lo + len("===CHAPTER_START===") : hi]
+                return LLMResponse(content=chapter.strip() + "\n", usage=LLMUsage())
+            return LLMResponse(content="\n", usage=LLMUsage())
+
         if "Planner" in joined and "target_word_delta" in joined:
             content = json.dumps(
                 {
@@ -414,14 +422,6 @@ class LLMClient:
                 sort_keys=True,
             )
             return LLMResponse(content=content, usage=LLMUsage())
-
-        if "===CHAPTER_START===" in joined and "===CHAPTER_END===" in joined:
-            lo = joined.find("===CHAPTER_START===")
-            hi = joined.find("===CHAPTER_END===")
-            if lo != -1 and hi != -1 and hi > lo:
-                chapter = joined[lo + len("===CHAPTER_START===") : hi]
-                return LLMResponse(content=chapter.strip() + "\n", usage=LLMUsage())
-            return LLMResponse(content="\n", usage=LLMUsage())
 
         if "Critic" in joined and "violations" in joined:
             content = json.dumps(
