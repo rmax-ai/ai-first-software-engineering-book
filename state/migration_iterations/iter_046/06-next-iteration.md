@@ -7,7 +7,7 @@ Install the `copilot` package in the execution environment and rerun the live SD
 The current iteration is blocked only by missing runtime dependency; resolving it enables direct verification of M1 live-provider behavior.
 
 ## Concrete acceptance criteria
-- `python -c "import copilot"` succeeds in this repository environment.
+- `uv run python -c "import copilot"` succeeds in this repository environment.
 - `uv run python state/copilot_sdk_smoke_test.py --mode live` executes and records pass/fail evidence.
 - Update iteration artifacts with command output and response/usage extraction observations.
 
