@@ -116,5 +116,8 @@ Rollback:
 ## Open Decisions
 
 - Keep legacy HTTP path indefinitely as fallback, or remove after M2?
+    - Remove legacy HTTP path after M2, as it will no longer be needed once the SDK is fully stable and the migration is complete.
 - Preferred provider mapping policy for `copilot` through SDK config.
+    - Use defaults.
 - Whether to expose an explicit kernel flag for SDK vs legacy transport selection.
+    - No legacy transport selection.

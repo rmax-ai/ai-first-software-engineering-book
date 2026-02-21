@@ -1132,11 +1132,17 @@ def run_kernel(
             if client is not None:
                 close_fn = getattr(client, "close", None)
                 if callable(close_fn):
-                    close_fn()
+                    try:
+                        close_fn()
+                    except Exception as exc:
+                        sys.stderr.write(f"WARN: LLM client close failed: {exc}\n")
                 else:
                     stop_fn = getattr(client, "stop", None)
                     if callable(stop_fn):
-                        stop_fn()
+                        try:
+                            stop_fn()
+                        except Exception as exc:
+                            sys.stderr.write(f"WARN: LLM client stop failed: {exc}\n")
 
 
 def main(argv: list[str] | None = None) -> int:

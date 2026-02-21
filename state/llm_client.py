@@ -66,57 +66,42 @@ class LLMClient:
 
     def close(self) -> None:
         """Compatibility shutdown hook for kernel-managed lifecycle."""
-        session_error: str | None = None
-        if self._sdk_session is not None:
-            destroy_fn = getattr(self._sdk_session, "destroy", None)
-            if callable(destroy_fn):
-                try:
-                    self._run_async(destroy_fn())
-                except Exception as destroy_exc:
-                    session_error = str(destroy_exc).strip() or destroy_exc.__class__.__name__
-            self._sdk_session = None
-        if self._sdk_client is None:
-            self._close_sdk_loop()
-            if session_error is not None:
-                raise LLMClientError(f"Copilot SDK shutdown failed: session.destroy()={session_error}")
-            return None
-        stop_fn = getattr(self._sdk_client, "stop", None)
+        shutdown_errors: list[str] = []
         try:
-            if callable(stop_fn):
-                self._run_async(stop_fn())
-                self._sdk_client = None
-                self._close_sdk_loop()
-                if session_error is not None:
-                    raise LLMClientError(f"Copilot SDK shutdown failed: session.destroy()={session_error}")
-                return None
-            raise LLMClientError("Copilot SDK shutdown failed: stop() unavailable")
-        except Exception as stop_exc:
-            force_stop_fn = getattr(self._sdk_client, "force_stop", None)
-            stop_detail = str(stop_exc).strip() or stop_exc.__class__.__name__
-            if callable(force_stop_fn):
-                try:
-                    self._run_async(force_stop_fn())
-                    self._sdk_client = None
-                    self._close_sdk_loop()
-                    if session_error is not None:
-                        raise LLMClientError(
-                            f"Copilot SDK shutdown failed: session.destroy()={session_error}; stop()={stop_detail}; force_stop()=ok"
-                        )
-                    return None
-                except Exception as force_exc:
-                    force_detail = str(force_exc).strip() or force_exc.__class__.__name__
-                    if session_error is not None:
-                        raise LLMClientError(
-                            f"Copilot SDK shutdown failed: session.destroy()={session_error}; stop()={stop_detail}; force_stop()={force_detail}"
-                        ) from force_exc
-                    raise LLMClientError(
-                        f"Copilot SDK shutdown failed: stop()={stop_detail}; force_stop()={force_detail}"
-                    ) from force_exc
-            if session_error is not None:
-                raise LLMClientError(
-                    f"Copilot SDK shutdown failed: session.destroy()={session_error}; stop()={stop_detail}; force_stop() unavailable"
-                ) from stop_exc
-            raise LLMClientError(f"Copilot SDK shutdown failed: stop()={stop_detail}; force_stop() unavailable") from stop_exc
+            if self._sdk_session is not None:
+                destroy_fn = getattr(self._sdk_session, "destroy", None)
+                if callable(destroy_fn):
+                    try:
+                        self._run_async(destroy_fn())
+                    except Exception as destroy_exc:
+                        detail = str(destroy_exc).strip() or destroy_exc.__class__.__name__
+                        shutdown_errors.append(f"session.destroy()={detail}")
+
+            if self._sdk_client is not None:
+                stop_fn = getattr(self._sdk_client, "stop", None)
+                if callable(stop_fn):
+                    try:
+                        self._run_async(stop_fn())
+                    except Exception as stop_exc:
+                        stop_detail = str(stop_exc).strip() or stop_exc.__class__.__name__
+                        force_stop_fn = getattr(self._sdk_client, "force_stop", None)
+                        if callable(force_stop_fn):
+                            try:
+                                self._run_async(force_stop_fn())
+                            except Exception as force_exc:
+                                force_detail = str(force_exc).strip() or force_exc.__class__.__name__
+                                shutdown_errors.append(f"stop()={stop_detail}; force_stop()={force_detail}")
+                        else:
+                            shutdown_errors.append(f"stop()={stop_detail}; force_stop() unavailable")
+                else:
+                    shutdown_errors.append("stop() unavailable")
+        finally:
+            self._sdk_session = None
+            self._sdk_client = None
+            self._close_sdk_loop()
+
+        if shutdown_errors:
+            raise LLMClientError("Copilot SDK shutdown failed: " + "; ".join(shutdown_errors))
         return None
 
     def _close_sdk_loop(self) -> None:
@@ -162,8 +147,6 @@ class LLMClient:
         temperature: float,
         max_tokens: int | None,
     ) -> LLMResponse | None:
-        if os.environ.get("KERNEL_LLM_USE_COPILOT_SDK", "1").strip().lower() in {"0", "false", "no"}:
-            return None
         try:
             sdk_mod = importlib.import_module("copilot")
         except ImportError:
@@ -270,11 +253,11 @@ class LLMClient:
         if result is not None:
             event_type = self._sdk_event_type_name(getattr(result, "type", ""))
             data = getattr(result, "data", None)
-            if event_type == "assistant.message":
+            if event_type in {"assistant.message", "assistant_message"}:
                 content = str(getattr(data, "content", "") or "")
                 usage = self._usage_from_any(data) or LLMUsage()
                 return LLMResponse(content=content, usage=usage, raw=None)
-            if event_type == "session.error":
+            if event_type in {"session.error", "session_error"}:
                 message = str(getattr(data, "message", "unknown session error"))
                 raise LLMClientError(f"Copilot SDK session error: {message}")
 
@@ -286,20 +269,39 @@ class LLMClient:
 
     def _response_from_sdk_events(self, events: Any, message_id: str | None = None) -> LLMResponse:
         if isinstance(events, list):
+            prompt_tokens = 0
+            completion_tokens = 0
+
+            for event in events:
+                event_type = self._sdk_event_type_name(getattr(event, "type", ""))
+                data = getattr(event, "data", None)
+                if event_type not in {"assistant.usage", "assistant_usage"}:
+                    continue
+                usage = self._usage_from_any(data)
+                if usage is None:
+                    continue
+                prompt_tokens += usage.prompt_tokens
+                completion_tokens += usage.completion_tokens
+
             for event in reversed(events):
                 event_type = self._sdk_event_type_name(getattr(event, "type", ""))
                 data = getattr(event, "data", None)
-                if event_type == "assistant.message":
+                if event_type in {"assistant.message", "assistant_message"}:
                     if message_id is not None:
                         event_message_id = getattr(data, "message_id", None)
                         if event_message_id and event_message_id != message_id:
                             continue
                     content = str(getattr(data, "content", "") or "")
-                    usage = self._usage_from_any(data) or LLMUsage()
+                    usage = self._usage_from_any(data)
+                    if usage is None:
+                        usage = LLMUsage(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens)
                     return LLMResponse(content=content, usage=usage, raw=None)
-                if event_type == "session.error":
+                if event_type in {"session.error", "session_error"}:
                     message = str(getattr(data, "message", "unknown session error"))
                     raise LLMClientError(f"Copilot SDK session error: {message}")
+
+            if prompt_tokens or completion_tokens:
+                return LLMResponse(content="", usage=LLMUsage(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens), raw=None)
         return LLMResponse(content="", usage=LLMUsage(), raw=None)
 
     def _sdk_event_type_name(self, value: Any) -> str:
@@ -338,14 +340,14 @@ class LLMClient:
             prompt_tokens = 0
             completion_tokens = 0
             for event in events:
-                if not isinstance(event, dict):
+                event_name = self._sdk_event_type_name(
+                    event.get("type") if isinstance(event, dict) else getattr(event, "type", "")
+                )
+                if event_name not in {"assistant.usage", "assistant_usage"}:
                     continue
-                event_name = str(event.get("type") or event.get("event") or "")
-                if event_name and event_name != "assistant.usage":
-                    continue
-                usage = self._usage_from_any(event.get("usage"))
+                usage = self._usage_from_any(event.get("usage") if isinstance(event, dict) else None)
                 if usage is None:
-                    usage = self._usage_from_any(event.get("data"))
+                    usage = self._usage_from_any(event.get("data") if isinstance(event, dict) else getattr(event, "data", None))
                 if usage is None:
                     continue
                 prompt_tokens += usage.prompt_tokens
@@ -365,12 +367,12 @@ class LLMClient:
         usage_attr = getattr(payload, "usage", None)
         if isinstance(usage_attr, dict):
             return self._usage_from_any(usage_attr)
-        if isinstance(getattr(payload, "prompt_tokens", None), int) or isinstance(
-            getattr(payload, "completion_tokens", None), int
-        ):
+        prompt_attr = getattr(payload, "prompt_tokens", getattr(payload, "input_tokens", None))
+        completion_attr = getattr(payload, "completion_tokens", getattr(payload, "output_tokens", None))
+        if prompt_attr is not None or completion_attr is not None:
             return LLMUsage(
-                prompt_tokens=int(getattr(payload, "prompt_tokens", 0) or 0),
-                completion_tokens=int(getattr(payload, "completion_tokens", 0) or 0),
+                prompt_tokens=int(prompt_attr or 0),
+                completion_tokens=int(completion_attr or 0),
             )
         return None
 
