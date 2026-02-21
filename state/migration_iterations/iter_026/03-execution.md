@@ -5,8 +5,8 @@
 - `view state/copilot_sdk_smoke_test.py`
 - `apply_patch state/llm_client.py`
 - `apply_patch state/copilot_sdk_smoke_test.py`
-- `python state/copilot_sdk_smoke_test.py --mode stub`
-- `python state/copilot_sdk_smoke_test.py --mode sdk-unavailable`
+- `uv run python state/copilot_sdk_smoke_test.py --mode stub`
+- `uv run python state/copilot_sdk_smoke_test.py --mode sdk-unavailable`
 
 ## Files changed
 - `state/llm_client.py`
