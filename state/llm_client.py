@@ -16,6 +16,7 @@ import asyncio
 import importlib
 import json
 import os
+import threading
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -58,6 +59,8 @@ class LLMClient:
         self._sdk_client: Any | None = None
         self._sdk_session: Any | None = None
         self._sdk_loop: asyncio.AbstractEventLoop | None = None
+        self._sdk_thread_loop: asyncio.AbstractEventLoop | None = None
+        self._sdk_thread: threading.Thread | None = None
 
 
     @property
@@ -107,7 +110,38 @@ class LLMClient:
     def _close_sdk_loop(self) -> None:
         if self._sdk_loop is not None and not self._sdk_loop.is_closed():
             self._sdk_loop.close()
+        if self._sdk_thread_loop is not None:
+            if self._sdk_thread_loop.is_running():
+                self._sdk_thread_loop.call_soon_threadsafe(self._sdk_thread_loop.stop)
+            if self._sdk_thread is not None and self._sdk_thread.is_alive():
+                self._sdk_thread.join(timeout=1.0)
+            if not self._sdk_thread_loop.is_running() and not self._sdk_thread_loop.is_closed():
+                self._sdk_thread_loop.close()
         self._sdk_loop = None
+        self._sdk_thread_loop = None
+        self._sdk_thread = None
+
+    def _ensure_sdk_thread_loop(self) -> asyncio.AbstractEventLoop:
+        if self._sdk_thread_loop is not None and self._sdk_thread_loop.is_running():
+            return self._sdk_thread_loop
+
+        ready = threading.Event()
+        loop_holder: dict[str, asyncio.AbstractEventLoop] = {}
+
+        def _runner() -> None:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop_holder["loop"] = loop
+            ready.set()
+            loop.run_forever()
+            loop.close()
+
+        thread = threading.Thread(target=_runner, name="llm-client-sdk-loop", daemon=True)
+        thread.start()
+        ready.wait()
+        self._sdk_thread = thread
+        self._sdk_thread_loop = loop_holder["loop"]
+        return self._sdk_thread_loop
 
     def chat(
         self,
@@ -123,6 +157,7 @@ class LLMClient:
         return self._chat_copilot_sdk(messages=messages, temperature=temperature, max_tokens=max_tokens)
 
     def _run_async(self, awaitable: Any) -> Any:
+        """Run coroutine from sync code; nested-loop calls use a dedicated SDK worker loop."""
         try:
             loop = asyncio.get_running_loop()
         except RuntimeError:
@@ -131,11 +166,9 @@ class LLMClient:
             return self._sdk_loop.run_until_complete(awaitable)
         if not loop.is_running():
             return loop.run_until_complete(awaitable)
-        fresh = asyncio.new_event_loop()
-        try:
-            return fresh.run_until_complete(awaitable)
-        finally:
-            fresh.close()
+        worker_loop = self._ensure_sdk_thread_loop()
+        future = asyncio.run_coroutine_threadsafe(awaitable, worker_loop)
+        return future.result()
 
     def _chat_copilot_sdk(
         self,
