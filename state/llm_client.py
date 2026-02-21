@@ -73,12 +73,25 @@ class LLMClient:
 
     def close(self) -> None:
         """Compatibility shutdown hook for kernel-managed lifecycle."""
+        session_error: str | None = None
+        if self._sdk_session is not None:
+            destroy_fn = getattr(self._sdk_session, "destroy", None)
+            if callable(destroy_fn):
+                try:
+                    self._run_async(destroy_fn())
+                except Exception as destroy_exc:
+                    session_error = str(destroy_exc).strip() or destroy_exc.__class__.__name__
+            self._sdk_session = None
         if self._sdk_client is None:
+            if session_error is not None:
+                raise LLMClientError(f"Copilot SDK shutdown failed: session.destroy()={session_error}")
             return None
         stop_fn = getattr(self._sdk_client, "stop", None)
         try:
             if callable(stop_fn):
                 self._run_async(stop_fn())
+                if session_error is not None:
+                    raise LLMClientError(f"Copilot SDK shutdown failed: session.destroy()={session_error}")
                 return None
             raise LLMClientError("Copilot SDK shutdown failed: stop() unavailable")
         except Exception as stop_exc:
@@ -87,12 +100,24 @@ class LLMClient:
             if callable(force_stop_fn):
                 try:
                     self._run_async(force_stop_fn())
+                    if session_error is not None:
+                        raise LLMClientError(
+                            f"Copilot SDK shutdown failed: session.destroy()={session_error}; stop()={stop_detail}; force_stop()=ok"
+                        )
                     return None
                 except Exception as force_exc:
                     force_detail = str(force_exc).strip() or force_exc.__class__.__name__
+                    if session_error is not None:
+                        raise LLMClientError(
+                            f"Copilot SDK shutdown failed: session.destroy()={session_error}; stop()={stop_detail}; force_stop()={force_detail}"
+                        ) from force_exc
                     raise LLMClientError(
                         f"Copilot SDK shutdown failed: stop()={stop_detail}; force_stop()={force_detail}"
                     ) from force_exc
+            if session_error is not None:
+                raise LLMClientError(
+                    f"Copilot SDK shutdown failed: session.destroy()={session_error}; stop()={stop_detail}; force_stop() unavailable"
+                ) from stop_exc
             raise LLMClientError(f"Copilot SDK shutdown failed: stop()={stop_detail}; force_stop() unavailable") from stop_exc
         return None
 
