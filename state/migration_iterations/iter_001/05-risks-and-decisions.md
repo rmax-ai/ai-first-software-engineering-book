@@ -1,11 +1,12 @@
 # Risks and Decisions
 
 ## Risks discovered
-- HTTP fallback assumes OpenAI-compatible `POST /v1/chat/completions` response shape.
+- Kernel does not yet call `close()` in a `finally` block, so cleanup is still best-effort.
 
-## Decisions made and trade-offs
-- Used stdlib `urllib` for minimal dependency footprint and compatibility with existing module constraints.
-- Triggered fallback only when SDK is unavailable, not on runtime SDK errors, to avoid masking SDK failures.
+## Decisions and trade-offs
+- Implemented only a no-op compatibility hook now to keep this iteration minimal and low-risk.
+- Deferred kernel control-flow edits to a dedicated follow-up iteration.
 
 ## Intentionally deferred
-- Broader schema compatibility for non-OpenAI chat completion responses.
+- `state/kernel.py` teardown wiring (`finally` + `client.close()` / `client.stop()` fallback).
+

@@ -1,14 +1,14 @@
 # Execution
 
 ## Commands/tools run
-- `python -m py_compile state/llm_client.py`
-- `python state/copilot_sdk_smoke_test.py --mode stub`
-- Inline Python harness with local HTTP server + patched `copilot` import failure to exercise fallback.
+- `apply_patch` to update `state/llm_client.py`
+- `python3 -m py_compile state/llm_client.py`
+- Python smoke check invoking `LLMClient(provider='mock', model='mock').close()`
 
 ## Files changed
 - `state/llm_client.py`
+  - Added `LLMClient.close()` compatibility hook to support future kernel-side teardown.
 
 ## Rationale
-- Added `_chat_copilot_http(...)` to preserve M0 fallback behavior.
-- Updated `chat(...)` to prefer SDK and only use HTTP fallback when SDK is unavailable.
-- Kept public interfaces unchanged.
+Introduces the smallest lifecycle surface needed for migration without altering current request paths.
+

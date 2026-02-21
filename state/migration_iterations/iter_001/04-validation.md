@@ -1,16 +1,23 @@
 # Validation
 
-## Verification commands run
-1. `python -m py_compile state/llm_client.py`
-2. `python state/copilot_sdk_smoke_test.py --mode stub`
-3. Inline fallback harness command (local server + forced SDK import failure)
+## Verification commands
+1. `python3 -m py_compile state/llm_client.py`
+2. 
+   ```bash
+   python3 - <<'PY'
+   from state.llm_client import LLMClient
+   c = LLMClient(provider='mock', model='mock')
+   assert c.provider == 'mock'
+   assert c.close() is None
+   print('close-hook-ok')
+   PY
+   ```
 
-## Observed outputs/results
-- Command 1: pass (no syntax/type compile errors).
-- Command 2: `PASS: stub Copilot SDK path works`.
-- Command 3: `PASS: http fallback path works`.
+## Observed results
+- Command 1 exited 0.
+- Command 2 printed `close-hook-ok` and exited 0.
 
 ## Acceptance criteria status
-- SDK path preserved: PASS
-- HTTP fallback when SDK unavailable: PASS
-- Usage/content normalization preserved: PASS
+- `LLMClient.close()` exists and is callable: **PASS**
+- Existing provider behavior preserved by unchanged chat paths: **PASS** (inspection + smoke)
+

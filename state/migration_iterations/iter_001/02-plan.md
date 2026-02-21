@@ -1,8 +1,10 @@
 # Plan
 
-1. Add a minimal HTTP fallback method in `state/llm_client.py`.
-2. Wire `chat()` to call HTTP fallback only when SDK path returns unavailable.
-3. Validate SDK stub path and HTTP fallback path with targeted commands.
+1. Add a minimal `LLMClient.close()` method in `state/llm_client.py`.
+2. Validate syntax and direct invocation of the new hook.
+3. Record evidence and handoff for the next iteration.
 
-## Expected files to change
+## Files expected to change
 - `state/llm_client.py`
+- `state/migration_iterations/iter_001/*.md`
+

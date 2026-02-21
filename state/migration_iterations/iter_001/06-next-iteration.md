@@ -1,15 +1,17 @@
-# Next Iteration
+# Next Iteration Recommendation
 
 ## Recommended next task
-Add a focused regression in `state/copilot_sdk_smoke_test.py` that permanently covers the HTTP fallback path.
+Wire bounded LLM client teardown into `run_kernel(...)` via `finally`.
 
 ## Why this is next
-The fallback behavior is now implemented and should be protected by a committed, repeatable test path instead of an ad-hoc inline harness.
+The close hook now exists; the next smallest step is to guarantee shutdown on success and failure paths.
 
 ## Acceptance criteria
-- Smoke test suite includes a deterministic fallback-mode case.
-- Test verifies content extraction and usage extraction from HTTP fallback response.
-- Test exits non-zero on fallback regressions.
+- `state/kernel.py` ensures cleanup in a `finally` block when LLM mode is enabled.
+- Cleanup attempts `close()` (and/or `stop()` fallback) without changing planner/writer/critic behavior.
+- Existing kernel return codes and error mapping remain unchanged.
 
 ## Expected files to touch
-- `state/copilot_sdk_smoke_test.py`
+- `state/kernel.py`
+- `state/migration_iterations/iter_002/*.md`
+

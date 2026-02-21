@@ -1,9 +1,8 @@
 # Summary
 
-This iteration completed one M0 migration task: preserving a legacy HTTP fallback while keeping the SDK path primary.
-`state/llm_client.py` now attempts Copilot SDK first and falls back to HTTP chat completions only when SDK import is unavailable.
-The fallback uses stdlib-only `urllib` and preserves `LLMResponse`/`LLMUsage` normalization.
-Public kernel-facing interfaces were not changed.
-Validation covered syntax compilation, existing SDK stub smoke test, and a deterministic local HTTP fallback harness.
-All acceptance criteria for this iteration were met.
-A single follow-up task is recommended: add a committed fallback regression case in the smoke test file.
+This iteration completed one minimal migration prerequisite.
+`state/llm_client.py` now exposes `LLMClient.close()` as a compatibility lifecycle hook.
+No request/response paths were changed, so provider behavior remains stable.
+Validation confirmed syntax integrity and direct hook invocation.
+The main migration risk that remains is missing kernel-side guaranteed teardown.
+The next iteration should add `finally`-based cleanup in `state/kernel.py`.
