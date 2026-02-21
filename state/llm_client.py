@@ -61,6 +61,7 @@ class LLMClient:
         self._timeout_s = int(timeout_s)
         self._sdk_client: Any | None = None
         self._sdk_session: Any | None = None
+        self._sdk_loop: asyncio.AbstractEventLoop | None = None
 
         if self._provider == "openai_compatible" and not self._base_url:
             self._base_url = "https://api.openai.com/v1"
@@ -83,6 +84,7 @@ class LLMClient:
                     session_error = str(destroy_exc).strip() or destroy_exc.__class__.__name__
             self._sdk_session = None
         if self._sdk_client is None:
+            self._close_sdk_loop()
             if session_error is not None:
                 raise LLMClientError(f"Copilot SDK shutdown failed: session.destroy()={session_error}")
             return None
@@ -91,6 +93,7 @@ class LLMClient:
             if callable(stop_fn):
                 self._run_async(stop_fn())
                 self._sdk_client = None
+                self._close_sdk_loop()
                 if session_error is not None:
                     raise LLMClientError(f"Copilot SDK shutdown failed: session.destroy()={session_error}")
                 return None
@@ -102,6 +105,7 @@ class LLMClient:
                 try:
                     self._run_async(force_stop_fn())
                     self._sdk_client = None
+                    self._close_sdk_loop()
                     if session_error is not None:
                         raise LLMClientError(
                             f"Copilot SDK shutdown failed: session.destroy()={session_error}; stop()={stop_detail}; force_stop()=ok"
@@ -122,6 +126,11 @@ class LLMClient:
                 ) from stop_exc
             raise LLMClientError(f"Copilot SDK shutdown failed: stop()={stop_detail}; force_stop() unavailable") from stop_exc
         return None
+
+    def _close_sdk_loop(self) -> None:
+        if self._sdk_loop is not None and not self._sdk_loop.is_closed():
+            self._sdk_loop.close()
+        self._sdk_loop = None
 
     def chat(
         self,
@@ -145,7 +154,9 @@ class LLMClient:
         try:
             loop = asyncio.get_running_loop()
         except RuntimeError:
-            return asyncio.run(awaitable)
+            if self._sdk_loop is None or self._sdk_loop.is_closed():
+                self._sdk_loop = asyncio.new_event_loop()
+            return self._sdk_loop.run_until_complete(awaitable)
         if not loop.is_running():
             return loop.run_until_complete(awaitable)
         fresh = asyncio.new_event_loop()
@@ -199,26 +210,53 @@ class LLMClient:
                 except Exception as exc:
                     raise self._sdk_stage_error("client startup", exc) from exc
             if self._sdk_session is None:
-                session_cfg = session_config_cls(model=self._model, provider=self._provider) if callable(session_config_cls) else None
+                session_cfg_obj: Any | None = None
+                session_cfg_dict: dict[str, Any] = {"model": self._model}
+                if callable(session_config_cls):
+                    try:
+                        session_cfg_obj = session_config_cls(model=self._model)
+                    except Exception:
+                        session_cfg_obj = None
                 create_session = getattr(self._sdk_client, "create_session", None)
                 if not callable(create_session):
                     raise LLMClientError("Copilot SDK client does not expose create_session()")
                 try:
-                    self._sdk_session = (
-                        await create_session(session_cfg) if session_cfg is not None else await create_session()
-                    )
+                    if session_cfg_obj is not None:
+                        self._sdk_session = await create_session(session_cfg_obj)
+                    else:
+                        self._sdk_session = await create_session(session_cfg_dict)
                 except Exception as exc:
-                    raise self._sdk_stage_error("session creation", exc) from exc
+                    try:
+                        self._sdk_session = await create_session(session_cfg_dict)
+                    except Exception:
+                        raise self._sdk_stage_error("session creation", exc) from exc
             payload: dict[str, Any] = {"messages": messages, "temperature": float(temperature)}
             if max_tokens is not None:
                 payload["max_tokens"] = int(max_tokens)
+            send_and_wait = getattr(self._sdk_session, "send_and_wait", None)
+            if callable(send_and_wait):
+                prompt_text = self._messages_to_prompt(messages)
+                try:
+                    result = await send_and_wait({"prompt": prompt_text}, timeout=float(self._timeout_s))
+                    return await self._normalize_sdk_session_result(result, self._sdk_session)
+                except Exception as exc:
+                    raise self._sdk_stage_error("message send", exc) from exc
             send = getattr(self._sdk_session, "send", None)
             if not callable(send):
                 raise LLMClientError("Copilot SDK session does not expose send()")
             try:
                 result = await send(**payload)
             except Exception as exc:
-                raise self._sdk_stage_error("message send", exc) from exc
+                prompt_text = self._messages_to_prompt(messages)
+                try:
+                    message_id = await send({"prompt": prompt_text})
+                    get_messages = getattr(self._sdk_session, "get_messages", None)
+                    if callable(get_messages):
+                        events = await get_messages()
+                        return self._response_from_sdk_events(events, message_id=message_id)
+                    raise self._sdk_stage_error("message send", exc)
+                except Exception:
+                    raise self._sdk_stage_error("message send", exc) from exc
             return self._normalize_sdk_response(result)
 
         try:
@@ -231,6 +269,57 @@ class LLMClient:
     def _sdk_stage_error(self, stage: str, exc: Exception) -> LLMClientError:
         detail = str(exc).strip() or exc.__class__.__name__
         return LLMClientError(f"Copilot SDK {stage} failed: {detail}")
+
+    def _messages_to_prompt(self, messages: list[dict[str, str]]) -> str:
+        rendered: list[str] = []
+        for item in messages:
+            role = str(item.get("role", "user")).strip().lower() or "user"
+            content = str(item.get("content", ""))
+            rendered.append(f"[{role}]\n{content}")
+        return "\n\n".join(rendered).strip()
+
+    async def _normalize_sdk_session_result(self, result: Any, session: Any) -> LLMResponse:
+        if result is not None:
+            event_type = self._sdk_event_type_name(getattr(result, "type", ""))
+            data = getattr(result, "data", None)
+            if event_type == "assistant.message":
+                content = str(getattr(data, "content", "") or "")
+                usage = self._usage_from_any(data) or LLMUsage()
+                return LLMResponse(content=content, usage=usage, raw=None)
+            if event_type == "session.error":
+                message = str(getattr(data, "message", "unknown session error"))
+                raise LLMClientError(f"Copilot SDK session error: {message}")
+
+        get_messages = getattr(session, "get_messages", None)
+        if callable(get_messages):
+            events = await get_messages()
+            return self._response_from_sdk_events(events)
+        return LLMResponse(content="", usage=LLMUsage(), raw=None)
+
+    def _response_from_sdk_events(self, events: Any, message_id: str | None = None) -> LLMResponse:
+        if isinstance(events, list):
+            for event in reversed(events):
+                event_type = self._sdk_event_type_name(getattr(event, "type", ""))
+                data = getattr(event, "data", None)
+                if event_type == "assistant.message":
+                    if message_id is not None:
+                        event_message_id = getattr(data, "message_id", None)
+                        if event_message_id and event_message_id != message_id:
+                            continue
+                    content = str(getattr(data, "content", "") or "")
+                    usage = self._usage_from_any(data) or LLMUsage()
+                    return LLMResponse(content=content, usage=usage, raw=None)
+                if event_type == "session.error":
+                    message = str(getattr(data, "message", "unknown session error"))
+                    raise LLMClientError(f"Copilot SDK session error: {message}")
+        return LLMResponse(content="", usage=LLMUsage(), raw=None)
+
+    def _sdk_event_type_name(self, value: Any) -> str:
+        normalized = getattr(value, "value", value)
+        text = str(normalized).strip().lower()
+        if text.startswith("sessioneventtype."):
+            text = text.split(".", 1)[1]
+        return text
 
     def _normalize_sdk_response(self, result: Any) -> LLMResponse:
         raw: dict[str, Any] | None = result if isinstance(result, dict) else None
