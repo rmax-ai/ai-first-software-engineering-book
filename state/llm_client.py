@@ -145,30 +145,51 @@ class LLMClient:
                     api_key = os.environ.get(self._api_key_env, "").strip()
                     if api_key:
                         options_kwargs["api_key"] = api_key
-                    options = client_options_cls(**options_kwargs)
-                self._sdk_client = copilot_client_cls(options) if options is not None else copilot_client_cls()
-                await self._sdk_client.start()
+                    try:
+                        options = client_options_cls(**options_kwargs)
+                    except Exception as exc:
+                        raise self._sdk_stage_error("options initialization", exc) from exc
+                try:
+                    self._sdk_client = copilot_client_cls(options) if options is not None else copilot_client_cls()
+                except Exception as exc:
+                    raise self._sdk_stage_error("client initialization", exc) from exc
+                try:
+                    await self._sdk_client.start()
+                except Exception as exc:
+                    raise self._sdk_stage_error("client startup", exc) from exc
             if self._sdk_session is None:
                 session_cfg = session_config_cls(model=self._model, provider=self._provider) if callable(session_config_cls) else None
                 create_session = getattr(self._sdk_client, "create_session", None)
                 if not callable(create_session):
                     raise LLMClientError("Copilot SDK client does not expose create_session()")
-                self._sdk_session = (
-                    await create_session(session_cfg) if session_cfg is not None else await create_session()
-                )
+                try:
+                    self._sdk_session = (
+                        await create_session(session_cfg) if session_cfg is not None else await create_session()
+                    )
+                except Exception as exc:
+                    raise self._sdk_stage_error("session creation", exc) from exc
             payload: dict[str, Any] = {"messages": messages, "temperature": float(temperature)}
             if max_tokens is not None:
                 payload["max_tokens"] = int(max_tokens)
             send = getattr(self._sdk_session, "send", None)
             if not callable(send):
                 raise LLMClientError("Copilot SDK session does not expose send()")
-            result = await send(**payload)
+            try:
+                result = await send(**payload)
+            except Exception as exc:
+                raise self._sdk_stage_error("message send", exc) from exc
             return self._normalize_sdk_response(result)
 
         try:
             return self._run_async(_send())
+        except LLMClientError:
+            raise
         except Exception as exc:
             raise LLMClientError(f"Copilot SDK chat failed: {exc}") from exc
+
+    def _sdk_stage_error(self, stage: str, exc: Exception) -> LLMClientError:
+        detail = str(exc).strip() or exc.__class__.__name__
+        return LLMClientError(f"Copilot SDK {stage} failed: {detail}")
 
     def _normalize_sdk_response(self, result: Any) -> LLMResponse:
         raw: dict[str, Any] | None = result if isinstance(result, dict) else None
