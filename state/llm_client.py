@@ -173,29 +173,67 @@ class LLMClient:
     def _normalize_sdk_response(self, result: Any) -> LLMResponse:
         raw: dict[str, Any] | None = result if isinstance(result, dict) else None
         content = ""
-        usage = LLMUsage()
+        usage = self._extract_sdk_usage(result)
         if isinstance(result, dict):
             if isinstance(result.get("content"), str):
                 content = result["content"]
             elif isinstance(result.get("message"), dict):
                 content = str(result["message"].get("content", ""))
-            usage_raw = result.get("usage")
-            if isinstance(usage_raw, dict):
-                usage = LLMUsage(
-                    prompt_tokens=int(usage_raw.get("prompt_tokens", 0) or 0),
-                    completion_tokens=int(usage_raw.get("completion_tokens", 0) or 0),
-                )
         if not content:
             content_attr = getattr(result, "content", None)
             if isinstance(content_attr, str):
                 content = content_attr
-        usage_attr = getattr(result, "usage", None)
-        if usage == LLMUsage() and isinstance(usage_attr, dict):
-            usage = LLMUsage(
-                prompt_tokens=int(usage_attr.get("prompt_tokens", 0) or 0),
-                completion_tokens=int(usage_attr.get("completion_tokens", 0) or 0),
-            )
         return LLMResponse(content=str(content), usage=usage, raw=raw)
+
+    def _extract_sdk_usage(self, result: Any) -> LLMUsage:
+        direct = self._usage_from_any(result)
+        if direct is not None:
+            return direct
+
+        events: Any = None
+        if isinstance(result, dict):
+            events = result.get("events")
+        if events is None:
+            events = getattr(result, "events", None)
+        if isinstance(events, list):
+            prompt_tokens = 0
+            completion_tokens = 0
+            for event in events:
+                if not isinstance(event, dict):
+                    continue
+                event_name = str(event.get("type") or event.get("event") or "")
+                if event_name and event_name != "assistant.usage":
+                    continue
+                usage = self._usage_from_any(event.get("usage"))
+                if usage is None:
+                    usage = self._usage_from_any(event.get("data"))
+                if usage is None:
+                    continue
+                prompt_tokens += usage.prompt_tokens
+                completion_tokens += usage.completion_tokens
+            return LLMUsage(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens)
+        return LLMUsage()
+
+    def _usage_from_any(self, payload: Any) -> LLMUsage | None:
+        if isinstance(payload, dict):
+            usage_raw = payload.get("usage") if isinstance(payload.get("usage"), dict) else payload
+            token_keys = {"prompt_tokens", "completion_tokens", "input_tokens", "output_tokens"}
+            if not any(key in usage_raw for key in token_keys):
+                return None
+            prompt = usage_raw.get("prompt_tokens", usage_raw.get("input_tokens", 0))
+            completion = usage_raw.get("completion_tokens", usage_raw.get("output_tokens", 0))
+            return LLMUsage(prompt_tokens=int(prompt or 0), completion_tokens=int(completion or 0))
+        usage_attr = getattr(payload, "usage", None)
+        if isinstance(usage_attr, dict):
+            return self._usage_from_any(usage_attr)
+        if isinstance(getattr(payload, "prompt_tokens", None), int) or isinstance(
+            getattr(payload, "completion_tokens", None), int
+        ):
+            return LLMUsage(
+                prompt_tokens=int(getattr(payload, "prompt_tokens", 0) or 0),
+                completion_tokens=int(getattr(payload, "completion_tokens", 0) or 0),
+            )
+        return None
 
     def _http_json(self, *, url: str, payload: dict[str, Any], headers: dict[str, str] | None = None) -> dict[str, Any]:
         body = json.dumps(payload).encode("utf-8")
