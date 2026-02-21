@@ -7,7 +7,7 @@ Stabilize deterministic `fallback-error` smoke mode to avoid intermittent connec
 The fallback HTTP error mapping regression mode is currently flaky in this environment and weakens confidence in deterministic failure-path coverage.
 
 ## Acceptance criteria
-- `python state/copilot_sdk_smoke_test.py --mode fallback-error` passes reliably across repeated local runs.
+- `uv run python state/copilot_sdk_smoke_test.py --mode fallback-error` passes reliably across repeated local runs.
 - Assertion continues to validate actionable HTTP status context.
 - Command fails non-zero if mapping regresses.
 
