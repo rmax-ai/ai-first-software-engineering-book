@@ -48,7 +48,45 @@ def _install_stub_copilot_module() -> None:
         model: str | None = None
         provider: str | None = None
 
+    @dataclass
+    class UsageData:
+        prompt_tokens: int
+        completion_tokens: int
+
+    @dataclass
+    class MessageData:
+        content: str
+        message_id: str
+
+    @dataclass
+    class SessionEvent:
+        type: str
+        data: Any
+
     class StubSession:
+        def __init__(self) -> None:
+            self._message_id = "stub-message-1"
+            self._content = ""
+
+        async def send_and_wait(self, payload: dict[str, Any], timeout: float) -> SessionEvent:
+            _ = timeout
+            prompt = str(payload.get("prompt", ""))
+            if "[user]\n" in prompt:
+                user = prompt.rsplit("[user]\n", 1)[1].strip()
+            else:
+                user = prompt.strip()
+            self._content = f"stub-ok: {user}".strip()
+            return SessionEvent(
+                type="assistant.message",
+                data=MessageData(content=self._content, message_id=self._message_id),
+            )
+
+        async def get_messages(self) -> list[SessionEvent]:
+            return [
+                SessionEvent(type="assistant.usage", data=UsageData(prompt_tokens=7, completion_tokens=3)),
+                SessionEvent(type="assistant.message", data=MessageData(content=self._content, message_id=self._message_id)),
+            ]
+
         async def send(self, **payload: Any) -> dict[str, Any]:
             messages_any = payload.get("messages", [])
             messages: list[dict[str, Any]] = []
