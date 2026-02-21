@@ -1,7 +1,7 @@
 # Validation
 
 ## Verification commands run
-1. `rg -n '\`python state/copilot_sdk_smoke_test.py --mode fallback-timeout\`' state/migration_iterations/iter_064/06-next-iteration.md || true`
+1. `rg -n '\`uv run python state/copilot_sdk_smoke_test.py --mode fallback-timeout\`' state/migration_iterations/iter_064/06-next-iteration.md || true`
 2. `rg -n '\`uv run python state/copilot_sdk_smoke_test.py --mode fallback-timeout\`' state/migration_iterations/iter_064/06-next-iteration.md`
 3. `git --no-pager diff -- state/migration_iterations/iter_064/06-next-iteration.md`
 
