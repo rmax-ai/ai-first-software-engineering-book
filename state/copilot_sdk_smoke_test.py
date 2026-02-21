@@ -7,6 +7,7 @@ Usage:
   python state/copilot_sdk_smoke_test.py --mode bootstrap-failure
   python state/copilot_sdk_smoke_test.py --mode shutdown-failure
   python state/copilot_sdk_smoke_test.py --mode stop-unavailable
+  python state/copilot_sdk_smoke_test.py --mode destroy-unavailable
   python state/copilot_sdk_smoke_test.py --mode destroy-failure
   python state/copilot_sdk_smoke_test.py --mode force-stop-unavailable
   python state/copilot_sdk_smoke_test.py --mode force-stop-close-idempotency
@@ -22,6 +23,7 @@ Modes:
 - bootstrap-failure: forces worker-loop bootstrap failure and verifies error context.
 - shutdown-failure: forces SDK shutdown failures and verifies stop/force_stop error context.
 - stop-unavailable: forces SDK client stop() to be unavailable and verifies shutdown error context.
+- destroy-unavailable: forces session.destroy() to be unavailable and verifies shutdown error context.
 - destroy-failure: forces session.destroy() failure and verifies shutdown error context.
 - force-stop-unavailable: forces stop() failure with non-callable force_stop and verifies shutdown error context.
 - force-stop-close-idempotency: forces stop() failure with force_stop unavailable, then verifies a second close() is a no-op.
@@ -366,6 +368,20 @@ def run_stop_unavailable_mode() -> int:
     return 0
 
 
+def run_destroy_unavailable_mode() -> int:
+    client = _init_shutdown_mode_client("destroy-unavailable")
+    try:
+        sdk_session = client._sdk_session
+        assert sdk_session is not None, "expected SDK session to be initialized"
+        setattr(sdk_session, "destroy", None)
+        client.close()
+    finally:
+        _teardown_shutdown_mode_client(client)
+
+    print("PASS: destroy unavailable mode validates non-callable session.destroy() shutdown success path")
+    return 0
+
+
 def run_force_stop_unavailable_mode() -> int:
     client = _init_shutdown_mode_client("force-stop-unavailable")
     try:
@@ -518,6 +534,7 @@ def main() -> int:
             "bootstrap-failure",
             "shutdown-failure",
             "stop-unavailable",
+            "destroy-unavailable",
             "destroy-failure",
             "force-stop-unavailable",
             "force-stop-close-idempotency",
@@ -527,7 +544,7 @@ def main() -> int:
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, live = real provider call",
+        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, live = real provider call",
     )
     args = parser.parse_args()
 
@@ -541,6 +558,8 @@ def main() -> int:
         return run_shutdown_failure_mode()
     if args.mode == "stop-unavailable":
         return run_stop_unavailable_mode()
+    if args.mode == "destroy-unavailable":
+        return run_destroy_unavailable_mode()
     if args.mode == "destroy-failure":
         return run_destroy_failure_mode()
     if args.mode == "force-stop-unavailable":
