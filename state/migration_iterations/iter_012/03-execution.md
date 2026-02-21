@@ -2,8 +2,8 @@
 
 ## Commands/tools run
 1. `mcp_pylance_mcp_s_pylanceRunCodeSnippet` live-provider smoke script that attempted:
-   - `openai_compatible` only when `OPENAI_API_KEY` exists
-   - local `ollama` request to default runtime
+   - `copilot` only when `COPILOT_API_KEY` exists
+   - local `copilot` request to default runtime
 
 ## Files changed
 - `state/migration_iterations/iter_012/01-task.md`

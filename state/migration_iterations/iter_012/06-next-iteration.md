@@ -10,7 +10,7 @@ All currently feasible migration tasks have been completed in this run; remainin
 
 ## Concrete acceptance criteria
 - At least one chapter status is changed from `hold/locked` to eligible, then kernel mock run executes planner/writer/critic and produces `_llm_trace`.
-- Configure `OPENAI_API_KEY` or start local Ollama, then one non-mock `LLMClient.chat(...)` call succeeds and records usage.
+- Configure `COPILOT_API_KEY` or start local Copilot CLI, then one non-mock `LLMClient.chat(...)` call succeeds and records usage.
 
 ## Expected files to touch
 - `state/ledger.json` (if governance status is unblocked)

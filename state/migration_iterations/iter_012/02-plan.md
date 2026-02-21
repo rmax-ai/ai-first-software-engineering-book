@@ -1,7 +1,7 @@
 # Plan
 
-1. Attempt `openai_compatible` smoke only if `OPENAI_API_KEY` is available.
-2. Attempt local `ollama` smoke using default localhost runtime.
+1. Attempt `copilot` smoke only if `COPILOT_API_KEY` is available.
+2. Attempt local `copilot` smoke using default localhost runtime.
 3. Capture success or blocked evidence with concrete failure messages.
 4. Record one next task recommendation with bounded unblock criteria.
 

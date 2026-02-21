@@ -408,8 +408,8 @@ Use custom API providers via `provider`:
 ```python
 session = await client.create_session({
     "provider": {
-        "type": "openai",
-        "base_url": "https://api.openai.com/v1",
+        "type": "custom",
+        "base_url": "https://example.com/v1",
         "api_key": "your-api-key"
     }
 })

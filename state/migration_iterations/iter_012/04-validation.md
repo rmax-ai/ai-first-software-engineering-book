@@ -4,8 +4,8 @@
 1. Python live-provider smoke script via `mcp_pylance_mcp_s_pylanceRunCodeSnippet`
 
 ## Observed outputs/results
-- `openai_compatible`: blocked (`missing OPENAI_API_KEY`).
-- `ollama`: error (`LLM provider connection error: ... Connection refused`).
+- `copilot`: blocked (`missing COPILOT_API_KEY`).
+- `copilot`: error (`LLM provider connection error: ... Connection refused`).
 - Script output included `blocked-live-provider-smoke`.
 
 ## Pass/fail against acceptance criteria

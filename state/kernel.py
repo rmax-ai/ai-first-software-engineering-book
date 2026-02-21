@@ -876,7 +876,7 @@ def run_kernel(
             provider="mock",
             model="",
             base_url=None,
-            api_key_env="OPENAI_API_KEY",
+            api_key_env="COPILOT_API_KEY",
             timeout_s=90,
         )
     )
@@ -1169,8 +1169,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--llm-provider",
-        default=os.environ.get("KERNEL_LLM_PROVIDER", "openai_compatible"),
-        help="LLM provider: openai_compatible | ollama | mock (default: env KERNEL_LLM_PROVIDER or openai_compatible)",
+        default=os.environ.get("KERNEL_LLM_PROVIDER", "copilot"),
+        help="LLM provider: copilot | mock (default: env KERNEL_LLM_PROVIDER or copilot)",
     )
     parser.add_argument(
         "--llm-model",
@@ -1184,8 +1184,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--llm-api-key-env",
-        default=os.environ.get("KERNEL_LLM_API_KEY_ENV", "OPENAI_API_KEY"),
-        help="Env var name containing API key (openai_compatible only). Default: OPENAI_API_KEY.",
+        default=os.environ.get("KERNEL_LLM_API_KEY_ENV", "COPILOT_API_KEY"),
+        help="Env var name containing API key (only when Copilot SDK is configured for BYOK). Default: COPILOT_API_KEY.",
     )
     parser.add_argument(
         "--llm-timeout-s",
@@ -1200,7 +1200,7 @@ def main(argv: list[str] | None = None) -> int:
     llm_cfg: LLMConfig | None = None
     if bool(args.llm):
         provider = str(args.llm_provider)
-        allowed = {"openai_compatible", "ollama", "mock"}
+        allowed = {"copilot", "mock"}
         if provider not in allowed:
             raise KernelError(f"--llm-provider must be one of {sorted(allowed)}")
         model = str(args.llm_model).strip()

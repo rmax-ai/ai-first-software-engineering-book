@@ -7,7 +7,7 @@ Run `LLMClient` failure-path smoke for the SDK/legacy boundary by asserting acti
 This advances migration-plan failure-path coverage while the kernel regression path remains blocked by chapter status governance.
 
 ## Concrete acceptance criteria
-- Validate `openai_compatible` path raises `LLMClientError` when API key env var is missing.
+- Validate `copilot` path raises `LLMClientError` when API key env var is missing.
 - Validate connection failure path produces actionable `LLMClientError` text.
 - Confirm `mock` provider behavior remains deterministic and unchanged.
 

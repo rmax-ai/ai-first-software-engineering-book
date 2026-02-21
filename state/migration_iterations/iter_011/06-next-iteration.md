@@ -1,7 +1,7 @@
 # Next Iteration Recommendation
 
 ## Recommended next task
-Attempt one live-provider smoke validation for SDK-backed path (`openai_compatible` or local `ollama`) and record explicit blocked evidence if credentials/runtime are unavailable.
+Attempt one live-provider smoke validation for SDK-backed path (`copilot` or local `copilot`) and record explicit blocked evidence if credentials/runtime are unavailable.
 
 ## Why it is next
 The migration plan still lists live-provider smoke as required coverage and this is the smallest remaining uncovered area.

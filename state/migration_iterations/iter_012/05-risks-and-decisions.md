@@ -8,4 +8,4 @@
 - Captured both credential and local-runtime availability evidence in one bounded step.
 
 ## Intentionally deferred
-- Full live-provider smoke remains deferred until either `OPENAI_API_KEY` is configured or local Ollama is running.
+- Full live-provider smoke remains deferred until either `COPILOT_API_KEY` is configured or local Copilot CLI is running.

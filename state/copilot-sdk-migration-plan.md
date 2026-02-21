@@ -7,7 +7,7 @@ Use the Copilot Python SDK as the primary LLM integration in `state/llm_client.p
 ## Current Baseline
 
 - `state/kernel.py` is synchronous and expects `LLMClient.chat(...) -> LLMResponse`.
-- `state/llm_client.py` supports providers: `openai_compatible`, `ollama`, `mock`.
+- `state/llm_client.py` supports providers: `copilot`, `mock`.
 - Kernel records usage via `LLMUsage(prompt_tokens, completion_tokens)` and writes to `state/ledger.json` / `state/metrics.json`.
 - Deterministic local mode relies on `mock` behavior.
 
@@ -31,7 +31,7 @@ Keep the public interface unchanged:
 
 Implement an internal adapter that:
 
-- Uses Copilot SDK for non-mock providers.
+- Uses Copilot SDK for the `copilot` provider.
 - Maintains a single client + session per kernel run (lazy-initialized).
 - Converts sync `chat(...)` calls into async SDK calls via an internal event loop bridge.
 - Aggregates token usage from `assistant.usage` events into existing `LLMUsage` shape.
@@ -67,7 +67,7 @@ Rollback:
 
 Scope:
 
-- Route `openai_compatible` and `ollama` requests through SDK provider/session config.
+- Route `copilot` requests through SDK session config.
 - Keep sync adapter surface for kernel compatibility.
 
 Acceptance criteria:
@@ -116,5 +116,5 @@ Rollback:
 ## Open Decisions
 
 - Keep legacy HTTP path indefinitely as fallback, or remove after M2?
-- Preferred provider mapping policy for `openai_compatible` and `ollama` through SDK config.
+- Preferred provider mapping policy for `copilot` through SDK config.
 - Whether to expose an explicit kernel flag for SDK vs legacy transport selection.

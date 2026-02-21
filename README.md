@@ -101,21 +101,12 @@ python state/kernel.py --chapter-id 01-paradigm-shift
 
 If you pass `--llm`, the kernel will auto-generate any missing `out/planner.json`, `out/writer.md`, and `out/critic.json` using an LLM client (and it will also write raw prompt/response traces under `out/_llm_trace/`). The deterministic eval gates still apply.
 
-OpenAI-compatible example:
+Copilot SDK example:
 
 ```bash
-export OPENAI_API_KEY=...               # or set KERNEL_LLM_API_KEY_ENV to a different env var name
-export KERNEL_LLM_PROVIDER=openai_compatible
+export COPILOT_API_KEY=...              # optional BYOK (or set KERNEL_LLM_API_KEY_ENV)
+export KERNEL_LLM_PROVIDER=copilot
 export KERNEL_LLM_MODEL=YOUR_MODEL_NAME
-
-python state/kernel.py --chapter-id 01-paradigm-shift --llm
-```
-
-Local Ollama example:
-
-```bash
-export KERNEL_LLM_PROVIDER=ollama
-export KERNEL_LLM_MODEL=llama3.1
 
 python state/kernel.py --chapter-id 01-paradigm-shift --llm
 ```

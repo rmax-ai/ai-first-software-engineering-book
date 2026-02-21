@@ -2,8 +2,8 @@
 
 ## Commands/tools run
 1. `mcp_pylance_mcp_s_pylanceRunCodeSnippet` script validating:
-   - missing API key mapping (`openai_compatible`)
-   - transport failure mapping (`ollama`)
+   - missing API key mapping (`copilot`)
+   - transport failure mapping (`copilot`)
    - deterministic `mock` outputs
 2. `python -m py_compile state/llm_client.py`
 

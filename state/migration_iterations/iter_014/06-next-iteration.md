@@ -7,7 +7,7 @@ No remaining in-repo migration task is unfinished. Only external-prerequisite ch
 Migration acceptance coverage is complete for feasible in-repo tasks; additional progress requires environment setup outside repository code.
 
 ## Concrete acceptance criteria
-- `OPENAI_API_KEY` is configured or local Ollama runtime is reachable.
+- `COPILOT_API_KEY` is configured or local Copilot CLI runtime is reachable.
 - Run one non-mock `LLMClient.chat(...)` smoke and capture usage evidence.
 - Write `iter_015` artifacts only if those prerequisites are newly available.
 

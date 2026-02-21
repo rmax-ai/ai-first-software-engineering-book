@@ -2,7 +2,7 @@
 
 ## Risks discovered
 - Kernel validation mutates `state/ledger.json` and `state/metrics.json` heavily when run repeatedly; this can create large unrelated diffs.
-- Live-provider validation still depends on external prerequisites (`OPENAI_API_KEY` or a running local Ollama server).
+- Live-provider validation still depends on external prerequisites (`COPILOT_API_KEY` or a running local Copilot CLI server).
 
 ## Decisions made and trade-offs
 - Decision: treat mock regression validation as complete based on artifact and rerun evidence.

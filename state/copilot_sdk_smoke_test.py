@@ -91,7 +91,7 @@ def _install_stub_copilot_module() -> None:
 
 def run_stub_mode() -> int:
     _install_stub_copilot_module()
-    client = LLMClient(provider="openai_compatible", model="stub-model")
+    client = LLMClient(provider="copilot", model="stub-model")
     try:
         response = client.chat(
             messages=[
@@ -123,10 +123,10 @@ def run_live_mode() -> int:
     except ImportError as exc:
         raise SystemExit("FAIL: copilot package is not installed") from exc
 
-    provider_raw = os.environ.get("KERNEL_LLM_PROVIDER", "openai_compatible")
-    if provider_raw not in {"openai_compatible", "ollama", "mock"}:
+    provider_raw = os.environ.get("KERNEL_LLM_PROVIDER", "copilot")
+    if provider_raw not in {"copilot", "mock"}:
         raise SystemExit(
-            "FAIL: KERNEL_LLM_PROVIDER must be one of openai_compatible|ollama|mock"
+            "FAIL: KERNEL_LLM_PROVIDER must be one of copilot|mock"
         )
     provider = cast(Provider, provider_raw)
     model = os.environ.get("KERNEL_LLM_MODEL", "gpt-4.1-mini")

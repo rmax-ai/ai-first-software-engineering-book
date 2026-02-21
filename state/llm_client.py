@@ -3,9 +3,7 @@
 
 Design goals:
 - stdlib-only (no extra dependencies)
-- provider-agnostic, but with pragmatic support for:
-  - OpenAI-compatible Chat Completions API
-  - Ollama /api/chat
+- Copilot SDK backed (with deterministic mock fallback)
 - returns token-usage when the provider supplies it
 
 This module deliberately does not attempt retries/backoff; the kernel remains
@@ -18,13 +16,11 @@ import asyncio
 import importlib
 import json
 import os
-import urllib.error
-import urllib.request
 from dataclasses import dataclass
 from typing import Any, Literal
 
 
-Provider = Literal["openai_compatible", "ollama", "mock"]
+Provider = Literal["copilot", "mock"]
 
 
 class LLMClientError(RuntimeError):
@@ -51,7 +47,7 @@ class LLMClient:
         provider: Provider,
         model: str,
         base_url: str | None = None,
-        api_key_env: str = "OPENAI_API_KEY",
+        api_key_env: str = "COPILOT_API_KEY",
         timeout_s: int = 90,
     ) -> None:
         self._provider: Provider = provider
@@ -63,10 +59,6 @@ class LLMClient:
         self._sdk_session: Any | None = None
         self._sdk_loop: asyncio.AbstractEventLoop | None = None
 
-        if self._provider == "openai_compatible" and not self._base_url:
-            self._base_url = "https://api.openai.com/v1"
-        if self._provider == "ollama" and not self._base_url:
-            self._base_url = "http://localhost:11434"
 
     @property
     def provider(self) -> Provider:
@@ -141,14 +133,12 @@ class LLMClient:
     ) -> LLMResponse:
         if self._provider == "mock":
             return self._chat_mock(messages=messages)
+        if self._provider != "copilot":
+            raise LLMClientError(f"Unknown provider: {self._provider}")
         sdk_response = self._chat_copilot_sdk(messages=messages, temperature=temperature, max_tokens=max_tokens)
-        if sdk_response is not None:
-            return sdk_response
-        if self._provider == "openai_compatible":
-            return self._chat_openai_compatible(messages=messages, temperature=temperature, max_tokens=max_tokens)
-        if self._provider == "ollama":
-            return self._chat_ollama(messages=messages, temperature=temperature, max_tokens=max_tokens)
-        raise LLMClientError(f"Unknown provider: {self._provider}")
+        if sdk_response is None:
+            raise LLMClientError("Copilot SDK unavailable (install github-copilot-sdk or disable --llm)")
+        return sdk_response
 
     def _run_async(self, awaitable: Any) -> Any:
         try:
@@ -192,8 +182,6 @@ class LLMClient:
                     options_kwargs: dict[str, Any] = {}
                     if self._base_url:
                         options_kwargs["base_url"] = self._base_url
-                    if self._provider:
-                        options_kwargs["provider"] = self._provider
                     api_key = os.environ.get(self._api_key_env, "").strip()
                     if api_key:
                         options_kwargs["api_key"] = api_key
@@ -385,107 +373,6 @@ class LLMClient:
                 completion_tokens=int(getattr(payload, "completion_tokens", 0) or 0),
             )
         return None
-
-    def _http_json(self, *, url: str, payload: dict[str, Any], headers: dict[str, str] | None = None) -> dict[str, Any]:
-        body = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(
-            url=url,
-            data=body,
-            headers={"Content-Type": "application/json", **(headers or {})},
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=self._timeout_s) as resp:
-                raw = resp.read().decode("utf-8")
-        except urllib.error.HTTPError as exc:
-            details = ""
-            try:
-                details = exc.read().decode("utf-8")
-            except Exception:
-                details = ""
-            raise LLMClientError(f"HTTP {exc.code} from LLM provider: {details or exc}") from exc
-        except urllib.error.URLError as exc:
-            raise LLMClientError(f"LLM provider connection error: {exc}") from exc
-
-        try:
-            out = json.loads(raw)
-        except json.JSONDecodeError as exc:
-            raise LLMClientError(f"LLM provider returned non-JSON response: {raw[:500]}") from exc
-
-        if not isinstance(out, dict):
-            raise LLMClientError("LLM provider returned unexpected JSON shape (expected object)")
-        return out
-
-    def _chat_openai_compatible(
-        self,
-        *,
-        messages: list[dict[str, str]],
-        temperature: float,
-        max_tokens: int | None,
-    ) -> LLMResponse:
-        api_key = os.environ.get(self._api_key_env, "").strip()
-        if not api_key:
-            raise LLMClientError(
-                f"Missing API key env var {self._api_key_env}. "
-                "Set it or use --llm-provider ollama (local) or --llm-provider mock."
-            )
-
-        payload: dict[str, Any] = {
-            "model": self._model,
-            "messages": messages,
-            "temperature": float(temperature),
-        }
-        if max_tokens is not None:
-            payload["max_tokens"] = int(max_tokens)
-
-        out = self._http_json(
-            url=f"{self._base_url}/chat/completions",
-            payload=payload,
-            headers={"Authorization": f"Bearer {api_key}"},
-        )
-
-        try:
-            content = out["choices"][0]["message"]["content"]
-        except Exception as exc:
-            raise LLMClientError("OpenAI-compatible response missing choices[0].message.content") from exc
-
-        usage_raw = out.get("usage")
-        usage = LLMUsage(
-            prompt_tokens=int(usage_raw.get("prompt_tokens", 0) or 0) if isinstance(usage_raw, dict) else 0,
-            completion_tokens=int(usage_raw.get("completion_tokens", 0) or 0) if isinstance(usage_raw, dict) else 0,
-        )
-        return LLMResponse(content=str(content), usage=usage, raw=out)
-
-    def _chat_ollama(
-        self,
-        *,
-        messages: list[dict[str, str]],
-        temperature: float,
-        max_tokens: int | None,
-    ) -> LLMResponse:
-        payload: dict[str, Any] = {
-            "model": self._model,
-            "messages": messages,
-            "stream": False,
-            "options": {
-                "temperature": float(temperature),
-            },
-        }
-        if max_tokens is not None:
-            payload["options"]["num_predict"] = int(max_tokens)
-
-        out = self._http_json(url=f"{self._base_url}/api/chat", payload=payload)
-
-        try:
-            content = out["message"]["content"]
-        except Exception as exc:
-            raise LLMClientError("Ollama response missing message.content") from exc
-
-        # Ollama usage fields vary by version; normalize best-effort.
-        prompt_tokens = int(out.get("prompt_eval_count", 0) or 0)
-        completion_tokens = int(out.get("eval_count", 0) or 0)
-        usage = LLMUsage(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens)
-        return LLMResponse(content=str(content), usage=usage, raw=out)
 
     def _chat_mock(self, *, messages: list[dict[str, str]]) -> LLMResponse:
         # Deterministic, safe mock: always produces schema-conforming outputs that

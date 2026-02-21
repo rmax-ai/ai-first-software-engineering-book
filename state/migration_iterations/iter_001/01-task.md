@@ -8,4 +8,4 @@ This is the smallest unfinished migration prerequisite for kernel-managed SDK/cl
 
 ## Acceptance criteria
 - `LLMClient` exposes a `close()` method without changing existing `chat(...)` behavior.
-- Existing providers (`openai_compatible`, `ollama`, `mock`) remain unaffected.
+- Existing providers (`copilot`, `copilot`, `mock`) remain unaffected.

@@ -8,7 +8,7 @@
 - Behavior script exited code 0 and printed `validation-ok`.
 - Assertions passed for:
   - missing API key error mapping
-  - ollama connection failure error mapping
+  - copilot connection failure error mapping
   - mock deterministic planner/critic outputs
 - `py_compile` completed successfully.
 
