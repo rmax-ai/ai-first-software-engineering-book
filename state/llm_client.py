@@ -122,10 +122,7 @@ class LLMClient:
             return self._chat_mock(messages=messages)
         if self._provider != "copilot":
             raise LLMClientError(f"Unknown provider: {self._provider}")
-        sdk_response = self._chat_copilot_sdk(messages=messages, temperature=temperature, max_tokens=max_tokens)
-        if sdk_response is not None:
-            return sdk_response
-        return self._chat_copilot_http(messages=messages, temperature=temperature, max_tokens=max_tokens)
+        return self._chat_copilot_sdk(messages=messages, temperature=temperature, max_tokens=max_tokens)
 
     def _run_async(self, awaitable: Any) -> Any:
         try:
@@ -148,17 +145,19 @@ class LLMClient:
         messages: list[dict[str, str]],
         temperature: float,
         max_tokens: int | None,
-    ) -> LLMResponse | None:
+    ) -> LLMResponse:
         try:
             sdk_mod = importlib.import_module("copilot")
-        except ImportError:
-            return None
+        except ImportError as exc:
+            raise LLMClientError(
+                "Copilot SDK unavailable: install `github-copilot-sdk` to use provider='copilot'"
+            ) from exc
 
         copilot_client_cls = getattr(sdk_mod, "CopilotClient", None)
         client_options_cls = getattr(sdk_mod, "CopilotClientOptions", None)
         session_config_cls = getattr(sdk_mod, "SessionConfig", None)
         if not callable(copilot_client_cls):
-            return None
+            raise LLMClientError("Copilot SDK module missing required CopilotClient class")
 
         async def _send() -> LLMResponse:
             if self._sdk_client is None:

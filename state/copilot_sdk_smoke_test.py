@@ -3,23 +3,13 @@
 
 Usage:
   python state/copilot_sdk_smoke_test.py
-  python state/copilot_sdk_smoke_test.py --mode fallback
-  python state/copilot_sdk_smoke_test.py --mode fallback-error
-  python state/copilot_sdk_smoke_test.py --mode fallback-connection-error
-  python state/copilot_sdk_smoke_test.py --mode fallback-invalid-json
-  python state/copilot_sdk_smoke_test.py --mode fallback-timeout
-  python state/copilot_sdk_smoke_test.py --mode fallback-non-object
+  python state/copilot_sdk_smoke_test.py --mode sdk-unavailable
   python state/copilot_sdk_smoke_test.py --mode live
 
 Modes:
 - stub (default): installs an in-process fake `copilot` module and verifies
   that LLMClient uses the SDK path end-to-end without network or credentials.
-- fallback: forces SDK import unavailability and verifies deterministic HTTP fallback.
-- fallback-error: forces fallback path and asserts HTTP error mapping stays actionable.
-- fallback-connection-error: forces fallback transport failure and asserts connection error mapping.
-- fallback-invalid-json: forces fallback path with non-JSON payload and asserts error mapping.
-- fallback-timeout: forces fallback timeout and asserts timeout error mapping.
-- fallback-non-object: forces fallback path with non-object JSON and asserts error mapping.
+- sdk-unavailable: forces SDK import unavailability and verifies a clear SDK-required error.
 - live: uses the real installed `copilot` package and your configured provider.
 """
 
@@ -211,72 +201,35 @@ def run_live_mode() -> int:
     return 0
 
 
-def run_fallback_mode() -> int:
-    request_payload: dict[str, Any] = {}
-    response_payload = {
-        "choices": [{"message": {"content": "fallback-ok: pong"}}],
-        "usage": {"prompt_tokens": 11, "completion_tokens": 5},
-    }
-
-    class _Handler(BaseHTTPRequestHandler):
-        def do_POST(self) -> None:  # noqa: N802
-            if self.path != "/v1/chat/completions":
-                self.send_response(404)
-                self.end_headers()
-                return
-            length = int(self.headers.get("Content-Length", "0"))
-            body = self.rfile.read(length).decode("utf-8")
-            request_payload["body"] = json.loads(body)
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps(response_payload).encode("utf-8"))
-
-        def log_message(self, _format: str, *_args: Any) -> None:
-            return
-
-    server = ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-
+def run_sdk_unavailable_mode() -> int:
     import_module = llm_client.importlib.import_module
 
     def _patched_import(name: str, package: str | None = None) -> Any:
         if name == "copilot":
-            raise ImportError("forced for fallback test")
+            raise ImportError("forced for unavailable-sdk test")
         return import_module(name, package)
 
     llm_client.importlib.import_module = _patched_import
-    client = LLMClient(provider="copilot", model="stub-model", base_url=f"http://127.0.0.1:{server.server_port}")
+    client = LLMClient(provider="copilot", model="stub-model")
     try:
-        response = client.chat(
-            messages=[
-                {"role": "system", "content": "Return a short answer."},
-                {"role": "user", "content": "pong"},
-            ],
-            temperature=0.0,
-            max_tokens=16,
-        )
+        try:
+            client.chat(
+                messages=[
+                    {"role": "system", "content": "Return a short answer."},
+                    {"role": "user", "content": "pong"},
+                ],
+                temperature=0.0,
+                max_tokens=16,
+            )
+            raise AssertionError("expected SDK unavailable error")
+        except LLMClientError as exc:
+            message = str(exc)
+            assert "Copilot SDK unavailable" in message, "missing SDK unavailable context"
     finally:
         client.close()
         llm_client.importlib.import_module = import_module
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=2.0)
 
-    body = cast(dict[str, Any], request_payload.get("body", {}))
-    assert response.content == "fallback-ok: pong", "unexpected fallback content"
-    assert response.usage.prompt_tokens == 11, "unexpected fallback prompt token count"
-    assert response.usage.completion_tokens == 5, "unexpected fallback completion token count"
-    assert body.get("messages", [{}])[-1].get("content") == "pong", "unexpected fallback request payload"
-
-    print("PASS: deterministic HTTP fallback path works")
-    print(f"content={response.content!r}")
-    print(
-        "usage="
-        f"prompt_tokens={response.usage.prompt_tokens},"
-        f" completion_tokens={response.usage.completion_tokens}"
-    )
+    print("PASS: copilot provider requires SDK when module is unavailable")
     return 0
 
 
@@ -527,33 +480,18 @@ def main() -> int:
         "--mode",
         choices=[
             "stub",
-            "fallback",
-            "fallback-error",
-            "fallback-connection-error",
-            "fallback-invalid-json",
-            "fallback-timeout",
-            "fallback-non-object",
+            "sdk-unavailable",
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, fallback = forced HTTP fallback, fallback-error = forced HTTP fallback error, fallback-connection-error = forced HTTP fallback connection error, fallback-invalid-json = forced HTTP fallback invalid JSON, fallback-timeout = forced HTTP fallback timeout, fallback-non-object = forced HTTP fallback non-object JSON payload, live = real provider call",
+        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, live = real provider call",
     )
     args = parser.parse_args()
 
     if args.mode == "stub":
         return run_stub_mode()
-    if args.mode == "fallback":
-        return run_fallback_mode()
-    if args.mode == "fallback-error":
-        return run_fallback_error_mode()
-    if args.mode == "fallback-connection-error":
-        return run_fallback_connection_error_mode()
-    if args.mode == "fallback-invalid-json":
-        return run_fallback_invalid_json_mode()
-    if args.mode == "fallback-timeout":
-        return run_fallback_timeout_mode()
-    if args.mode == "fallback-non-object":
-        return run_fallback_non_object_mode()
+    if args.mode == "sdk-unavailable":
+        return run_sdk_unavailable_mode()
     return run_live_mode()
 
 
