@@ -7,7 +7,7 @@ Run one live-provider Copilot SDK smoke pass and capture migration evidence for 
 Deterministic shutdown hardening coverage is now broad; the highest remaining migration risk is unverified real-provider runtime behavior in this iteration sequence.
 
 ## Concrete acceptance criteria
-- Execute `python state/copilot_sdk_smoke_test.py --mode live` in an environment with valid provider credentials.
+- Execute `uv run python state/copilot_sdk_smoke_test.py --mode live` in an environment with valid provider credentials.
 - Capture whether planner/writer/critic-style path assumptions remain valid for a real provider response shape and usage extraction.
 - Record command output and clear pass/fail evidence in iteration artifacts.
 
