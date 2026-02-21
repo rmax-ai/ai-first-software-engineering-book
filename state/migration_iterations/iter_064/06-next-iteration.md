@@ -7,7 +7,7 @@ Normalize the next remaining direct legacy snippet in `state/migration_iteration
 After updating the highest-priority remaining snippet in `iter_045`, the next direct command snippet still in bare form is in `iter_024/07-summary.md`.
 
 ## Concrete acceptance criteria
-- `rg -n "\`python state/copilot_sdk_smoke_test.py --mode fallback-timeout\`" state/migration_iterations/iter_024/07-summary.md` finds the legacy snippet before edit.
+- `rg -n "\`uv run python state/copilot_sdk_smoke_test.py --mode fallback-timeout\`" state/migration_iterations/iter_024/07-summary.md` finds the normalized snippet wording.
 - Update that snippet to `uv run python state/copilot_sdk_smoke_test.py --mode fallback-timeout`.
 - Capture `rg` and `git --no-pager diff -- state/migration_iterations/iter_024/07-summary.md` evidence in the new iteration artifacts.
 
