@@ -102,7 +102,7 @@ Rollback:
 ## Test Plan
 
 1. **Deterministic regression**: run kernel with mock provider and verify no workflow regressions.
-2. **Live provider smoke test**: run one chapter iteration with SDK-backed provider.
+2. **Live provider smoke test**: run `uv run python state/copilot_sdk_smoke_test.py --mode live` with SDK-backed provider.
 3. **Failure path test**: induce auth/transport failure and verify clean stop + clear error propagation.
 4. **Resource accounting test**: verify prompt/completion token fields persist and stay numeric.
 

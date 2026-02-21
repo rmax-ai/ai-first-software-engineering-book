@@ -2,24 +2,24 @@
 """Small Copilot SDK smoke test for state/llm_client.py.
 
 Usage:
-  python state/copilot_sdk_smoke_test.py
-  python state/copilot_sdk_smoke_test.py --mode sdk-unavailable
-  python state/copilot_sdk_smoke_test.py --mode bootstrap-failure
-  python state/copilot_sdk_smoke_test.py --mode shutdown-failure
-  python state/copilot_sdk_smoke_test.py --mode stop-unavailable
-  python state/copilot_sdk_smoke_test.py --mode destroy-unavailable
-  python state/copilot_sdk_smoke_test.py --mode destroy-failure
-  python state/copilot_sdk_smoke_test.py --mode force-stop-unavailable
-  python state/copilot_sdk_smoke_test.py --mode force-stop-close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode stop-close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode destroy-close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode destroy-unavailable-close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode stop-destroy-unavailable-close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode stop-unavailable-destroy-failure-close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-unavailable-close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency
-  python state/copilot_sdk_smoke_test.py --mode live
+  uv run python state/copilot_sdk_smoke_test.py
+  uv run python state/copilot_sdk_smoke_test.py --mode sdk-unavailable
+  uv run python state/copilot_sdk_smoke_test.py --mode bootstrap-failure
+  uv run python state/copilot_sdk_smoke_test.py --mode shutdown-failure
+  uv run python state/copilot_sdk_smoke_test.py --mode stop-unavailable
+  uv run python state/copilot_sdk_smoke_test.py --mode destroy-unavailable
+  uv run python state/copilot_sdk_smoke_test.py --mode destroy-failure
+  uv run python state/copilot_sdk_smoke_test.py --mode force-stop-unavailable
+  uv run python state/copilot_sdk_smoke_test.py --mode force-stop-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode stop-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode destroy-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode destroy-unavailable-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode stop-destroy-unavailable-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode stop-unavailable-destroy-failure-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-unavailable-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode live
 
 Modes:
 - stub (default): installs an in-process fake `copilot` module and verifies
