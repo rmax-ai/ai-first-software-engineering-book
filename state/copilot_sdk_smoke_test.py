@@ -16,6 +16,7 @@ Usage:
   python state/copilot_sdk_smoke_test.py --mode destroy-close-idempotency
   python state/copilot_sdk_smoke_test.py --mode destroy-unavailable-close-idempotency
   python state/copilot_sdk_smoke_test.py --mode stop-destroy-unavailable-close-idempotency
+  python state/copilot_sdk_smoke_test.py --mode stop-unavailable-destroy-failure-close-idempotency
   python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-unavailable-close-idempotency
   python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency
   python state/copilot_sdk_smoke_test.py --mode live
@@ -36,6 +37,7 @@ Modes:
 - destroy-close-idempotency: forces session.destroy() failure then verifies a second close() is a no-op.
 - destroy-unavailable-close-idempotency: forces session.destroy() unavailable then verifies a second close() is a no-op.
 - stop-destroy-unavailable-close-idempotency: forces both stop() and session.destroy() unavailable, then verifies a second close() is a no-op.
+- stop-unavailable-destroy-failure-close-idempotency: forces stop() unavailable and session.destroy() failure, then verifies a second close() is a no-op.
 - stop-failure-destroy-unavailable-close-idempotency: forces stop() failure and session.destroy() unavailable, then verifies a second close() is a no-op.
 - stop-failure-destroy-failure-close-idempotency: forces stop() and session.destroy() failures, then verifies a second close() is a no-op.
 - live: uses the real installed `copilot` package and your configured provider.
@@ -612,6 +614,40 @@ def run_stop_failure_destroy_unavailable_close_idempotency_mode() -> int:
     return 0
 
 
+def run_stop_unavailable_destroy_failure_close_idempotency_mode() -> int:
+    client = _init_shutdown_mode_client("stop-unavailable-destroy-failure-close-idempotency")
+    first_message = ""
+    try:
+        async def _patched_destroy_failure() -> None:
+            raise RuntimeError("forced destroy failure")
+
+        sdk_client = client._sdk_client
+        assert sdk_client is not None, "expected SDK client to be initialized"
+        setattr(sdk_client, "stop", None)
+        sdk_session = client._sdk_session
+        assert sdk_session is not None, "expected SDK session to be initialized"
+        setattr(sdk_session, "destroy", _patched_destroy_failure)
+
+        try:
+            client.close()
+            raise AssertionError("expected stop unavailable/destroy failure")
+        except LLMClientError as exc:
+            first_message = str(exc)
+            assert "Copilot SDK shutdown failed:" in first_message, "missing shutdown failure context"
+            assert "stop() unavailable" in first_message, "missing stop() unavailable detail"
+            assert "session.destroy()=forced destroy failure" in first_message, "missing destroy() failure detail"
+
+        client.close()
+        assert first_message, "expected first close() failure message"
+    finally:
+        _teardown_shutdown_mode_client(client)
+
+    print(
+        "PASS: stop-unavailable-destroy-failure-close-idempotency mode validates repeated close() after stop() unavailable and destroy() failure"
+    )
+    return 0
+
+
 def run_stop_failure_destroy_failure_close_idempotency_mode() -> int:
     client = _init_shutdown_mode_client("stop-failure-destroy-failure-close-idempotency")
     first_message = ""
@@ -668,12 +704,13 @@ def main() -> int:
             "destroy-close-idempotency",
             "destroy-unavailable-close-idempotency",
             "stop-destroy-unavailable-close-idempotency",
+            "stop-unavailable-destroy-failure-close-idempotency",
             "stop-failure-destroy-unavailable-close-idempotency",
             "stop-failure-destroy-failure-close-idempotency",
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, live = real provider call",
+        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, stop-unavailable-destroy-failure-close-idempotency = repeated close() after stop() unavailable and destroy() failure, stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, live = real provider call",
     )
     args = parser.parse_args()
 
@@ -705,6 +742,8 @@ def main() -> int:
         return run_destroy_unavailable_close_idempotency_mode()
     if args.mode == "stop-destroy-unavailable-close-idempotency":
         return run_stop_destroy_unavailable_close_idempotency_mode()
+    if args.mode == "stop-unavailable-destroy-failure-close-idempotency":
+        return run_stop_unavailable_destroy_failure_close_idempotency_mode()
     if args.mode == "stop-failure-destroy-unavailable-close-idempotency":
         return run_stop_failure_destroy_unavailable_close_idempotency_mode()
     if args.mode == "stop-failure-destroy-failure-close-idempotency":
