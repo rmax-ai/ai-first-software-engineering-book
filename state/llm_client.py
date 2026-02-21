@@ -73,13 +73,27 @@ class LLMClient:
 
     def close(self) -> None:
         """Compatibility shutdown hook for kernel-managed lifecycle."""
-        if self._sdk_client is not None:
-            stop_fn = getattr(self._sdk_client, "stop", None)
+        if self._sdk_client is None:
+            return None
+        stop_fn = getattr(self._sdk_client, "stop", None)
+        try:
             if callable(stop_fn):
                 self._run_async(stop_fn())
+                return None
+            raise LLMClientError("Copilot SDK shutdown failed: stop() unavailable")
+        except Exception as stop_exc:
             force_stop_fn = getattr(self._sdk_client, "force_stop", None)
+            stop_detail = str(stop_exc).strip() or stop_exc.__class__.__name__
             if callable(force_stop_fn):
-                self._run_async(force_stop_fn())
+                try:
+                    self._run_async(force_stop_fn())
+                    return None
+                except Exception as force_exc:
+                    force_detail = str(force_exc).strip() or force_exc.__class__.__name__
+                    raise LLMClientError(
+                        f"Copilot SDK shutdown failed: stop()={stop_detail}; force_stop()={force_detail}"
+                    ) from force_exc
+            raise LLMClientError(f"Copilot SDK shutdown failed: stop()={stop_detail}; force_stop() unavailable") from stop_exc
         return None
 
     def chat(
