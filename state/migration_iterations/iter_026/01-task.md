@@ -9,4 +9,4 @@ Remove legacy HTTP fallback routing for Copilot provider and require Copilot SDK
 ## Acceptance criteria
 - `LLMClient.chat()` no longer routes Copilot requests to `_chat_copilot_http(...)`.
 - Missing SDK for `provider="copilot"` raises clear `LLMClientError` without HTTP fallback.
-- `python state/copilot_sdk_smoke_test.py --mode stub` passes.
+- `uv run python state/copilot_sdk_smoke_test.py --mode stub` passes.

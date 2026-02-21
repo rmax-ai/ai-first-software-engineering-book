@@ -9,7 +9,7 @@ This iteration switched runtime behavior to SDK-only, leaving dead fallback code
 ## Acceptance criteria
 - Unused fallback helper path in `state/llm_client.py` is removed if no callers remain.
 - Unreachable fallback smoke helper functions/mode documentation are removed from `state/copilot_sdk_smoke_test.py`.
-- `python state/copilot_sdk_smoke_test.py --mode stub` and `--mode sdk-unavailable` still pass.
+- `uv run python state/copilot_sdk_smoke_test.py --mode stub` and `--mode sdk-unavailable` still pass.
 
 ## Expected files to touch
 - `state/llm_client.py`
