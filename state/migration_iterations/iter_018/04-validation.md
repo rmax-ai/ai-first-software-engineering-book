@@ -2,7 +2,7 @@
 
 ## Verification commands run
 1. `python -m py_compile state/llm_client.py`
-2. `python state/copilot_sdk_smoke_test.py --mode stub`
+2. `uv run python state/copilot_sdk_smoke_test.py --mode stub`
 3. Inline fallback harness command (local server + forced SDK import failure)
 
 ## Observed outputs/results
