@@ -1,12 +1,12 @@
 # Risks and Decisions
 
 ## Risks discovered
-- If `session.get_messages()` omits events for the current message ID, usage can still fall back to zero.
-- Event schema drift across SDK versions may still affect message/usage correlation.
+- Kernel does not yet call `close()` in a `finally` block, so cleanup is still best-effort.
 
 ## Decisions and trade-offs
-- Reused existing `_response_from_sdk_events(...)` instead of adding new parsing logic to keep diff minimal.
-- Kept fallback strictly conditional on missing message usage to avoid extra event fetches on normal paths.
+- Implemented only a no-op compatibility hook now to keep this iteration minimal and low-risk.
+- Deferred kernel control-flow edits to a dedicated follow-up iteration.
 
-## Deferred
-- Adding a dedicated regression test that simulates `send_and_wait` returning message-only events without usage.
+## Intentionally deferred
+- `state/kernel.py` teardown wiring (`finally` + `client.close()` / `client.stop()` fallback).
+
