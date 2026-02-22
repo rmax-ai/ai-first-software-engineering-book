@@ -1235,15 +1235,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-regression-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1408,15 +1400,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode()
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1438,15 +1422,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1468,15 +1444,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1498,15 +1466,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1528,15 +1488,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1558,15 +1510,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1588,15 +1532,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1618,15 +1554,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1648,15 +1576,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1678,15 +1598,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1708,15 +1620,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1738,15 +1642,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1768,15 +1664,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1798,15 +1686,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1828,15 +1708,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1858,15 +1730,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1888,15 +1752,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1918,15 +1774,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1948,15 +1796,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -1977,15 +1817,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -2007,15 +1839,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
@@ -2036,15 +1860,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
