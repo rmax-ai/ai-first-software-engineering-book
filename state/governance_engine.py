@@ -87,6 +87,13 @@ class GovernanceCLIArgsPayload(BaseModel):
     status: str = "active_refinement"
 
 
+class ChapterStatusUpdatePayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    chapter_id: list[str]
+    status: str
+
+
 class LedgerPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -184,6 +191,22 @@ class GovernanceCLIArgsTransit:
             ledger=self.payload.ledger,
             chapter_id=list(self.payload.chapter_id),
             status=self.payload.status,
+        )
+
+
+@dataclass(frozen=True)
+class ChapterStatusUpdateTransit:
+    payload: ChapterStatusUpdatePayload
+
+    @classmethod
+    def from_namespace(cls, args: argparse.Namespace) -> "ChapterStatusUpdateTransit":
+        return cls(
+            payload=ChapterStatusUpdatePayload.model_validate(
+                {
+                    "chapter_id": [str(chapter_id) for chapter_id in getattr(args, "chapter_id", [])],
+                    "status": str(getattr(args, "status", "active_refinement")),
+                }
+            )
         )
 
 
@@ -544,6 +567,10 @@ def _cmd_promotions(args: argparse.Namespace) -> int:
 
 
 def _cmd_unhold(args: argparse.Namespace) -> int:
+    try:
+        status_update = ChapterStatusUpdateTransit.from_namespace(args)
+    except ValidationError as exc:
+        raise GovernanceError(f"Invalid status update payload: {exc}") from exc
     ledger_transit = _load_ledger(args.ledger)
     ledger = ledger_transit.as_ledger_dict()
     errors = validate_ledger(ledger)
@@ -553,14 +580,14 @@ def _cmd_unhold(args: argparse.Namespace) -> int:
             sys.stderr.write(f"- {err}\n")
         return 1
 
-    new_status = str(args.status)
+    new_status = status_update.payload.status
     if new_status in {"hold", "locked"}:
         sys.stderr.write("Refusing to set status to hold/locked; choose an eligible status.\n")
         return 2
 
     chapters = _get_chapters(ledger)
     changed = 0
-    for chapter_id in args.chapter_id:
+    for chapter_id in status_update.payload.chapter_id:
         if chapter_id not in chapters:
             sys.stderr.write(f"Unknown chapter_id: {chapter_id}\n")
             return 2
@@ -581,6 +608,10 @@ def _cmd_unhold(args: argparse.Namespace) -> int:
 
 
 def _cmd_unlock(args: argparse.Namespace) -> int:
+    try:
+        status_update = ChapterStatusUpdateTransit.from_namespace(args)
+    except ValidationError as exc:
+        raise GovernanceError(f"Invalid status update payload: {exc}") from exc
     ledger_transit = _load_ledger(args.ledger)
     ledger = ledger_transit.as_ledger_dict()
     errors = validate_ledger(ledger)
@@ -590,14 +621,14 @@ def _cmd_unlock(args: argparse.Namespace) -> int:
             sys.stderr.write(f"- {err}\n")
         return 1
 
-    new_status = str(args.status)
+    new_status = status_update.payload.status
     if new_status in {"hold", "locked"}:
         sys.stderr.write("Refusing to set status to hold/locked; choose an eligible status.\n")
         return 2
 
     chapters = _get_chapters(ledger)
     changed = 0
-    for chapter_id in args.chapter_id:
+    for chapter_id in status_update.payload.chapter_id:
         if chapter_id not in chapters:
             sys.stderr.write(f"Unknown chapter_id: {chapter_id}\n")
             return 2
