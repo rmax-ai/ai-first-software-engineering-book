@@ -106,6 +106,7 @@ class LedgerJSONTransit:
 
 @dataclass(frozen=True)
 class LedgerTransit:
+    json_mapping: LedgerJSONTransit
     raw: dict[str, Any]
     payload: LedgerPayload
 
@@ -154,12 +155,13 @@ def _dump_json(data: Any) -> str:
 
 
 def _load_ledger(path: Path) -> LedgerTransit:
-    raw = _load_json(path).to_mapping()
+    json_mapping = _load_json(path)
+    raw = json_mapping.to_mapping()
     try:
         payload = LedgerPayload.model_validate(raw)
     except ValidationError as exc:
         raise GovernanceError(f"Invalid ledger payload: {exc}") from exc
-    return LedgerTransit(raw=raw, payload=payload)
+    return LedgerTransit(json_mapping=json_mapping, raw=raw, payload=payload)
 
 
 def _get_chapters(ledger: dict[str, Any]) -> dict[str, dict[str, Any]]:
