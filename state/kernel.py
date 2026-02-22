@@ -88,6 +88,55 @@ class LLMRun:
     usage: Any
 
 
+class KernelCLIArgsPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    chapter_id: str | None = None
+    list_chapters: bool = False
+    io_dir: Path
+    max_iterations: int
+    max_diff_ratio: float
+    max_drift_score: float
+    require_two_consecutive_passes: bool | None = None
+    commit: bool = False
+    verbose: bool = False
+    llm: bool = False
+    llm_provider: str
+    llm_model: str
+    llm_base_url: str | None = None
+    llm_api_key_env: str
+    llm_timeout_s: int
+
+
+@dataclass(frozen=True)
+class KernelCLIArgsTransit:
+    payload: KernelCLIArgsPayload
+
+    @classmethod
+    def from_namespace(cls, args: argparse.Namespace) -> "KernelCLIArgsTransit":
+        return cls(
+            payload=KernelCLIArgsPayload.model_validate(
+                {
+                    "chapter_id": str(args.chapter_id) if args.chapter_id is not None else None,
+                    "list_chapters": bool(args.list_chapters),
+                    "io_dir": Path(args.io_dir),
+                    "max_iterations": int(args.max_iterations),
+                    "max_diff_ratio": float(args.max_diff_ratio),
+                    "max_drift_score": float(args.max_drift_score),
+                    "require_two_consecutive_passes": args.require_two_consecutive_passes,
+                    "commit": bool(args.commit),
+                    "verbose": bool(args.verbose),
+                    "llm": bool(args.llm),
+                    "llm_provider": str(args.llm_provider),
+                    "llm_model": str(args.llm_model),
+                    "llm_base_url": str(args.llm_base_url) if args.llm_base_url else None,
+                    "llm_api_key_env": str(args.llm_api_key_env),
+                    "llm_timeout_s": int(args.llm_timeout_s),
+                }
+            )
+        )
+
+
 class PlannerInputPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1900,7 +1949,12 @@ def run_kernel(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="kernel", description="Deterministic Planner→Writer→Critic refinement kernel")
-    parser.add_argument("--chapter-id", required=True)
+    parser.add_argument("--chapter-id")
+    parser.add_argument(
+        "--list-chapters",
+        action="store_true",
+        help="List available chapter IDs (from book/chapters/*.md) and exit.",
+    )
     parser.add_argument("--io-dir", type=Path, default=REPO_ROOT / "state" / "role_io")
     parser.add_argument("--max-iterations", type=int, default=3)
     parser.add_argument("--max-diff-ratio", type=float, default=0.35)
@@ -1955,15 +2009,34 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     args = parser.parse_args(argv)
-    require_two_consecutive_passes = True if args.require_two_consecutive_passes is None else bool(args.require_two_consecutive_passes)
+    try:
+        cli_args = KernelCLIArgsTransit.from_namespace(args)
+    except ValidationError as exc:
+        raise KernelError(f"Invalid CLI args payload: {exc}") from exc
+
+    if cli_args.payload.list_chapters:
+        chapters_dir = REPO_ROOT / "book" / "chapters"
+        chapter_paths = sorted(chapters_dir.glob("*.md"))
+        for path in chapter_paths:
+            sys.stdout.write(path.stem + "\n")
+        return 0
+
+    chapter_id = cli_args.payload.chapter_id
+    if not chapter_id:
+        raise KernelError("--chapter-id is required (or use --list-chapters)")
+    require_two_consecutive_passes = (
+        True
+        if cli_args.payload.require_two_consecutive_passes is None
+        else bool(cli_args.payload.require_two_consecutive_passes)
+    )
 
     llm_cfg: LLMConfig | None = None
-    if bool(args.llm):
-        provider = str(args.llm_provider)
+    if cli_args.payload.llm:
+        provider = cli_args.payload.llm_provider
         allowed = {"copilot", "mock"}
         if provider not in allowed:
             raise KernelError(f"--llm-provider must be one of {sorted(allowed)}")
-        model = str(args.llm_model).strip()
+        model = cli_args.payload.llm_model.strip()
         if not model and provider != "mock":
             raise KernelError("--llm-model (or env KERNEL_LLM_MODEL) is required when --llm is set")
 
@@ -1971,21 +2044,21 @@ def main(argv: list[str] | None = None) -> int:
             enabled=True,
             provider=provider,  # type: ignore[arg-type]
             model=model or "mock",
-            base_url=(str(args.llm_base_url) if args.llm_base_url else None),
-            api_key_env=str(args.llm_api_key_env),
-            timeout_s=int(args.llm_timeout_s),
+            base_url=(cli_args.payload.llm_base_url if cli_args.payload.llm_base_url else None),
+            api_key_env=cli_args.payload.llm_api_key_env,
+            timeout_s=cli_args.payload.llm_timeout_s,
         )
     try:
         return int(
             run_kernel(
-                chapter_id=str(args.chapter_id),
-                io_dir=Path(args.io_dir),
-                max_iterations=int(args.max_iterations),
-                max_diff_ratio=float(args.max_diff_ratio),
-                max_drift_score=float(args.max_drift_score),
+                chapter_id=chapter_id,
+                io_dir=cli_args.payload.io_dir,
+                max_iterations=cli_args.payload.max_iterations,
+                max_diff_ratio=cli_args.payload.max_diff_ratio,
+                max_drift_score=cli_args.payload.max_drift_score,
                 require_two_consecutive_passes=require_two_consecutive_passes,
-                commit_on_refine=bool(args.commit),
-                verbose=bool(args.verbose),
+                commit_on_refine=cli_args.payload.commit,
+                verbose=cli_args.payload.verbose,
                 llm_config=llm_cfg,
             )
         )
