@@ -94,6 +94,14 @@ class ChapterTextPayload(BaseModel):
     text: str
 
 
+class CriticEvalInputsPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    chapter_quality: str
+    style_guard: str
+    drift_detection: str
+
+
 class LedgerChapterPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -253,6 +261,11 @@ class RoadmapTextTransit:
 
     def to_text(self) -> str:
         return self.payload.text
+
+
+@dataclass(frozen=True)
+class CriticEvalInputsTransit:
+    payload: CriticEvalInputsPayload
 
 
 @dataclass(frozen=True)
@@ -425,6 +438,20 @@ def _load_roadmap_text(path: Path) -> RoadmapTextTransit:
     return RoadmapTextTransit(payload=payload)
 
 
+def _load_critic_eval_inputs() -> CriticEvalInputsTransit:
+    try:
+        payload = CriticEvalInputsPayload.model_validate(
+            {
+                "chapter_quality": _read_text(EVAL_CHAPTER_QUALITY_PATH),
+                "style_guard": _read_text(EVAL_STYLE_GUARD_PATH),
+                "drift_detection": _read_text(EVAL_DRIFT_DETECTION_PATH),
+            }
+        )
+    except ValidationError as exc:
+        raise KernelError(f"Invalid critic eval inputs payload: {exc}") from exc
+    return CriticEvalInputsTransit(payload=payload)
+
+
 def _strip_wrapping_code_fence(text: str) -> str:
     t = text.strip()
     if not t.startswith("```"):
@@ -592,19 +619,17 @@ def _llm_generate_writer(itdir: Path, llm: LLMRun, *, chapter_text: str, planner
 
 def _llm_generate_critic(itdir: Path, llm: LLMRun, *, revised_md: str) -> Any:
     contract = _read_prompt(REPO_ROOT / "prompts" / "critic.md")
-    cq = _read_text(EVAL_CHAPTER_QUALITY_PATH)
-    sg = _read_text(EVAL_STYLE_GUARD_PATH)
-    dd = _read_text(EVAL_DRIFT_DETECTION_PATH)
+    critic_eval_inputs = _load_critic_eval_inputs()
     user = (
         "Return JSON only. No code fences. No commentary.\n\n"
         + "evals/chapter-quality.yaml:\n"
-        + cq
+        + critic_eval_inputs.payload.chapter_quality
         + "\n\n"
         + "evals/style-guard.yaml:\n"
-        + sg
+        + critic_eval_inputs.payload.style_guard
         + "\n\n"
         + "evals/drift-detection.yaml:\n"
-        + dd
+        + critic_eval_inputs.payload.drift_detection
         + "\n\n"
         + "Revised chapter markdown:\n"
         + revised_md
