@@ -155,3 +155,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 |--------:|-----:|--------|-----------|--------|
 | 01-paradigm-shift | 1 | failed(1) | none | `this commit` |
 | 01-paradigm-shift | 2 | failed(1) | none | `this commit` |
+| 01-paradigm-shift | 3 | failed(1) | none | `this commit` |
