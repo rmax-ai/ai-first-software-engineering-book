@@ -10,8 +10,11 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +23,27 @@ LEDGER_PATH = REPO_ROOT / "state" / "ledger.json"
 
 class TemplateError(RuntimeError):
     pass
+
+
+class LedgerChapterPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    path: str
+    current_iteration: int | None = None
+
+
+class LedgerPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    chapters: dict[str, LedgerChapterPayload]
+
+
+@dataclass(frozen=True)
+class TemplateContext:
+    chapter_id: str
+    iteration: int
+    chapter_path: str
+    chapter_text: str
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -31,6 +55,14 @@ def _load_json(path: Path) -> dict[str, Any]:
         raise TemplateError(f"Invalid JSON: {path}: {exc}") from exc
 
 
+def _load_ledger(path: Path) -> LedgerPayload:
+    raw = _load_json(path)
+    try:
+        return LedgerPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise TemplateError(f"Invalid ledger payload: {exc}") from exc
+
+
 def _write_if_missing(path: Path, content: str, *, force: bool) -> bool:
     if path.exists() and not force:
         return False
@@ -39,23 +71,39 @@ def _write_if_missing(path: Path, content: str, *, force: bool) -> bool:
     return True
 
 
-def _resolve_iteration(ledger: dict[str, Any], chapter_id: str, iteration: int | None) -> int:
-    chapters = ledger.get("chapters")
-    if not isinstance(chapters, dict) or chapter_id not in chapters or not isinstance(chapters[chapter_id], dict):
+def _resolve_iteration(ledger: LedgerPayload, chapter_id: str, iteration: int | None) -> int:
+    chapter = ledger.chapters.get(chapter_id)
+    if chapter is None:
         raise TemplateError(f"Unknown chapter_id: {chapter_id}")
-    meta: dict[str, Any] = chapters[chapter_id]
 
     if iteration is not None:
         if iteration <= 0:
             raise TemplateError("--iteration must be positive")
         return iteration
 
-    current_iteration_raw = meta.get("current_iteration", 0)
+    current_iteration_raw = chapter.current_iteration or 0
     try:
         current_iteration = int(current_iteration_raw)
     except (TypeError, ValueError):
         current_iteration = 0
     return current_iteration + 1
+
+
+def _build_template_context(ledger: LedgerPayload, chapter_id: str, iteration: int) -> TemplateContext:
+    chapter = ledger.chapters.get(chapter_id)
+    if chapter is None:
+        raise TemplateError(f"Unknown chapter_id: {chapter_id}")
+    chapter_file = REPO_ROOT / chapter.path
+    try:
+        chapter_text = chapter_file.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise TemplateError(f"Chapter file not found: {chapter_file}") from exc
+    return TemplateContext(
+        chapter_id=chapter_id,
+        iteration=iteration,
+        chapter_path=chapter.path,
+        chapter_text=chapter_text,
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -67,23 +115,12 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
 
-    ledger = _load_json(LEDGER_PATH)
+    ledger = _load_ledger(LEDGER_PATH)
     chapter_id = str(args.chapter_id)
     iteration = _resolve_iteration(ledger, chapter_id, args.iteration)
+    context = _build_template_context(ledger, chapter_id, iteration)
 
-    chapters = ledger["chapters"]
-    meta: dict[str, Any] = chapters[chapter_id]
-    chapter_path = meta.get("path")
-    if not isinstance(chapter_path, str) or not chapter_path:
-        raise TemplateError(f"Missing chapters.{chapter_id}.path")
-
-    chapter_file = REPO_ROOT / chapter_path
-    try:
-        chapter_text = chapter_file.read_text(encoding="utf-8")
-    except FileNotFoundError as exc:
-        raise TemplateError(f"Chapter file not found: {chapter_file}") from exc
-
-    it_dir = Path(args.io_dir) / chapter_id / f"iter_{iteration:02d}" / "out"
+    it_dir = Path(args.io_dir) / context.chapter_id / f"iter_{context.iteration:02d}" / "out"
 
     planner_template = {
         "focus_areas": [
@@ -111,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
         created.append("planner.json")
     if _write_if_missing(it_dir / "critic.json", json.dumps(critic_template, indent=2, sort_keys=True) + "\n", force=args.force):
         created.append("critic.json")
-    if _write_if_missing(it_dir / "writer.md", chapter_text, force=args.force):
+    if _write_if_missing(it_dir / "writer.md", context.chapter_text, force=args.force):
         created.append("writer.md")
 
     if created:
