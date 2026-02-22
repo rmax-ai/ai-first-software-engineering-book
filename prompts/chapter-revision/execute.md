@@ -164,3 +164,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 04-memory-systems | 1 | failed(1) | none | `a62625f` |
 | 04-memory-systems | 2 | failed(1) | none | `3d85759` |
 | 04-memory-systems | 3 | failed(1) | none | `68fc443` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `d0b8db7` |
