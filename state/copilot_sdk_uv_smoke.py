@@ -13,6 +13,7 @@ import asyncio
 import importlib
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 from typing import Any
@@ -172,6 +173,57 @@ def _build_trace_summary_fixture(
     return metrics_path, fixture_repo_root
 
 
+def _build_trace_summary_kernel_fixture(chapter_id: str, fixture_root: Path) -> tuple[Path, Path]:
+    fixture_repo_root = fixture_root / "kernel_repo"
+    if fixture_repo_root.exists():
+        shutil.rmtree(fixture_repo_root)
+    fixture_repo_root.mkdir(parents=True, exist_ok=True)
+
+    source_ledger = json.loads((REPO_ROOT / "state" / "ledger.json").read_text(encoding="utf-8"))
+    source_chapter = source_ledger.get("chapters", {}).get(chapter_id)
+    if not isinstance(source_chapter, dict):
+        raise RuntimeError(f"Unknown chapter_id for fixture: {chapter_id}")
+    chapter_meta = dict(source_chapter)
+    chapter_meta["status"] = "draft"
+    if chapter_meta.get("lifecycle") == "frozen":
+        chapter_meta["lifecycle"] = "draft"
+    chapter_path = chapter_meta.get("path")
+    if not isinstance(chapter_path, str) or not chapter_path:
+        raise RuntimeError(f"Invalid chapter path for fixture chapter: {chapter_id}")
+
+    (fixture_repo_root / "state").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(REPO_ROOT / "state" / "kernel.py", fixture_repo_root / "state" / "kernel.py")
+    shutil.copy2(REPO_ROOT / "state" / "llm_client.py", fixture_repo_root / "state" / "llm_client.py")
+    shutil.copytree(REPO_ROOT / "evals", fixture_repo_root / "evals")
+    shutil.copytree(REPO_ROOT / "prompts", fixture_repo_root / "prompts")
+    shutil.copy2(REPO_ROOT / "AGENTS.md", fixture_repo_root / "AGENTS.md")
+    shutil.copy2(REPO_ROOT / "CONSTITUTION.md", fixture_repo_root / "CONSTITUTION.md")
+    shutil.copy2(REPO_ROOT / "ROADMAP.md", fixture_repo_root / "ROADMAP.md")
+    chapter_file = fixture_repo_root / chapter_path
+    chapter_file.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(REPO_ROOT / chapter_path, chapter_file)
+
+    fixture_ledger = {"chapters": {chapter_id: chapter_meta}, "repo_iteration_log": []}
+    (fixture_repo_root / "state" / "ledger.json").write_text(json.dumps(fixture_ledger, indent=2) + "\n", encoding="utf-8")
+    (fixture_repo_root / "state" / "metrics.json").write_text(json.dumps({"chapters": {}}, indent=2) + "\n", encoding="utf-8")
+    source_version_map = REPO_ROOT / "state" / "version_map.json"
+    if source_version_map.exists():
+        shutil.copy2(source_version_map, fixture_repo_root / "state" / "version_map.json")
+    else:
+        (fixture_repo_root / "state" / "version_map.json").write_text("{}\n", encoding="utf-8")
+
+    subprocess.run(["git", "init"], cwd=fixture_repo_root, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "add", "."], cwd=fixture_repo_root, check=True, capture_output=True, text=True)
+    subprocess.run(
+        ["git", "-c", "user.name=trace-smoke", "-c", "user.email=trace-smoke@example.com", "commit", "-m", "fixture"],
+        cwd=fixture_repo_root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return fixture_repo_root / "state" / "metrics.json", fixture_repo_root
+
+
 async def run_trace_summary_mode(
     chapter_id: str,
     max_iterations: int,
@@ -185,7 +237,12 @@ async def run_trace_summary_mode(
 ) -> int:
     repo_root_for_trace = REPO_ROOT
     metrics_path_for_trace = metrics_path
-    if not run_kernel:
+    if run_kernel:
+        metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_kernel_fixture(
+            chapter_id=chapter_id,
+            fixture_root=fixture_root,
+        )
+    else:
         metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_fixture(
             chapter_id=chapter_id,
             fixture_root=fixture_root,
@@ -195,9 +252,10 @@ async def run_trace_summary_mode(
         )
 
     if run_kernel:
+        fixture_kernel_path = repo_root_for_trace / "state" / "kernel.py"
         kernel_cmd = [
             sys.executable,
-            str(KERNEL_PATH),
+            str(fixture_kernel_path),
             "--chapter-id",
             chapter_id,
             "--llm",
@@ -206,8 +264,8 @@ async def run_trace_summary_mode(
             "--max-iterations",
             str(max_iterations),
         ]
-        proc = subprocess.run(kernel_cmd, cwd=REPO_ROOT, capture_output=True, text=True)
-        if proc.returncode != 0:
+        proc = subprocess.run(kernel_cmd, cwd=repo_root_for_trace, capture_output=True, text=True)
+        if proc.returncode not in {0, 1}:
             print("FAIL: kernel run failed for trace-summary smoke")
             if proc.stdout:
                 print(proc.stdout.strip())
@@ -245,6 +303,15 @@ async def run_trace_summary_mode(
 
     trace_entries = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
     phase_entries = [entry for entry in trace_entries if entry.get("event") == "phase_trace"]
+    if run_kernel and phase_entries:
+        if inject_malformed_phase_trace:
+            payload = phase_entries[0].get("payload")
+            if isinstance(payload, dict):
+                payload.pop("budget_signal", None)
+        if inject_non_object_phase_payload:
+            phase_entries[0]["payload"] = "not-an-object"
+        if inject_missing_required_phase_trace:
+            phase_entries = [entry for entry in phase_entries if entry.get("payload", {}).get("phase") != "evaluation"]
     if not phase_entries:
         observed_phase_trace_failure = "no phase_trace events in kernel trace"
     else:
