@@ -83,39 +83,6 @@ Replace `<chapter>` with the chapter identifier listed below.
 - All kernel runs exited with code `1` after hitting max-iteration hold; chapters were re-opened via governance `unlock`/`unhold` before each pass as needed.
 - Total commits created for this loop: 24 (`chore: pass N for chapter ...`).
 
-## Re-run 2026-02-22T18:27:16Z
-| Chapter | Pass | Result | Subagents | Commit |
-|--------:|-----:|--------|-----------|--------|
-| 01-paradigm-shift | 1 | failed(1) | none | `d3e965a` |
-| 01-paradigm-shift | 2 | failed(1) | none | `ff2254c` |
-| 01-paradigm-shift | 3 | failed(1) | none | `3993913` |
-| 02-harness-engineering | 1 | failed(1) | none | `59db948` |
-| 02-harness-engineering | 2 | failed(1) | none | `f008970` |
-| 02-harness-engineering | 3 | failed(1) | none | `89b1654` |
-| 03-autonomous-kernels | 1 | failed(1) | none | `79451b8` |
-| 03-autonomous-kernels | 2 | failed(1) | none | `552d736` |
-| 03-autonomous-kernels | 3 | failed(1) | none | `92e2ce9` |
-| 04-memory-systems | 1 | failed(1) | none | `71421b7` |
-| 04-memory-systems | 2 | failed(1) | none | `6c504c4` |
-| 04-memory-systems | 3 | failed(1) | none | `ab6240b` |
-| 05-evaluation-and-traces | 1 | failed(1) | none | `d4790e3` |
-| 05-evaluation-and-traces | 2 | failed(1) | none | `0b6dc72` |
-| 05-evaluation-and-traces | 3 | failed(1) | none | `46f1d93` |
-| 06-agent-governance | 1 | failed(1) | none | `c4a9ccd` |
-| 06-agent-governance | 2 | failed(1) | none | `0937ed5` |
-| 06-agent-governance | 3 | failed(1) | none | `32f73c7` |
-| 07-production-ai-infrastructure | 1 | failed(1) | none | `9795ffe` |
-| 07-production-ai-infrastructure | 2 | failed(1) | none | `d922ad5` |
-| 07-production-ai-infrastructure | 3 | failed(1) | none | `8c0d5b9` |
-| 99-future-directions | 1 | failed(1) | none | `4863810` |
-| 99-future-directions | 2 | failed(1) | none | `df25a52` |
-| 99-future-directions | 3 | failed(1) | none | `731ed63` |
-### Re-run Summary (2026-02-22T18:27:16Z)
-- Completed 24/24 chapter passes so far.
-- Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 24.
-- Total commits created for this re-run loop: 24.
-
 ## Re-run 2026-02-22T18:32:14Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
@@ -144,6 +111,39 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 99-future-directions | 2 | failed(1) | none | `7d8d6f3` |
 | 99-future-directions | 3 | failed(1) | none | `201de5e` |
 ### Re-run Summary (2026-02-22T18:32:14Z)
+- Completed 24/24 chapter passes so far.
+- Kernel runs were executed with governance unlock/unhold before each pass.
+- Failed passes: 24.
+- Total commits created for this re-run loop: 24.
+
+## Re-run 2026-02-22T18:40:14Z
+| Chapter | Pass | Result | Subagents | Commit |
+|--------:|-----:|--------|-----------|--------|
+| 01-paradigm-shift | 1 | failed(1) | none | `7dfdcdc` |
+| 01-paradigm-shift | 2 | failed(1) | none | `752cdef` |
+| 01-paradigm-shift | 3 | failed(1) | none | `f77b23a` |
+| 02-harness-engineering | 1 | failed(1) | none | `9008c83` |
+| 02-harness-engineering | 2 | failed(1) | none | `731a19c` |
+| 02-harness-engineering | 3 | failed(1) | none | `c2570eb` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `03ce903` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `d14fdee` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `4f72c25` |
+| 04-memory-systems | 1 | failed(1) | none | `d5cc2f8` |
+| 04-memory-systems | 2 | failed(1) | none | `92fe8be` |
+| 04-memory-systems | 3 | failed(1) | none | `2674245` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `321f1a7` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `1c3b880` |
+| 05-evaluation-and-traces | 3 | failed(1) | none | `92fc713` |
+| 06-agent-governance | 1 | failed(1) | none | `7f4f84d` |
+| 06-agent-governance | 2 | failed(1) | none | `619af25` |
+| 06-agent-governance | 3 | failed(1) | none | `e9d6f53` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `367a236` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `f7493cf` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `25f247d` |
+| 99-future-directions | 1 | failed(1) | none | `602f81d` |
+| 99-future-directions | 2 | failed(1) | none | `74b5952` |
+| 99-future-directions | 3 | failed(1) | none | `6005e6f` |
+### Re-run Summary (2026-02-22T18:40:14Z)
 - Completed 24/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Failed passes: 24.
