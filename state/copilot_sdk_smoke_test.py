@@ -915,6 +915,18 @@ def run_usage_examples_coverage_guard_mode() -> int:
     return 0
 
 
+def run_usage_examples_duplicates_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    usage_lines = _usage_doc_lines(all_mode_specs)
+    actual_lines = [line for line in usage_lines if line.startswith("  uv run python state/copilot_sdk_smoke_test.py --mode ")]
+    assert len(actual_lines) == len(set(actual_lines)), "expected generated usage examples to contain no duplicate non-stub mode lines"
+
+    print(
+        "PASS: usage-examples-duplicates-guard mode validates generated usage examples contain no duplicates"
+    )
+    return 0
+
+
 TraceSummaryModeHandler = Callable[[], int]
 TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] = (
     ("trace-summary", run_trace_summary_mode, "deterministic required-key assertion"),
@@ -970,6 +982,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-coverage-guard",
         run_usage_examples_coverage_guard_mode,
         "deterministic generated usage-example coverage assertion",
+    ),
+    (
+        "usage-examples-duplicates-guard",
+        run_usage_examples_duplicates_guard_mode,
+        "deterministic generated usage-example duplicate-line assertion",
     ),
 )
 
