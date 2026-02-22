@@ -92,7 +92,8 @@ Enable independent auditing and regression analysis by exporting traces from one
 
 **Replay validity check (what must match)**
 - The replay harness must reproduce the same sequence of tool calls (tool name + validated arguments) and the same tool outcomes when tools are deterministic and versioned.
-- When nondeterminism exists (timeouts, stochastic tools, external APIs), the trace must record the nondeterminism boundary (e.g., tool snapshot id, cached response id, or allowed outcome set), and replay is valid only if outcomes stay within that boundary.
+- When nondeterminism exists (timeouts, stochastic tools, external APIs), the trace must record the nondeterminism boundary (e.g., tool snapshot id, cached response id, or allowed outcome set).
+  Replay is valid only if outcomes stay within that boundary.
 - If the replay diverges in tool-call sequence under deterministic conditions, the run is not reproducible and should be flagged as a portability failure.
 
 ## Trade-offs
