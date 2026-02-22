@@ -127,6 +127,7 @@ class LedgerSnapshotTransit:
 class JSONMappingTransit:
     source_path: Path
     raw_text: str
+    json_text: JSONTextTransit
     payload: JSONMappingPayload
 
     def to_mapping(self) -> dict[str, Any]:
@@ -173,7 +174,7 @@ def _load_json_mapping(path: Path) -> JSONMappingTransit:
         payload = JSONMappingPayload.model_validate({"data": parsed})
     except ValidationError as exc:
         raise AssertionError(f"expected {path} to contain a JSON object mapping: {exc}") from exc
-    return JSONMappingTransit(source_path=path, raw_text=json_text.to_text(), payload=payload)
+    return JSONMappingTransit(source_path=path, raw_text=json_text.to_text(), json_text=json_text, payload=payload)
 
 
 def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:

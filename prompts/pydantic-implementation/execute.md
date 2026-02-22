@@ -93,6 +93,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_smoke_test.py` now validates raw `state/ledger.json` snapshot text through `JSONTextPayload` and forwards source-path text via `JSONTextTransit` before JSON mapping parsing.
 - `state/copilot_sdk_smoke_test.py` now validates raw ledger snapshot JSON mapping roots through `JSONMappingPayload` and forwards parsed mappings via `JSONMappingTransit` before `LedgerSnapshotPayload` parsing.
 - `state/copilot_sdk_smoke_test.py` now forwards ledger snapshot JSON source-path provenance through `JSONMappingTransit` before `LedgerSnapshotTransit` assembly.
+- `state/copilot_sdk_smoke_test.py` now carries `JSONTextTransit` inside `JSONMappingTransit` so ledger snapshot raw-text provenance remains attached before `LedgerSnapshotTransit` assembly.
 - `state/kernel.py` now validates cross-chapter markdown ingestion through `ChapterTextPayload` and forwards deterministic-eval chapter context via `OtherChaptersTransit`.
 - `state/llm_client.py` now validates external `chat()` message payload lists through `ChatMessagesPayload` and forwards validated messages via `ChatMessagesTransit` before mock/Copilot provider handling.
 - `state/llm_client.py` now validates Copilot SDK `send()` response dictionaries through `SDKChatResponsePayload` and forwards them via `SDKChatResponseTransit` before usage/content normalization.
