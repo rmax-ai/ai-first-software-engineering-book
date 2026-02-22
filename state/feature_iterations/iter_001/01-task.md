@@ -1,11 +1,12 @@
 # Task: Plan custom state harness improvements
 
 ## Why this task now
-
-No prior `state/feature_iterations/iter_XXX` artifacts exist, so the first iteration should establish a concrete, reviewable backlog for improving the custom harness in `state/`.
+- No prior feature-iteration backlog exists under `state/feature_iterations/`.
+- A clear plan is needed before touching harness execution paths.
+- This creates a deterministic handoff for implementation iterations.
 
 ## Acceptance criteria
-
-- Define a concise improvement story that covers required harness **features**, **tests**, and **evaluations**.
-- Scope later implementation work to concrete files, including `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and relevant `evals/*.yaml`.
-- Produce a single recommended next task with actionable acceptance criteria.
+- Document concise feature improvements for the custom harness in `state/`.
+- Document targeted tests that will verify each proposed improvement.
+- Document eval/regression checks tied to `evals/*.yaml` and harness outputs.
+- Keep this iteration planning-only (no implementation changes in runtime code).

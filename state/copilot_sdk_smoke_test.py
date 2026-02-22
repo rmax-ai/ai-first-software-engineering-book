@@ -1610,6 +1610,32 @@ def run_usage_examples_duplicate_count_wrapper_helper_delegation_guard_mode() ->
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_single_delegation_guard_mode() -> int:
+    wrapper_functions = [
+        mode_handler
+        for mode_name, mode_handler, _description in TRACE_SUMMARY_MODE_SPECS
+        if mode_name.startswith("usage-examples-duplicate-count-mode-coverage-guard")
+    ]
+    assert wrapper_functions, "expected duplicate-count coverage-guard wrapper functions"
+
+    wrappers_without_single_delegation = [
+        mode_handler.__name__
+        for mode_handler in wrapper_functions
+        if inspect.getsource(mode_handler).count("_run_usage_examples_duplicate_count_mode_coverage_guard(") != 1
+    ]
+    assert not wrappers_without_single_delegation, (
+        "expected duplicate-count coverage-guard wrappers to call "
+        "_run_usage_examples_duplicate_count_mode_coverage_guard(...) exactly once, "
+        f"found regressions: {wrappers_without_single_delegation}"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-single-delegation-guard mode validates duplicate-count "
+        "coverage-guard wrappers call _run_usage_examples_duplicate_count_mode_coverage_guard(...) exactly once"
+    )
+    return 0
+
+
 def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
@@ -1908,6 +1934,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-helper-delegation-guard",
         run_usage_examples_duplicate_count_wrapper_helper_delegation_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper helper delegation assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-single-delegation-guard",
+        run_usage_examples_duplicate_count_wrapper_helper_single_delegation_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper single helper delegation assertion",
     ),
     (
         "usage-examples-order-guard",
