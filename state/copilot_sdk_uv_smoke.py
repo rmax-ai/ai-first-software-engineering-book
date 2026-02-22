@@ -121,6 +121,16 @@ class KernelTraceTextPayload(BaseModel):
     text: str
 
 
+class SDKSessionEventDataPayload(BaseModel):
+    content: str | None = None
+    message: str | None = None
+
+
+class SDKSessionEventPayload(BaseModel):
+    type: str | None = None
+    data: SDKSessionEventDataPayload | None = None
+
+
 @dataclass(frozen=True)
 class KernelFixtureLedgerTransit:
     json_mapping: JSONMappingTransit
@@ -235,9 +245,43 @@ class KernelFixtureChapterTransit:
         return chapter_meta
 
 
+@dataclass(frozen=True)
+class SDKSessionEventTransit:
+    payload: SDKSessionEventPayload
+
+    @classmethod
+    def from_raw(cls, raw: dict[str, Any]) -> "SDKSessionEventTransit":
+        return cls(payload=SDKSessionEventPayload.model_validate(raw))
+
+    def event_type(self) -> str:
+        return _event_type_name(self.payload.type)
+
+    def content(self) -> str:
+        data = self.payload.data
+        if data is None or data.content is None:
+            return ""
+        return data.content
+
+    def error_message(self) -> str:
+        data = self.payload.data
+        if data is None or data.message is None:
+            return "unknown session error"
+        return data.message
+
+
 def _event_type_name(event_type: Any) -> str:
     value = getattr(event_type, "value", event_type)
     return str(value).strip().lower()
+
+
+def _sdk_event_to_mapping(event: Any) -> dict[str, Any]:
+    event_type = event.get("type") if isinstance(event, dict) else getattr(event, "type", None)
+    data = event.get("data") if isinstance(event, dict) else getattr(event, "data", None)
+    data_mapping = data if isinstance(data, dict) else getattr(data, "__dict__", {})
+    mapping: dict[str, Any] = {"type": event_type}
+    if isinstance(data_mapping, dict):
+        mapping["data"] = {key: value for key, value in data_mapping.items() if not str(key).startswith("_")}
+    return mapping
 
 
 async def run_ping_mode() -> int:
@@ -276,20 +320,30 @@ async def run_prompt_mode(model: str, prompt: str, timeout_s: float) -> int:
         if response is None:
             print(f"FAIL: prompt mode timed out after {timeout_s:.1f}s")
             return 1
-        response_type = _event_type_name(response.type)
+        try:
+            response_transit = SDKSessionEventTransit.from_raw(_sdk_event_to_mapping(response))
+        except ValidationError as exc:
+            print(f"FAIL: invalid prompt response payload: {exc}")
+            return 1
+        response_type = response_transit.event_type()
         if response_type in {"session.error", "sessioneventtype.session_error"}:
-            result["error"] = getattr(response.data, "message", "unknown session error")
+            result["error"] = response_transit.error_message()
         elif response_type in {"assistant.message", "sessioneventtype.assistant_message"}:
-            result["content"] = getattr(response.data, "content", "")
+            result["content"] = response_transit.content()
         else:
             events = await session.get_messages()
             for event in reversed(events):
-                event_type = _event_type_name(event.type)
+                try:
+                    event_transit = SDKSessionEventTransit.from_raw(_sdk_event_to_mapping(event))
+                except ValidationError as exc:
+                    print(f"FAIL: invalid prompt session event payload: {exc}")
+                    return 1
+                event_type = event_transit.event_type()
                 if event_type in {"assistant.message", "sessioneventtype.assistant_message"}:
-                    result["content"] = getattr(event.data, "content", "")
+                    result["content"] = event_transit.content()
                     break
                 if event_type in {"session.error", "sessioneventtype.session_error"}:
-                    result["error"] = getattr(event.data, "message", "unknown session error")
+                    result["error"] = event_transit.error_message()
                     break
     except TimeoutError:
         print(f"FAIL: prompt mode timed out after {timeout_s:.1f}s")
