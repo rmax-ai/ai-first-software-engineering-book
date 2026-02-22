@@ -1,12 +1,12 @@
-# Risks and Decisions
+# Risks and decisions
 
-## Risks discovered
-- Plan quality depends on accurate linkage between new kernel signals and eval assertions; poor mapping could produce false confidence.
-- Future implementation may expand scope if role template updates and kernel logging are changed together without strict boundaries.
+## Risks
+- Plan quality risk: without immediate implementation, some assumptions about observability touchpoints in `state/kernel.py` may need refinement.
+- Drift risk: future iterations must keep eval YAML updates tightly coupled to behavior changes to avoid false confidence.
 
 ## Decisions and trade-offs
-- Chose planning-only scope for this seed iteration to satisfy prompt intent and reduce risk of premature implementation.
-- Deferred code edits until the next iteration to keep this change minimal and auditable.
+- Decision: keep this seed iteration planning-only to follow prompt requirements exactly.
+- Trade-off: no runtime test execution in this iteration; verification is artifact and guidance completeness.
 
-## Deferred intentionally
-- Any direct modifications to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+## Deferred items
+- Actual code changes to kernel/templates/smoke harness are intentionally deferred to the next iteration.

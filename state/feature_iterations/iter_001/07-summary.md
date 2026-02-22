@@ -1,9 +1,10 @@
-# Iteration Summary
+# Iteration summary
 
-This first feature iteration created the required seven-artifact handoff for `iter_001`.
-It selected the planning story for improving the custom harness in `state/`.
-The plan covers feature work in kernel and role templates, testing updates in smoke scripts, and eval wiring for regression detection.
-No production harness code was changed in this seed iteration by design.
-Validation confirms all required artifacts exist and align with prompt constraints.
-A single concrete next task is provided: implement deterministic trace summary enhancements with smoke verification.
-This keeps future work incremental, testable, and consistent with `DEVELOPMENT.md`.
+- Created `state/feature_iterations/iter_001/` as the first discovered iteration folder.
+- Executed a planning-only seed iteration as required by the runner prompt.
+- Documented task framing, why-now context, and acceptance criteria in `01-task.md`.
+- Produced an implementation roadmap covering harness features, tests, and eval gates in `02-plan.md`.
+- Logged the execution actions and file outputs in `03-execution.md`.
+- Recorded validation evidence for folder discovery, guidance review, and artifact completeness in `04-validation.md`.
+- Captured risks, trade-offs, and intentional deferrals in `05-risks-and-decisions.md`.
+- Defined exactly one concrete next task with measurable criteria and target files in `06-next-iteration.md`.

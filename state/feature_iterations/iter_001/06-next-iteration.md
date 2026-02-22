@@ -1,17 +1,20 @@
-# Next Iteration Recommendation
+# Recommended next task
 
-## Recommended task (exactly one)
-Implement deterministic trace summary enhancements in `state/kernel.py` and expose corresponding smoke assertions in `state/copilot_sdk_uv_smoke.py`.
+## Task
+Implement deterministic trace logging scaffolds in `state/kernel.py` with matching smoke assertions in `state/copilot_sdk_uv_smoke.py`.
 
 ## Why this is next
-The plan identifies observability as the highest-leverage first implementation step and it unlocks measurable eval alignment in subsequent iterations.
+- Observability is the highest-leverage foundation for subsequent harness controls and easier regression diagnosis.
+- It directly follows the seed plan and can be validated with targeted smoke execution.
 
 ## Acceptance criteria
-- Add a minimal kernel trace summary signal that is deterministic and documented in code.
-- Add/adjust smoke test coverage in `state/copilot_sdk_uv_smoke.py` that validates the new signal.
-- Record verification evidence in `state/feature_iterations/iter_002/04-validation.md` using `uv run python state/copilot_sdk_uv_smoke.py`.
+- Add a minimal, structured trace output path in `state/kernel.py` for key loop checkpoints.
+- Update `state/copilot_sdk_uv_smoke.py` with at least one assertion that verifies the new trace signal.
+- Run `uv run python state/copilot_sdk_uv_smoke.py` and record pass/fail evidence in iteration artifacts.
+- Keep diffs minimal and avoid public interface breakage.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/0{1..7}-*.md`
+- `state/feature_iterations/iter_002/03-execution.md`
+- `state/feature_iterations/iter_002/04-validation.md`

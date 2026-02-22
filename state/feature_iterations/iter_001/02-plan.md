@@ -1,18 +1,19 @@
-# Plan
+# Iteration plan (planning-only)
 
-1. Review `DEVELOPMENT.md` constraints and align proposed work to deterministic harness principles.
-2. Define feature improvements for:
-   - `state/kernel.py`: richer trace logging and deterministic execution controls.
-   - `state/role_io_templates.py`: clearer role input/output scaffolds.
-3. Define verification improvements for `state/copilot_sdk_uv_smoke.py` with explicit smoke scenarios tied to new controls.
-4. Define eval updates in `evals/*.yaml` to detect regressions from new harness behavior and signals.
-5. Sequence work into small future iterations with one immediately actionable next task.
+1. Baseline current harness governance and execution constraints from `DEVELOPMENT.md`.
+2. Define feature backlog slices for:
+   - richer kernel observability in `state/kernel.py`
+   - clearer role I/O scaffolds in `state/role_io_templates.py`
+   - deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py`
+3. Map each feature slice to concrete validation:
+   - targeted `uv run python ...` harness commands
+   - eval contract checks in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
+4. Sequence the first executable task as a minimal, testable follow-up iteration.
 
-## Files expected to change this iteration
-- `state/feature_iterations/iter_001/01-task.md`
-- `state/feature_iterations/iter_001/02-plan.md`
-- `state/feature_iterations/iter_001/03-execution.md`
-- `state/feature_iterations/iter_001/04-validation.md`
-- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_001/06-next-iteration.md`
-- `state/feature_iterations/iter_001/07-summary.md`
+## Expected files to change in future iterations
+- `state/kernel.py`
+- `state/role_io_templates.py`
+- `state/copilot_sdk_uv_smoke.py`
+- `evals/chapter-quality.yaml`
+- `evals/style-guard.yaml`
+- `evals/drift-detection.yaml`
