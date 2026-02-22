@@ -4268,6 +4268,249 @@
             "diff_ratio": 0.0,
             "drift_score": 0.02189183987682833
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 161,
+          "timestamp": "2026-02-22T17:13:51Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 162,
+          "timestamp": "2026-02-22T17:13:51Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 163,
+          "timestamp": "2026-02-22T17:13:52Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 164,
+          "timestamp": "2026-02-22T17:13:56Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 165,
+          "timestamp": "2026-02-22T17:13:56Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 166,
+          "timestamp": "2026-02-22T17:13:56Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 167,
+          "timestamp": "2026-02-22T17:14:01Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 168,
+          "timestamp": "2026-02-22T17:14:02Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.02189183987682833,
+            "passed": true,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 169,
+          "timestamp": "2026-02-22T17:14:02Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.02189183987682833
+          }
         }
       ]
     },
@@ -7841,6 +8084,249 @@
             "diff_ratio": 0.0,
             "drift_score": 0.0010372214319582741
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 134,
+          "timestamp": "2026-02-22T17:14:04Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 135,
+          "timestamp": "2026-02-22T17:14:05Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 136,
+          "timestamp": "2026-02-22T17:14:05Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 137,
+          "timestamp": "2026-02-22T17:14:08Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 138,
+          "timestamp": "2026-02-22T17:14:08Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 139,
+          "timestamp": "2026-02-22T17:14:08Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 140,
+          "timestamp": "2026-02-22T17:14:11Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 141,
+          "timestamp": "2026-02-22T17:14:12Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 142,
+          "timestamp": "2026-02-22T17:14:12Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
         }
       ]
     },
@@ -11385,6 +11871,249 @@
             "diff_ratio": 0.0,
             "drift_score": 0.005217650566487776
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 133,
+          "timestamp": "2026-02-22T17:14:17Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 134,
+          "timestamp": "2026-02-22T17:14:17Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 135,
+          "timestamp": "2026-02-22T17:14:19Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 136,
+          "timestamp": "2026-02-22T17:14:22Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 137,
+          "timestamp": "2026-02-22T17:14:23Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 138,
+          "timestamp": "2026-02-22T17:14:23Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 139,
+          "timestamp": "2026-02-22T17:14:26Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 140,
+          "timestamp": "2026-02-22T17:14:26Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.005217650566487776,
+            "passed": false,
+            "similarity_max": 0.708158720232515
+          },
+          "iteration": 141,
+          "timestamp": "2026-02-22T17:14:26Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.005217650566487776
+          }
         }
       ]
     },
@@ -14785,6 +15514,249 @@
           },
           "iteration": 127,
           "timestamp": "2026-02-22T17:10:44Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 128,
+          "timestamp": "2026-02-22T17:14:28Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 129,
+          "timestamp": "2026-02-22T17:14:28Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 130,
+          "timestamp": "2026-02-22T17:14:28Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 131,
+          "timestamp": "2026-02-22T17:14:30Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 132,
+          "timestamp": "2026-02-22T17:14:30Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 133,
+          "timestamp": "2026-02-22T17:14:30Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 134,
+          "timestamp": "2026-02-22T17:14:32Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 135,
+          "timestamp": "2026-02-22T17:14:32Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.4753120358283167
+          },
+          "iteration": 136,
+          "timestamp": "2026-02-22T17:14:32Z",
           "trace_summary": {
             "decision": "approve",
             "deterministic_pass": true,
@@ -18197,6 +19169,249 @@
             "diff_ratio": 0.0,
             "drift_score": 0.0
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 128,
+          "timestamp": "2026-02-22T17:14:34Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 129,
+          "timestamp": "2026-02-22T17:14:34Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 130,
+          "timestamp": "2026-02-22T17:14:34Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 131,
+          "timestamp": "2026-02-22T17:14:36Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 132,
+          "timestamp": "2026-02-22T17:14:36Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 133,
+          "timestamp": "2026-02-22T17:14:36Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 134,
+          "timestamp": "2026-02-22T17:14:38Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 135,
+          "timestamp": "2026-02-22T17:14:38Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5671742976531242
+          },
+          "iteration": 136,
+          "timestamp": "2026-02-22T17:14:38Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
         }
       ]
     },
@@ -21597,6 +22812,249 @@
           },
           "iteration": 127,
           "timestamp": "2026-02-22T17:11:05Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 128,
+          "timestamp": "2026-02-22T17:14:41Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 129,
+          "timestamp": "2026-02-22T17:14:42Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 130,
+          "timestamp": "2026-02-22T17:14:42Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 131,
+          "timestamp": "2026-02-22T17:14:45Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 132,
+          "timestamp": "2026-02-22T17:14:45Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 133,
+          "timestamp": "2026-02-22T17:14:45Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 134,
+          "timestamp": "2026-02-22T17:14:47Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 135,
+          "timestamp": "2026-02-22T17:14:48Z",
+          "trace_summary": {
+            "decision": "approve",
+            "deterministic_pass": true,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": true,
+            "similarity_max": 0.5162327765286524
+          },
+          "iteration": 136,
+          "timestamp": "2026-02-22T17:14:48Z",
           "trace_summary": {
             "decision": "approve",
             "deterministic_pass": true,
@@ -25009,6 +26467,249 @@
             "diff_ratio": 0.0,
             "drift_score": 0.0
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 128,
+          "timestamp": "2026-02-22T17:14:50Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 129,
+          "timestamp": "2026-02-22T17:14:50Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 130,
+          "timestamp": "2026-02-22T17:14:50Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 131,
+          "timestamp": "2026-02-22T17:14:53Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 132,
+          "timestamp": "2026-02-22T17:14:53Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 133,
+          "timestamp": "2026-02-22T17:14:53Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 134,
+          "timestamp": "2026-02-22T17:14:55Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 135,
+          "timestamp": "2026-02-22T17:14:55Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.45097174131536477
+          },
+          "iteration": 136,
+          "timestamp": "2026-02-22T17:14:55Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
         }
       ]
     },
@@ -28409,6 +30110,249 @@
           },
           "iteration": 127,
           "timestamp": "2026-02-22T17:11:31Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 128,
+          "timestamp": "2026-02-22T17:14:57Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 129,
+          "timestamp": "2026-02-22T17:14:57Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 130,
+          "timestamp": "2026-02-22T17:14:57Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 131,
+          "timestamp": "2026-02-22T17:14:59Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 132,
+          "timestamp": "2026-02-22T17:14:59Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 133,
+          "timestamp": "2026-02-22T17:15:00Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 134,
+          "timestamp": "2026-02-22T17:15:03Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 135,
+          "timestamp": "2026-02-22T17:15:03Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.5406427125208426
+          },
+          "iteration": 136,
+          "timestamp": "2026-02-22T17:15:04Z",
           "trace_summary": {
             "decision": "refine",
             "deterministic_pass": false,
