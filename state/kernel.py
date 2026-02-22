@@ -1089,6 +1089,12 @@ def run_kernel(
                         "drift_score": det.drift_score,
                         "similarity_max": det.similarity_max,
                     },
+                    "trace_summary": {
+                        "decision": "approve" if pass_now else "refine",
+                        "drift_score": float(det.drift_score),
+                        "diff_ratio": float(diff_ratio),
+                        "deterministic_pass": bool(det_pass),
+                    },
                 }
             )
             _save_json(METRICS_PATH, metrics)
