@@ -11072,6 +11072,87 @@
             "diff_ratio": 0.0,
             "drift_score": 0.02189183987682833
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.84,
+            "decision": "refine",
+            "drift_score": 0.05,
+            "example_density": 0.75,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard: sentence exceeds 28 words in ## System Breakdown: \"A diagram helps here because the key distinction (model vs harness) is not just conceptual; it shows up as evidence flow through the loop.\"",
+              "Style-guard: sentence exceeds 28 words in ## System Breakdown: \"Takeaway: if you cannot produce a trace and an attribution decision for a failure, you cannot tell whether you need a better prompt/spec, better tools/runtime, a code fix, or an eval fix.\"",
+              "## Concrete Example 2: \"Commands run (in order)\" lists categories (contract tests, integration tests, lint/typecheck) but does not include at least one concrete command example like Example 1 does."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.2701974930295942,
+            "passed": false,
+            "similarity_max": 0.7403736222263874
+          },
+          "iteration": 413,
+          "timestamp": "2026-02-22T20:13:42Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.7439024390243902,
+            "drift_score": 0.2701974930295942
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "approve",
+            "drift_score": 0.06,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Concrete Example 2: \"Commands run (in order, examples)\" includes tool-specific commands but they are not explicitly labeled as illustrative placeholders (e.g., \"example command\") within the line."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.26936619488757485,
+            "passed": false,
+            "similarity_max": 0.7441280769803642
+          },
+          "iteration": 414,
+          "timestamp": "2026-02-22T20:14:22Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.04580152671755725,
+            "drift_score": 0.26936619488757485
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "approve",
+            "drift_score": 0.06,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.26932935965083704,
+            "passed": false,
+            "similarity_max": 0.743272616046391
+          },
+          "iteration": 415,
+          "timestamp": "2026-02-22T20:14:56Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.015267175572519083,
+            "drift_score": 0.26932935965083704
+          }
         }
       ]
     },
@@ -81913,6 +81994,60 @@
             "deterministic_pass": false,
             "diff_ratio": 1.0,
             "drift_score": 0.3
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "refine",
+            "drift_score": 0.06,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard metaphor policy: the sentence \"The main bottleneck is system interfaces and verification\" uses a metaphor (\"bottleneck\") without an explicit justification sentence."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.057915057915057896,
+            "passed": false,
+            "similarity_max": 0.751475292120097
+          },
+          "iteration": 372,
+          "timestamp": "2026-02-22T20:16:25Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.17886178861788618,
+            "drift_score": 0.057915057915057896
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.89,
+            "decision": "refine",
+            "drift_score": 0.06,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Concrete Example 2 contains a sentence over the 28-word limit: the \u201cWhen nondeterminism exists \u2026 the trace must record \u2026 and replay is valid only if \u2026\u201d sentence is 37 words."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.057915057915057896,
+            "passed": false,
+            "similarity_max": 0.7446576264233249
+          },
+          "iteration": 373,
+          "timestamp": "2026-02-22T20:17:34Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.12598425196850394,
+            "drift_score": 0.057915057915057896
           }
         }
       ]

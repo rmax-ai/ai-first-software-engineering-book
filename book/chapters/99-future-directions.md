@@ -1,9 +1,11 @@
 # Chapter 99 — Future Directions
 
 ## Thesis
-The frontier is system interfaces and verification: stronger tool contracts, better evaluations, structured memory, and governance primitives that scale across teams and models.
+The focus is not larger models; it is system-level interfaces and verification: stronger tool contracts, better evaluations, structured memory, and governance primitives that scale across teams and models.
 
-Here, “interfaces” means the concrete artifacts that let components interoperate: tool-call schemas (inputs/outputs and error contracts), trace formats (event types and required fields), and evaluation definitions (tasks, scoring, and pass/fail rules). “Verification” means methods that can detect incorrect behavior reliably: contract tests for tools, replay checks for agent runs, property-based testing for invariants, and runtime enforcement (schema validation, pre/post-conditions, and budget limits).
+Here, “interfaces” means the concrete artifacts that let components interoperate. This includes tool-call schemas (inputs/outputs and error contracts), trace formats (event types and required fields), and evaluation definitions (tasks, scoring, and pass/fail rules).
+
+“Verification” means methods that detect incorrect behavior reliably. Examples include contract tests for tools, replay checks for agent runs, property-based testing for invariants, and runtime enforcement (schema validation, pre/post-conditions, and budget limits).
 
 Hypothesis: as autonomy scales, the limiting factor becomes organizational and infrastructural coupling, not raw inference capability. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.
 
@@ -45,14 +47,15 @@ Cross-model portability experiment.
 
 **Procedure (minimal)**
 - Run N trials per task per model with identical harness inputs (same seeds where applicable; same tool sandbox state).
-- Record traces using the same trace interchange spec (see next section) and compute:
+- Record traces using the same trace interchange spec (see next section).
+- Compute:
   - Task success rate (pass/fail as defined by the eval).
   - Tool error rate (by tool + error type).
   - Iteration profile (turn count, tool-call count, timeouts/budget hits).
   - Failure signatures (clusters based on trace event sequences, not just final answers).
 
 **Expected outputs**
-- A per-model result table plus a “signature diff” report showing which failure clusters are model-specific vs shared.
+- A per-model result table, plus a “signature diff” report. The report shows which failure clusters are model-specific vs shared.
 - A set of “portability blockers” attributed to either:
   - Harness/tool coupling (e.g., a tool contract ambiguity that different models interpret differently), or
   - Model behavior (e.g., consistent violation of a particular tool precondition).
@@ -62,8 +65,8 @@ Cross-model portability experiment.
 - If one model fails with a distinct trace signature while others pass under identical contracts, treat it as model-dependent and capture it as a regression test.
 
 **What would falsify the goal**
-- If the dominant variance is explained by harness nondeterminism (e.g., unstable tool responses or non-versioned datasets), then differences cannot be attributed to models; the harness is not portable enough to support the comparison.
-- If success/failure flips under small, contract-preserving changes (e.g., harmless schema reordering) across models, the tool contracts are underspecified.
+- If variance is dominated by harness nondeterminism (e.g., unstable tool responses or non-versioned datasets), differences cannot be attributed to models. The harness is not portable enough to support the comparison.
+- If success/failure flips under small, contract-preserving changes across models (e.g., harmless schema reordering), the tool contracts are underspecified.
 
 ## Concrete Example 2
 Standardized trace interchange.
@@ -98,9 +101,12 @@ Enable independent auditing and regression analysis by exporting traces from one
 - More governance improves safety but can reduce developer autonomy.
 
 **Decision checklist (operational)**
-- Standardize now if: multiple teams depend on the same tools/traces, incidents require cross-team auditing, or model swaps are frequent; delay if: the interface is changing weekly and only one team uses it.
-- Verify with tests/contracts if: failures are frequent, expensive, or safety-critical; prefer lighter checks if: the component is experimental and low-impact, but still enforce schema validation and basic budgets.
-- Escalate governance if: a change affects shared tool contracts, trace schemas, or eval definitions; keep governance minimal for isolated experiments that do not affect shared artifacts.
+- Standardize when multiple teams depend on the same tools/traces, when incidents require cross-team auditing, or when model swaps are frequent.
+  Delay standardization when the interface changes weekly and only one team uses it.
+- Use tests/contracts when failures are frequent, expensive, or safety-critical.
+  Prefer lighter checks when the component is experimental and low-impact, but still enforce schema validation and basic budgets.
+- Escalate governance when a change affects shared tool contracts, trace schemas, or eval definitions.
+  Keep governance minimal for isolated experiments that do not affect shared artifacts.
 - Set thresholds explicitly: acceptable tool error rate, maximum budget hits per run, and the severity that triggers an incident workflow.
 
 ## Failure Modes
