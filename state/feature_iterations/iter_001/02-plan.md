@@ -1,26 +1,21 @@
 # Plan
 
-1. Audit harness seams referenced by `DEVELOPMENT.md` and define the smallest backlog item that improves determinism and observability first.
-2. Specify `state/kernel.py` changes:
-   - Introduce a normalized phase-trace summary helper with strict shape validation.
-   - Emit clearer failure metadata for budget/validator failures without changing public CLI flags.
-3. Specify `state/role_io_templates.py` changes:
-   - Add explicit template contract notes for role input/output placeholders.
-   - Add one deterministic guard for missing required sections.
-4. Specify `state/copilot_sdk_uv_smoke.py` changes:
-   - Add one table-driven smoke mode validating the new trace summary behavior.
-   - Keep smoke matrix deterministic and aligned with existing naming conventions.
-5. Specify eval updates (`evals/*.yaml`):
-   - Add/adjust one focused check that verifies expected trace signal fields.
-   - Ensure no overlap with existing style/drift guards.
-6. Define verification sequence for execution iteration:
-   - `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>`
-   - targeted kernel invocation against a small chapter fixture
-   - existing eval gate command(s) used by repository workflow.
+1. Reconfirm harness constraints from `DEVELOPMENT.md` and the seed requirements in `prompts/incremental-improvements/execute.md`.
+2. Define feature backlog items for deterministic harness behavior and observability:
+   - richer phase/trace summaries in `state/kernel.py`
+   - clearer structured role scaffolds in `state/role_io_templates.py`
+   - stricter smoke-mode coverage and malformed-payload guards in `state/copilot_sdk_uv_smoke.py`
+3. Define validation tests for each feature area:
+   - targeted UV smoke commands (`uv run python state/copilot_sdk_uv_smoke.py --mode ...`)
+   - focused kernel execution checks (`uv run python state/kernel.py --chapter-id <id>`)
+4. Define evaluation wiring updates in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` to detect regressions caused by harness changes.
+5. Record risks, trade-offs, and one concrete next implementation task to execute in the next iteration.
 
-## Expected files to change in future execution iteration
-- `state/kernel.py`
-- `state/role_io_templates.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `evals/*.yaml` (one targeted file expected)
-- `state/feature_iterations/iter_002/*.md`
+## Files expected to change (this iteration)
+- `state/feature_iterations/iter_001/01-task.md`
+- `state/feature_iterations/iter_001/02-plan.md`
+- `state/feature_iterations/iter_001/03-execution.md`
+- `state/feature_iterations/iter_001/04-validation.md`
+- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
+- `state/feature_iterations/iter_001/06-next-iteration.md`
+- `state/feature_iterations/iter_001/07-summary.md`

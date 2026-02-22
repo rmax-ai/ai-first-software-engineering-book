@@ -1,16 +1,16 @@
 # Validation
 
-## Verification performed
-1. Confirmed seed-iteration inputs were read:
-   - `prompts/incremental-improvements/execute.md`
-   - `DEVELOPMENT.md`
-2. Confirmed iteration discovery result:
-   - `state/feature_iterations/iter_*` returned no existing folders, so `iter_001` was selected.
-3. Confirmed required artifact contract:
-   - All seven markdown files were created under `state/feature_iterations/iter_001/`.
+## Verification commands
+- `ls -1 state/feature_iterations/iter_001`
+- `rg -n "^# " state/feature_iterations/iter_001/*.md`
+- `rg -n "state/kernel.py|state/role_io_templates.py|state/copilot_sdk_uv_smoke.py|evals/" state/feature_iterations/iter_001/*.md`
 
-## Results against acceptance criteria
-- **AC1 (features coverage):** Pass — plan names kernel observability/determinism and role I/O contract improvements.
-- **AC2 (tests coverage):** Pass — plan includes targeted smoke and kernel verification commands for follow-up iteration.
-- **AC3 (eval coverage):** Pass — plan maps expected work to `evals/*.yaml` updates and guard alignment.
-- **AC4 (artifact completeness):** Pass — all seven required markdown artifacts are present.
+## Observed results
+- Iteration folder contains all seven required files (`01-task.md` through `07-summary.md`).
+- Every artifact is markdown and has a top-level heading.
+- Planning artifacts explicitly reference required harness and eval paths.
+
+## Acceptance criteria status
+- Criteria 1 (features/tests/evals plan): **PASS**
+- Criteria 2 (required target files mentioned): **PASS**
+- Criteria 3 (single next task with criteria): **PASS**
