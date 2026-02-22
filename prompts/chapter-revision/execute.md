@@ -105,9 +105,10 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 06-agent-governance | 2 | failed(1) | none | `33774fd]` |
 | 06-agent-governance | 3 | failed(1) | none | `2d52340]` |
 | 07-production-ai-infrastructure | 1 | failed(1) | none | `1430329]` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `7aec582]` |
 ### Re-run Summary (2026-02-22T18:25:03Z)
-- Completed 19/24 chapter passes so far.
+- Completed 20/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 19.
-- Total commits created for this re-run loop: 19.
+- Failed passes: 20.
+- Total commits created for this re-run loop: 20.
 
