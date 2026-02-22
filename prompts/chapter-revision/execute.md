@@ -97,3 +97,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 04-memory-systems | 1 | failed(1) | none | `chore: pass 1 for chapter 04-memory-systems` |
 | 04-memory-systems | 2 | failed(1) | none | `chore: pass 2 for chapter 04-memory-systems` |
 | 04-memory-systems | 3 | failed(1) | none | `chore: pass 3 for chapter 04-memory-systems` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `chore: pass 1 for chapter 05-evaluation-and-traces` |
