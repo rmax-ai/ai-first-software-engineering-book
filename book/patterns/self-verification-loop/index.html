@@ -1043,13 +1043,17 @@
 </ul>
 <h3 id="concrete-example">Concrete example</h3>
 <p>Task: “Add a new CLI flag and update docs.”</p>
-<p>Work:
-- Implement parsing for <code>--format json</code>.
-- Update <code>README</code> usage section.</p>
-<p>Verification:
-- Run unit tests that cover the new flag.
-- Run a help-text snapshot (golden file) test.
-- Run linter/formatter.</p>
+<p>Work:</p>
+<ul>
+<li>Implement parsing for <code>--format json</code>.</li>
+<li>Update <code>README</code> usage section.</li>
+</ul>
+<p>Verification:</p>
+<ul>
+<li>Run unit tests that cover the new flag.</li>
+<li>Run a help-text snapshot (golden file) test.</li>
+<li>Run linter/formatter.</li>
+</ul>
 <p>Example evidence-oriented trace snippet:</p>
 <pre><code class="language-text">$ mycli --help
 ... includes &quot;--format&quot; ...

@@ -1012,13 +1012,15 @@
 <li><strong>Context limits</strong>: the loop must decide what to read, summarize, and omit.</li>
 </ul>
 <h2 id="solution">Solution</h2>
-<p>Implement the smallest loop that can:
-1. Load state (workspace snapshot + budgets + any session memory).
-2. Produce exactly one next action using a typed schema (tool call or stop).
-3. Execute the action with timeouts, error normalization, and side-effect capture.
-4. Append a structured event to a trace.
-5. Update state and budgets.
-6. Stop only on explicit conditions (success, budget exhausted, or blocked).</p>
+<p>Implement the smallest loop that can:</p>
+<ol>
+<li>Load state (workspace snapshot + budgets + any session memory).</li>
+<li>Produce exactly one next action using a typed schema (tool call or stop).</li>
+<li>Execute the action with timeouts, error normalization, and side-effect capture.</li>
+<li>Append a structured event to a trace.</li>
+<li>Update state and budgets.</li>
+<li>Stop only on explicit conditions (success, budget exhausted, or blocked).</li>
+</ol>
 <p>Keep loop policy simple. Push sophistication into tools (typed boundaries) and verification (tests/evals).</p>
 <h2 id="implementation-sketch">Implementation sketch</h2>
 <p>A minimal state machine:</p>

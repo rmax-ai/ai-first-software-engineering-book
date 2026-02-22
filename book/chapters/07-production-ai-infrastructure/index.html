@@ -591,37 +591,45 @@
 <li><strong>Security</strong>: secrets handling, network egress controls, least privilege. Contract: allowlists cover tools, filesystem paths, and network egress; secrets are injected only at execution time and never written to artifacts.</li>
 </ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
-<p>Sandboxed tool execution for code changes.
-- Trigger: a proposed patch (diff) plus a task spec (e.g., “fix failing test X”). Include the target branch SHA and a pinned environment (container image + lockfile).
-- Sandbox: start an isolated runner with no ambient credentials. Mount the repo read-write and restrict filesystem + network egress to an allowlist.
-- Tool calls:
-  - Run a fixed sequence (format/lint → unit tests → build).
-  - Enforce step timeouts (e.g., 5m/unit, 15m/build) and bounded retries for flaky steps (e.g., 2 retries with exponential backoff).
-- Artifact bundle (stored per run id):
-  - Persist the patch and tool call transcripts (commands, versions, exit codes).
-  - Persist logs, test reports (JUnit/JSON), build outputs, and a replay manifest for the same inputs.
-- Evaluation gate:
-  - Promote only if required checks pass (e.g., all tests green, no new lints, diff applies cleanly).
-  - Require reproducibility: either a replay succeeds at least once, or the environment hash matches a known-good cache entry.
-  - On failure, generate a human-facing summary with: run id link, failed step, and top error class.
-  - Include a short “what to try next” hint (e.g., rerun without cache, or inspect a specific log).</p>
+<p>Sandboxed tool execution for code changes.</p>
+<ul>
+<li>Trigger: a proposed patch (diff) plus a task spec (e.g., “fix failing test X”). Include the target branch SHA and a pinned environment (container image + lockfile).</li>
+<li>Sandbox: start an isolated runner with no ambient credentials. Mount the repo read-write and restrict filesystem + network egress to an allowlist.</li>
+<li>Tool calls:</li>
+<li>Run a fixed sequence (format/lint → unit tests → build).</li>
+<li>Enforce step timeouts (e.g., 5m/unit, 15m/build) and bounded retries for flaky steps (e.g., 2 retries with exponential backoff).</li>
+<li>Artifact bundle (stored per run id):</li>
+<li>Persist the patch and tool call transcripts (commands, versions, exit codes).</li>
+<li>Persist logs, test reports (JUnit/JSON), build outputs, and a replay manifest for the same inputs.</li>
+<li>Evaluation gate:</li>
+<li>Promote only if required checks pass (e.g., all tests green, no new lints, diff applies cleanly).</li>
+<li>Require reproducibility: either a replay succeeds at least once, or the environment hash matches a known-good cache entry.</li>
+<li>On failure, generate a human-facing summary with: run id link, failed step, and top error class.</li>
+<li>Include a short “what to try next” hint (e.g., rerun without cache, or inspect a specific log).</li>
+</ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
-<p>Cost-aware autonomy for a batch of maintenance tasks.
-- Budget: per-task token/cost ceilings (e.g., $0.50 and 20k tokens) plus a batch budget (e.g., $50/day), enforced by the orchestrator.
-- Strategy: fail fast on low-signal tasks (small, repetitive, or high-latency tool loops) and escalate to human review when confidence is low or blast radius is high.
-- Decision policy:
-  - Treat a task as “low-signal” when:
-    - (a) there is no progress after N tool steps (e.g., 6),
-    - (b) the same error repeats (e.g., the same stack trace twice), or
-    - (c) predicted cost-to-complete exceeds remaining budget.
-  - Escalate when the change touches production config or security-sensitive files.
-  - Escalate when the diff exceeds a size threshold (e.g., &gt;200 lines changed).
-  - If per-task or batch budget is exceeded:
-    - stop further tool calls,
-    - write a short spend-and-status summary (last step, last error, run id),
-    - escalate for human review.
-- Measure (throughput): cost per successful task and time-to-merge.
-- Measure (quality): regression rate (e.g., rollback or test failures within 24h) and “wasted spend” (tokens spent on tasks that are abandoned or escalated).</p>
+<p>Cost-aware autonomy for a batch of maintenance tasks.</p>
+<ul>
+<li>Budget: per-task token/cost ceilings (e.g., $0.50 and 20k tokens) plus a batch budget (e.g., $50/day), enforced by the orchestrator.</li>
+<li>Strategy: fail fast on low-signal tasks (small, repetitive, or high-latency tool loops) and escalate to human review when confidence is low or blast radius is high.</li>
+<li>Decision policy:</li>
+<li>Treat a task as “low-signal” when:<ul>
+<li>(a) there is no progress after N tool steps (e.g., 6),</li>
+<li>(b) the same error repeats (e.g., the same stack trace twice), or</li>
+<li>(c) predicted cost-to-complete exceeds remaining budget.</li>
+</ul>
+</li>
+<li>Escalate when the change touches production config or security-sensitive files.</li>
+<li>Escalate when the diff exceeds a size threshold (e.g., &gt;200 lines changed).</li>
+<li>If per-task or batch budget is exceeded:<ul>
+<li>stop further tool calls,</li>
+<li>write a short spend-and-status summary (last step, last error, run id),</li>
+<li>escalate for human review.</li>
+</ul>
+</li>
+<li>Measure (throughput): cost per successful task and time-to-merge.</li>
+<li>Measure (quality): regression rate (e.g., rollback or test failures within 24h) and “wasted spend” (tokens spent on tasks that are abandoned or escalated).</li>
+</ul>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
 <li>Isolation increases safety but adds operational complexity. Default: start with containerized execution + allowlists; revisit if tool latency dominates (e.g., repeated cold starts) and you can prove tighter scoping by repo/path.</li>

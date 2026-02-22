@@ -620,80 +620,70 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 </div>
 <p>After you review the flow, the key takeaway is this: every STOP is a first-class outcome.
   The trace must record enough to explain the stop and replay the same checks.</p>
-<p>Legend:
-  - Diamonds are harness decision points.
-  - Every STOP must record enough fields to replay the same checks.</p>
+<p>Legend:</p>
 <ul>
+<li>Diamonds are harness decision points.</li>
+<li>
+<p>Every STOP must record enough fields to replay the same checks.</p>
+</li>
 <li>
 <p>Minimal gating matrix (example, stated as rules):</p>
+</li>
+<li>
+<p>read-only (grep/view/list):</p>
 <ul>
-<li>read-only (grep/view/list):</li>
 <li>safety: require permission check for accessed path(s)</li>
 <li>quality: skip; record <code>skipped_reason: "read_only_action"</code></li>
 <li>correctness: skip; record <code>skipped_reason: "read_only_action"</code></li>
-<li>
-<p>performance: skip; record <code>skipped_reason: "read_only_action"</code></p>
+<li>performance: skip; record <code>skipped_reason: "read_only_action"</code></li>
+</ul>
 </li>
 <li>
 <p>patch edit (apply diff to code/docs):</p>
-</li>
-<li>safety:<ul>
+<ul>
+<li>safety:</li>
 <li>require protected-path check for all touched files</li>
-<li>if any touched file is protected:</li>
+<li>if any touched file is protected:<ul>
 <li>stop with <code>stop_reason: "permission_denied"</code></li>
 </ul>
 </li>
-<li>quality:<ul>
+<li>quality:</li>
 <li>require lint/typecheck if repo has config</li>
 <li>otherwise record <code>skipped_reason: "no_config"</code></li>
-</ul>
-</li>
-<li>correctness:<ul>
+<li>correctness:</li>
 <li>require targeted tests for touched modules</li>
 <li>selection order:
-  1) if a module→test mapping exists:<ul>
-<li>run the mapped command</li>
-<li>record <code>selection_reason: "mapping"</code>
-  2) else if the plan declares <code>test_command</code>:</li>
-<li>run it</li>
-<li>record <code>selection_reason: "plan.test_command"</code>
-  3) else if the repo declares a default test command:</li>
-<li>run it</li>
-<li>record <code>selection_reason</code> with the source path
-  4) else if a stack can be detected:</li>
-<li>run the stack fallback command</li>
-<li>record <code>selection_reason: "fallback.detected_stack"</code>
-  5) else:</li>
-<li>record <code>skipped_reason: "no_test_runner_detected"</code></li>
-<li>stop with <code>stop_reason: "blocked_by_correctness_gate"</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>fallback by detected stack:<ul>
-<li>Deterministic stack detection (precedence order):</li>
-<li>Inputs:<ul>
+      1) if a module→test mapping exists:
+         - run the mapped command
+         - record <code>selection_reason: "mapping"</code>
+      2) else if the plan declares <code>test_command</code>:
+         - run it
+         - record <code>selection_reason: "plan.test_command"</code>
+      3) else if the repo declares a default test command:
+         - run it
+         - record <code>selection_reason</code> with the source path
+      4) else if a stack can be detected:
+         - run the stack fallback command
+         - record <code>selection_reason: "fallback.detected_stack"</code>
+      5) else:
+         - record <code>skipped_reason: "no_test_runner_detected"</code>
+         - stop with <code>stop_reason: "blocked_by_correctness_gate"</code></li>
+<li>fallback by detected stack:</li>
+<li>Deterministic stack detection (precedence order):<ul>
+<li>Inputs:</li>
 <li>touched file paths from the diff (after patch application)</li>
 <li>repo evidence files (repo root only)</li>
-</ul>
-</li>
-<li>Step 1 — candidates from touched paths:<ul>
+<li>Step 1 — candidates from touched paths:</li>
 <li>Python if any touched path ends with <code>.py</code></li>
 <li>Node if any touched path ends with <code>.js</code>, <code>.jsx</code>, <code>.ts</code>, or <code>.tsx</code></li>
 <li>Go if any touched path ends with <code>.go</code></li>
-</ul>
-</li>
-<li>Step 2 — if no candidates, use evidence files:<ul>
+<li>Step 2 — if no candidates, use evidence files:</li>
 <li>Python if <code>pyproject.toml</code>, <code>pytest.ini</code>, <code>setup.cfg</code>, or <code>requirements.txt</code> exists</li>
 <li>Node if <code>package.json</code> exists</li>
 <li>Go if <code>go.mod</code> exists</li>
-</ul>
-</li>
-<li>Step 3 — tie-break precedence:<ul>
+<li>Step 3 — tie-break precedence:</li>
 <li>Python → Node → Go</li>
-</ul>
-</li>
-<li>Trace requirements:<ul>
+<li>Trace requirements:</li>
 <li>record <code>selection_reason</code> (example: <code>touched_ext:.py</code>)</li>
 <li>record <code>detected_stacks</code> before tie-break (example: <code>[python,node]</code>)</li>
 </ul>
@@ -701,11 +691,7 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 <li>Python: <code>pytest -q</code></li>
 <li>Node: <code>npm test</code></li>
 <li>Go: <code>go test ./...</code></li>
-</ul>
-</li>
-<li>
-<p>performance:</p>
-<ul>
+<li>performance:</li>
 <li>require only when applicable</li>
 <li>require if any touched path is under <code>deploy/</code></li>
 <li>require if any touched path is under <code>prod/</code></li>
@@ -715,32 +701,22 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 </li>
 <li>
 <p>dependency install (lockfile changes, package adds):</p>
-</li>
-<li>safety:<ul>
+<ul>
+<li>safety:</li>
 <li>require secret scan of the diff and updated lockfile(s)</li>
 <li>record scan tool name</li>
 <li>record any hit signatures</li>
-</ul>
-</li>
-<li>safety:<ul>
+<li>safety:</li>
 <li>require protected-path check for touched files</li>
 <li>if blocked, stop with <code>stop_reason: "permission_denied"</code></li>
-</ul>
-</li>
-<li>quality:<ul>
+<li>quality:</li>
 <li>require lint/typecheck if repo has config</li>
 <li>otherwise record <code>skipped_reason: "no_config"</code></li>
-</ul>
-</li>
-<li>correctness:<ul>
+<li>correctness:</li>
 <li>require tests that import the changed dependency</li>
 <li>if unknown, select a command using the patch-edit rule</li>
 <li>record <code>selection_reason</code> for the path taken</li>
-</ul>
-</li>
-<li>
-<p>performance:</p>
-<ul>
+<li>performance:</li>
 <li>require only when runtime or deploy files change</li>
 <li>examples: <code>Dockerfile</code>, <code>deploy/**</code></li>
 <li>otherwise record <code>skipped_reason: "not_applicable"</code></li>
@@ -748,34 +724,24 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 </li>
 <li>
 <p>deploy/release (publish, migrate, prod config):</p>
-</li>
-<li>safety:<ul>
+<ul>
+<li>safety:</li>
 <li>require explicit permission grant</li>
 <li>record grant artifact (id or prompt) in the trace</li>
-</ul>
-</li>
-<li>safety:<ul>
+<li>safety:</li>
 <li>require secret scan</li>
 <li>stop on any forbidden hit</li>
 <li>record hit signatures</li>
-</ul>
-</li>
-<li>quality:<ul>
+<li>quality:</li>
 <li>require lint/typecheck if configured</li>
 <li>otherwise record <code>skipped_reason: "no_config"</code></li>
-</ul>
-</li>
-<li>correctness:<ul>
+<li>correctness:</li>
 <li>require full suite or contract tests for release</li>
 <li>record suite name and command</li>
-</ul>
-</li>
-<li>performance:<ul>
+<li>performance:</li>
 <li>require if a budget is declared in the plan</li>
 <li>stop if exceeded</li>
 <li>record measured values</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -787,65 +753,71 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 <li>That combination lets a reviewer replay the same sequence.</li>
 </ul>
 <p>Pseudo-trace excerpt (illustrative):</p>
-<pre><code>task_id: refactor-auth-2026-02-22-001
+<pre><code class="language-yaml">    task_id: refactor-auth-2026-02-22-001
 
-environment:
-  repo_sha: a1b2c3d
-  tool_versions:
-    pytest: 8.1.1
-    python: 3.12.1
+    environment:
+      repo_sha: a1b2c3d
+      tool_versions:
+        pytest: 8.1.1
+        python: 3.12.1
 
-plan:
-  - rename AuthClient -&gt; CopilotClient
-  - update imports
-  - run targeted tests
-  - stop if tests fail
+    plan:
+      - rename AuthClient -&gt; CopilotClient
+      - update imports
+      - run targeted tests
+      - stop if tests fail
 
-tool_calls:
-  - tool: apply_patch
-    files:
-      - src/auth/client.py
-    exit_status: 0
-  - tool: bash
-    cmd: pytest -q tests/test_auth_client.py::test_retry
-    exit_status: 1
-    failure_signature: ImportError: cannot import name 'AuthClient'
+    tool_calls:
+      - tool: apply_patch
+        files:
+          - src/auth/client.py
+        exit_status: 0
+      - tool: bash
+        cmd: pytest -q tests/test_auth_client.py::test_retry
+        exit_status: 1
+        failure_signature: ImportError: cannot import name 'AuthClient'
 
-diffs:
-  - path: src/auth/client.py
-    summary: renamed symbol
-  - path: tests/test_auth_client.py
-    summary: unchanged
+    diffs:
+      - path: src/auth/client.py
+        summary: renamed symbol
+      - path: tests/test_auth_client.py
+        summary: unchanged
 
-evaluation_results:
-  correctness:
-    cmd: pytest -q tests/test_auth_client.py::test_retry
-    outcome: FAIL
-    signature: ImportError
+    evaluation_results:
+      correctness:
+        cmd: pytest -q tests/test_auth_client.py::test_retry
+        outcome: FAIL
+        signature: ImportError
 
-stop_reason: blocked_by_correctness_gate
+    stop_reason: blocked_by_correctness_gate
 </code></pre>
-<p>Query step using structured fields (one possible workflow):
-- Query: <code>repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"</code>
-- Result (summary):
-  - matching_tasks: 3
-  - last_success_task_id: <code>refactor-auth-2026-02-20-007</code>
-  - last_success_repo_sha: <code>a1b2c3d</code>
-  - common_missing_patch_pattern: diffs do not include any files under <code>src/auth/__init__.py</code> or <code>src/auth/*</code> besides <code>client.py</code></p>
-<p>Decision rule using the query result:
-- If <code>last_success_repo_sha</code> matches the current <code>repo_sha</code>:
-  - If only <code>client.py</code> was changed, expand patch scope to import sites.
-  - Update <code>src/auth/__init__.py</code> exports and import usages.
-  - Rerun <code>pytest -q tests/test_auth_client.py::test_retry</code>.
-- If <code>last_success_repo_sha</code> differs:
-  - Rebase/reset to the pinned <code>repo_sha</code> first.
-  - Apply the expanded patch.
-  - Rerun <code>pytest -q tests/test_auth_client.py::test_retry</code>.</p>
-<p>Attribution using the trace:
-- Model vs tool is not ambiguous here.
-- The patch tool succeeded, and the test runner executed.
-- The failure signature is a stable ImportError.
-- The diffs show a narrow touch pattern, so the likely cause is refactor incompleteness.</p>
+<p>Query step using structured fields (one possible workflow):</p>
+<ul>
+<li>Query: <code>repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"</code></li>
+<li>Result (summary):</li>
+<li>matching_tasks: 3</li>
+<li>last_success_task_id: <code>refactor-auth-2026-02-20-007</code></li>
+<li>last_success_repo_sha: <code>a1b2c3d</code></li>
+<li>common_missing_patch_pattern: diffs do not include any files under <code>src/auth/__init__.py</code> or <code>src/auth/*</code> besides <code>client.py</code></li>
+</ul>
+<p>Decision rule using the query result:</p>
+<ul>
+<li>If <code>last_success_repo_sha</code> matches the current <code>repo_sha</code>:</li>
+<li>If only <code>client.py</code> was changed, expand patch scope to import sites.</li>
+<li>Update <code>src/auth/__init__.py</code> exports and import usages.</li>
+<li>Rerun <code>pytest -q tests/test_auth_client.py::test_retry</code>.</li>
+<li>If <code>last_success_repo_sha</code> differs:</li>
+<li>Rebase/reset to the pinned <code>repo_sha</code> first.</li>
+<li>Apply the expanded patch.</li>
+<li>Rerun <code>pytest -q tests/test_auth_client.py::test_retry</code>.</li>
+</ul>
+<p>Attribution using the trace:</p>
+<ul>
+<li>Model vs tool is not ambiguous here.</li>
+<li>The patch tool succeeded, and the test runner executed.</li>
+<li>The failure signature is a stable ImportError.</li>
+<li>The diffs show a narrow touch pattern, so the likely cause is refactor incompleteness.</li>
+</ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Drift detection for an agent loop.</p>
 <ul>
