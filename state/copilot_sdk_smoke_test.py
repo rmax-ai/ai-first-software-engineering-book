@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import importlib
 import os
+import subprocess
 import sys
 import types
 from collections import Counter
@@ -829,6 +830,72 @@ def run_trace_summary_missing_entry_guard_mode() -> int:
         assert str(exc) == "expected latest history entry to contain trace_summary dictionary"
 
     print("PASS: trace-summary-missing-entry-guard mode detects missing trace_summary entries")
+    return 0
+
+
+def _run_trace_summary_kernel_mode(mode_name: str, expected_failure: str | None = None) -> str:
+    ledger_path = ROOT / "state" / "ledger.json"
+    before_ledger = ledger_path.read_text(encoding="utf-8")
+    proc = subprocess.run(
+        [
+            "uv",
+            "run",
+            "python",
+            "state/copilot_sdk_uv_smoke.py",
+            "--mode",
+            mode_name,
+            "--run-kernel-for-trace-summary",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    after_ledger = ledger_path.read_text(encoding="utf-8")
+    assert after_ledger == before_ledger, "expected state/ledger.json to remain unchanged after kernel trace-summary smoke"
+
+    combined_output = "\n".join(part for part in (proc.stdout.strip(), proc.stderr.strip()) if part).strip()
+    assert proc.returncode == 0, f"expected exit code 0 for mode {mode_name}, got {proc.returncode}\n{combined_output}"
+    if expected_failure is None:
+        assert "PASS: trace_summary present with required keys" in combined_output, (
+            f"expected success output for mode {mode_name}, got: {combined_output}"
+        )
+    else:
+        assert expected_failure in combined_output, (
+            f"expected phase_trace validation failure output for mode {mode_name}, got: {combined_output}"
+        )
+    return combined_output
+
+
+def run_trace_summary_kernel_mode() -> int:
+    _run_trace_summary_kernel_mode("trace-summary")
+    print("PASS: trace-summary-kernel mode validates fixture-backed kernel trace-summary success")
+    return 0
+
+
+def run_trace_summary_kernel_malformed_phase_mode() -> int:
+    _run_trace_summary_kernel_mode(
+        "trace-summary-malformed-phase",
+        expected_failure="phase_trace missing keys: ['budget_signal']",
+    )
+    print("PASS: trace-summary-kernel-malformed-phase mode validates malformed phase-trace key failures")
+    return 0
+
+
+def run_trace_summary_kernel_malformed_phase_payload_mode() -> int:
+    _run_trace_summary_kernel_mode(
+        "trace-summary-malformed-phase-payload",
+        expected_failure="phase_trace payload is not an object",
+    )
+    print("PASS: trace-summary-kernel-malformed-phase-payload mode validates non-object phase-trace payload failures")
+    return 0
+
+
+def run_trace_summary_kernel_missing_phase_mode() -> int:
+    _run_trace_summary_kernel_mode(
+        "trace-summary-missing-phase",
+        expected_failure="missing required phase traces: ['evaluation']",
+    )
+    print("PASS: trace-summary-kernel-missing-phase mode validates missing required phase-trace failures")
     return 0
 
 
@@ -1732,6 +1799,26 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-missing-entry-guard",
         run_trace_summary_missing_entry_guard_mode,
         "deterministic missing trace_summary entry detection",
+    ),
+    (
+        "trace-summary-kernel",
+        run_trace_summary_kernel_mode,
+        "fixture-backed --run-kernel-for-trace-summary success assertion",
+    ),
+    (
+        "trace-summary-kernel-malformed-phase",
+        run_trace_summary_kernel_malformed_phase_mode,
+        "fixture-backed malformed phase-trace key failure assertion",
+    ),
+    (
+        "trace-summary-kernel-malformed-phase-payload",
+        run_trace_summary_kernel_malformed_phase_payload_mode,
+        "fixture-backed non-object phase-trace payload failure assertion",
+    ),
+    (
+        "trace-summary-kernel-missing-phase",
+        run_trace_summary_kernel_missing_phase_mode,
+        "fixture-backed missing required phase-trace assertion",
     ),
     (
         "docstring-mode-coverage-guard",
