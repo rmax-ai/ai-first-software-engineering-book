@@ -539,9 +539,14 @@ def _extract_json_object(text: str) -> JSONMappingTransit:
     return JSONMappingTransit(payload=payload)
 
 
-def _extract_markdown(text: str) -> str:
+def _extract_markdown(text: str) -> WriterOutputTransit:
     # Some models wrap markdown in ``` fences; unwrap if present.
-    return _strip_wrapping_code_fence(text).rstrip() + "\n"
+    markdown = _strip_wrapping_code_fence(text).rstrip() + "\n"
+    try:
+        payload = WriterOutputPayload.model_validate({"text": markdown})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid writer markdown payload from LLM response: {exc}") from exc
+    return WriterOutputTransit(payload=payload)
 
 
 def _llm_trace_dir(itdir: Path) -> Path:
@@ -660,7 +665,8 @@ def _llm_generate_writer(itdir: Path, llm: LLMRun, *, chapter_text: str, planner
         raise KernelError(f"Writer LLM call failed: {exc}") from exc
 
     _llm_write_trace(itdir, name="writer", prompt=f"SYSTEM\n{contract}\n\nUSER\n{user}\n", response=resp.content)
-    md = _extract_markdown(resp.content)
+    writer_output = _extract_markdown(resp.content)
+    md = writer_output.to_markdown()
     _write_text(itdir / "out" / "writer.md", md)
     llm.usage = _llm_add_usage(llm.usage, resp.usage)
     return md
