@@ -525,8 +525,8 @@
 - better evaluations
 - structured memory
 - governance primitives</p>
-<p>Here, “interfaces” means the concrete artifacts that let components interoperate. In practice, interfaces are what make runs portable: a tool-call schema that two runtimes both validate, a trace format that two analysis tools both parse, and an eval definition that two teams can both reproduce.</p>
-<p>“Verification” means methods that detect incorrect behavior reliably. In practice, verification is what makes runs auditable: it lets you show that a tool call matched a contract, that a replay stayed within a declared nondeterminism boundary, and that a reported score came from a pinned dataset and scoring implementation.</p>
+<p>Here, “interfaces” means the concrete artifacts that let components interoperate. In practice, interfaces are what make runs portable. Examples include a tool-call schema that two runtimes both validate, a trace format that two analysis tools both parse, and an eval definition that two teams can both reproduce.</p>
+<p>“Verification” means methods that detect incorrect behavior reliably. In practice, verification is what makes runs auditable. It lets you show that a tool call matched a contract and that a replay stayed within a declared nondeterminism boundary. It also lets you show that a reported score came from a pinned dataset and scoring implementation.</p>
 <p>Hypothesis: as autonomy scales, the limiting factor becomes organizational and infrastructural coupling, not raw inference capability. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
@@ -536,7 +536,7 @@
 </ul>
 <p>So what changes for teams? Treat tool schemas, trace formats, and eval definitions as versioned products. Write contracts and test them. Require replayable traces so failures can be audited and compared across models.</p>
 <h2 id="system-breakdown">System Breakdown</h2>
-<p>These four areas are coupled: interfaces create portability, verification enables auditability, and governance sets the rules for how shared artifacts evolve. The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows: they show what must be versioned and validated before you can compare runs across teams or models.</p>
+<p>These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve. The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows: they show what must be versioned and validated before you can compare runs across teams or models.</p>
 <pre class="mermaid">
 flowchart TB
   I[Interoperability<br/>trace formats · tool schemas · eval definitions] --&gt; V[Verification<br/>contract tests · replay checks · property checks]
