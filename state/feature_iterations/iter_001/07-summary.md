@@ -1,8 +1,9 @@
 # Iteration Summary
 
-This seed iteration established the first feature-improvement backlog entry under `state/feature_iterations/iter_001/`.
-The selected task was planning-only: define how to improve custom harness features, tests, and eval coverage.
-The plan identifies concrete future edits across `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-Validation confirmed prompt/guideline inputs were read and that all seven required artifacts were created.
-No harness runtime code changed in this iteration by design, reducing risk while creating an actionable next step.
-The next iteration is scoped to one small behavior slice: deterministic trace-summary normalization plus smoke/eval coverage.
+This iteration executed the seed planning task defined by `prompts/incremental-improvements/execute.md`.
+`iter_001` was created because no prior `state/feature_iterations/iter_XXX` folders existed.
+The artifact set defines a concise backlog for custom harness improvements across `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+The plan specifies feature additions, deterministic test strategy, and eval contract alignment to catch regressions.
+No harness runtime code changed in this iteration; scope was intentionally limited to planning.
+Validation documented contract compliance and artifact completeness.
+The next task is a single implementation step: deterministic trace observability wiring plus smoke/eval checks.
