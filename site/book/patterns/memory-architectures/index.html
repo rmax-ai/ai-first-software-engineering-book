@@ -1,210 +1,108 @@
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Technical book on AI-first software engineering governance and execution">
-      
-      
-        <meta name="author" content="Autonomous Authors">
-      
-      
-      
-        <link rel="prev" href="../harness-design-patterns/">
-      
-      
-        <link rel="next" href="../minimal-agent-loop/">
-      
-      
-        
-      
-      
-      <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
-    
-    
-      
-        <title>Memory Architectures - AI-First Software Engineering</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+<!DOCTYPE html>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#memory-architectures" class="md-skip">
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Technical book on AI-first software engineering governance and execution" name="description"/>
+<meta content="Autonomous Authors" name="author"/>
+<link href="../harness-design-patterns/" rel="prev"/>
+<link href="../minimal-agent-loop/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
+<title>Memory Architectures - AI-First Software Engineering</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#memory-architectures">
           Skip to content
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
+</div>
+<div data-md-component="announce">
+</div>
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="AI-First Software Engineering" class="md-header__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="AI-First Software Engineering" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
             AI-First Software Engineering
           </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
             
               Memory Architectures
             
           </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
+</div>
+</div>
+</div>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+<ol class="md-search-result__list" role="presentation"></ol>
 </div>
-      
-    
-    
-  </nav>
-  
+</div>
+</div>
+</div>
+</div>
+</nav>
 </header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="AI-First Software Engineering" class="md-nav__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="AI-First Software Engineering" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
     AI-First Software Engineering
   </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
     
   
     Home
@@ -212,26 +110,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../preface/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../preface/">
+<span class="md-ellipsis">
     
   
     Preface
@@ -239,37 +122,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
     
   
     Chapters
@@ -277,35 +135,21 @@
 
     
   </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
             
   
     Chapters
   
 
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/01-paradigm-shift/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/01-paradigm-shift/">
+<span class="md-ellipsis">
     
   
     01. Paradigm Shift
@@ -313,27 +157,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/02-harness-engineering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/02-harness-engineering/">
+<span class="md-ellipsis">
     
   
     02. Harness Engineering
@@ -341,27 +169,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/03-autonomous-kernels/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/03-autonomous-kernels/">
+<span class="md-ellipsis">
     
   
     03. Autonomous Kernels
@@ -369,27 +181,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/04-memory-systems/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/04-memory-systems/">
+<span class="md-ellipsis">
     
   
     04. Memory Systems
@@ -397,27 +193,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/05-evaluation-and-traces/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/05-evaluation-and-traces/">
+<span class="md-ellipsis">
     
   
     05. Evaluation and Traces
@@ -425,27 +205,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/06-agent-governance/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/06-agent-governance/">
+<span class="md-ellipsis">
     
   
     06. Agent Governance
@@ -453,27 +217,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/07-production-ai-infrastructure/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/07-production-ai-infrastructure/">
+<span class="md-ellipsis">
     
   
     07. Production AI Infrastructure
@@ -481,27 +229,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/99-future-directions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/99-future-directions/">
+<span class="md-ellipsis">
     
   
     99. Future Directions
@@ -509,34 +241,14 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../glossary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../glossary/">
+<span class="md-ellipsis">
     
   
     Glossary
@@ -544,39 +256,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
     
   
     Patterns Overview
@@ -584,35 +269,21 @@
 
     
   </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
             
   
     Patterns Overview
   
 
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../harness-design-patterns/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../harness-design-patterns/">
+<span class="md-ellipsis">
     
   
     Harness Design
@@ -620,36 +291,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
     
   
     Memory Architectures
@@ -657,17 +304,10 @@
 
     
   </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
     
   
     Memory Architectures
@@ -675,191 +315,135 @@
 
     
   </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#context">
+<span class="md-ellipsis">
       
         Context
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
       
         Problem
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#forces" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forces">
+<span class="md-ellipsis">
       
         Forces
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#solution" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solution">
+<span class="md-ellipsis">
       
         Solution
       
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#layer-1-run-local-working-memory-scratch" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Solution" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-1-run-local-working-memory-scratch">
+<span class="md-ellipsis">
       
         Layer 1: Run-local working memory (scratch)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#layer-2-session-memory-task-state" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-2-session-memory-task-state">
+<span class="md-ellipsis">
       
         Layer 2: Session memory (task state)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#layer-3-project-memory-durable-facts" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-3-project-memory-durable-facts">
+<span class="md-ellipsis">
       
         Layer 3: Project memory (durable facts)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#layer-4-retrieval-index-searchable-corpus" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-4-retrieval-index-searchable-corpus">
+<span class="md-ellipsis">
       
         Layer 4: Retrieval index (searchable corpus)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-sketch" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
       
         Implementation sketch
       
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation sketch">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#concrete-example" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Implementation sketch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example">
+<span class="md-ellipsis">
       
         Concrete example
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#failure-modes" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
       
         Failure modes
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#when-not-to-use" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
       
         When not to use
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../minimal-agent-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../minimal-agent-loop/">
+<span class="md-ellipsis">
     
   
     Minimal Agent Loop
@@ -867,27 +451,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../self-verification-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../self-verification-loop/">
+<span class="md-ellipsis">
     
   
     Self-Verification Loop
@@ -895,214 +463,159 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
+</a>
+</li>
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#context">
+<span class="md-ellipsis">
       
         Context
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
       
         Problem
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#forces" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forces">
+<span class="md-ellipsis">
       
         Forces
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#solution" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solution">
+<span class="md-ellipsis">
       
         Solution
       
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#layer-1-run-local-working-memory-scratch" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Solution" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-1-run-local-working-memory-scratch">
+<span class="md-ellipsis">
       
         Layer 1: Run-local working memory (scratch)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#layer-2-session-memory-task-state" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-2-session-memory-task-state">
+<span class="md-ellipsis">
       
         Layer 2: Session memory (task state)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#layer-3-project-memory-durable-facts" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-3-project-memory-durable-facts">
+<span class="md-ellipsis">
       
         Layer 3: Project memory (durable facts)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#layer-4-retrieval-index-searchable-corpus" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-4-retrieval-index-searchable-corpus">
+<span class="md-ellipsis">
       
         Layer 4: Retrieval index (searchable corpus)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-sketch" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
       
         Implementation sketch
       
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation sketch">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#concrete-example" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Implementation sketch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example">
+<span class="md-ellipsis">
       
         Concrete example
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#failure-modes" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
       
         Failure modes
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#when-not-to-use" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
       
         When not to use
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
 <h1 id="memory-architectures">Memory Architectures</h1>
 <h2 id="context">Context</h2>
 <p>Agents are limited by context window, variability across runs, and the need to operate over long-lived projects. Memory mechanisms can improve continuity, but they also introduce drift, privacy risk, and debugging complexity.</p>
+<p>In this chapter, “memory” means persisted or semi-persisted information that can influence a later run. “State” is the structured record of the current task’s progress. It answers: what’s done, what’s next, and what’s blocked. “Retrieval” selects candidate information from a larger corpus and brings it into the current context. Retrieval results are suggestions, not authoritative facts.</p>
 <h2 id="problem">Problem</h2>
 <p>How do you add memory so the system remains reproducible and governable?</p>
+<p>A useful answer must preserve two properties:</p>
+<ul>
+<li><strong>Reproducibility</strong>: given the same code and inputs, you can explain which memories were consulted and why they mattered.</li>
+<li><strong>Governability</strong>: you can audit, version, and delete memory items by rule (scope, source, and time), without relying on implicit behavior.</li>
+</ul>
 <h2 id="forces">Forces</h2>
 <ul>
 <li><strong>Recall vs. precision</strong>: retrieving more increases coverage but adds noise.</li>
@@ -1111,8 +624,30 @@
 <li><strong>Debuggability</strong>: implicit retrieval is harder to reason about than explicit records.</li>
 <li><strong>Versioning</strong>: memory must evolve with code; unversioned memory becomes a hidden dependency.</li>
 </ul>
+<p>How to choose (practical heuristics):</p>
+<ul>
+<li>If mistakes are costly, bias toward <strong>precision over recall</strong>: retrieve fewer items, require source confirmation, and prefer explicit pointers (file paths, trace IDs) over paraphrased “facts.”</li>
+<li>If work spans days/weeks, bias toward <strong>stability over freshness</strong> for durable memory: append new entries rather than mutating old ones; treat “updates” as new, versioned records.</li>
+<li>If data sensitivity is unclear, bias toward <strong>utility via derived retrieval</strong>: store less durable content; keep indexes rebuildable; rely on short-lived state plus links to existing sources.</li>
+</ul>
 <h2 id="solution">Solution</h2>
 <p>Prefer layered, explicit memory with clear scopes, schemas, and write rules.</p>
+<p>A diagram helps because the key idea is the <em>relationship</em> between layers. Focus on the arrows (what feeds the model) and the “write rule” labels (what is allowed to persist). The goal is to make persistence explicit and reviewable.</p>
+<div class="mermaid">flowchart LR
+  A["Layer 1: Run-local scratch\n(write: overwrite OK)\n(scope: one run)"] --&gt;|summaries, hypotheses| M["Model context"]
+  B["Layer 2: Session task state\n(write: update each step; clear on close)\n(scope: task)"] --&gt;|checklists, next steps| M
+  C["Layer 3: Project durable facts\n(write: only after verification + sources)\n(scope: long-lived)"] --&gt;|contracts, ADRs, runbooks| M
+  D["Layer 4: Retrieval index (derived)\n(write: rebuildable; not source of truth)\n(scope: long-lived)"] --&gt;|top-k excerpts| M
+  C --&gt;|index/build| D
+</div>
+<p>Layer boundaries (inputs, outputs, authority):</p>
+<ul>
+<li><strong>Layer 1 (scratch)</strong>: input is the current prompt + tool outputs; output is short notes and summaries; not authoritative.</li>
+<li><strong>Layer 2 (session state)</strong>: input is task steps and decisions; output is a checklist and verification status; authoritative for <em>task progress</em> only.</li>
+<li><strong>Layer 3 (durable facts)</strong>: input is verified outcomes plus sources; output is reviewable records with provenance; authoritative when sources are valid.</li>
+<li><strong>Layer 4 (retrieval index)</strong>: input is documents/issues/traces; output is ranked pointers/excerpts; derived and never authoritative.</li>
+</ul>
+<p>The takeaway: make “what the agent knows” a controlled blend of volatile scratch, explicit task state, verified durable facts, and derived retrieval. Each layer has different write permissions.</p>
 <h3 id="layer-1-run-local-working-memory-scratch">Layer 1: Run-local working memory (scratch)</h3>
 <ul>
 <li><strong>What</strong>: transient notes, intermediate calculations, short summaries.</li>
@@ -1143,23 +678,30 @@
 </ul>
 <h2 id="implementation-sketch">Implementation sketch</h2>
 <p>Write rules that keep memory auditable and safe:</p>
+<p>Write gates:</p>
 <ul>
 <li>Only write durable memory after verification passes.</li>
+<li>Treat retrieval as a <em>hint</em>; require confirmation against sources for critical claims.</li>
+</ul>
+<p>Provenance &amp; schemas:</p>
+<ul>
 <li>Store sources (file paths, URLs, trace IDs, commit hashes) with each memory item.</li>
 <li>Separate schemas for different types of memory: facts, decisions, preferences, open questions.</li>
-<li>Treat retrieval as a <em>hint</em>; require confirmation against sources for critical claims.</li>
 <li>Version memory alongside the system (or tie it to a release identifier).</li>
+</ul>
+<p>Retention &amp; redaction:</p>
+<ul>
 <li>Support redaction and retention policies (delete by scope, delete by source, delete by time).</li>
 </ul>
 <p>Example durable-memory record schema (conceptual):</p>
 <pre><code class="language-json">{
-  &quot;type&quot;: &quot;decision&quot;,
-  &quot;title&quot;: &quot;Prefer golden tests for CLI help output&quot;,
-  &quot;status&quot;: &quot;accepted&quot;,
-  &quot;sources&quot;: [&quot;docs/cli.md&quot;, &quot;trace:2026-02-18T10:14Z&quot;],
-  &quot;rationale&quot;: &quot;Help output is user-facing and easy to regress&quot;,
-  &quot;verified_by&quot;: [&quot;npm test&quot;, &quot;snapshot update reviewed&quot;],
-  &quot;created_at&quot;: &quot;2026-02-18&quot;
+  "type": "decision",
+  "title": "Prefer golden tests for CLI help output",
+  "status": "accepted",
+  "sources": ["docs/cli.md", "trace:2026-02-18T10:14Z"],
+  "rationale": "Help output is user-facing and easy to regress",
+  "verified_by": ["npm test", "snapshot update reviewed"],
+  "created_at": "2026-02-18"
 }
 </code></pre>
 <h3 id="concrete-example">Concrete example</h3>
@@ -1170,14 +712,48 @@
 <li><strong>Project</strong>: “Root cause and fix” note linked to the failing test and the patch.</li>
 <li><strong>Retrieval</strong>: search prior traces for similar failure signatures.</li>
 </ul>
+<p>End-to-end walkthrough (one bugfix, four layers):</p>
+<p>1) <strong>Retrieval index (Layer 4) proposes candidates</strong><br/>
+   The agent runs “retrieve top 5 related incidents” using the failing test name and a short error signature (e.g., <code>TypeError: cannot read property 'id' of null</code>). It gets excerpts like:
+   - an incident note mentioning “null user during CLI parsing”
+   - a PR discussion that links to <code>src/parse.ts</code>
+   These excerpts are treated as leads. The agent follows the links and re-checks the current sources.</p>
+<p>2) <strong>Run-local scratch (Layer 1) captures hypotheses, not conclusions</strong><br/>
+   The agent writes volatile notes such as:
+   - “Hypothesis A: null handling in parse.ts”
+   - “Hypothesis B: fixture missing <code>id</code> field”
+   - “Next checks: reproduce with <code>npm test -t parse</code>”
+   If the hypothesis changes after inspecting sources, the scratch note is overwritten.</p>
+<p>3) <strong>Session task state (Layer 2) makes progress and verification explicit</strong><br/>
+   The agent maintains a task record (checklist-style) like:
+   - Repro step captured: <code>npm test -t "parse handles null user"</code> ✅
+   - Minimal failing input recorded (fixture path) ✅
+   - Fix implemented in <code>src/parse.ts</code> ⬜
+   - Regression test added/updated ⬜
+   - Verification rerun (tests/lint) ⬜
+   This is the place to see what was done and what remains. It is cleared when the task closes.</p>
+<p>4) <strong>Project durable facts (Layer 3) is written only after verification</strong><br/>
+   After tests pass, the agent writes a durable note (ADR/runbook/“root cause” entry) that includes:
+   - the root cause (“parser assumed non-null user; null can occur when flag X is omitted”)
+   - the fix (“guard + explicit error message”)
+   - sources (commit hash, file paths, failing test name, trace ID)
+   This is what makes future runs governable. The durable entry points back to artifacts that can be re-checked.</p>
+<p>Operationally, this keeps reproducibility. You can replay the run by inspecting the sources, seeing which retrieval hits were used, and verifying that durable memory was gated on passing checks.</p>
+<p>Second scenario (non-bugfix): onboarding and runbook lookup:</p>
+<ul>
+<li><strong>Retrieval (Layer 4)</strong>: query “deploy rollback steps” and “service X runbook” and pull top-k links only.</li>
+<li><strong>Scratch (Layer 1)</strong>: jot “candidate runbooks: docs/runbooks/rollback.md, incident-2025-11-03” and open questions.</li>
+<li><strong>Session state (Layer 2)</strong>: track “confirmed steps in staging” and “who reviewed,” plus exact commands run.</li>
+<li><strong>Durable facts (Layer 3)</strong>: after a staging drill passes, record an updated runbook entry with sources (PR link and command transcript). Include a drill run ID (e.g., <code>DRILL-2026-02-22</code>) and a pass criterion (e.g., rollback script exits 0).</li>
+</ul>
 <h2 id="failure-modes">Failure modes</h2>
 <ul>
-<li><strong>Stale memory</strong>: outdated assumptions persist after refactors; fixes target the wrong code.</li>
-<li><strong>Memory poisoning</strong>: incorrect entries are stored as facts and bias future actions.</li>
-<li><strong>Over-retrieval</strong>: too many irrelevant items drown the signal and dilute constraints.</li>
-<li><strong>Silent mutation</strong>: memory is updated without review; history is effectively rewritten.</li>
-<li><strong>Unversioned dependency</strong>: behavior depends on memory that is not tied to code/version.</li>
-<li><strong>Privacy leakage</strong>: sensitive content is stored, retrieved, or logged without appropriate handling.</li>
+<li><strong>Stale memory</strong>: outdated assumptions persist after refactors; fixes target the wrong code. Mitigation: store <strong>sources and version identifiers</strong> with durable entries, and treat retrieval as a hint that must be confirmed against current files/traces.</li>
+<li><strong>Memory poisoning</strong>: incorrect entries are stored as facts and bias future actions. Mitigation: apply a <strong>write gate</strong> (only after verification) and use <strong>separate schemas</strong> so “open questions” and “hypotheses” do not masquerade as facts.</li>
+<li><strong>Over-retrieval</strong>: too many irrelevant items drown the signal and dilute constraints. Mitigation: keep retrieval <strong>top-k and source-linked</strong>, and require confirmation against sources for critical claims rather than pasting large context blobs.</li>
+<li><strong>Silent mutation</strong>: memory is updated without review; history is effectively rewritten. Mitigation: prefer <strong>append-only, versioned durable records</strong> tied to releases/commits instead of in-place edits.</li>
+<li><strong>Unversioned dependency</strong>: behavior depends on memory that is not tied to code/version. Mitigation: <strong>version memory alongside the system</strong> (or bind to release identifiers) so the dependency is explicit and reviewable.</li>
+<li><strong>Privacy leakage</strong>: sensitive content is stored, retrieved, or logged without appropriate handling. Mitigation: enforce <strong>retention/redaction policies</strong> (delete by scope/source/time) and keep derived indexes rebuildable so deletion is enforceable.</li>
 </ul>
 <h2 id="when-not-to-use">When not to use</h2>
 <ul>
@@ -1185,60 +761,32 @@
 <li>High-sensitivity domains without a clear retention/redaction policy.</li>
 <li>Systems that require strict reproducibility but cannot version memory with code.</li>
 </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
+<p>Fallback for strict reproducibility: rely on explicit logs + artifacts (commands, traces, patches, test reports) and keep “memory” limited to pointers into those sources.</p>
+</article>
+</div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
       Material for MkDocs
     </a>
-  
 </div>
-      
-    </div>
-  </div>
+</div>
+</div>
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-    
-  </body>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
 </html>

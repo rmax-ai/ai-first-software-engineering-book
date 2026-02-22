@@ -1,210 +1,108 @@
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Technical book on AI-first software engineering governance and execution">
-      
-      
-        <meta name="author" content="Autonomous Authors">
-      
-      
-      
-        <link rel="prev" href="../../glossary/">
-      
-      
-        <link rel="next" href="../memory-architectures/">
-      
-      
-        
-      
-      
-      <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
-    
-    
-      
-        <title>Harness Design - AI-First Software Engineering</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+<!DOCTYPE html>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#harness-design-patterns" class="md-skip">
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Technical book on AI-first software engineering governance and execution" name="description"/>
+<meta content="Autonomous Authors" name="author"/>
+<link href="../../glossary/" rel="prev"/>
+<link href="../memory-architectures/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
+<title>Harness Design - AI-First Software Engineering</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#harness-design-patterns">
           Skip to content
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
+</div>
+<div data-md-component="announce">
+</div>
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="AI-First Software Engineering" class="md-header__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="AI-First Software Engineering" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
             AI-First Software Engineering
           </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
             
               Harness Design
             
           </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
+</div>
+</div>
+</div>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+<ol class="md-search-result__list" role="presentation"></ol>
 </div>
-      
-    
-    
-  </nav>
-  
+</div>
+</div>
+</div>
+</div>
+</nav>
 </header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="AI-First Software Engineering" class="md-nav__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="AI-First Software Engineering" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
     AI-First Software Engineering
   </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
     
   
     Home
@@ -212,26 +110,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../preface/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../preface/">
+<span class="md-ellipsis">
     
   
     Preface
@@ -239,37 +122,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
     
   
     Chapters
@@ -277,35 +135,21 @@
 
     
   </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
             
   
     Chapters
   
 
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/01-paradigm-shift/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/01-paradigm-shift/">
+<span class="md-ellipsis">
     
   
     01. Paradigm Shift
@@ -313,27 +157,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/02-harness-engineering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/02-harness-engineering/">
+<span class="md-ellipsis">
     
   
     02. Harness Engineering
@@ -341,27 +169,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/03-autonomous-kernels/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/03-autonomous-kernels/">
+<span class="md-ellipsis">
     
   
     03. Autonomous Kernels
@@ -369,27 +181,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/04-memory-systems/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/04-memory-systems/">
+<span class="md-ellipsis">
     
   
     04. Memory Systems
@@ -397,27 +193,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/05-evaluation-and-traces/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/05-evaluation-and-traces/">
+<span class="md-ellipsis">
     
   
     05. Evaluation and Traces
@@ -425,27 +205,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/06-agent-governance/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/06-agent-governance/">
+<span class="md-ellipsis">
     
   
     06. Agent Governance
@@ -453,27 +217,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/07-production-ai-infrastructure/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/07-production-ai-infrastructure/">
+<span class="md-ellipsis">
     
   
     07. Production AI Infrastructure
@@ -481,27 +229,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../chapters/99-future-directions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../chapters/99-future-directions/">
+<span class="md-ellipsis">
     
   
     99. Future Directions
@@ -509,34 +241,14 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../glossary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../glossary/">
+<span class="md-ellipsis">
     
   
     Glossary
@@ -544,39 +256,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
     
   
     Patterns Overview
@@ -584,44 +269,22 @@
 
     
   </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
             
   
     Patterns Overview
   
 
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
     
   
     Harness Design
@@ -629,17 +292,10 @@
 
     
   </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
     
   
     Harness Design
@@ -647,202 +303,144 @@
 
     
   </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#context">
+<span class="md-ellipsis">
       
         Context
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
       
         Problem
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#forces" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forces">
+<span class="md-ellipsis">
       
         Forces
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#solution" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solution">
+<span class="md-ellipsis">
       
         Solution
       
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pattern-1-typed-tool-boundary" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Solution" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-1-typed-tool-boundary">
+<span class="md-ellipsis">
       
         Pattern 1: Typed Tool Boundary
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#pattern-2-budgeted-control-stepstimecost" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-2-budgeted-control-stepstimecost">
+<span class="md-ellipsis">
       
         Pattern 2: Budgeted Control (Steps/Time/Cost)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#pattern-3-evidence-first-completion" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-3-evidence-first-completion">
+<span class="md-ellipsis">
       
         Pattern 3: Evidence-First Completion
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#pattern-4-narrow-context-construction" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-4-narrow-context-construction">
+<span class="md-ellipsis">
       
         Pattern 4: Narrow Context Construction
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#pattern-5-separation-of-duties-plan-vs-execute-vs-verify" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-5-separation-of-duties-plan-vs-execute-vs-verify">
+<span class="md-ellipsis">
       
         Pattern 5: Separation of Duties (Plan vs. Execute vs. Verify)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-sketch" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
       
         Implementation sketch
       
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation sketch">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#concrete-example" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Implementation sketch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example">
+<span class="md-ellipsis">
       
         Concrete example
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#failure-modes" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
       
         Failure modes
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#when-not-to-use" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
       
         When not to use
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../memory-architectures/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../memory-architectures/">
+<span class="md-ellipsis">
     
   
     Memory Architectures
@@ -850,27 +448,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../minimal-agent-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../minimal-agent-loop/">
+<span class="md-ellipsis">
     
   
     Minimal Agent Loop
@@ -878,27 +460,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../self-verification-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../self-verification-loop/">
+<span class="md-ellipsis">
     
   
     Self-Verification Loop
@@ -906,235 +472,194 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
+</a>
+</li>
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#context">
+<span class="md-ellipsis">
       
         Context
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
       
         Problem
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#forces" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forces">
+<span class="md-ellipsis">
       
         Forces
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#solution" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solution">
+<span class="md-ellipsis">
       
         Solution
       
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pattern-1-typed-tool-boundary" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Solution" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-1-typed-tool-boundary">
+<span class="md-ellipsis">
       
         Pattern 1: Typed Tool Boundary
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#pattern-2-budgeted-control-stepstimecost" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-2-budgeted-control-stepstimecost">
+<span class="md-ellipsis">
       
         Pattern 2: Budgeted Control (Steps/Time/Cost)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#pattern-3-evidence-first-completion" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-3-evidence-first-completion">
+<span class="md-ellipsis">
       
         Pattern 3: Evidence-First Completion
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#pattern-4-narrow-context-construction" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-4-narrow-context-construction">
+<span class="md-ellipsis">
       
         Pattern 4: Narrow Context Construction
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#pattern-5-separation-of-duties-plan-vs-execute-vs-verify" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-5-separation-of-duties-plan-vs-execute-vs-verify">
+<span class="md-ellipsis">
       
         Pattern 5: Separation of Duties (Plan vs. Execute vs. Verify)
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-sketch" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
       
         Implementation sketch
       
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation sketch">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#concrete-example" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Implementation sketch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example">
+<span class="md-ellipsis">
       
         Concrete example
       
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#failure-modes" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
       
         Failure modes
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#when-not-to-use" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
       
         When not to use
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
 <h1 id="harness-design-patterns">Harness Design Patterns</h1>
 <h2 id="context">Context</h2>
 <p>A model alone is a general-purpose component. Production behavior is shaped by the harness: prompts, tools, memory, budgets, verification, and traceability.</p>
+<p>In this chapter, “agent” means the model-driven decision-maker. It is the part that chooses actions and generates outputs. “Harness” means everything around the agent that constrains, records, and verifies actions. That includes the step loop, tool boundary, context construction, budget enforcement, and the evidence required before “done.”</p>
+<p>A harness is <em>governable</em> when run artifacts can answer: what was allowed, what was attempted, what changed, what was proven, and who approved high-risk capability.</p>
 <h2 id="problem">Problem</h2>
 <p>How do you design a harness that is reliable, debuggable, and governable without building a fragile tangle of special cases?</p>
+<p>More concretely, how do you get repeatable outcomes from bounded iteration? How do you get explainable outcomes from traces and errors? How do you get safe outcomes from tool gating and verification, while keeping enough capability for real repo tasks?</p>
 <h2 id="forces">Forces</h2>
 <ul>
 <li><strong>Constraints vs. coverage</strong>: adding constraints improves safety but can reduce task coverage.</li>
+<li>Mitigation: enforce constraints in the kernel/router (budgets, tool allowlists). Do not rely on prompt-only rules.</li>
+<li>Over-optimizing risk: narrow allowlists and strict stop gates can force manual “escape hatches.” That reduces auditability.</li>
 <li><strong>Tools vs. surface area</strong>: more tools increase capability but enlarge the debug and governance surface.</li>
+<li>Mitigation: prefer a small set of composable, typed tools. Keep a consistent error model and idempotency.</li>
+<li>Over-optimizing risk: tool sprawl creates overlapping affordances (“edit_file” vs “apply_patch” vs “write_file”). Traces become harder to interpret.</li>
 <li><strong>Memory vs. drift/privacy</strong>: continuity improves with memory, but so do drift and data handling risks.</li>
+<li>Mitigation: narrow context construction with explicit selection limits. Treat summaries as <em>derived</em> artifacts, not source of truth.</li>
+<li>Over-optimizing risk: long-term memory can preserve outdated assumptions. It also increases retention and redaction obligations.</li>
 <li><strong>Automation vs. blast radius</strong>: stronger automation improves throughput but increases the impact of failures.</li>
+<li>Mitigation: separate plan/execute/verify duties. Add governance gates for high-risk tools or wide-scope edits.</li>
+<li>Over-optimizing risk: automatic execution without approvals or rollback can amplify a single bad decision. The impact can be repo-wide.</li>
 <li><strong>Observability vs. cost</strong>: better tracing and verification cost time and compute.</li>
+<li>Mitigation: require a minimal, standardized verification bundle. Record commands, exit codes, diffs, and checksums.</li>
+<li>Over-optimizing risk: heavyweight evals and extensive instrumentation can consume the budget. Little time remains to fix what the eval found.</li>
 </ul>
 <h2 id="solution">Solution</h2>
 <p>Use a small set of recurring harness patterns that are easy to audit and compose.</p>
+<p>Together, these patterns form a cohesive system. Define a strict side-effect boundary (tools). Bound the process (budgets). Require proof (evidence). Keep inputs minimal (narrow context). Prevent phase-skipping (separation of duties).</p>
+<p>End-to-end mini-walkthrough (how the patterns compose in a typical repo edit):</p>
+<ul>
+<li>The run begins in <strong>Plan</strong> mode and produces a concrete plan. No side effects are permitted. <em>(Pattern 5)</em></li>
+<li>A narrow working set is constructed (for example, 2–4 files) plus a summary of prior steps. <em>(Pattern 4)</em></li>
+<li>In <strong>Execute</strong> mode, the agent proposes a patch. Mutations happen only via a typed patch tool with a structured result and checksum. <em>(Pattern 1)</em></li>
+<li>The kernel enforces iteration budgets (steps/time/cost). On exhaustion, the run stops with a partial report and the trace. <em>(Pattern 2)</em></li>
+<li>In <strong>Verify</strong> mode, checks are run and recorded. “Done” is accepted only if verification artifacts exist. <em>(Pattern 3)</em></li>
+</ul>
 <h3 id="pattern-1-typed-tool-boundary">Pattern 1: Typed Tool Boundary</h3>
 <ul>
 <li><strong>Idea</strong>: tools are the only way to cause side effects, and each tool has a typed schema with explicit errors.</li>
@@ -1174,6 +699,14 @@
 <li><strong>Verifier</strong>: runs evals/tests and records outputs.</li>
 <li><strong>Governance layer</strong>: approvals for high-risk tools, audit logs, retention/redaction rules.</li>
 </ul>
+<p>A diagram helps here because the harness is mostly about boundaries and evidence flow. It shows where side effects can occur. It also shows where gates enforce approvals and verification.</p>
+<p>To make “evidence-first” operational, define the minimal verification bundle that the Verifier must emit into the trace. This should happen even on failure. At minimum:</p>
+<ul>
+<li><strong>What ran</strong>: command lines or eval identifiers, plus working directory and relevant env flags (redacted as needed).</li>
+<li><strong>What happened</strong>: exit code, duration, and a bounded stdout/stderr capture (or a pointer to stored logs).</li>
+<li><strong>What changed</strong>: patch/diff identifiers and file-level checksums (before/after) for any mutated files.</li>
+<li><strong>What was decided</strong>: a final outcome marker such as <code>verified</code> or <code>blocked</code>, plus reproduction steps when blocked.</li>
+</ul>
 <p>A small harness configuration can be expressed as a policy document (conceptual):</p>
 <pre><code class="language-yaml">tools:
   allowlist: [read_file, grep_search, apply_patch, get_errors, run_in_terminal]
@@ -1182,8 +715,25 @@ budgets:
   max_minutes: 5
 stop_gate:
   require_verification: true
-  acceptable_outcomes: [&quot;verified&quot;, &quot;blocked&quot;]
+  acceptable_outcomes: ["verified", "blocked"]
 </code></pre>
+<p>A diagram helps here because the harness is mostly about <em>boundaries</em> (who can do what) and <em>evidence flow</em> (what must be recorded before completion). As you read it, focus on two things: where side effects can occur, and where gates enforce approvals and verification.</p>
+<div class="mermaid">flowchart TB
+  K["Kernel\n(step loop + budgets)"] --&gt; C["Context builder\n(select + summarize)"]
+  C --&gt; M["Model\n(decide next action)"]
+  M --&gt; TR["Tool router\n(allowlist + schema validate)"]
+  TR --&gt; SE["Side effects\n(files / network / system)"]
+
+  G["Governance layer\n(approvals + audit)"] -. "approval gate (dashed)" .-&gt; TR
+  V["Verifier\n(tests/evals + capture)"] --&gt; SE
+  V --&gt; K
+
+  K -. "trace append (dashed)" .-&gt; T["Trace store\n(events + artifacts)"]
+  TR -. "tool result (dashed)" .-&gt; T
+  V -. "verification bundle (dashed)" .-&gt; T
+  SE -. "outputs/logs (dashed)" .-&gt; T
+</div>
+<p>In the diagram, solid arrows represent control/data flow for the run (what happens next), while dashed arrows represent trace and gate signals (what must be recorded or approved). The key takeaway is that side effects are reachable only through the tool router, and completion is reachable only after the verifier has produced evidence into the trace.</p>
 <h3 id="concrete-example">Concrete example</h3>
 <p>Repo task agent that edits documentation:</p>
 <ul>
@@ -1191,14 +741,34 @@ stop_gate:
 <li>Budgets: 15 steps, 3 minutes.</li>
 <li>Stop gate: markdown checks (or at minimum a syntax/lint pass) must be clean, or the run stops as “blocked” with reproduction steps.</li>
 </ul>
+<p>Trace snippet (expected high-level events, in order):</p>
+<ul>
+<li><code>plan_created</code> (includes constraints and intended files)</li>
+<li><code>files_selected</code> (file list + selection rationale)</li>
+<li><code>patch_applied</code> (diff id + checksums)</li>
+<li><code>checks_run</code> (commands + exit codes + captured output pointers)</li>
+<li><code>run_outcome: verified | blocked</code> (plus reproduction steps if blocked)</li>
+</ul>
 <h2 id="failure-modes">Failure modes</h2>
 <ul>
 <li><strong>Tool sprawl</strong>: too many overlapping tools; selection becomes inconsistent and hard to audit.</li>
+<li>Typical symptom: similar tasks produce different tool sequences, making runs hard to compare.</li>
+<li>Mitigation: Pattern 1 (Typed Tool Boundary) with a small, composable tool set and consistent return types.</li>
 <li><strong>Hidden side effects</strong>: tools mutate state without reporting it; traces become misleading.</li>
+<li>Typical symptom: verification fails but there is no record of what changed.</li>
+<li>Mitigation: Pattern 1 (typed results + checksums) plus Pattern 3 (evidence bundle includes “what changed”).</li>
 <li><strong>Context bloat</strong>: prompts include too much content; constraints and acceptance criteria are diluted.</li>
+<li>Typical symptom: the agent “forgets” budgets or acceptance criteria because they are drowned out by irrelevant text.</li>
+<li>Mitigation: Pattern 4 (Narrow Context Construction) with explicit file limits and rolling summaries.</li>
 <li><strong>Policy bypass</strong>: weak allowlists or validation enable unintended actions.</li>
+<li>Typical symptom: the agent discovers an unreviewed capability via a permissive tool surface (“run_shell” becomes a universal escape hatch).</li>
+<li>Mitigation: Pattern 1 (tool allowlists + schema validation) and Pattern 5 (phase constraints that prevent execution-time policy edits).</li>
 <li><strong>Unmeasured changes</strong>: no evals/verification; regressions ship silently.</li>
+<li>Typical symptom: “looks good” completions that fail when rerun or merged.</li>
+<li>Mitigation: Pattern 3 (Evidence-First Completion) with a stop gate that requires recorded verification.</li>
 <li><strong>Over-coupling</strong>: harness depends on brittle prompt wording instead of enforceable kernel/router constraints.</li>
+<li>Typical symptom: small wording changes in system prompts shift behavior dramatically.</li>
+<li>Mitigation: Pattern 2 (Budgeted Control) and Pattern 1 (enforced tool boundary) so critical constraints are not prompt-dependent.</li>
 </ul>
 <h2 id="when-not-to-use">When not to use</h2>
 <ul>
@@ -1206,60 +776,31 @@ stop_gate:
 <li>One-off exploratory work where harness engineering overhead dominates.</li>
 <li>Systems without ownership/ops capacity to maintain tools, budgets, verification, and incident response.</li>
 </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
+</article>
+</div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
       Material for MkDocs
     </a>
-  
 </div>
-      
-    </div>
-  </div>
+</div>
+</div>
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-    
-  </body>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
 </html>
