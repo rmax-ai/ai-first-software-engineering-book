@@ -1,27 +1,19 @@
 # Plan
 
-1. Baseline current harness guidance from `DEVELOPMENT.md` and align proposed work with deterministic, minimal-diff iteration flow.
-2. Define **feature backlog** for the custom harness:
-   - Add richer trace-summary observability in `state/kernel.py` for iteration outputs and guard outcomes.
-   - Clarify role I/O scaffolds in `state/role_io_templates.py` so writer/critic transitions are easier to validate deterministically.
-   - Add deterministic UV smoke coverage in `state/copilot_sdk_uv_smoke.py` for new trace and role-template invariants.
-3. Define **test backlog** to prove feature work:
-   - Add/extend focused smoke modes in `state/copilot_sdk_uv_smoke.py`.
-   - Add targeted unit-level checks (or deterministic helper checks) for trace-summary shape and role-template contracts.
-   - Validate via `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>`.
-4. Define **evaluation backlog** to prevent regressions:
-   - Ensure eval contracts in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` reflect new expected signals.
-   - Confirm harness outputs remain compatible with `state/metrics.json` and iteration artifact requirements.
-5. Sequence future work as smallest tasks:
-   - Iteration N+1: implement one trace-summary observability improvement in `state/kernel.py` with a deterministic smoke assertion.
-   - Iteration N+2: tighten `state/role_io_templates.py` scaffolds and add coverage.
-   - Iteration N+3: wire eval contract refinements under `evals/*.yaml`.
+1. Baseline current harness touchpoints from `DEVELOPMENT.md` and existing `state/` assets.
+2. Define feature backlog slices for:
+   - richer kernel trace observability in `state/kernel.py`
+   - clearer deterministic role I/O scaffolding in `state/role_io_templates.py`
+   - stronger smoke coverage in `state/copilot_sdk_uv_smoke.py`
+3. Map each feature slice to explicit tests and smoke commands (`uv run python ...`) needed for proof.
+4. Map each slice to regression detection through `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`, including expected signals in `state/metrics.json`.
+5. Produce a one-task next-iteration recommendation with concrete acceptance criteria and file targets.
 
-## Files expected to change in future iterations
-
+## Expected files to change in later iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
+- `state/metrics.json` (signal verification only; schema preserved)
