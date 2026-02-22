@@ -1231,21 +1231,26 @@ def run_usage_examples_duplicate_count_regression_guard_mode() -> int:
     return 0
 
 
-def run_usage_examples_duplicate_count_mode_coverage_guard_mode() -> int:
-    all_mode_specs = _all_mode_specs()
-    target_mode_name = "usage-examples-duplicate-count-regression-guard"
+def _assert_mode_in_parser_and_usage_examples(
+    all_mode_specs: Sequence[tuple[str, Callable[[], int], str]], target_mode_name: str
+) -> None:
     parser = _build_parser(all_mode_specs)
     mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert target_mode_name in parser_mode_choices, (
         f"expected argparse --mode choices to include {target_mode_name}"
     )
-
     usage_lines = _usage_doc_lines(all_mode_specs)
     usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
     assert target_mode_name in usage_mode_names, (
         f"expected generated usage examples to include {target_mode_name}"
     )
+
+
+def run_usage_examples_duplicate_count_mode_coverage_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    target_mode_name = "usage-examples-duplicate-count-regression-guard"
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard mode validates duplicate-count regression mode coverage"
@@ -1399,18 +1404,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_uniquen
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard mode coverage"
