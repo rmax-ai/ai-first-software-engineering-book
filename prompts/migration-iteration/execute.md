@@ -17,7 +17,7 @@ Do not hard-code a specific iteration number.
 
 ## Source of Truth
 
-- Read `state/copilot-sdk-migration-plan.md`.
+- Read `DEVELOPMENT.md`
 - Read the latest prior iteration folder under `state/migration_iterations/` if it exists.
 - If prior iteration includes `06-next-iteration.md`, treat it as high-priority guidance.
 
