@@ -94,6 +94,7 @@ Mini-runbook (a single bounded kernel run):
    - Hypothesis: empty string is being treated as a valid token stream in `src/parser.py`.
    - Action: make a minimal edit that rejects empty input at the boundary (not across unrelated call sites).
    - Budget check:
+
      - ensure diff size stays within 40 lines and touches only `src/parser.py` (or a single adjacent file if necessary).
 
    - Record:
@@ -101,6 +102,7 @@ Mini-runbook (a single bounded kernel run):
      - diff stats: `+6 -1` (placeholder)
 
 3. Run verification gate (tight but credible)
+
    - Gate 1: rerun the failing test.
      - Command: `pytest -k rejects_empty_input`
    - Gate 2 (cheap regression check): run related unit tests only.
