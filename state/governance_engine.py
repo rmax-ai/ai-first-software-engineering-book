@@ -19,6 +19,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
 
 LEDGER_DEFAULT_PATH = Path(__file__).resolve().parent / "ledger.json"
 IMMUTABLE_GOVERNANCE_FILES = {"AGENTS.md", "CONSTITUTION.md"}
@@ -26,6 +28,49 @@ IMMUTABLE_GOVERNANCE_FILES = {"AGENTS.md", "CONSTITUTION.md"}
 
 class GovernanceError(RuntimeError):
     pass
+
+
+class ChapterQualityPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    structure_score: float | int | None = 0.0
+    drift_score: float | int | None = 0.0
+
+
+class ChapterStabilityPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    consecutive_passes: int | None = 0
+    last_modified_iteration: int | str | None = 0
+    frozen_candidate: bool | None = None
+
+
+class LedgerChapterPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    status: str | None = None
+    lifecycle: str | None = None
+    quality_metrics: ChapterQualityPayload = Field(default_factory=ChapterQualityPayload)
+    stability: ChapterStabilityPayload = Field(default_factory=ChapterStabilityPayload)
+
+
+class LedgerPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    version: int | None = None
+    chapter_lifecycle_rules: dict[str, Any] = Field(default_factory=dict)
+    chapter_selection_strategy: dict[str, Any] = Field(default_factory=dict)
+    repo_iteration_log: list[dict[str, Any]] = Field(default_factory=list)
+    chapters: dict[str, LedgerChapterPayload] = Field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class LedgerTransit:
+    raw: dict[str, Any]
+    payload: LedgerPayload
+
+    def as_ledger_dict(self) -> dict[str, Any]:
+        return self.raw
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -39,6 +84,15 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 def _dump_json(data: Any) -> str:
     return json.dumps(data, indent=2, sort_keys=True)
+
+
+def _load_ledger(path: Path) -> LedgerTransit:
+    raw = _load_json(path)
+    try:
+        payload = LedgerPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise GovernanceError(f"Invalid ledger payload: {exc}") from exc
+    return LedgerTransit(raw=raw, payload=payload)
 
 
 def _get_chapters(ledger: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -313,7 +367,7 @@ def compute_lifecycle_promotions(ledger: dict[str, Any]) -> dict[str, str]:
 
 
 def _cmd_validate(args: argparse.Namespace) -> int:
-    ledger = _load_json(args.ledger)
+    ledger = _load_ledger(args.ledger).as_ledger_dict()
     errors = validate_ledger(ledger)
     if errors:
         sys.stderr.write("Ledger validation failed:\n")
@@ -326,7 +380,7 @@ def _cmd_validate(args: argparse.Namespace) -> int:
 
 
 def _cmd_select(args: argparse.Namespace) -> int:
-    ledger = _load_json(args.ledger)
+    ledger = _load_ledger(args.ledger).as_ledger_dict()
     errors = validate_ledger(ledger)
     if errors:
         sys.stderr.write("Ledger validation failed; refusing to select.\n")
@@ -340,7 +394,7 @@ def _cmd_select(args: argparse.Namespace) -> int:
 
 
 def _cmd_promotions(args: argparse.Namespace) -> int:
-    ledger = _load_json(args.ledger)
+    ledger = _load_ledger(args.ledger).as_ledger_dict()
     errors = validate_ledger(ledger)
     if errors:
         sys.stderr.write("Ledger validation failed; refusing to compute promotions.\n")
