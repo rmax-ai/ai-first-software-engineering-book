@@ -112,6 +112,12 @@ class LLMJSONResponseTextPayload(BaseModel):
     text: str
 
 
+class YAMLTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
 class CriticEvalInputsPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -420,10 +426,20 @@ class MetricsHistoryTransit:
 class YAMLMappingTransit:
     source_path: Path
     raw_text: str
+    yaml_text: "YAMLTextTransit"
     payload: YAMLMappingPayload
 
     def to_mapping(self) -> dict[str, Any]:
         return self.payload.data
+
+
+@dataclass(frozen=True)
+class YAMLTextTransit:
+    source_path: Path
+    payload: YAMLTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
 
 
 @dataclass(frozen=True)
@@ -475,14 +491,22 @@ def _load_yaml(path: Path) -> YAMLMappingTransit:
         raw_text = path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
         raise KernelError(f"Missing YAML file: {path}") from exc
-    data = yaml.safe_load(raw_text)
+    try:
+        yaml_text_payload = YAMLTextPayload.model_validate({"text": raw_text})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid YAML text payload: {path}: {exc}") from exc
+    yaml_text = YAMLTextTransit(source_path=path, payload=yaml_text_payload)
+    try:
+        data = yaml.safe_load(yaml_text.to_text())
+    except yaml.YAMLError as exc:
+        raise KernelError(f"Invalid YAML: {path}: {exc}") from exc
     if not isinstance(data, dict):
         raise KernelError(f"Expected YAML mapping at {path}")
     try:
         payload = YAMLMappingPayload.model_validate({"data": data})
     except ValidationError as exc:
         raise KernelError(f"Invalid YAML mapping payload: {path}: {exc}") from exc
-    return YAMLMappingTransit(source_path=path, raw_text=raw_text, payload=payload)
+    return YAMLMappingTransit(source_path=path, raw_text=yaml_text.to_text(), yaml_text=yaml_text, payload=payload)
 
 
 def _load_eval_config(path: Path) -> DeterministicEvalConfigTransit:
