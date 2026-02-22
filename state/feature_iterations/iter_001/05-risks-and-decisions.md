@@ -1,12 +1,14 @@
-# Risks and Decisions
+# Risks and decisions
 
-## Risks
-- Planned scope may still be broad if a future iteration attempts multiple harness behaviors at once.
-- Eval mappings may drift if implementation lands without updating corresponding `evals/*.yaml` assertions.
+## Risks discovered
+- Planning quality risk: without explicit acceptance checks, future iterations could drift into broad refactors.
+- Signal risk: new telemetry fields may be added without eval updates, reducing regression detectability.
 
 ## Decisions and trade-offs
-- Chose planning-only execution for this seed iteration to match prompt requirements and minimize risk.
-- Deferred implementation details in favor of one concrete next task to keep iteration granularity tight.
+- Chose a planning-only iteration per prompt requirements; deferred all runtime code edits.
+- Chose minimal, file-targeted backlog items to keep subsequent diffs small and reviewable.
+- Kept compatibility as a first-order constraint (future work should preserve existing public interfaces).
 
-## Deferred items
-- Actual kernel/role-IO/smoke/eval code updates are intentionally deferred to the next iteration.
+## Deferred intentionally
+- Implementation of trace schema updates in `state/kernel.py`.
+- Smoke/eval contract updates until after trace schema is finalized in the next iteration.
