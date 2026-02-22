@@ -1,12 +1,14 @@
 # Risks and decisions
 
 ## Risks
-- The backlog is concise by design, so implementation iterations must avoid scope creep when converting plan bullets into code changes.
-- Eval coupling can regress if new harness signals are added without updating matching `evals/*.yaml` expectations.
+- Planning-only iteration provides no executable regression signal by itself.
+- Later iterations may over-scope unless each task remains a smallest vertical slice.
 
 ## Decisions and trade-offs
-- Chose a planning-only seed iteration to satisfy prompt requirements and minimize risk.
-- Deferred all runtime modifications to future iterations so evidence can be gathered with targeted tests per feature.
+- Chose planning scope only (per seed instruction) instead of implementing kernel changes immediately.
+- Deferred implementation to keep this iteration deterministic and reviewable.
 
-## Intentionally deferred
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+## Deferred work
+- Implement structured kernel trace improvements.
+- Add/adjust smoke modes for new guardrails.
+- Update eval YAML assertions to match new observability outputs.
