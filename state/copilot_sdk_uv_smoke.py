@@ -103,8 +103,13 @@ class JSONMappingPayload(BaseModel):
     data: dict[str, Any]
 
 
+class JSONLinePayload(BaseModel):
+    line_number: int
+    data: dict[str, Any]
+
+
 class JSONLinesPayload(BaseModel):
-    entries: list[JSONMappingPayload]
+    entries: list[JSONLinePayload]
 
 
 @dataclass(frozen=True)
@@ -124,6 +129,10 @@ class JSONMappingTransit:
 @dataclass(frozen=True)
 class JSONLinesTransit:
     payload: JSONLinesPayload
+
+    @classmethod
+    def from_payload(cls, payload: JSONLinesPayload) -> "JSONLinesTransit":
+        return cls(payload=payload)
 
     def to_mappings(self) -> list[dict[str, Any]]:
         return [entry.data for entry in self.payload.entries]
@@ -407,13 +416,25 @@ def _load_metrics(path: Path) -> MetricsTransit:
 
 def _load_kernel_trace(path: Path) -> KernelTraceTransit:
     try:
-        raw_entries = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    except json.JSONDecodeError as exc:
-        raise RuntimeError(f"Invalid kernel trace entry JSON at {path}: {exc}") from exc
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"Kernel trace file not found: {path}") from exc
+    raw_entries: list[dict[str, Any]] = []
+    for line_number, line in enumerate(lines, start=1):
+        if not line.strip():
+            continue
+        try:
+            parsed_line = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise RuntimeError(f"Invalid kernel trace entry JSON at {path}:{line_number}: {exc}") from exc
+        if not isinstance(parsed_line, dict):
+            raise RuntimeError(f"Invalid kernel trace entry JSON at {path}:{line_number}: expected object mapping")
+        raw_entries.append({"line_number": line_number, "data": parsed_line})
     try:
-        json_lines = JSONLinesTransit(payload=JSONLinesPayload.model_validate({"entries": [{"data": entry} for entry in raw_entries]}))
+        json_lines_payload = JSONLinesPayload.model_validate({"entries": raw_entries})
     except ValidationError as exc:
         raise RuntimeError(f"Invalid kernel trace JSON mapping payload at {path}: {exc}") from exc
+    json_lines = JSONLinesTransit.from_payload(json_lines_payload)
     try:
         payload = KernelTracePayload.model_validate({"entries": json_lines.to_mappings()})
     except ValidationError as exc:
