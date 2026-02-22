@@ -73,6 +73,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/governance_engine.py` now parses chapter selection strategy ordering via `ChapterSelectionStrategyPayload` and forwards lifecycle selection order via `SelectionStrategyTransit` before deterministic chapter selection.
 - `state/governance_engine.py` now validates CLI argument ingestion through `GovernanceCLIArgsPayload` and forwards parsed command arguments via `GovernanceCLIArgsTransit` before command handler dispatch.
 - `state/governance_engine.py` now constrains CLI command ingestion through `GovernanceCLIArgsPayload` literal command values and dispatches handlers via `GovernanceCLIArgsTransit` payload data instead of forwarding raw callable references.
+- `state/governance_engine.py` now validates unhold/unlock status update requests through `ChapterStatusUpdatePayload` and forwards chapter-id/status values via `ChapterStatusUpdateTransit` before status mutation checks.
 - `state/copilot_sdk_uv_smoke.py` now validates trace-summary metrics and `kernel_trace.jsonl` phase payloads with Pydantic models and forwards validated values through `MetricsHistoryTransit` and `PhaseTraceTransit`.
 - `state/copilot_sdk_uv_smoke.py` now validates fixture `state/ledger.json` chapter metadata with `KernelFixtureLedgerPayload` and forwards chapter setup through `KernelFixtureChapterTransit` before kernel smoke fixture writes.
 - `state/copilot_sdk_uv_smoke.py` now forwards validated fixture ledgers through `KernelFixtureLedgerTransit` before extracting chapter fixture payloads.
