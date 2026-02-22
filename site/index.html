@@ -35,7 +35,7 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="nav-item">
-                                <a href="docs/index.md" class="nav-link">Home</a>
+                                <a href="." class="nav-link active" aria-current="page">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a href="book/preface/" class="nav-link">Preface</a>
@@ -109,6 +109,16 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
+                            <li class="nav-item">
+                                <a rel="prev" class="nav-link disabled">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="book/preface/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
                     </ul>
                 </div>
             </div>
@@ -263,5 +273,5 @@ evals/*.yaml                 # Evaluation contracts enforced via state/kernel.py
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-02-22 16:17:24.564194+00:00
+Build Date UTC : 2026-02-22 16:18:09.180374+00:00
 -->
