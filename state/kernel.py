@@ -495,10 +495,11 @@ class YAMLMappingTransit:
 @dataclass(frozen=True)
 class YAMLTextTransit:
     source_path: Path
+    raw_text: str
     payload: YAMLTextPayload
 
     def to_text(self) -> str:
-        return self.payload.text
+        return self.raw_text
 
 
 @dataclass(frozen=True)
@@ -568,7 +569,7 @@ def _load_yaml(path: Path) -> YAMLMappingTransit:
         yaml_text_payload = YAMLTextPayload.model_validate({"text": raw_text})
     except ValidationError as exc:
         raise KernelError(f"Invalid YAML text payload: {path}: {exc}") from exc
-    yaml_text = YAMLTextTransit(source_path=path, payload=yaml_text_payload)
+    yaml_text = YAMLTextTransit(source_path=path, raw_text=yaml_text_payload.text, payload=yaml_text_payload)
     try:
         data = yaml.safe_load(yaml_text.to_text())
     except yaml.YAMLError as exc:
@@ -714,7 +715,7 @@ def _load_yaml_text(path: Path) -> YAMLTextTransit:
         payload = YAMLTextPayload.model_validate({"text": _read_text(path)})
     except ValidationError as exc:
         raise KernelError(f"Invalid YAML text payload: {path}: {exc}") from exc
-    return YAMLTextTransit(source_path=path, payload=payload)
+    return YAMLTextTransit(source_path=path, raw_text=payload.text, payload=payload)
 
 
 def _strip_wrapping_code_fence(text: str) -> str:

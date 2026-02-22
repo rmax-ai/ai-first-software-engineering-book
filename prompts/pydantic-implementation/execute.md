@@ -128,6 +128,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` now validates writer LLM markdown responses through `WriterOutputPayload` and forwards validated content via `WriterOutputTransit` before persisting `out/writer.md`.
 - `state/kernel.py` now carries writer-output source-path and raw markdown text through `WriterOutputTransit` so writer-ingestion provenance remains explicit after `WriterOutputPayload` parsing.
 - `state/kernel.py` now validates critic eval YAML text ingestion through `YAMLTextPayload` and forwards each eval input via `YAMLTextTransit` inside `CriticEvalInputsTransit` before critic prompt assembly.
+- `state/kernel.py` now carries critic-eval YAML source-path and raw YAML text through `YAMLTextTransit` so eval-input ingestion provenance remains explicit after `YAMLTextPayload` parsing.
 - `state/kernel.py` now materializes `chapter_meta` from validated `LedgerChapterPayload` via `model_dump()` so chapter transit no longer reads `ledger_transit.raw` for runtime chapter state.
 - `state/kernel.py` now routes cross-chapter markdown ingestion through `_load_chapter_text()` so `ChapterTextTransit` carries source-path/raw-text provenance before `OtherChaptersTransit` mapping conversion.
 - `state/copilot_sdk_smoke_test.py` now validates ledger snapshot JSON roots through `_load_json_mapping()` and forwards raw JSON text plus parsed mappings via `JSONMappingTransit` before `LedgerSnapshotTransit` assembly.
