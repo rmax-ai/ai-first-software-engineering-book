@@ -1,17 +1,12 @@
 # Execution
 
 ## Commands/tools run
-
-- Read prompt and governance docs with `view`:
-  - `prompts/incremental-improvements/execute.md`
-  - `AGENTS.md`
-  - `DEVELOPMENT.md`
-- Checked existing iteration folders with `glob state/feature_iterations/iter_*` (none found).
-- Created iteration directory:
-  - `mkdir -p state/feature_iterations/iter_001`
+- `view prompts/incremental-improvements/execute.md`
+- `view DEVELOPMENT.md`
+- `glob state/feature_iterations/iter_*` (no prior iterations found)
+- `apply_patch` to create iteration artifacts under `state/feature_iterations/iter_001/`
 
 ## Files changed
-
 - `state/feature_iterations/iter_001/01-task.md`
 - `state/feature_iterations/iter_001/02-plan.md`
 - `state/feature_iterations/iter_001/03-execution.md`
@@ -21,6 +16,6 @@
 - `state/feature_iterations/iter_001/07-summary.md`
 
 ## Rationale per change
-
-- Added the required seven-artifact handoff for one planning-focused seed iteration.
-- Kept scope to planning only, per prompt seed requirements.
+- Created the required seven-file iteration contract.
+- Kept the iteration planning-only per prompt seed instructions.
+- Established one concrete next task for the following iteration.
