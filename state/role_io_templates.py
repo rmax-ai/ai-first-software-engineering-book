@@ -38,6 +38,12 @@ class LedgerPayload(BaseModel):
     chapters: dict[str, LedgerChapterPayload]
 
 
+class JSONMappingPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: dict[str, Any]
+
+
 class ChapterTextPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -59,6 +65,14 @@ class LedgerTransit:
 
 
 @dataclass(frozen=True)
+class JSONMappingTransit:
+    payload: JSONMappingPayload
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.data
+
+
+@dataclass(frozen=True)
 class ChapterTextTransit:
     payload: ChapterTextPayload
 
@@ -66,17 +80,22 @@ class ChapterTextTransit:
         return self.payload.text
 
 
-def _load_json(path: Path) -> dict[str, Any]:
+def _load_json(path: Path) -> JSONMappingTransit:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        raw = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise TemplateError(f"Missing JSON file: {path}") from exc
     except json.JSONDecodeError as exc:
         raise TemplateError(f"Invalid JSON: {path}: {exc}") from exc
+    try:
+        payload = JSONMappingPayload.model_validate({"data": raw})
+    except ValidationError as exc:
+        raise TemplateError(f"Invalid JSON mapping payload: {path}: {exc}") from exc
+    return JSONMappingTransit(payload=payload)
 
 
 def _load_ledger(path: Path) -> LedgerTransit:
-    raw = _load_json(path)
+    raw = _load_json(path).to_mapping()
     try:
         payload = LedgerPayload.model_validate(raw)
     except ValidationError as exc:
