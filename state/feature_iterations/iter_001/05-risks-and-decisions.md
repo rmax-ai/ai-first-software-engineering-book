@@ -1,12 +1,13 @@
 # Risks and decisions
 
 ## Risks
-- Plan quality risk: if scope is too broad, follow-up iterations may lose minimal-diff discipline.
-- Coverage risk: eval updates might lag behind kernel changes unless each iteration keeps eval wiring in scope.
+- Plan-level ambiguity may remain until concrete constraints in `state/kernel.py` are inspected during implementation.
+- Future eval tightening in `evals/*.yaml` may fail existing flows if acceptance thresholds are set too aggressively.
 
 ## Decisions and trade-offs
-- Chose planning-only seed iteration as required by prompt, deferring code edits to later iterations.
-- Kept recommendations focused on deterministic behavior and measurable verification signals.
+- Chose strict planning-only scope to satisfy the seed-iteration requirement and avoid accidental behavior changes.
+- Prioritized deterministic observability and role-IO clarity first, because these reduce debugging cost for later feature work.
 
-## Deferred intentionally
-- Implementation details for trace event schema and parser internals are deferred to next iteration tasks.
+## Deferred items
+- Exact metric keys and trace payload schemas are deferred to the next implementation iteration.
+- Any refactors outside the listed harness/eval surfaces are intentionally deferred.

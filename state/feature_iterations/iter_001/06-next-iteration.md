@@ -1,16 +1,17 @@
 # Next iteration recommendation
 
 ## Task
-Implement deterministic loop-step trace event emission in `state/kernel.py` with smoke-test coverage in `state/copilot_sdk_uv_smoke.py`.
+Implement deterministic trace logging checkpoints in `state/kernel.py`.
 
-## Why this is next
-Trace observability is the highest-leverage foundation; later role-IO and eval enhancements depend on stable, structured kernel telemetry.
+## Why next
+- The seed plan identifies observability as the foundational dependency for safely evolving role templates, smoke scenarios, and eval gates.
+- Adding deterministic trace checkpoints first gives immediate evidence for subsequent iterations and reduces regression triage time.
 
 ## Acceptance criteria
-- `state/kernel.py` emits bounded structured trace events for each major loop stage (plan, change, evaluate, decide).
-- Failures include explicit reason codes and preserve existing guardrail behavior.
-- `state/copilot_sdk_uv_smoke.py` adds/updates tests proving trace-event presence, ordering, and bounded payload constraints.
-- Validation includes `uv run python state/copilot_sdk_uv_smoke.py` with passing results for affected checks.
+- Add explicit trace checkpoints at major kernel phases (plan/build/validate/emit) with stable field naming.
+- Ensure checkpoints are emitted through existing harness output paths without changing public CLI behavior.
+- Add/adjust targeted smoke coverage in `state/copilot_sdk_uv_smoke.py` proving checkpoints appear in successful and failing flows.
+- Record expected verification command(s) and outcomes in the next iteration’s `04-validation.md`.
 
 ## Expected files to touch
 - `state/kernel.py`

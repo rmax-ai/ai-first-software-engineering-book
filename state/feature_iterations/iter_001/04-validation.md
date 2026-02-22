@@ -1,12 +1,15 @@
 # Validation
 
 ## Verification commands run
-- `ls state/feature_iterations/iter_001`
-- `rg -n "state/kernel.py|state/role_io_templates.py|state/copilot_sdk_uv_smoke.py|evals/" state/feature_iterations/iter_001/*.md`
+- `ls -1 state/feature_iterations/iter_001`
+- `for f in state/feature_iterations/iter_001/*.md; do echo "== $f =="; head -n 5 "$f"; done`
 
 ## Observed results
-- `ls` returned all seven required artifacts (`01-task.md` through `07-summary.md`).
-- `rg` confirmed references to planned feature/test/eval files in planning and next-iteration artifacts.
+- Iteration folder contains all seven required markdown artifacts.
+- Artifact headers and opening sections confirm planning-only scope and explicit features/tests/evals coverage.
+- No production harness files were modified in this seed planning iteration.
 
 ## Acceptance criteria status
-- Pass. The iteration artifacts are present, complete, and include required feature/test/eval planning coverage.
+- **Pass**: seed iteration created with seven artifacts.
+- **Pass**: plan explicitly covers features, tests, and evaluations.
+- **Pass**: future-touch file paths are listed for `state/` and `evals/`.

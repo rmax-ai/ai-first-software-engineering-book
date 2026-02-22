@@ -1,9 +1,9 @@
 # Iteration summary
 
-This seed feature iteration established the first actionable backlog entry under `state/feature_iterations/iter_001`.
-The work intentionally focused on planning, not implementation, per the execution prompt.
-Artifacts define a concrete harness roadmap covering feature changes, test strategy, and eval regression detection.
-The plan prioritizes deterministic trace observability in `state/kernel.py` as the next implementable unit.
-It also scopes follow-up role-IO template hardening and eval contract alignment.
-Validation steps were defined in the artifact set and are executed in the next workflow step.
-The next iteration is constrained to one task with explicit acceptance criteria and file targets.
+- Created `state/feature_iterations/iter_001/` as the first feature iteration folder.
+- Executed the seed prompt as a planning-only iteration with no harness runtime code edits.
+- Authored `01-task.md` with rationale and acceptance criteria focused on features/tests/evals.
+- Authored `02-plan.md` with an implementation sequence targeting `state/kernel.py`, role I/O templates, smoke tests, and eval YAMLs.
+- Logged execution and validation evidence in `03-execution.md` and `04-validation.md`.
+- Captured major planning risks, key decisions, and deferrals in `05-risks-and-decisions.md`.
+- Recommended exactly one next task in `06-next-iteration.md`: deterministic trace checkpoints in the kernel.
