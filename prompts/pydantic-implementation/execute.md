@@ -73,3 +73,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` now validates cross-chapter markdown ingestion through `ChapterTextPayload` and forwards deterministic-eval chapter context via `OtherChaptersTransit`.
 - `state/llm_client.py` now validates external `chat()` message payload lists through `ChatMessagesPayload` and forwards validated messages via `ChatMessagesTransit` before mock/Copilot provider handling.
 - `state/llm_client.py` now validates Copilot SDK `send()` response dictionaries through `SDKChatResponsePayload` and forwards them via `SDKChatResponseTransit` before usage/content normalization.
+- `state/copilot_sdk_smoke_test.py` now translates `LedgerSnapshotPayload` validation failures into explicit assertion errors during ledger fixture ingestion while forwarding validated snapshots via `LedgerSnapshotTransit`.

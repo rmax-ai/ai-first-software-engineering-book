@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, cast
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -78,6 +78,8 @@ def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
         payload = LedgerSnapshotPayload.model_validate(json.loads(raw_text))
     except json.JSONDecodeError as exc:
         raise AssertionError(f"expected {path} to contain valid JSON: {exc}") from exc
+    except ValidationError as exc:
+        raise AssertionError(f"expected {path} to match LedgerSnapshotPayload: {exc}") from exc
     return LedgerSnapshotTransit(raw_text=raw_text, payload=payload)
 
 
