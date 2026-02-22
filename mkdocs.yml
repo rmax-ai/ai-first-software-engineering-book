@@ -1,1 +1,22 @@
-site_name: My Docs
+site_name: AI-First Software Engineering
+site_description: Technical book on AI-first software engineering governance and execution
+site_author: "Autonomous Authors"
+docs_dir: .
+nav:
+  - Home: docs/index.md
+  - Preface: book/preface.md
+  - Chapters:
+      - "01. Paradigm Shift": book/chapters/01-paradigm-shift.md
+      - "02. Harness Engineering": book/chapters/02-harness-engineering.md
+      - "03. Autonomous Kernels": book/chapters/03-autonomous-kernels.md
+      - "04. Memory Systems": book/chapters/04-memory-systems.md
+      - "05. Evaluation and Traces": book/chapters/05-evaluation-and-traces.md
+      - "06. Agent Governance": book/chapters/06-agent-governance.md
+      - "07. Production AI Infrastructure": book/chapters/07-production-ai-infrastructure.md
+      - "99. Future Directions": book/chapters/99-future-directions.md
+  - Glossary: book/glossary.md
+  - Patterns Overview: book/patterns/
+theme:
+  name: material
+plugins:
+  - search
