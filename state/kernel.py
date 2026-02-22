@@ -264,6 +264,14 @@ class RoadmapTextTransit:
 
 
 @dataclass(frozen=True)
+class ChapterTextTransit:
+    payload: ChapterTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
+
+
+@dataclass(frozen=True)
 class CriticEvalInputsTransit:
     payload: CriticEvalInputsPayload
 
@@ -436,6 +444,14 @@ def _load_roadmap_text(path: Path) -> RoadmapTextTransit:
     except ValidationError as exc:
         raise KernelError(f"Invalid roadmap text payload: {path}: {exc}") from exc
     return RoadmapTextTransit(payload=payload)
+
+
+def _load_chapter_text(path: Path) -> ChapterTextTransit:
+    try:
+        payload = ChapterTextPayload.model_validate({"text": _read_text(path)})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid chapter text payload: {path}: {exc}") from exc
+    return ChapterTextTransit(payload=payload)
 
 
 def _load_critic_eval_inputs() -> CriticEvalInputsTransit:
@@ -1229,7 +1245,7 @@ def run_kernel(
         if not chapter_path:
             raise KernelError("Chapter is missing a valid path")
         chapter_file = REPO_ROOT / chapter_path
-        baseline_text = _read_text(chapter_file)
+        baseline_text = _load_chapter_text(chapter_file).to_text()
 
         previous_critic: dict[str, Any] | None = None
         # If ledger has last_eval and it is critic-like, pass through.
@@ -1263,7 +1279,7 @@ def run_kernel(
                 io_dir=io_dir,
                 chapter_id=chapter_id,
                 iteration=iteration,
-                chapter_text=_read_text(chapter_file),
+                chapter_text=_load_chapter_text(chapter_file).to_text(),
                 ledger_chapter=ledger_chapter_for_iteration,
                 previous_critic=previous_critic,
             )
@@ -1288,7 +1304,7 @@ def run_kernel(
                     _llm_generate_writer(
                         itdir,
                         llm,
-                        chapter_text=_read_text(chapter_file),
+                        chapter_text=_load_chapter_text(chapter_file).to_text(),
                         planner_json=planner_json_text,
                     )
 
@@ -1345,14 +1361,15 @@ def run_kernel(
             if revised_headings != original_headings:
                 raise KernelError("Writer changed headings; this is forbidden.")
 
-            diff_ratio = _diff_size_ratio(_read_text(chapter_file), revised)
+            current_chapter_text = _load_chapter_text(chapter_file).to_text()
+            diff_ratio = _diff_size_ratio(current_chapter_text, revised)
             if diff_ratio > max_diff_ratio:
                 raise KernelError(f"Writer diff size too large ({diff_ratio:.2f} > {max_diff_ratio:.2f}).")
 
             declared = _declared_section_set(plan, original_headings)
             if not declared:
                 raise KernelError("Planner did not explicitly reference any existing '##' headings.")
-            changed = _changed_sections(_read_text(chapter_file), revised)
+            changed = _changed_sections(current_chapter_text, revised)
             illegal = sorted(changed - declared)
             if illegal:
                 raise KernelError("Writer modified undeclared sections: " + ", ".join(illegal))
