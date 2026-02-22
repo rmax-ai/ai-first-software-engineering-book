@@ -9,7 +9,7 @@
 ```bash
 uv run python state/governance_engine.py unlock --chapter-id <chapter> || true
 uv run python state/governance_engine.py unhold --chapter-id <chapter> || true
-uv run python state/kernel.py --chapter-id <chapter> --llm --llm-provider mock --llm-model gpt-5.2 --verbose
+uv run python state/kernel.py --chapter-id <chapter> --llm --llm-provider copilot --llm-model gpt-5.2 --verbose
 ```
 Replace `<chapter>` with the chapter identifier listed below.
 
