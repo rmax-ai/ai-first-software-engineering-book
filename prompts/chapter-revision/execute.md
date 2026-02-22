@@ -169,3 +169,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 05-evaluation-and-traces | 2 | failed(1) | none | `this commit` |
 | 05-evaluation-and-traces | 3 | failed(1) | none | `this commit` |
 | 06-agent-governance | 1 | failed(1) | none | `this commit` |
+| 06-agent-governance | 2 | failed(1) | none | `this commit` |
