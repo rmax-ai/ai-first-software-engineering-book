@@ -229,6 +229,7 @@ class MetricsPayload(BaseModel):
 
 @dataclass(frozen=True)
 class MetricsTransit:
+    json_mapping: "JSONMappingTransit"
     raw: dict[str, Any]
     payload: MetricsPayload
 
@@ -242,6 +243,7 @@ class VersionMapPayload(BaseModel):
 
 @dataclass(frozen=True)
 class VersionMapTransit:
+    json_mapping: "JSONMappingTransit"
     raw: dict[str, Any]
     payload: VersionMapPayload
 
@@ -492,21 +494,23 @@ def _load_eval_config(path: Path) -> DeterministicEvalConfigTransit:
 
 
 def _load_metrics(path: Path) -> MetricsTransit:
-    raw = _load_json(path).to_mapping()
+    json_mapping = _load_json(path)
+    raw = json_mapping.to_mapping()
     try:
         payload = MetricsPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid metrics payload: {path}: {exc}") from exc
-    return MetricsTransit(raw=raw, payload=payload)
+    return MetricsTransit(json_mapping=json_mapping, raw=raw, payload=payload)
 
 
 def _load_version_map(path: Path) -> VersionMapTransit:
-    raw = _load_json(path).to_mapping()
+    json_mapping = _load_json(path)
+    raw = json_mapping.to_mapping()
     try:
         payload = VersionMapPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid version_map payload: {path}: {exc}") from exc
-    return VersionMapTransit(raw=raw, payload=payload)
+    return VersionMapTransit(json_mapping=json_mapping, raw=raw, payload=payload)
 
 
 def _run_git(args: list[str]) -> str:
