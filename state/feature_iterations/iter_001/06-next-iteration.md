@@ -1,19 +1,19 @@
-# Recommended Next Task
+# Recommended Next Iteration Task
 
 ## Task
-Implement kernel trace-envelope improvements in `state/kernel.py` with deterministic visibility fields.
+Implement deterministic trace-summary observability in `state/kernel.py` and expose aligned role I/O scaffolds in `state/role_io_templates.py`.
 
 ## Why this is next
-- `state/kernel.py` is the highest-impact integration point for observability and deterministic controls.
-- Downstream role-IO and smoke updates depend on stable kernel trace shape.
+- It is the highest-value harness feature from this plan and unblocks meaningful smoke/eval assertions.
+- It creates concrete output signals that later eval updates can measure.
 
 ## Acceptance criteria
-- Add explicit trace fields for loop budget usage, step outcomes, and failure reasons.
-- Preserve existing kernel public behavior while enriching emitted trace data.
-- Add/adjust targeted tests for trace shape and determinism.
-- Validate with `uv run python state/copilot_sdk_uv_smoke.py` on relevant modes.
+1. Kernel emits a stable trace-summary structure for each loop with bounded fields.
+2. Role I/O template helpers include explicit sections matching the trace-summary contract.
+3. Add/extend targeted deterministic checks in `state/copilot_sdk_uv_smoke.py` that assert the new structure.
+4. Validation evidence includes `uv run python state/copilot_sdk_uv_smoke.py` with relevant mode(s) and observed pass/fail.
 
 ## Expected files to touch
 - `state/kernel.py`
+- `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
-- Relevant `state/` test files for kernel trace assertions
