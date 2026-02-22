@@ -21,6 +21,21 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 KERNEL_PATH = REPO_ROOT / "state" / "kernel.py"
 METRICS_PATH = REPO_ROOT / "state" / "metrics.json"
 TRACE_SUMMARY_FIXTURE_ROOT = REPO_ROOT / "state" / ".smoke_fixtures" / "trace_summary"
+TRACE_SUMMARY_MODE_SPECS: dict[str, dict[str, bool]] = {
+    "trace-summary": {},
+    "trace-summary-malformed-phase": {
+        "expect_phase_trace_failure": True,
+        "inject_malformed_phase_trace": True,
+    },
+    "trace-summary-malformed-phase-payload": {
+        "expect_phase_trace_failure": True,
+        "inject_non_object_phase_payload": True,
+    },
+    "trace-summary-missing-phase": {
+        "expect_phase_trace_failure": True,
+        "inject_missing_required_phase_trace": True,
+    },
+}
 
 
 def _event_type_name(event_type: Any) -> str:
@@ -276,35 +291,14 @@ async def main_async(args: argparse.Namespace) -> int:
         return await run_ping_mode()
     if args.mode == "prompt":
         return await run_prompt_mode(model=args.model, prompt=args.prompt, timeout_s=args.timeout)
-    if args.mode == "trace-summary-malformed-phase":
+    mode_spec = TRACE_SUMMARY_MODE_SPECS.get(args.mode)
+    if mode_spec is None:
         return await run_trace_summary_mode(
             chapter_id=args.chapter_id,
             max_iterations=args.kernel_max_iterations,
             run_kernel=args.run_kernel_for_trace_summary,
             metrics_path=Path(args.metrics_path),
             fixture_root=Path(args.trace_summary_fixture_root),
-            expect_phase_trace_failure=True,
-            inject_malformed_phase_trace=True,
-        )
-    if args.mode == "trace-summary-malformed-phase-payload":
-        return await run_trace_summary_mode(
-            chapter_id=args.chapter_id,
-            max_iterations=args.kernel_max_iterations,
-            run_kernel=args.run_kernel_for_trace_summary,
-            metrics_path=Path(args.metrics_path),
-            fixture_root=Path(args.trace_summary_fixture_root),
-            expect_phase_trace_failure=True,
-            inject_non_object_phase_payload=True,
-        )
-    if args.mode == "trace-summary-missing-phase":
-        return await run_trace_summary_mode(
-            chapter_id=args.chapter_id,
-            max_iterations=args.kernel_max_iterations,
-            run_kernel=args.run_kernel_for_trace_summary,
-            metrics_path=Path(args.metrics_path),
-            fixture_root=Path(args.trace_summary_fixture_root),
-            expect_phase_trace_failure=True,
-            inject_missing_required_phase_trace=True,
         )
     return await run_trace_summary_mode(
         chapter_id=args.chapter_id,
@@ -312,6 +306,7 @@ async def main_async(args: argparse.Namespace) -> int:
         run_kernel=args.run_kernel_for_trace_summary,
         metrics_path=Path(args.metrics_path),
         fixture_root=Path(args.trace_summary_fixture_root),
+        **mode_spec,
     )
 
 
@@ -322,10 +317,7 @@ def main() -> int:
         choices=[
             "ping",
             "prompt",
-            "trace-summary",
-            "trace-summary-malformed-phase",
-            "trace-summary-malformed-phase-payload",
-            "trace-summary-missing-phase",
+            *TRACE_SUMMARY_MODE_SPECS,
         ],
         default="ping",
     )
