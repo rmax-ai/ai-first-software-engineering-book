@@ -896,16 +896,23 @@ def run_mode_choices_coverage_guard_mode() -> int:
     return 0
 
 
+_USAGE_EXAMPLE_MODE_PREFIX = "  uv run python state/copilot_sdk_smoke_test.py --mode "
+
+
+def _generated_non_stub_usage_mode_names(usage_lines: Sequence[str]) -> list[str]:
+    return [
+        line.removeprefix(_USAGE_EXAMPLE_MODE_PREFIX)
+        for line in usage_lines
+        if line.startswith(_USAGE_EXAMPLE_MODE_PREFIX)
+    ]
+
+
 def run_usage_examples_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
-    expected_lines = [
-        f"  uv run python state/copilot_sdk_smoke_test.py --mode {name}"
-        for name, _handler, _description in all_mode_specs
-        if name != "stub"
-    ]
-    actual_lines = [line for line in usage_lines if line.startswith("  uv run python state/copilot_sdk_smoke_test.py --mode ")]
-    assert actual_lines == expected_lines, (
+    expected_mode_names = [name for name, _handler, _description in all_mode_specs if name != "stub"]
+    actual_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
+    assert actual_mode_names == expected_mode_names, (
         "expected usage examples to include every non-stub mode exactly once in order"
     )
 
@@ -918,8 +925,8 @@ def run_usage_examples_coverage_guard_mode() -> int:
 def run_usage_examples_duplicates_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
-    actual_lines = [line for line in usage_lines if line.startswith("  uv run python state/copilot_sdk_smoke_test.py --mode ")]
-    assert len(actual_lines) == len(set(actual_lines)), "expected generated usage examples to contain no duplicate non-stub mode lines"
+    actual_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
+    assert len(actual_mode_names) == len(set(actual_mode_names)), "expected generated usage examples to contain no duplicate non-stub mode lines"
 
     print(
         "PASS: usage-examples-duplicates-guard mode validates generated usage examples contain no duplicates"
@@ -931,11 +938,7 @@ def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
     expected_mode_order = [name for name, _handler, _description in all_mode_specs if name != "stub"]
-    actual_mode_order = [
-        line.removeprefix("  uv run python state/copilot_sdk_smoke_test.py --mode ")
-        for line in usage_lines
-        if line.startswith("  uv run python state/copilot_sdk_smoke_test.py --mode ")
-    ]
+    actual_mode_order = _generated_non_stub_usage_mode_names(usage_lines)
     assert actual_mode_order == expected_mode_order, (
         "expected generated usage examples to preserve non-stub mode registration order"
     )
@@ -950,11 +953,7 @@ def run_usage_examples_mode_set_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
     expected_mode_names = [name for name, _handler, _description in all_mode_specs if name != "stub"]
-    actual_mode_names = [
-        line.removeprefix("  uv run python state/copilot_sdk_smoke_test.py --mode ")
-        for line in usage_lines
-        if line.startswith("  uv run python state/copilot_sdk_smoke_test.py --mode ")
-    ]
+    actual_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
     assert len(actual_mode_names) == len(expected_mode_names), (
         "expected generated usage examples to include each non-stub mode exactly once by count"
     )
