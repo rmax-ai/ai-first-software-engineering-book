@@ -134,3 +134,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 05-evaluation-and-traces | 1 | failed(1) | none | `bf0f8a8` |
 | 05-evaluation-and-traces | 2 | failed(1) | none | `898ff3e` |
 | 05-evaluation-and-traces | 3 | failed(1) | none | `17224aa` |
+| 06-agent-governance | 1 | failed(1) | none | pending |
