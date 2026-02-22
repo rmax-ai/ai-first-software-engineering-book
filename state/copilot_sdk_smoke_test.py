@@ -1248,6 +1248,27 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_mode() -> int:
     return 0
 
 
+def run_trace_summary_fixture_cleanup_parity_usage_examples_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    usage_lines = _usage_doc_lines(all_mode_specs)
+    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
+    mode_counts = Counter(usage_mode_names)
+    target_modes = (
+        "trace-summary-fixture-root-cleanup-parity",
+        "trace-summary-fixture-cleanup-parity",
+    )
+    unexpected_counts = {name: mode_counts.get(name, 0) for name in target_modes if mode_counts.get(name, 0) != 1}
+    assert not unexpected_counts, (
+        "expected parity cleanup modes to appear exactly once in generated usage examples; "
+        f"counts were {unexpected_counts}"
+    )
+
+    print(
+        "PASS: trace-summary-fixture-cleanup-parity-usage-examples-guard mode validates parity mode usage-example uniqueness"
+    )
+    return 0
+
+
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard"
@@ -2024,6 +2045,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-fixture-cleanup-parity",
         run_trace_summary_fixture_cleanup_parity_mode,
         "fixture-backed parity assertion for kernel and non-kernel trace-summary cleanup",
+    ),
+    (
+        "trace-summary-fixture-cleanup-parity-usage-examples-guard",
+        run_trace_summary_fixture_cleanup_parity_usage_examples_guard_mode,
+        "deterministic generated usage-example uniqueness assertion for parity cleanup modes",
     ),
     (
         "docstring-mode-coverage-guard",
