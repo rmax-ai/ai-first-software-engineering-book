@@ -5,7 +5,7 @@ AI-first software engineering is an architectural inversion: machine reasoning b
 
 The inversion is practical: reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable, testable loop.
 
-A concrete, testable implication: holding the model constant, improving the harness should predictably reduce iteration count, increase pass rates, and improve failure attribution more than “prompt tweaks” alone.
+A concrete, testable implication: holding the model constant, improving the harness should predictably reduce iteration count, increase pass rates, and improve failure attribution.
 
 Operational definition:
 - **Model capability** changes when you swap models while holding tools, constraints, and evaluation constant.
@@ -74,7 +74,7 @@ Ship a minor API change in a production service.
 - **Unbounded autonomy**: loops run without budgets, causing tool thrash and unclear outcomes.
 - **Non-attributable failures**: missing traces make regressions un-debuggable.
 
-Synthesis: if machine reasoning is treated as an execution substrate, reliability depends less on a “better prompt” and more on the harness that constrains and verifies outputs. Evaluation gates and budgets convert open-ended generation into a bounded loop with stop conditions. Traceability plus an attribution checklist makes failures actionable: you can separate prompt/spec issues from tool/runtime issues from code regressions from eval defects. Under this view, model selection still matters, but it is secondary within a harness-defined capability envelope.
+Synthesis: treat machine reasoning as an execution substrate, and treat the harness as the primary lever for reliability. Track *iterations-to-pass*, *time-to-green*, and *attribution rate* to separate harness effects from model effects and to make failures actionable.
 
 ## Research Directions
 - Metrics that separate model improvements from harness improvements.
