@@ -54,6 +54,12 @@ class TraceSummaryMetricsPayload(BaseModel):
     chapters: dict[str, Any]
 
 
+class TraceSummaryHistoryEntryPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    trace_summary: dict[str, Any] | None = None
+
+
 @dataclass(frozen=True)
 class TraceSummaryTransit:
     payload: TraceSummaryPayload
@@ -77,6 +83,18 @@ class TraceSummaryMetricsTransit:
     @property
     def chapters(self) -> dict[str, Any]:
         return self.payload.chapters
+
+
+@dataclass(frozen=True)
+class TraceSummaryHistoryEntryTransit:
+    payload: TraceSummaryHistoryEntryPayload
+
+    @classmethod
+    def from_mapping(cls, payload: dict[str, Any]) -> "TraceSummaryHistoryEntryTransit":
+        return cls(payload=TraceSummaryHistoryEntryPayload.model_validate(payload))
+
+    def trace_summary_mapping(self) -> dict[str, Any] | None:
+        return self.payload.trace_summary
 
 
 class LedgerSnapshotPayload(BaseModel):
@@ -169,7 +187,7 @@ def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[
     assert isinstance(history, list) and history, f"expected metrics history for chapter {chapter_id}"
     latest = history[-1]
     assert isinstance(latest, dict), "expected latest history entry to be a dictionary"
-    trace_summary = latest.get("trace_summary")
+    trace_summary = TraceSummaryHistoryEntryTransit.from_mapping(latest).trace_summary_mapping()
     assert isinstance(trace_summary, dict), "expected latest history entry to contain trace_summary dictionary"
     return TraceSummaryTransit.from_mapping(trace_summary).to_mapping()
 
