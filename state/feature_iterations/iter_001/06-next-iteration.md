@@ -1,19 +1,17 @@
-# Recommended next iteration task
+# Next iteration recommendation
 
-## Task
-Implement deterministic phase-trace summary enrichment in `state/kernel.py` and validate it with smoke coverage.
+## Recommended task
+Implement deterministic trace-summary observability hooks in `state/kernel.py` with matching smoke coverage.
 
 ## Why this is next
-- It is the highest-leverage feature slice from the seed plan and improves observability without changing public interfaces.
-- It provides a concrete anchor for pairing feature work with tests and eval-aligned validation.
+It is the smallest code slice that enables measurable harness visibility and unlocks follow-on template/eval alignment work.
 
 ## Acceptance criteria
-- Add minimal kernel logic to emit richer, deterministic phase-trace summary fields.
-- Add/adjust targeted smoke checks in `state/copilot_sdk_uv_smoke.py` proving success and malformed-trace failure paths.
-- Document verification with `uv run python state/copilot_sdk_uv_smoke.py --mode trace-summary` and at least one malformed mode.
-- Ensure no governance file mutations and no unrelated refactors.
+- Add a focused helper in `state/kernel.py` that emits stable trace-summary fields for each loop.
+- Add/extend one smoke mode in `state/copilot_sdk_uv_smoke.py` that asserts those fields are present and ordered.
+- Update execution docs in the new iteration folder with exact verification command/output.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/*.md`
+- `state/feature_iterations/iter_002/*`
