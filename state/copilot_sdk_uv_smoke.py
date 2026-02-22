@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from dataclasses import dataclass
 import importlib
 import json
 from pathlib import Path
@@ -17,6 +18,8 @@ import shutil
 import subprocess
 import sys
 from typing import Any
+
+from pydantic import BaseModel, ValidationError
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 KERNEL_PATH = REPO_ROOT / "state" / "kernel.py"
@@ -37,6 +40,61 @@ TRACE_SUMMARY_MODE_SPECS: dict[str, dict[str, bool]] = {
         "inject_missing_required_phase_trace": True,
     },
 }
+
+
+class TraceSummaryPayload(BaseModel):
+    decision: str
+    drift_score: float
+    diff_ratio: float
+    deterministic_pass: bool
+
+
+class MetricsHistoryEntryPayload(BaseModel):
+    iteration: int
+    trace_summary: TraceSummaryPayload
+
+
+class MetricsChapterPayload(BaseModel):
+    history: list[MetricsHistoryEntryPayload]
+
+
+class MetricsPayload(BaseModel):
+    chapters: dict[str, MetricsChapterPayload]
+
+
+class KernelTraceEntryPayload(BaseModel):
+    event: str
+    payload: Any
+
+
+class PhaseTracePayload(BaseModel):
+    phase: str
+    status: str
+    duration_ms: int
+    budget_signal: str
+
+
+@dataclass(frozen=True)
+class MetricsHistoryTransit:
+    iteration: int
+    trace_summary: TraceSummaryPayload
+
+
+@dataclass(frozen=True)
+class PhaseTraceTransit:
+    phase: str
+    status: str
+    duration_ms: int
+    budget_signal: str
+
+    @classmethod
+    def from_payload(cls, payload: PhaseTracePayload) -> "PhaseTraceTransit":
+        return cls(
+            phase=payload.phase,
+            status=payload.status,
+            duration_ms=payload.duration_ms,
+            budget_signal=payload.budget_signal,
+        )
 
 
 def _event_type_name(event_type: Any) -> str:
@@ -276,18 +334,15 @@ async def run_trace_summary_mode(
                     print(proc.stderr.strip())
                 return 1
 
-        metrics = json.loads(metrics_path_for_trace.read_text(encoding="utf-8"))
-        chapter_metrics = metrics.get("chapters", {}).get(chapter_id, {})
-        history = chapter_metrics.get("history", [])
-        if not history:
+        metrics_payload = MetricsPayload.model_validate(json.loads(metrics_path_for_trace.read_text(encoding="utf-8")))
+        chapter_metrics = metrics_payload.chapters.get(chapter_id)
+        if chapter_metrics is None or not chapter_metrics.history:
             print(f"FAIL: no metrics history for chapter {chapter_id}")
             return 1
 
-        latest = history[-1]
-        trace_summary = latest.get("trace_summary")
-        if not isinstance(trace_summary, dict):
-            print("FAIL: latest metrics history entry missing trace_summary")
-            return 1
+        latest_entry = chapter_metrics.history[-1]
+        latest = MetricsHistoryTransit(iteration=latest_entry.iteration, trace_summary=latest_entry.trace_summary)
+        trace_summary = latest.trace_summary.model_dump()
 
         required_keys = {"decision", "drift_score", "diff_ratio", "deterministic_pass"}
         missing = sorted(required_keys - set(trace_summary))
@@ -295,45 +350,61 @@ async def run_trace_summary_mode(
             print(f"FAIL: trace_summary missing keys: {missing}")
             return 1
 
-        iteration = latest.get("iteration")
-        if not isinstance(iteration, int):
-            print("FAIL: latest metrics history entry missing integer iteration")
-            return 1
+        iteration = latest.iteration
         trace_path = repo_root_for_trace / "state" / "role_io" / chapter_id / f"iter_{iteration:02d}" / "out" / "kernel_trace.jsonl"
         if not trace_path.exists():
             print(f"FAIL: kernel trace file missing at {trace_path}")
             return 1
 
-        trace_entries = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-        phase_entries = [entry for entry in trace_entries if entry.get("event") == "phase_trace"]
+        trace_entries = [
+            KernelTraceEntryPayload.model_validate(json.loads(line))
+            for line in trace_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        phase_entries = [entry for entry in trace_entries if entry.event == "phase_trace"]
         if run_kernel and phase_entries:
             if inject_malformed_phase_trace:
-                payload = phase_entries[0].get("payload")
+                payload = phase_entries[0].payload
                 if isinstance(payload, dict):
                     payload.pop("budget_signal", None)
             if inject_non_object_phase_payload:
-                phase_entries[0]["payload"] = "not-an-object"
+                phase_entries[0].payload = "not-an-object"
             if inject_missing_required_phase_trace:
-                phase_entries = [entry for entry in phase_entries if entry.get("payload", {}).get("phase") != "evaluation"]
+                phase_entries = [
+                    entry
+                    for entry in phase_entries
+                    if not (isinstance(entry.payload, dict) and entry.payload.get("phase") == "evaluation")
+                ]
+        phase_transits: list[PhaseTraceTransit] = []
         if not phase_entries:
             observed_phase_trace_failure = "no phase_trace events in kernel trace"
         else:
             observed_phase_trace_failure = ""
 
-        required_phase_payload_keys = {"phase", "status", "duration_ms", "budget_signal"}
         if not observed_phase_trace_failure:
             for entry in phase_entries:
-                payload = entry.get("payload")
+                payload = entry.payload
                 if not isinstance(payload, dict):
                     observed_phase_trace_failure = "phase_trace payload is not an object"
                     break
-                phase_missing = sorted(required_phase_payload_keys - set(payload))
-                if phase_missing:
-                    observed_phase_trace_failure = f"phase_trace missing keys: {phase_missing}"
+                try:
+                    phase_transits.append(PhaseTraceTransit.from_payload(PhaseTracePayload.model_validate(payload)))
+                except ValidationError as exc:
+                    missing_keys = sorted(
+                        {
+                            ".".join(str(part) for part in error["loc"])
+                            for error in exc.errors()
+                            if error.get("type") == "missing"
+                        }
+                    )
+                    if missing_keys:
+                        observed_phase_trace_failure = f"phase_trace missing keys: {missing_keys}"
+                    else:
+                        observed_phase_trace_failure = "phase_trace payload is not an object"
                     break
 
         if not observed_phase_trace_failure:
-            phase_names = {entry.get("payload", {}).get("phase") for entry in phase_entries}
+            phase_names = {entry.phase for entry in phase_transits}
             required_phases = {"role_output_ready", "evaluation", "state_persistence"}
             missing_phases = sorted(required_phases - phase_names)
             if missing_phases:
@@ -352,7 +423,7 @@ async def run_trace_summary_mode(
 
         print("PASS: trace_summary present with required keys")
         print(f"trace_summary={trace_summary}")
-        print(f"phase_trace_events={len(phase_entries)}")
+        print(f"phase_trace_events={len(phase_transits)}")
         return 0
     finally:
         if fixture_cleanup_target is not None and fixture_cleanup_target.exists():
