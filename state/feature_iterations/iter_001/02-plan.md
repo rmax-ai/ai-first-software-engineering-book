@@ -1,21 +1,18 @@
 # Plan
 
-1. Inventory current harness surfaces in `state/` and identify gaps in trace visibility, role IO consistency, and deterministic execution controls.
-2. Propose feature work for:
-   - `state/kernel.py`: richer trace-summary telemetry and stricter loop-level guard checks.
-   - `state/role_io_templates.py` and `state/role_io/`: clearer role input/output scaffold parity checks.
-   - `state/copilot_sdk_uv_smoke.py`: smoke modes proving new telemetry and guard behavior.
-3. Map future verification:
-   - Script-level checks via `uv run python state/copilot_sdk_uv_smoke.py`.
-   - Focused kernel execution checks via `uv run python state/kernel.py --chapter-id <id>`.
-4. Map eval regression detection to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`, plus metrics verification in `state/metrics.json`.
-5. Write follow-up iteration task that implements the smallest high-leverage slice first (trace-summary coverage guard wiring).
+1. Review `DEVELOPMENT.md` constraints and align proposed work to deterministic harness principles.
+2. Define feature improvements for:
+   - `state/kernel.py`: richer trace logging and deterministic execution controls.
+   - `state/role_io_templates.py`: clearer role input/output scaffolds.
+3. Define verification improvements for `state/copilot_sdk_uv_smoke.py` with explicit smoke scenarios tied to new controls.
+4. Define eval updates in `evals/*.yaml` to detect regressions from new harness behavior and signals.
+5. Sequence work into small future iterations with one immediately actionable next task.
 
-## Files expected to change in future implementation iterations
-- `state/kernel.py`
-- `state/role_io_templates.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `evals/chapter-quality.yaml`
-- `evals/style-guard.yaml`
-- `evals/drift-detection.yaml`
-- `state/metrics.json`
+## Files expected to change this iteration
+- `state/feature_iterations/iter_001/01-task.md`
+- `state/feature_iterations/iter_001/02-plan.md`
+- `state/feature_iterations/iter_001/03-execution.md`
+- `state/feature_iterations/iter_001/04-validation.md`
+- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
+- `state/feature_iterations/iter_001/06-next-iteration.md`
+- `state/feature_iterations/iter_001/07-summary.md`

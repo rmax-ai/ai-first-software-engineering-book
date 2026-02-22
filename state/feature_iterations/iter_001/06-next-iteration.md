@@ -1,18 +1,17 @@
-# Next iteration recommendation
+# Next Iteration Recommendation
 
-## Exactly 1 recommended next task
-Implement trace-summary guard instrumentation in `state/copilot_sdk_smoke_test.py` and `state/copilot_sdk_uv_smoke.py` to enforce parity between usage-example mode choices and fixture-cleanup trace-summary outputs.
+## Recommended task (exactly one)
+Implement deterministic trace summary enhancements in `state/kernel.py` and expose corresponding smoke assertions in `state/copilot_sdk_uv_smoke.py`.
 
-## Why it is next
-- It is the smallest high-impact slice from the new plan and improves deterministic observability without broad kernel refactoring.
-- It creates immediate, testable signals that later kernel and eval updates can rely on.
+## Why this is next
+The plan identifies observability as the highest-leverage first implementation step and it unlocks measurable eval alignment in subsequent iterations.
 
 ## Acceptance criteria
-- Add one new smoke-mode guard that fails when trace-summary mode choices drift from usage-example parity expectations.
-- Ensure the guard is reachable via existing smoke execution paths and documented in test output.
-- Execute `uv run python state/copilot_sdk_uv_smoke.py` and record pass/fail evidence in the next iteration `04-validation.md`.
+- Add a minimal kernel trace summary signal that is deterministic and documented in code.
+- Add/adjust smoke test coverage in `state/copilot_sdk_uv_smoke.py` that validates the new signal.
+- Record verification evidence in `state/feature_iterations/iter_002/04-validation.md` using `uv run python state/copilot_sdk_uv_smoke.py`.
 
 ## Expected files to touch
-- `state/copilot_sdk_smoke_test.py`
+- `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `state/feature_iterations/iter_002/0{1..7}-*.md`

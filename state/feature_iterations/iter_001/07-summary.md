@@ -1,9 +1,9 @@
-# Iteration summary
+# Iteration Summary
 
-- Created `state/feature_iterations/iter_001/` as the seed feature-improvement iteration.
-- Selected and completed one planning-only task: custom harness improvement plan definition.
-- Documented acceptance criteria centered on feature, test, and eval planning coverage.
-- Produced a future-facing implementation plan spanning kernel, role templates, smoke checks, and eval YAMLs.
-- Recorded execution evidence and validation checks for artifact completeness and scope compliance.
-- Captured risks and explicit deferrals to avoid unplanned code churn in a planning iteration.
-- Recommended exactly one next task with measurable checks and concrete file touchpoints.
+This first feature iteration created the required seven-artifact handoff for `iter_001`.
+It selected the planning story for improving the custom harness in `state/`.
+The plan covers feature work in kernel and role templates, testing updates in smoke scripts, and eval wiring for regression detection.
+No production harness code was changed in this seed iteration by design.
+Validation confirms all required artifacts exist and align with prompt constraints.
+A single concrete next task is provided: implement deterministic trace summary enhancements with smoke verification.
+This keeps future work incremental, testable, and consistent with `DEVELOPMENT.md`.
