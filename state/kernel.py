@@ -130,6 +130,12 @@ class YAMLMappingPayload(BaseModel):
     data: dict[str, Any]
 
 
+class JSONMappingPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: dict[str, Any]
+
+
 class MetricsChapterPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -291,21 +297,34 @@ class YAMLMappingTransit:
         return self.payload.data
 
 
+@dataclass(frozen=True)
+class JSONMappingTransit:
+    payload: JSONMappingPayload
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.data
+
+
 def _utc_now_iso() -> str:
     return _dt.datetime.now(tz=_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def _load_json(path: Path) -> dict[str, Any]:
+def _load_json(path: Path) -> JSONMappingTransit:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise KernelError(f"Missing JSON file: {path}") from exc
     except json.JSONDecodeError as exc:
         raise KernelError(f"Invalid JSON: {path}: {exc}") from exc
+    try:
+        payload = JSONMappingPayload.model_validate({"data": data})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid JSON mapping payload: {path}: {exc}") from exc
+    return JSONMappingTransit(payload=payload)
 
 
 def _load_ledger(path: Path) -> LedgerTransit:
-    raw = _load_json(path)
+    raw = _load_json(path).to_mapping()
     try:
         payload = LedgerPayload.model_validate(raw)
     except ValidationError as exc:
@@ -340,7 +359,7 @@ def _load_eval_config(path: Path) -> DeterministicEvalConfigPayload:
 
 
 def _load_metrics(path: Path) -> MetricsTransit:
-    raw = _load_json(path)
+    raw = _load_json(path).to_mapping()
     try:
         payload = MetricsPayload.model_validate(raw)
     except ValidationError as exc:
@@ -349,7 +368,7 @@ def _load_metrics(path: Path) -> MetricsTransit:
 
 
 def _load_version_map(path: Path) -> VersionMapTransit:
-    raw = _load_json(path)
+    raw = _load_json(path).to_mapping()
     try:
         payload = VersionMapPayload.model_validate(raw)
     except ValidationError as exc:
@@ -525,7 +544,7 @@ def _maybe_init_llm(cfg: LLMConfig) -> LLMRun | None:
 
 def _llm_generate_planner(itdir: Path, llm: LLMRun) -> Any:
     contract = _read_prompt(REPO_ROOT / "prompts" / "planner.md")
-    planner_input_raw = _load_json(itdir / "in" / "planner_input.json")
+    planner_input_raw = _load_json(itdir / "in" / "planner_input.json").to_mapping()
     try:
         planner_input_payload = PlannerInputPayload.model_validate(planner_input_raw)
     except ValidationError as exc:
@@ -784,7 +803,7 @@ def _require_exact_keys(obj: dict[str, Any], keys: set[str], ctx: str) -> None:
 
 
 def _load_planner_plan(path: Path) -> PlannerPlanTransit:
-    raw = _load_json(path)
+    raw = _load_json(path).to_mapping()
     try:
         payload = PlannerPlanPayload.model_validate(raw)
     except ValidationError as exc:
@@ -799,7 +818,7 @@ def _load_planner_plan(path: Path) -> PlannerPlanTransit:
 
 
 def _load_critic_report(path: Path) -> CriticReportTransit:
-    raw = _load_json(path)
+    raw = _load_json(path).to_mapping()
     try:
         payload = CriticReportPayload.model_validate(raw)
     except ValidationError as exc:
