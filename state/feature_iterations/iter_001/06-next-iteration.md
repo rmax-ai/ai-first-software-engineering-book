@@ -1,17 +1,18 @@
-# Recommended next iteration task
+# Recommended next task
 
-## Task
-Implement structured trace-summary guard events in `state/kernel.py` and cover them with a deterministic smoke mode.
+Implement deterministic trace-summary observability in `state/kernel.py` and prove it via smoke coverage.
 
 ## Why this is next
-Trace visibility is the foundation for validating later role-IO and eval wiring changes; adding it first reduces debugging ambiguity across all following iterations.
+This is the smallest implementation slice that delivers immediate value from the plan: better harness visibility with measurable behavior and low interface risk.
 
 ## Acceptance criteria
-- `state/kernel.py` emits stable, parseable trace-summary guard payloads for required chapter metrics.
-- `state/copilot_sdk_uv_smoke.py` includes one deterministic mode asserting the new trace-summary payload shape.
-- Validation evidence includes the exact `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` command and observed pass result.
+- Add a deterministic trace-summary emission path in `state/kernel.py` for key chapter/run signals.
+- Update `state/copilot_sdk_uv_smoke.py` with at least one mode that validates trace-summary shape/content.
+- Ensure eval alignment by documenting or wiring expected trace signals against existing eval contracts (and any required YAML adjustments) without broad refactors.
+- Record verification evidence with `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>`.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/*`
+- `evals/chapter-quality.yaml` (if contract updates are needed)
+- `evals/drift-detection.yaml` (if regression checks are needed)

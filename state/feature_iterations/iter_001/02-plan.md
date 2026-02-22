@@ -1,22 +1,16 @@
 # Iteration plan
 
-1. Review `DEVELOPMENT.md` and the seed prompt requirements to anchor scope to harness-only improvements.
-2. Define feature backlog slices:
-   - Add richer structured trace events and deterministic guard reporting in `state/kernel.py`.
-   - Clarify/normalize role I/O scaffold contracts in `state/role_io_templates.py`.
-   - Expand deterministic smoke scenarios in `state/copilot_sdk_uv_smoke.py` for newly introduced guardrails.
-3. Define verification strategy:
-   - Targeted smoke runs via `uv run python state/copilot_sdk_uv_smoke.py` modes tied to each feature slice.
-   - Kernel-focused checks for guard behavior and ledger/metrics invariants.
-4. Define eval integration strategy:
-   - Map trace/guard changes to `evals/drift-detection.yaml` and `evals/style-guard.yaml` expectations.
-   - Ensure chapter-quality signals remain compatible with `evals/chapter-quality.yaml`.
-5. Record decisions, risks, and one recommended next implementation task.
+1. Inspect `DEVELOPMENT.md` and current repository structure to anchor harness priorities.
+2. Define feature backlog slices for `state/kernel.py` (trace logging, deterministic controls), `state/role_io_templates.py` (clearer role I/O templates), and supporting harness observability artifacts in `state/`.
+3. Define test strategy around `state/copilot_sdk_uv_smoke.py` plus focused harness/unit scenarios that validate new controls.
+4. Define eval integration points using `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`, including expected metric signals in `state/metrics.json`.
+5. Publish one concrete next implementation task with acceptance criteria and explicit expected files.
 
-## Expected files to change in later iterations
+## Files expected to change in later implementation iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
+- `state/metrics.json`

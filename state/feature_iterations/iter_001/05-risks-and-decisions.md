@@ -1,14 +1,12 @@
 # Risks and decisions
 
-## Risks
-- Planning-only iteration provides no executable regression signal by itself.
-- Later iterations may over-scope unless each task remains a smallest vertical slice.
+## Risks discovered
+- Plan quality risk: if future work does not keep scope small, harness changes could sprawl across kernel and evals.
+- Verification risk: adding observability may increase noise unless deterministic assertions are explicitly defined.
 
-## Decisions and trade-offs
-- Chose planning scope only (per seed instruction) instead of implementing kernel changes immediately.
-- Deferred implementation to keep this iteration deterministic and reviewable.
+## Decisions made and trade-offs
+- Chose a planning-only first iteration per prompt seed requirements instead of code changes.
+- Prioritized explicit mapping between features, tests, and eval gates to reduce ambiguity in later implementation.
 
-## Deferred work
-- Implement structured kernel trace improvements.
-- Add/adjust smoke modes for new guardrails.
-- Update eval YAML assertions to match new observability outputs.
+## Intentionally deferred
+- Actual code changes in `state/kernel.py`, `state/role_io_templates.py`, smoke scripts, and eval YAML updates are deferred to the next iteration.

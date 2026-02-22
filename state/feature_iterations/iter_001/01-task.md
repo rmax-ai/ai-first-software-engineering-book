@@ -1,9 +1,9 @@
 # Plan custom state harness improvements
 
 ## Why this task now
-No prior `state/feature_iterations/` iteration exists, and the seed iteration in `prompts/incremental-improvements/execute.md` requires establishing a concrete, testable backlog for harness improvements.
+The feature-iteration backlog is empty, so the first iteration should establish a concrete improvement roadmap for the `state/` harness with explicit scope for features, tests, and eval alignment.
 
 ## Acceptance criteria
-- Produce a concise improvement plan covering harness **features**, **tests**, and **eval/regression detection**.
-- Explicitly map planned work to: `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-- Define one smallest next implementation task with clear acceptance criteria and file targets.
+- A concise plan exists for harness feature improvements with clear behaviors/controls to add.
+- The plan lists targeted validation work (smoke/tests) tied to specific files.
+- The plan maps expected regression detection to existing eval assets under `evals/` and harness metrics.
