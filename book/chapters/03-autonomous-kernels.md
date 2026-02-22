@@ -112,28 +112,35 @@ Mini-runbook (a single bounded kernel run):
      - Command: `pytest -k parse`
 
    - Verification risk handling:
-   
+
      - If Gate 1 passes but Gate 2 fails, treat as “not fixed” (the patch likely broke a nearby invariant).
 
 4. Record trace (auditable, replayable)
+
    - Persist a kernel trace with:
+
      - budgets consumed: iterations used, tool calls used, diff size
      - commands executed + exit codes
      - final test summary line (placeholder): `2 passed, 0 failed`
+
    - Write a ledger entry summarizing:
+
      - what changed (one-sentence)
      - why it changed (link to failing assertion)
      - what verified it (gate list)
 
 5. Stop criteria (explicit)
+
    - Stop success: Gate 1 and Gate 2 pass within budget.
    - Stop failure: tool-call budget exhausted, diff budget exceeded, or verification indicates a broader refactor is required.
    - Stop escalation output: include “next action for a human” (e.g., “needs design change in tokenization; requires editing `src/lexer.py`, which is outside current write scope”).
 
 ## Concrete Example 2
+
 Dependency upgrade kernel.
 
 - Input:
+
   - target version: `libX 4.2.0 → 4.3.0`
   - constraints: Python `>=3.10`, cannot change public API, CI must stay green
   - upgrade guide: notes a breaking rename `OldClient` → `Client`
@@ -141,79 +148,117 @@ Dependency upgrade kernel.
   - permissions: write `pyproject.toml` and `src/`, run `python -m compileall` and `pytest`
 
 Kernel steps with an explicit remediation branch:
+
 1. Update manifest (narrow scope)
+
    - Action: bump version constraint in `pyproject.toml`.
    - Record:
+
      - old/new constraint strings
      - diff stats for manifest only
+
    - Stop/iterate rule:
+
      - If the dependency resolver cannot produce a consistent lock, stop with resolver output (do not attempt ad-hoc pinning unless that is explicitly in scope).
 
 2. Run a fast build/type gate before full tests
+
    - Gate A (fast): import/type/compile smoke check.
+
      - Command: `python -m compileall src`
+
    - Record:
+
      - exit code
      - compile summary line (placeholder): `Listing 'src'...` … `compileall: success` (or equivalent)
+
    - Interpretation:
+
      - If Gate A fails, this is often a missing symbol or incompatible API that will be faster to remediate than running the full suite.
 
 3. Remediation branch (compile errors vs failing tests)
+
    - If **compile/import fails**:
+
      - Localize: identify first error site (file + symbol).
      - Patch: apply the minimal mechanical fix (e.g., rename `OldClient` to `Client`) in the smallest set of files.
      - Verify: rerun Gate A only, then proceed.
      - Budget guard:
+
        - If more than 5 files are touched, stop and escalate (“requires broader refactor”).
        - If the cumulative diff exceeds 120 lines changed, stop and escalate (“exceeds change budget for this kernel”).
+
    - If **compile passes but tests fail**:
+
      - Localize: run the single failing test file or test case.
      - Patch: address behavioral change (e.g., new default timeout) with a targeted adjustment and a justification in the trace.
      - Verify: rerun the failing tests, then run the full relevant suite.
 
 4. Run full verification gate (credibility gate)
+
    - Gate B (full): run the test suite (or the project’s standard verification command).
+
      - Command: `pytest`
+
    - Record:
+
      - exit code
      - test summary line (placeholder): `X passed, 0 failed` (or, on failure, `X passed, Y failed`)
+
    - Verification risk handling:
+
      - Treat a narrowed verification set as a failure mode unless the trace records why it is acceptable (e.g., “no integration tests exist; unit suite is the highest available gate”).
 
 5. Stop criteria and outputs
+
    - Stop success: Gate A and Gate B pass within budget.
    - Stop failure: repeated failures indicate the upgrade exceeds current permission/scope (e.g., requires API redesign), or budgets are exhausted.
    - Required outputs on stop:
+
      - change summary: files touched + primary reason
      - verification summary: Gate A command + result and Gate B command + result, including summary lines
      - rollback plan: “revert manifest bump and lockfile” (or equivalent) with the exact files to revert
 
 ## Trade-offs
+
 - Smaller kernels reduce risk but may require orchestration for multi-step projects.
+
   - Mitigation: use staged kernels (e.g., “diagnose-only” kernel → “patch” kernel → “refactor” kernel), each with separate budgets and permissions.
+
 - Strict permissions reduce blast radius but can prevent necessary refactors.
+
   - Mitigation: use permission escalation as an explicit step with a justification and a widened verification gate (e.g., requiring a broader test suite when write scope expands).
+
 - Heavier tracing improves auditability but adds operational overhead.
+
   - Mitigation: record a minimum viable trace by default (commands, diffs, gate results), and sample/expand traces only on failures or high-risk task classes.
 
 ## Failure Modes
+
 - **Local minima**: kernel makes safe micro-edits without addressing root cause.
 - **Tool thrash**: too many actions with low information gain.
 - **False confidence**: passing a narrow eval set while violating higher-level requirements.
 
 Detection signals (tie these to budgets and evaluation gates, not intuition):
+
 - Local minima:
+
   - repeated edits in the same small area with no change in verification outcome across iterations
   - steadily increasing diff size without new evidence (no new failing test localized, no new reproduction)
+
 - Tool thrash:
+
   - tool-call count rising while the plan does not change (same commands rerun without a new hypothesis)
   - frequent context switches (many files touched) despite a small, bounded intent
+
 - False confidence:
+
   - verification gates becoming narrower over time (“only reran one test”) without a recorded justification
   - “green” on fast gates but repeated regressions reported elsewhere (signals the gate set is mis-specified for the task class)
   - success declared without a trace artifact that includes gate results and the exact commands used
 
 ## Research Directions
+
 - Kernel composition patterns (delegation, staged permissions, multi-kernel workflows).
 - Automatic stop-condition tuning based on task class.
 - Replayable kernels for deterministic debugging of agent behavior.
