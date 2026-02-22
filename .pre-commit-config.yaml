@@ -1,7 +1,10 @@
-- id: markdownlint
-  name: Markdownlint
-  description: Run markdownlint on your Markdown files
-  entry: mdl
-  language: ruby
-  files: \.(md|mdown|markdown)$
-  language_version: 3.3.0
+- repos:
+  - repo: local
+    hooks:
+      - id: markdownlint
+        name: Markdownlint
+        description: Run markdownlint on your Markdown files
+        entry: mdl
+        language: ruby
+        files: \.(md|mdown|markdown)$
+        language_version: 3.3.0
