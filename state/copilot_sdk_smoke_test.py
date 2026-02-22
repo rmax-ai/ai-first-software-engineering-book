@@ -929,6 +929,15 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
 )
 
 
+BaseModeHandler = Callable[[], int]
+BASE_MODE_SPECS: tuple[tuple[str, BaseModeHandler, str], ...] = (
+    ("stub", run_stub_mode, "offline synthetic test"),
+    ("sdk-unavailable", run_sdk_unavailable_mode, "forced missing SDK error"),
+    ("bootstrap-failure", run_bootstrap_failure_mode, "forced worker-loop bootstrap error"),
+    ("live", run_live_mode, "real provider call"),
+)
+
+
 ShutdownModeHandler = Callable[[], int]
 SHUTDOWN_MODE_SPECS: tuple[tuple[str, ShutdownModeHandler, str], ...] = (
     ("shutdown-failure", run_shutdown_failure_mode, "forced SDK shutdown error"),
@@ -973,50 +982,19 @@ SHUTDOWN_MODE_SPECS: tuple[tuple[str, ShutdownModeHandler, str], ...] = (
 
 
 def main() -> int:
-    shutdown_mode_names = [name for name, _handler, _description in SHUTDOWN_MODE_SPECS]
-    shutdown_mode_help = ", ".join(
-        f"{name} = {description}" for name, _handler, description in SHUTDOWN_MODE_SPECS
-    )
-    shutdown_mode_handlers = {
-        name: handler for name, handler, _description in SHUTDOWN_MODE_SPECS
-    }
-    trace_summary_mode_names = [name for name, _handler, _description in TRACE_SUMMARY_MODE_SPECS]
-    trace_summary_mode_help = ", ".join(
-        f"{name} = {description}" for name, _handler, description in TRACE_SUMMARY_MODE_SPECS
-    )
-    trace_summary_mode_handlers = {
-        name: handler for name, handler, _description in TRACE_SUMMARY_MODE_SPECS
-    }
+    all_mode_specs = (*BASE_MODE_SPECS, *SHUTDOWN_MODE_SPECS, *TRACE_SUMMARY_MODE_SPECS)
+    mode_names = [name for name, _handler, _description in all_mode_specs]
+    mode_help = ", ".join(f"{name} = {description}" for name, _handler, description in all_mode_specs)
+    mode_handlers = {name: handler for name, handler, _description in all_mode_specs}
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
     parser.add_argument(
         "--mode",
-        choices=[
-            "stub",
-            "sdk-unavailable",
-            "bootstrap-failure",
-            *shutdown_mode_names,
-            *trace_summary_mode_names,
-            "live",
-        ],
+        choices=mode_names,
         default="stub",
-        help=(
-            "stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, "
-            f"{shutdown_mode_help}, {trace_summary_mode_help}, live = real provider call"
-        ),
+        help=mode_help,
     )
     args = parser.parse_args()
-
-    if args.mode == "stub":
-        return run_stub_mode()
-    if args.mode == "sdk-unavailable":
-        return run_sdk_unavailable_mode()
-    if args.mode == "bootstrap-failure":
-        return run_bootstrap_failure_mode()
-    if args.mode in shutdown_mode_handlers:
-        return shutdown_mode_handlers[args.mode]()
-    if args.mode in trace_summary_mode_handlers:
-        return trace_summary_mode_handlers[args.mode]()
-    return run_live_mode()
+    return mode_handlers[args.mode]()
 
 
 if __name__ == "__main__":
