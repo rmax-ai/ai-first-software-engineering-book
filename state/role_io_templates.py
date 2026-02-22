@@ -46,6 +46,12 @@ class TemplateContext:
     chapter_text: str
 
 
+@dataclass(frozen=True)
+class LedgerTransit:
+    raw: dict[str, Any]
+    payload: LedgerPayload
+
+
 def _load_json(path: Path) -> dict[str, Any]:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
@@ -55,12 +61,13 @@ def _load_json(path: Path) -> dict[str, Any]:
         raise TemplateError(f"Invalid JSON: {path}: {exc}") from exc
 
 
-def _load_ledger(path: Path) -> LedgerPayload:
+def _load_ledger(path: Path) -> LedgerTransit:
     raw = _load_json(path)
     try:
-        return LedgerPayload.model_validate(raw)
+        payload = LedgerPayload.model_validate(raw)
     except ValidationError as exc:
         raise TemplateError(f"Invalid ledger payload: {exc}") from exc
+    return LedgerTransit(raw=raw, payload=payload)
 
 
 def _write_if_missing(path: Path, content: str, *, force: bool) -> bool:
@@ -71,8 +78,8 @@ def _write_if_missing(path: Path, content: str, *, force: bool) -> bool:
     return True
 
 
-def _resolve_iteration(ledger: LedgerPayload, chapter_id: str, iteration: int | None) -> int:
-    chapter = ledger.chapters.get(chapter_id)
+def _resolve_iteration(ledger: LedgerTransit, chapter_id: str, iteration: int | None) -> int:
+    chapter = ledger.payload.chapters.get(chapter_id)
     if chapter is None:
         raise TemplateError(f"Unknown chapter_id: {chapter_id}")
 
@@ -89,8 +96,8 @@ def _resolve_iteration(ledger: LedgerPayload, chapter_id: str, iteration: int | 
     return current_iteration + 1
 
 
-def _build_template_context(ledger: LedgerPayload, chapter_id: str, iteration: int) -> TemplateContext:
-    chapter = ledger.chapters.get(chapter_id)
+def _build_template_context(ledger: LedgerTransit, chapter_id: str, iteration: int) -> TemplateContext:
+    chapter = ledger.payload.chapters.get(chapter_id)
     if chapter is None:
         raise TemplateError(f"Unknown chapter_id: {chapter_id}")
     chapter_file = REPO_ROOT / chapter.path
