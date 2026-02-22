@@ -119,30 +119,30 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Re-run 2026-02-22T17:35:15Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
-| 01-paradigm-shift | 1 | failed(1) | none | `chore: pass 1 for chapter 01-paradigm-shift` |
-| 01-paradigm-shift | 2 | failed(1) | none | `chore: pass 2 for chapter 01-paradigm-shift` |
-| 01-paradigm-shift | 3 | failed(1) | none | `chore: pass 3 for chapter 01-paradigm-shift` |
-| 02-harness-engineering | 1 | failed(1) | none | `chore: pass 1 for chapter 02-harness-engineering` |
-| 02-harness-engineering | 2 | failed(1) | none | `chore: pass 2 for chapter 02-harness-engineering` |
-| 02-harness-engineering | 3 | failed(1) | none | `chore: pass 3 for chapter 02-harness-engineering` |
-| 03-autonomous-kernels | 1 | failed(1) | none | `chore: pass 1 for chapter 03-autonomous-kernels` |
-| 03-autonomous-kernels | 2 | failed(1) | none | `chore: pass 2 for chapter 03-autonomous-kernels` |
-| 03-autonomous-kernels | 3 | failed(1) | none | `chore: pass 3 for chapter 03-autonomous-kernels` |
-| 04-memory-systems | 1 | failed(1) | none | `chore: pass 1 for chapter 04-memory-systems` |
-| 04-memory-systems | 2 | failed(1) | none | `chore: pass 2 for chapter 04-memory-systems` |
-| 04-memory-systems | 3 | failed(1) | none | `chore: pass 3 for chapter 04-memory-systems` |
-| 05-evaluation-and-traces | 1 | failed(1) | none | `chore: pass 1 for chapter 05-evaluation-and-traces` |
-| 05-evaluation-and-traces | 2 | failed(1) | none | `chore: pass 2 for chapter 05-evaluation-and-traces` |
-| 05-evaluation-and-traces | 3 | failed(1) | none | `chore: pass 3 for chapter 05-evaluation-and-traces` |
-| 06-agent-governance | 1 | failed(1) | none | `chore: pass 1 for chapter 06-agent-governance` |
-| 06-agent-governance | 2 | failed(1) | none | `chore: pass 2 for chapter 06-agent-governance` |
-| 06-agent-governance | 3 | failed(1) | none | `chore: pass 3 for chapter 06-agent-governance` |
-| 07-production-ai-infrastructure | 1 | failed(1) | none | `chore: pass 1 for chapter 07-production-ai-infrastructure` |
-| 07-production-ai-infrastructure | 2 | failed(1) | none | `chore: pass 2 for chapter 07-production-ai-infrastructure` |
-| 07-production-ai-infrastructure | 3 | failed(1) | none | `chore: pass 3 for chapter 07-production-ai-infrastructure` |
-| 99-future-directions | 1 | failed(1) | none | `chore: pass 1 for chapter 99-future-directions` |
-| 99-future-directions | 2 | failed(1) | none | `chore: pass 2 for chapter 99-future-directions` |
-| 99-future-directions | 3 | failed(1) | none | `chore: pass 3 for chapter 99-future-directions` |
+| 01-paradigm-shift | 1 | failed(1) | none | `cf1fd5e` |
+| 01-paradigm-shift | 2 | failed(1) | none | `ca23225` |
+| 01-paradigm-shift | 3 | failed(1) | none | `9a5d876` |
+| 02-harness-engineering | 1 | failed(1) | none | `ec8ba6d` |
+| 02-harness-engineering | 2 | failed(1) | none | `2fb5bd4` |
+| 02-harness-engineering | 3 | failed(1) | none | `9c848db` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `f89f04e` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `ae428ed` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `26c1a67` |
+| 04-memory-systems | 1 | failed(1) | none | `0226940` |
+| 04-memory-systems | 2 | failed(1) | none | `c74da87` |
+| 04-memory-systems | 3 | failed(1) | none | `9831e67` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `cce2fb8` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `2fe41f7` |
+| 05-evaluation-and-traces | 3 | failed(1) | none | `a582669` |
+| 06-agent-governance | 1 | failed(1) | none | `76bf6eb` |
+| 06-agent-governance | 2 | failed(1) | none | `a981840` |
+| 06-agent-governance | 3 | failed(1) | none | `c8c0967` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `be5eff9` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `2521d10` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `9ae2490` |
+| 99-future-directions | 1 | failed(1) | none | `f181c0c` |
+| 99-future-directions | 2 | failed(1) | none | `c821713` |
+| 99-future-directions | 3 | failed(1) | none | `ceb48fb` |
 
 ### Re-run Summary (2026-02-22T17:35:15Z)
 - Completed 24/24 chapter passes with one commit per pass.
