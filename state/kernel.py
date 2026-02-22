@@ -1588,6 +1588,8 @@ def run_kernel(
         if status in {"locked", "hold"}:
             if status == "hold":
                 hint = f" Try: uv run python state/governance_engine.py unhold --chapter-id {chapter_id}"
+            elif status == "locked":
+                hint = f" Try: uv run python state/governance_engine.py unlock --chapter-id {chapter_id}"
             else:
                 hint = ""
             raise KernelError(f"Chapter is not eligible (status={status!r})." + hint)

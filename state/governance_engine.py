@@ -81,7 +81,7 @@ class ChapterSelectionStrategyPayload(BaseModel):
 class GovernanceCLIArgsPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    cmd: Literal["validate", "select", "promotions", "unhold"]
+    cmd: Literal["validate", "select", "promotions", "unhold", "unlock"]
     ledger: Path
     chapter_id: list[str] = Field(default_factory=list)
     status: str = "active_refinement"
@@ -580,6 +580,43 @@ def _cmd_unhold(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_unlock(args: argparse.Namespace) -> int:
+    ledger_transit = _load_ledger(args.ledger)
+    ledger = ledger_transit.as_ledger_dict()
+    errors = validate_ledger(ledger)
+    if errors:
+        sys.stderr.write("Ledger validation failed; refusing to unlock.\n")
+        for err in errors:
+            sys.stderr.write(f"- {err}\n")
+        return 1
+
+    new_status = str(args.status)
+    if new_status in {"hold", "locked"}:
+        sys.stderr.write("Refusing to set status to hold/locked; choose an eligible status.\n")
+        return 2
+
+    chapters = _get_chapters(ledger)
+    changed = 0
+    for chapter_id in args.chapter_id:
+        if chapter_id not in chapters:
+            sys.stderr.write(f"Unknown chapter_id: {chapter_id}\n")
+            return 2
+        chapter = chapters[chapter_id]
+        if not isinstance(chapter, dict):
+            sys.stderr.write(f"Invalid chapter payload type for {chapter_id}: expected object\n")
+            return 2
+
+        if chapter.get("status") == "locked":
+            chapter["status"] = new_status
+            changed += 1
+
+    if changed:
+        _save_json(args.ledger, ledger)
+
+    sys.stdout.write(f"unlock: updated {changed} chapter(s)\n")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="governance_engine", description="Operational governance utilities for state/ledger.json")
     parser.add_argument("--ledger", type=Path, default=LEDGER_DEFAULT_PATH, help="Path to ledger.json")
@@ -604,6 +641,15 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_unhold.set_defaults(func=_cmd_unhold)
 
+    p_unlock = sub.add_parser("unlock", help="Clear locked status for one or more chapters")
+    p_unlock.add_argument("--chapter-id", nargs="+", required=True, help="Chapter id(s) to unlock")
+    p_unlock.add_argument(
+        "--status",
+        default="active_refinement",
+        help="New status to apply when current status is 'locked' (default: active_refinement)",
+    )
+    p_unlock.set_defaults(func=_cmd_unlock)
+
     args = parser.parse_args(argv)
     try:
         cli_args = GovernanceCLIArgsTransit.from_namespace(args)
@@ -614,6 +660,7 @@ def main(argv: list[str] | None = None) -> int:
         "select": _cmd_select,
         "promotions": _cmd_promotions,
         "unhold": _cmd_unhold,
+        "unlock": _cmd_unlock,
     }
     return int(handler_map[cli_args.payload.cmd](cli_args.to_namespace()))
 
