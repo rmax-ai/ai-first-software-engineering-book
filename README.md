@@ -82,26 +82,33 @@ This check is intentionally narrow; the stricter requirements (tone, drift, evid
 
 The repository includes a deterministic refinement kernel at `state/kernel.py`.
 
-By default, the kernel is **file-driven**: it prepares inputs under `state/role_io/<chapter-id>/iter_XX/in/` and expects role outputs under `.../out/`:
+By default, the kernel is **file-driven**: it prepares inputs under `state/role_io/<chapter-id>/iter_XX/in/` and expects role outputs under `.../out/`. You can develop new iterations by following the deterministic loop:
+
+1. Scaffold the next iteration I/O layout for the target chapter:
 
 ```bash
-# 1) Scaffold the next iteration I/O files
 python state/role_io_templates.py --chapter-id 01-paradigm-shift
+```
 
-# 2) Fill these outputs (by hand or with your own tooling)
-# - state/role_io/01-paradigm-shift/iter_XX/out/planner.json
-# - state/role_io/01-paradigm-shift/iter_XX/out/writer.md
-# - state/role_io/01-paradigm-shift/iter_XX/out/critic.json
+2. Populate the role outputs (planner, writer, and critic) either manually or with your own tooling. The kernel requires:
 
-# 3) Run the kernel (it will refuse to proceed if outputs are missing)
+```
+state/role_io/01-paradigm-shift/iter_XX/out/planner.json
+state/role_io/01-paradigm-shift/iter_XX/out/writer.md
+state/role_io/01-paradigm-shift/iter_XX/out/critic.json
+```
+
+3. Execute the kernel, which validates the provided outputs and enforces the evaluation contracts:
+
+```bash
 python state/kernel.py --chapter-id 01-paradigm-shift
 ```
 
 ### Optional: LLM-powered role outputs
 
-If you pass `--llm`, the kernel will auto-generate any missing `out/planner.json`, `out/writer.md`, and `out/critic.json` using an LLM client (and it will also write raw prompt/response traces under `out/_llm_trace/`). The deterministic eval gates still apply.
+Passing `--llm` lets the kernel auto-generate any missing planner, writer, or critic outputs by calling the configured LLM provider. Each run will still enforce the same deterministic eval gates and record raw prompt/response traces under `out/_llm_trace/`.
 
-Copilot SDK example:
+For example, with the Copilot SDK:
 
 ```bash
 export COPILOT_API_KEY=...              # optional BYOK (or set KERNEL_LLM_API_KEY_ENV)
