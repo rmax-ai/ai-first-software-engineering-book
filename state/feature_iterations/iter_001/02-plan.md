@@ -1,25 +1,23 @@
 # Plan
 
-1. Inspect governance and development guidance (`DEVELOPMENT.md`) to anchor harness expectations around determinism, UV execution, and eval contracts.
-2. Define a feature backlog for the harness:
-   - `state/kernel.py`: richer trace checkpoints, deterministic budget accounting visibility, and clearer failure categorization.
-   - `state/role_io_templates.py`: explicit role I/O schemas and stricter template validation helpers.
-   - `state/copilot_sdk_uv_smoke.py`: targeted smoke scenarios for trace integrity and failure-surface coverage.
-3. Define test strategy for each feature:
-   - Add/extend kernel-focused unit tests for pure helpers.
-   - Extend UV smoke coverage with deterministic pass/fail assertions.
-   - Keep command surface centered on `uv run python ...` workflows.
-4. Define evaluation strategy:
-   - Map harness changes to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` checks.
-   - Specify expected regression signals (metric drift, missing headings, style violations) and where they should be observed.
-5. Record risks, trade-offs, and deferred items so execution iterations stay minimal and verifiable.
-6. Recommend exactly one next iteration implementation task with bounded acceptance criteria.
+1. Reconfirm harness contribution constraints from `DEVELOPMENT.md` and seed prompt requirements in `prompts/incremental-improvements/execute.md`.
+2. Define feature workstreams for later iterations:
+   - richer deterministic trace/decision visibility in `state/kernel.py`
+   - clearer role-scaffold contracts in `state/role_io_templates.py`
+   - stronger smoke/e2e harness controls in `state/copilot_sdk_uv_smoke.py`
+3. Define verification workstreams:
+   - targeted harness runs via `uv run python state/copilot_sdk_uv_smoke.py`
+   - focused kernel checks via `uv run python state/kernel.py --chapter-id <id>`
+   - optional unit-level parser/validator checks as gaps are found
+4. Define evaluation integration workstreams:
+   - map expected signals to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
+   - ensure iteration validations capture metrics/ledger evidence in `state/metrics.json` and related artifacts
+5. Write complete iteration artifacts and queue one concrete next implementation task.
 
-## Expected files to change in future iterations
+## Expected files to change in later iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- `state/feature_iterations/iter_XXX/*.md`

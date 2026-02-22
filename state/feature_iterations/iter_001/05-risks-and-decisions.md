@@ -1,14 +1,12 @@
 # Risks and Decisions
 
 ## Risks discovered
-- Kernel observability changes can increase log noise and make deterministic diffs harder if not schema-constrained.
-- Expanding smoke coverage can create brittle checks unless assertions target stable signals.
-- Eval contract tightening may surface latent drift in unrelated chapters.
+- No implementation changes were made yet, so planned improvements remain unproven until follow-up execution iterations run.
+- Eval contract mapping may require refinement once concrete kernel/smoke changes are drafted.
 
 ## Decisions and trade-offs
-- Chose a planning-only iteration to satisfy seed prompt constraints before implementation.
-- Prioritized deterministic trace/accounting visibility first because it improves debuggability for all later harness changes.
-- Deferred implementation details to keep this iteration minimal and reviewable.
+- Chose the required seed planning scope from `execute.md` instead of speculative code edits.
+- Kept the backlog concise and file-specific to preserve one-task-per-iteration discipline.
 
 ## Intentionally deferred
-- Direct code edits in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.

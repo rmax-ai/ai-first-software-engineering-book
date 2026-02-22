@@ -1,10 +1,9 @@
 # Execution
 
 ## Commands/tools run
-- Read prompt contract: `view prompts/incremental-improvements/execute.md`
-- Read harness development guidance: `view DEVELOPMENT.md`
-- Checked existing iteration folders: `glob state/feature_iterations/iter_*`
-- Created seed iteration artifacts under: `state/feature_iterations/iter_001/`
+- `view prompts/incremental-improvements/execute.md`
+- `view DEVELOPMENT.md`
+- `apply_patch` to create iteration artifacts in `state/feature_iterations/iter_001/`
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -15,5 +14,7 @@
 - `state/feature_iterations/iter_001/06-next-iteration.md`
 - `state/feature_iterations/iter_001/07-summary.md`
 
-## Rationale
-This seed iteration intentionally performs planning-only work per the prompt contract, producing a concrete backlog for subsequent implementation iterations.
+## Rationale per change
+- Captured the seed task and acceptance criteria.
+- Produced a future-facing backlog that explicitly covers feature, test, and eval surfaces.
+- Documented verification evidence and clear handoff to the next single smallest task.

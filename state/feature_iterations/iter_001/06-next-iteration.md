@@ -1,20 +1,19 @@
-# Next Iteration Recommendation
+# Recommended next task
 
 ## Task
-Implement deterministic trace checkpoint summaries in `state/kernel.py` and validate them with a focused UV smoke test extension.
+Implement deterministic trace-summary emission in `state/kernel.py` for key loop stages.
 
 ## Why this is next
-The seed plan identified trace observability as the highest-leverage foundation; implementing it first improves diagnostics for every subsequent harness change.
+- It is the smallest concrete feature from the plan that improves observability without changing public interfaces.
+- It unlocks stronger smoke and eval assertions in subsequent iterations.
 
 ## Acceptance criteria
-- `state/kernel.py` emits structured checkpoint summaries at key loop boundaries without changing existing public CLI behavior.
-- `state/copilot_sdk_uv_smoke.py` includes at least one mode that asserts checkpoint summary presence and stable ordering.
-- Validation includes running `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` with captured pass/fail evidence in the next iteration’s `04-validation.md`.
+1. Add a minimal, deterministic trace-summary helper and wire it into the kernel loop at clearly defined checkpoints.
+2. Ensure trace output remains stable across identical runs.
+3. Validate with a targeted harness command (for example `uv run python state/copilot_sdk_uv_smoke.py --mode <targeted-mode>`) and record results.
+4. Update iteration artifacts with evidence and any follow-up risk notes.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/01-task.md`
-- `state/feature_iterations/iter_002/02-plan.md`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `state/feature_iterations/iter_002/*`
