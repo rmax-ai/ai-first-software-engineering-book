@@ -144,6 +144,12 @@ class LiveModeEnvPayload(BaseModel):
     base_url: str | None = None
 
 
+class SmokeCLIArgsPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    mode: str
+
+
 @dataclass(frozen=True)
 class LedgerSnapshotTransit:
     source_path: Path
@@ -199,6 +205,15 @@ class LiveModeEnvTransit:
     @property
     def base_url(self) -> str | None:
         return self.payload.base_url
+
+
+@dataclass(frozen=True)
+class SmokeCLIArgsTransit:
+    payload: SmokeCLIArgsPayload
+
+    @classmethod
+    def from_namespace(cls, args: argparse.Namespace) -> "SmokeCLIArgsTransit":
+        return cls(payload=SmokeCLIArgsPayload.model_validate({"mode": str(args.mode)}))
 
 
 def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
@@ -4072,7 +4087,8 @@ def main() -> int:
     mode_handlers = {name: handler for name, handler, _description in all_mode_specs}
     parser = _build_parser(all_mode_specs)
     args = parser.parse_args()
-    return mode_handlers[args.mode]()
+    cli_args = SmokeCLIArgsTransit.from_namespace(args)
+    return mode_handlers[cli_args.payload.mode]()
 
 
 if __name__ == "__main__":
