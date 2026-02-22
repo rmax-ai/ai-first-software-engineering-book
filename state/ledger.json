@@ -1065,7 +1065,7 @@
       "status": "hold"
     },
     "02-harness-engineering": {
-      "current_iteration": 91,
+      "current_iteration": 94,
       "drift_history": [],
       "human_validation": {
         "approved": false,
@@ -1889,6 +1889,33 @@
           "planner_focus": [
             "## Thesis: tighten scope"
           ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0010372214319582741,
+          "iteration": 92,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0010372214319582741,
+          "iteration": 93,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0010372214319582741,
+          "iteration": 94,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
         }
       ],
       "last_eval": {
@@ -1916,7 +1943,7 @@
               "thesis_clarity": 1.0,
               "tradeoffs": 1.0
             },
-            "timestamp": "2026-02-22T16:34:36Z",
+            "timestamp": "2026-02-22T16:34:38Z",
             "total": 1.0
           },
           "drift_detection": {
@@ -1934,7 +1961,7 @@
               "duplicate_sentence_ratio": 0.0,
               "near_duplicate_ngram_ratio": 0.0007112375533428165
             },
-            "timestamp": "2026-02-22T16:34:36Z"
+            "timestamp": "2026-02-22T16:34:38Z"
           },
           "drift_score": 0.0010372214319582741,
           "passed": false,
@@ -1989,7 +2016,7 @@
                 "words": 30
               }
             ],
-            "timestamp": "2026-02-22T16:34:36Z"
+            "timestamp": "2026-02-22T16:34:38Z"
           }
         }
       },
@@ -2008,11 +2035,11 @@
         "hypothesis": "",
         "validation_status": "untested"
       },
-      "revision_count": 91,
+      "revision_count": 94,
       "stability": {
         "consecutive_passes": 0,
         "frozen_candidate": false,
-        "last_modified_iteration": 91
+        "last_modified_iteration": 94
       },
       "status": "hold"
     },
@@ -67648,6 +67675,363 @@
         "patterns_modified": []
       },
       "timestamp": "2026-02-22T16:34:36Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:34:37Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0007112375533428165
+          },
+          "timestamp": "2026-02-22T16:34:37Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.06170212765957447,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 02 \u2014 Harness Engineering ## Thesis Harness engineering is the discipline of turning a general-purpose model into a predictable system by defining tool contracts, constraints, loop control, a",
+              "words": 30
+            },
+            {
+              "sentence": "Hypothesis (falsifiable): for a fixed set of tasks and repositories, tightening the harness (schemas, budgets, gates, and recovery rules) reduces regression rate and rework more than swapping between ",
+              "words": 32
+            },
+            {
+              "sentence": "A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track: | Plane | Responsibilities | Key artifacts (inputs/outputs) | One measura",
+              "words": 53
+            },
+            {
+              "sentence": "Outputs: patches, command outputs, structured errors | Patch locality (changed files/lines per task) | | Evaluation plane | Decide if work is acceptable based on checks | Inputs: build/test/lint resul",
+              "words": 29
+            },
+            {
+              "sentence": "Outputs: trace, ledger, artifacts for replay | Reproducibility rate (can rerun and get same pass/fail) | The \u201cminimal contract surface\u201d is the set of interfaces that must be stable for predictability.",
+              "words": 30
+            },
+            {
+              "sentence": "A minimal schema sketch: - Required fields: - `path`: absolute or repo-relative file path (must exist unless `create=true`) - `old_str`: exact original text to be replaced (must match uniquely) - `new",
+              "words": 48
+            },
+            {
+              "sentence": "- Error contract (examples): - `NOT_FOUND`: `path` does not exist and `create` is false - `NON_UNIQUE_MATCH`: `old_str` matches multiple locations - `NO_MATCH`: `old_str` matches zero locations (stale",
+              "words": 41
+            },
+            {
+              "sentence": "Evaluation: measure whether the tool contract is improving outcomes with two task-level metrics: - **Revert rate**: fraction of tasks where the patch is reverted in the next N commits/PR updates.",
+              "words": 31
+            },
+            {
+              "sentence": "Fallback gate policy when tests are missing: - If unit tests are absent or non-runnable, the harness should not silently accept \u201clooks good.\u201d - Replace the unit-test requirement with a narrower, expli",
+              "words": 67
+            },
+            {
+              "sentence": "- How you notice: many files touched per task, drift into unrelated directories, and regressions discovered after \u201ccompletion.\u201d - Harness fix: enforce patch locality budgets, add path allowlists/denyl",
+              "words": 35
+            },
+            {
+              "sentence": "- Harness fix: make gates non-optional for PR-ready output (policy), require artifacts (logs, diff id, check results) attached to the task, and surface \u201cstop reason\u201d when evidence is missing.",
+              "words": 30
+            }
+          ],
+          "timestamp": "2026-02-22T16:34:37Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/02-harness-engineering.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 92 for 02-harness-engineering"
+      },
+      "iteration": 685,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "02-harness-engineering"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:34:37Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:34:37Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0007112375533428165
+          },
+          "timestamp": "2026-02-22T16:34:37Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.06170212765957447,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 02 \u2014 Harness Engineering ## Thesis Harness engineering is the discipline of turning a general-purpose model into a predictable system by defining tool contracts, constraints, loop control, a",
+              "words": 30
+            },
+            {
+              "sentence": "Hypothesis (falsifiable): for a fixed set of tasks and repositories, tightening the harness (schemas, budgets, gates, and recovery rules) reduces regression rate and rework more than swapping between ",
+              "words": 32
+            },
+            {
+              "sentence": "A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track: | Plane | Responsibilities | Key artifacts (inputs/outputs) | One measura",
+              "words": 53
+            },
+            {
+              "sentence": "Outputs: patches, command outputs, structured errors | Patch locality (changed files/lines per task) | | Evaluation plane | Decide if work is acceptable based on checks | Inputs: build/test/lint resul",
+              "words": 29
+            },
+            {
+              "sentence": "Outputs: trace, ledger, artifacts for replay | Reproducibility rate (can rerun and get same pass/fail) | The \u201cminimal contract surface\u201d is the set of interfaces that must be stable for predictability.",
+              "words": 30
+            },
+            {
+              "sentence": "A minimal schema sketch: - Required fields: - `path`: absolute or repo-relative file path (must exist unless `create=true`) - `old_str`: exact original text to be replaced (must match uniquely) - `new",
+              "words": 48
+            },
+            {
+              "sentence": "- Error contract (examples): - `NOT_FOUND`: `path` does not exist and `create` is false - `NON_UNIQUE_MATCH`: `old_str` matches multiple locations - `NO_MATCH`: `old_str` matches zero locations (stale",
+              "words": 41
+            },
+            {
+              "sentence": "Evaluation: measure whether the tool contract is improving outcomes with two task-level metrics: - **Revert rate**: fraction of tasks where the patch is reverted in the next N commits/PR updates.",
+              "words": 31
+            },
+            {
+              "sentence": "Fallback gate policy when tests are missing: - If unit tests are absent or non-runnable, the harness should not silently accept \u201clooks good.\u201d - Replace the unit-test requirement with a narrower, expli",
+              "words": 67
+            },
+            {
+              "sentence": "- How you notice: many files touched per task, drift into unrelated directories, and regressions discovered after \u201ccompletion.\u201d - Harness fix: enforce patch locality budgets, add path allowlists/denyl",
+              "words": 35
+            },
+            {
+              "sentence": "- Harness fix: make gates non-optional for PR-ready output (policy), require artifacts (logs, diff id, check results) attached to the task, and surface \u201cstop reason\u201d when evidence is missing.",
+              "words": 30
+            }
+          ],
+          "timestamp": "2026-02-22T16:34:37Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/02-harness-engineering.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 93 for 02-harness-engineering"
+      },
+      "iteration": 686,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "02-harness-engineering"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:34:37Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:34:38Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0007112375533428165
+          },
+          "timestamp": "2026-02-22T16:34:38Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.06170212765957447,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 02 \u2014 Harness Engineering ## Thesis Harness engineering is the discipline of turning a general-purpose model into a predictable system by defining tool contracts, constraints, loop control, a",
+              "words": 30
+            },
+            {
+              "sentence": "Hypothesis (falsifiable): for a fixed set of tasks and repositories, tightening the harness (schemas, budgets, gates, and recovery rules) reduces regression rate and rework more than swapping between ",
+              "words": 32
+            },
+            {
+              "sentence": "A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track: | Plane | Responsibilities | Key artifacts (inputs/outputs) | One measura",
+              "words": 53
+            },
+            {
+              "sentence": "Outputs: patches, command outputs, structured errors | Patch locality (changed files/lines per task) | | Evaluation plane | Decide if work is acceptable based on checks | Inputs: build/test/lint resul",
+              "words": 29
+            },
+            {
+              "sentence": "Outputs: trace, ledger, artifacts for replay | Reproducibility rate (can rerun and get same pass/fail) | The \u201cminimal contract surface\u201d is the set of interfaces that must be stable for predictability.",
+              "words": 30
+            },
+            {
+              "sentence": "A minimal schema sketch: - Required fields: - `path`: absolute or repo-relative file path (must exist unless `create=true`) - `old_str`: exact original text to be replaced (must match uniquely) - `new",
+              "words": 48
+            },
+            {
+              "sentence": "- Error contract (examples): - `NOT_FOUND`: `path` does not exist and `create` is false - `NON_UNIQUE_MATCH`: `old_str` matches multiple locations - `NO_MATCH`: `old_str` matches zero locations (stale",
+              "words": 41
+            },
+            {
+              "sentence": "Evaluation: measure whether the tool contract is improving outcomes with two task-level metrics: - **Revert rate**: fraction of tasks where the patch is reverted in the next N commits/PR updates.",
+              "words": 31
+            },
+            {
+              "sentence": "Fallback gate policy when tests are missing: - If unit tests are absent or non-runnable, the harness should not silently accept \u201clooks good.\u201d - Replace the unit-test requirement with a narrower, expli",
+              "words": 67
+            },
+            {
+              "sentence": "- How you notice: many files touched per task, drift into unrelated directories, and regressions discovered after \u201ccompletion.\u201d - Harness fix: enforce patch locality budgets, add path allowlists/denyl",
+              "words": 35
+            },
+            {
+              "sentence": "- Harness fix: make gates non-optional for PR-ready output (policy), require artifacts (logs, diff id, check results) attached to the task, and surface \u201cstop reason\u201d when evidence is missing.",
+              "words": 30
+            }
+          ],
+          "timestamp": "2026-02-22T16:34:38Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/02-harness-engineering.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 94 for 02-harness-engineering"
+      },
+      "iteration": 687,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "02-harness-engineering"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:34:38Z"
     }
   ],
   "version": 2
