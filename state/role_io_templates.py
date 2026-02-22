@@ -44,6 +44,12 @@ class JSONMappingPayload(BaseModel):
     data: dict[str, Any]
 
 
+class JSONTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
 class ChapterTextPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -73,10 +79,20 @@ class LedgerTransit:
 class JSONMappingTransit:
     source_path: Path
     raw_text: str
+    json_text: "JSONTextTransit"
     payload: JSONMappingPayload
 
     def to_mapping(self) -> dict[str, Any]:
         return self.payload.data
+
+
+@dataclass(frozen=True)
+class JSONTextTransit:
+    source_path: Path
+    payload: JSONTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
 
 
 @dataclass(frozen=True)
@@ -95,14 +111,18 @@ def _load_json(path: Path) -> JSONMappingTransit:
     except FileNotFoundError as exc:
         raise TemplateError(f"Missing JSON file: {path}") from exc
     try:
-        raw = json.loads(raw_text)
+        json_text = JSONTextTransit(source_path=path, payload=JSONTextPayload.model_validate({"text": raw_text}))
+    except ValidationError as exc:
+        raise TemplateError(f"Invalid JSON text payload: {path}: {exc}") from exc
+    try:
+        raw = json.loads(json_text.to_text())
     except json.JSONDecodeError as exc:
         raise TemplateError(f"Invalid JSON: {path}: {exc}") from exc
     try:
         payload = JSONMappingPayload.model_validate({"data": raw})
     except ValidationError as exc:
         raise TemplateError(f"Invalid JSON mapping payload: {path}: {exc}") from exc
-    return JSONMappingTransit(source_path=path, raw_text=raw_text, payload=payload)
+    return JSONMappingTransit(source_path=path, raw_text=json_text.to_text(), json_text=json_text, payload=payload)
 
 
 def _load_ledger(path: Path) -> LedgerTransit:
