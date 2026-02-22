@@ -128,3 +128,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 03-autonomous-kernels | 1 | failed(1) | none | `41e3bff` |
 | 03-autonomous-kernels | 2 | failed(1) | none | `4a13492` |
 | 03-autonomous-kernels | 3 | failed(1) | none | `896d5af` |
+| 04-memory-systems | 1 | failed(1) | none | pending |
