@@ -88,6 +88,24 @@ class PlannerInputPayload(BaseModel):
     chapter_hypothesis: str
 
 
+class LedgerChapterPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    path: str
+    status: str | None = None
+    lifecycle: str | None = None
+    current_iteration: int | None = 0
+    quality_metrics: dict[str, Any] = Field(default_factory=dict)
+    last_eval: dict[str, Any] | None = None
+    stability: dict[str, Any] = Field(default_factory=dict)
+
+
+class LedgerPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    chapters: dict[str, LedgerChapterPayload]
+
+
 @dataclass(frozen=True)
 class PlannerInputTransit:
     chapter_id: str
@@ -158,6 +176,15 @@ def _load_json(path: Path) -> dict[str, Any]:
         raise KernelError(f"Missing JSON file: {path}") from exc
     except json.JSONDecodeError as exc:
         raise KernelError(f"Invalid JSON: {path}: {exc}") from exc
+
+
+def _load_ledger(path: Path) -> tuple[dict[str, Any], LedgerPayload]:
+    raw = _load_json(path)
+    try:
+        payload = LedgerPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise KernelError(f"Invalid ledger payload: {exc}") from exc
+    return raw, payload
 
 
 def _save_json(path: Path, data: Any) -> None:
@@ -862,21 +889,15 @@ def _critic_score(report: CriticReport) -> float:
     return float((report.structure_score + report.clarity_score + report.example_density) / 3.0)
 
 
-def _load_other_chapters_text(ledger: dict[str, Any], current_chapter_id: str) -> dict[str, str]:
-    chapters = ledger.get("chapters")
-    if not isinstance(chapters, dict):
-        return {}
+def _load_other_chapters_text(ledger: LedgerPayload, current_chapter_id: str) -> dict[str, str]:
     out: dict[str, str] = {}
-    for cid, meta in chapters.items():
+    for cid, meta in ledger.chapters.items():
         if cid == current_chapter_id:
             continue
-        if not isinstance(meta, dict):
-            continue
-        p = meta.get("path")
-        if not isinstance(p, str) or not p:
+        if not meta.path:
             continue
         try:
-            out[cid] = _read_text(REPO_ROOT / p)
+            out[cid] = _read_text(REPO_ROOT / meta.path)
         except KernelError:
             continue
     return out
@@ -892,7 +913,7 @@ def _prepare_iteration_inputs(
     chapter_id: str,
     iteration: int,
     chapter_text: str,
-    ledger_chapter: dict[str, Any],
+    ledger_chapter: LedgerChapterPayload,
     previous_critic: dict[str, Any] | None,
 ) -> None:
     itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
@@ -901,14 +922,17 @@ def _prepare_iteration_inputs(
 
     roadmap_text = _read_text(ROADMAP_PATH)
     hypothesis = _extract_roadmap_hypothesis(roadmap_text, chapter_id)
-    planner_input = {
-        "chapter_id": chapter_id,
-        "chapter_content": chapter_text,
-        "quality_metrics": ledger_chapter.get("quality_metrics", {}),
-        "previous_critic_feedback": previous_critic,
-        "chapter_hypothesis": hypothesis,
-    }
-    _write_text(itdir / "in" / "planner_input.json", json.dumps(planner_input, indent=2, sort_keys=True) + "\n")
+    planner_input = PlannerInputTransit(
+        chapter_id=chapter_id,
+        chapter_content=chapter_text,
+        quality_metrics=ledger_chapter.quality_metrics,
+        previous_critic_feedback=previous_critic,
+        chapter_hypothesis=hypothesis,
+    )
+    _write_text(
+        itdir / "in" / "planner_input.json",
+        json.dumps(dataclasses.asdict(planner_input), indent=2, sort_keys=True) + "\n",
+    )
 
     # Writer input is chapter + planner output (planner output will be produced in out/planner.json).
     _write_text(itdir / "in" / "writer_chapter.md", chapter_text)
@@ -950,34 +974,37 @@ def run_kernel(
     )
 
     try:
-        ledger = _load_json(LEDGER_PATH)
+        ledger, ledger_payload = _load_ledger(LEDGER_PATH)
         chapters = ledger.get("chapters")
-        if not isinstance(chapters, dict) or chapter_id not in chapters or not isinstance(chapters[chapter_id], dict):
+        if not isinstance(chapters, dict):
+            raise KernelError("Invalid ledger structure: chapters must be a mapping")
+        chapter_meta_payload = ledger_payload.chapters.get(chapter_id)
+        if chapter_meta_payload is None:
             raise KernelError(f"Unknown chapter_id: {chapter_id}")
         chapter_meta: dict[str, Any] = chapters[chapter_id]
-        status = chapter_meta.get("status")
-        lifecycle = chapter_meta.get("lifecycle")
+        status = chapter_meta_payload.status
+        lifecycle = chapter_meta_payload.lifecycle
         if status in {"locked", "hold"}:
             raise KernelError(f"Chapter is not eligible (status={status!r}).")
         if lifecycle == "frozen":
             raise KernelError("Chapter is frozen.")
 
-        chapter_path = chapter_meta.get("path")
-        if not isinstance(chapter_path, str) or not chapter_path:
+        chapter_path = chapter_meta_payload.path
+        if not chapter_path:
             raise KernelError("Chapter is missing a valid path")
         chapter_file = REPO_ROOT / chapter_path
         baseline_text = _read_text(chapter_file)
 
         previous_critic: dict[str, Any] | None = None
         # If ledger has last_eval and it is critic-like, pass through.
-        if isinstance(chapter_meta.get("last_eval"), dict):
-            previous_critic = chapter_meta.get("last_eval")  # type: ignore[assignment]
+        if isinstance(chapter_meta_payload.last_eval, dict):
+            previous_critic = chapter_meta_payload.last_eval
 
-        other_chapters = _load_other_chapters_text(ledger, chapter_id)
+        other_chapters = _load_other_chapters_text(ledger_payload, chapter_id)
         original_headings = _markdown_headings(baseline_text)
 
-        consecutive_passes = int(chapter_meta.get("stability", {}).get("consecutive_passes", 0) or 0)
-        current_iteration = int(chapter_meta.get("current_iteration", 0) or 0)
+        consecutive_passes = int(chapter_meta_payload.stability.get("consecutive_passes", 0) or 0)
+        current_iteration = int(chapter_meta_payload.current_iteration or 0)
 
         for i in range(1, max_iterations + 1):
             iteration = current_iteration + i
@@ -992,12 +1019,16 @@ def run_kernel(
                     "max_drift_score": max_drift_score,
                 },
             )
+            try:
+                ledger_chapter_for_iteration = LedgerChapterPayload.model_validate(chapter_meta)
+            except ValidationError as exc:
+                raise KernelError(f"Invalid chapter ledger payload: {exc}") from exc
             _prepare_iteration_inputs(
                 io_dir=io_dir,
                 chapter_id=chapter_id,
                 iteration=iteration,
                 chapter_text=_read_text(chapter_file),
-                ledger_chapter=chapter_meta,
+                ledger_chapter=ledger_chapter_for_iteration,
                 previous_critic=previous_critic,
             )
 

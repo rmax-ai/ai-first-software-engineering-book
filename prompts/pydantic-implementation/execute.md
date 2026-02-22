@@ -45,6 +45,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 ## Typed Flow Notes
 
 - `state/kernel.py` validates `in/planner_input.json`, `out/planner.json`, and `out/critic.json` with Pydantic payload models before use.
+- `state/kernel.py` also validates `state/ledger.json` through `LedgerPayload` and materializes each iteration's planner input via `PlannerInputTransit` before writing `in/planner_input.json`.
 - The planner input payload is converted into a `PlannerInputTransit` dataclass before being forwarded to the planner LLM prompt.
 - Kernel runtime logic continues consuming internal dataclasses (`PlannerPlan`, `CriticReport`) after validation.
 - `state/role_io_templates.py` now validates `state/ledger.json` through `LedgerPayload` and forwards chapter data via the `TemplateContext` dataclass before template writes.
