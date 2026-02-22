@@ -62,6 +62,12 @@ class MetricsPayload(BaseModel):
     chapters: dict[str, MetricsChapterPayload]
 
 
+@dataclass(frozen=True)
+class MetricsTransit:
+    raw: dict[str, Any]
+    payload: MetricsPayload
+
+
 class KernelTraceEntryPayload(BaseModel):
     event: str
     payload: Any
@@ -351,6 +357,18 @@ def _build_trace_summary_kernel_fixture(chapter_id: str, fixture_root: Path) -> 
     return fixture_repo_root / "state" / "metrics.json", fixture_repo_root
 
 
+def _load_metrics(path: Path) -> MetricsTransit:
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Invalid metrics JSON at {path}: {exc}") from exc
+    try:
+        payload = MetricsPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise RuntimeError(f"Invalid metrics payload at {path}: {exc}") from exc
+    return MetricsTransit(raw=raw, payload=payload)
+
+
 def _load_kernel_trace(path: Path) -> KernelTraceTransit:
     try:
         raw_entries = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -415,8 +433,8 @@ async def run_trace_summary_mode(
                     print(proc.stderr.strip())
                 return 1
 
-        metrics_payload = MetricsPayload.model_validate(json.loads(metrics_path_for_trace.read_text(encoding="utf-8")))
-        chapter_metrics = metrics_payload.chapters.get(chapter_id)
+        metrics_transit = _load_metrics(metrics_path_for_trace)
+        chapter_metrics = metrics_transit.payload.chapters.get(chapter_id)
         if chapter_metrics is None or not chapter_metrics.history:
             print(f"FAIL: no metrics history for chapter {chapter_id}")
             return 1
