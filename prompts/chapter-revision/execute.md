@@ -171,3 +171,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 06-agent-governance | 2 | failed(1) | none | `273e776` |
 | 06-agent-governance | 3 | failed(1) | none | `e6d9276` |
 | 07-production-ai-infrastructure | 1 | failed(1) | none | `fc2cdd4` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `6036e34` |
