@@ -120,6 +120,19 @@ class LLMJSONObjectTextPayload(BaseModel):
     end_index: int
 
 
+class LLMNormalizedJSONTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+    @field_validator("text")
+    @classmethod
+    def _validate_text(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("normalized LLM JSON response text must not be empty")
+        return value
+
+
 class YAMLTextPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -406,6 +419,15 @@ class LLMJSONResponseTextTransit:
 class LLMJSONObjectTextTransit:
     response_text: LLMJSONResponseTextTransit
     payload: LLMJSONObjectTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
+
+
+@dataclass(frozen=True)
+class LLMNormalizedJSONTextTransit:
+    response_text: LLMJSONResponseTextTransit
+    payload: LLMNormalizedJSONTextPayload
 
     def to_text(self) -> str:
         return self.payload.text
@@ -711,7 +733,14 @@ def _extract_json_object(text: str) -> JSONMappingTransit:
     except ValidationError as exc:
         raise KernelError(f"Invalid LLM JSON response text payload: {exc}") from exc
     text_transit = LLMJSONResponseTextTransit(payload=text_payload)
-    normalized_text = _strip_wrapping_code_fence(text_transit.to_text()).strip()
+    try:
+        normalized_payload = LLMNormalizedJSONTextPayload.model_validate(
+            {"text": _strip_wrapping_code_fence(text_transit.to_text()).strip()}
+        )
+    except ValidationError as exc:
+        raise KernelError(f"Invalid normalized LLM JSON response text payload: {exc}") from exc
+    normalized_transit = LLMNormalizedJSONTextTransit(response_text=text_transit, payload=normalized_payload)
+    normalized_text = normalized_transit.to_text()
     lo = 0
     hi = len(normalized_text)
     candidate = normalized_text
