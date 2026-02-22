@@ -101,6 +101,7 @@ class LedgerSnapshotTransit:
 
 @dataclass(frozen=True)
 class JSONMappingTransit:
+    source_path: Path
     raw_text: str
     payload: JSONMappingPayload
 
@@ -115,7 +116,7 @@ def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
     except ValidationError as exc:
         raise AssertionError(f"expected {path} to match LedgerSnapshotPayload: {exc}") from exc
     return LedgerSnapshotTransit(
-        source_path=path,
+        source_path=json_mapping.source_path,
         raw_text=json_mapping.raw_text,
         json_mapping=json_mapping,
         payload=payload,
@@ -135,7 +136,7 @@ def _load_json_mapping(path: Path) -> JSONMappingTransit:
         payload = JSONMappingPayload.model_validate({"data": parsed})
     except ValidationError as exc:
         raise AssertionError(f"expected {path} to contain a JSON object mapping: {exc}") from exc
-    return JSONMappingTransit(raw_text=raw_text, payload=payload)
+    return JSONMappingTransit(source_path=path, raw_text=raw_text, payload=payload)
 
 
 def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:
