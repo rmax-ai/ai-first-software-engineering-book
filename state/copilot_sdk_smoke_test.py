@@ -7,6 +7,7 @@ Usage and mode details are generated from shared mode metadata below.
 from __future__ import annotations
 
 import argparse
+import ast
 import importlib
 import inspect
 import os
@@ -1636,6 +1637,45 @@ def run_usage_examples_duplicate_count_wrapper_helper_single_delegation_guard_mo
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_signature_guard_mode() -> int:
+    wrapper_functions = [
+        mode_handler
+        for mode_name, mode_handler, _description in TRACE_SUMMARY_MODE_SPECS
+        if mode_name.startswith("usage-examples-duplicate-count-mode-coverage-guard")
+    ]
+    assert wrapper_functions, "expected duplicate-count coverage-guard wrapper functions"
+
+    wrappers_with_non_canonical_signature: list[str] = []
+    for mode_handler in wrapper_functions:
+        helper_calls = [
+            node
+            for node in ast.walk(ast.parse(inspect.getsource(mode_handler)))
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "_run_usage_examples_duplicate_count_mode_coverage_guard"
+        ]
+        if len(helper_calls) != 1:
+            wrappers_with_non_canonical_signature.append(mode_handler.__name__)
+            continue
+        helper_call = helper_calls[0]
+        if len(helper_call.args) != 2 or any(
+            not isinstance(arg, ast.Constant) or not isinstance(arg.value, str) for arg in helper_call.args
+        ):
+            wrappers_with_non_canonical_signature.append(mode_handler.__name__)
+
+    assert not wrappers_with_non_canonical_signature, (
+        "expected duplicate-count coverage-guard wrappers to delegate with exactly two string arguments to "
+        "_run_usage_examples_duplicate_count_mode_coverage_guard(...), "
+        f"found regressions: {wrappers_with_non_canonical_signature}"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-signature-guard mode validates duplicate-count "
+        "coverage-guard wrappers delegate with canonical two-string helper arguments"
+    )
+    return 0
+
+
 def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
@@ -1939,6 +1979,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-helper-single-delegation-guard",
         run_usage_examples_duplicate_count_wrapper_helper_single_delegation_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper single helper delegation assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-signature-guard",
+        run_usage_examples_duplicate_count_wrapper_helper_signature_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper signature assertion",
     ),
     (
         "usage-examples-order-guard",
