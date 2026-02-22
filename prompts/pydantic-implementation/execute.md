@@ -47,6 +47,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` validates `in/planner_input.json`, `out/planner.json`, and `out/critic.json` with Pydantic payload models before use.
 - `state/kernel.py` also validates `state/ledger.json` through `LedgerPayload` and materializes each iteration's planner input via `PlannerInputTransit` before writing `in/planner_input.json`.
 - `state/kernel.py` now forwards validated ledger payloads between kernel setup stages through `LedgerTransit` instead of raw tuple unpacking.
+- `state/kernel.py` now carries the `JSONMappingTransit` used for ledger ingestion inside `LedgerTransit`, preserving source-path and raw-JSON provenance after `LedgerPayload` parsing.
 - `state/kernel.py` validates deterministic eval YAML payloads through `DeterministicEvalConfigPayload` and forwards them between evaluators via `DeterministicEvalTransit`.
 - `state/kernel.py` validates `state/metrics.json` and `state/version_map.json` through `MetricsPayload` and `VersionMapPayload` before updating runtime artifacts.
 - `state/kernel.py` now forwards validated metrics payloads through `MetricsTransit` before updating chapter metrics history.
