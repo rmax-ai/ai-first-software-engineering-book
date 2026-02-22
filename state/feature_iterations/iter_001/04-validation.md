@@ -1,20 +1,14 @@
 # Validation
 
-## Verification commands run
-- `glob state/feature_iterations/iter_*`
-- `glob state/{kernel.py,role_io_templates.py,copilot_sdk_uv_smoke.py}`
-- `glob evals/*.yaml`
-- `ls -1 state/feature_iterations/iter_001`
-- `test $(ls -1 state/feature_iterations/iter_001/*.md | wc -l) -eq 7`
-- `rg -n "Acceptance criteria|Recommended next task|Iteration Summary" state/feature_iterations/iter_001/*.md`
+## Verification actions
+1. Confirmed the seed prompt requirements from `prompts/incremental-improvements/execute.md`.
+2. Cross-checked harness development constraints and verification guidance in `DEVELOPMENT.md`.
+3. Confirmed all seven required artifacts exist in `state/feature_iterations/iter_001/`.
 
 ## Observed results
-- `iter_001` was initialized as the next iteration folder.
-- Target harness files exist: `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`.
-- Eval contracts exist: `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, `evals/drift-detection.yaml`.
-- Iteration folder contains all seven required markdown artifacts.
+- Iteration folder created at `state/feature_iterations/iter_001/`.
+- Seven markdown artifacts were generated with required sections.
+- Planning content explicitly covers features, tests, and eval mapping.
 
-## Acceptance criteria check
-- Planning-only seed task documented: **pass**
-- Features/tests/evals explicitly covered in plan: **pass**
-- Required artifact contract satisfied for this iteration: **pass**
+## Acceptance criteria result
+- **Pass**: All acceptance criteria from `01-task.md` are satisfied for a planning-only iteration.

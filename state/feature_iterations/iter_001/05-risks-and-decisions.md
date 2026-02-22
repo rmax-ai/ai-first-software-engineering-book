@@ -1,12 +1,15 @@
-# Risks and Decisions
+# Risks and decisions
 
 ## Risks
-- Future kernel changes may couple logging, budget control, and eval wiring if feature slices are not isolated.
-- Expanding smoke coverage can create noisy signals unless expected outputs are explicitly codified.
+1. `state/kernel.py` changes can easily introduce nondeterministic behavior unless guard checks remain table-driven and reproducible.
+2. Role template tightening in `state/role_io_templates.py` may break existing prompt assumptions if migration coverage is incomplete.
+3. Expanding smoke modes without stable assertions can create brittle tests.
 
 ## Decisions and trade-offs
-- Chose a planning-only first iteration to satisfy prompt requirements and avoid speculative code edits.
-- Prioritized deterministic observability and eval alignment before adding new runtime behavior.
+- Decided to keep this iteration planning-only to de-risk implementation sequencing.
+- Deferred code edits until feature slices can be validated with targeted smoke and eval checks.
+- Chose eval-first mapping so each future change is tied to explicit regression signals.
 
-## Deferred
-- Implementation of kernel and smoke changes is deferred to the next iteration by design.
+## Intentionally deferred
+- No Python implementation changes in this iteration.
+- No eval YAML edits in this iteration; only mapping and planning were documented.
