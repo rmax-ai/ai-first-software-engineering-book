@@ -977,6 +977,34 @@ def run_trace_summary_kernel_fixture_cleanup_mode() -> int:
     return 0
 
 
+def run_trace_summary_kernel_fixture_root_cleanup_mode() -> int:
+    _run_trace_summary_kernel_mode("trace-summary", expect_fixture_cleanup=True)
+    _assert_trace_summary_fixture_root_clean("trace-summary")
+    _run_trace_summary_kernel_mode(
+        "trace-summary-malformed-phase",
+        expected_failure="phase_trace missing keys: ['budget_signal']",
+        expect_fixture_cleanup=True,
+    )
+    _assert_trace_summary_fixture_root_clean("trace-summary-malformed-phase")
+    _run_trace_summary_kernel_mode(
+        "trace-summary-malformed-phase-payload",
+        expected_failure="phase_trace payload is not an object",
+        expect_fixture_cleanup=True,
+    )
+    _assert_trace_summary_fixture_root_clean("trace-summary-malformed-phase-payload")
+    _run_trace_summary_kernel_mode(
+        "trace-summary-missing-phase",
+        expected_failure="missing required phase traces: ['evaluation']",
+        expect_fixture_cleanup=True,
+    )
+    _assert_trace_summary_fixture_root_clean("trace-summary-missing-phase")
+    print(
+        "PASS: trace-summary-kernel-fixture-root-cleanup mode validates trace-summary fixture root cleanup "
+        "after kernel trace-summary runs"
+    )
+    return 0
+
+
 def run_trace_summary_non_kernel_fixture_cleanup_mode() -> int:
     _run_trace_summary_non_kernel_mode("trace-summary", expect_fixture_cleanup=True)
     _run_trace_summary_non_kernel_mode(
@@ -1951,6 +1979,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-kernel-fixture-cleanup",
         run_trace_summary_kernel_fixture_cleanup_mode,
         "fixture-backed kernel trace-summary cleanup assertion",
+    ),
+    (
+        "trace-summary-kernel-fixture-root-cleanup",
+        run_trace_summary_kernel_fixture_root_cleanup_mode,
+        "fixture-backed kernel trace-summary root cleanup assertion",
     ),
     (
         "trace-summary-non-kernel-fixture-cleanup",
