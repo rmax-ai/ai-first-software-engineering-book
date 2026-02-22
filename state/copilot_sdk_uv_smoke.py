@@ -67,6 +67,10 @@ class KernelTraceEntryPayload(BaseModel):
     payload: Any
 
 
+class KernelTracePayload(BaseModel):
+    entries: list[KernelTraceEntryPayload]
+
+
 class KernelTracePhaseEntryPayload(BaseModel):
     event: str
     payload: dict[str, Any]
@@ -125,6 +129,14 @@ class KernelTracePhaseTransit:
     @classmethod
     def from_payload(cls, payload: KernelTracePhaseEntryPayload) -> "KernelTracePhaseTransit":
         return cls(payload=payload.payload)
+
+
+@dataclass(frozen=True)
+class KernelTraceTransit:
+    payload: KernelTracePayload
+
+    def phase_entries(self) -> list[KernelTraceEntryPayload]:
+        return [entry for entry in self.payload.entries if entry.event == "phase_trace"]
 
 
 @dataclass(frozen=True)
@@ -339,6 +351,18 @@ def _build_trace_summary_kernel_fixture(chapter_id: str, fixture_root: Path) -> 
     return fixture_repo_root / "state" / "metrics.json", fixture_repo_root
 
 
+def _load_kernel_trace(path: Path) -> KernelTraceTransit:
+    try:
+        raw_entries = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Invalid kernel trace entry JSON at {path}: {exc}") from exc
+    try:
+        payload = KernelTracePayload.model_validate({"entries": raw_entries})
+    except ValidationError as exc:
+        raise RuntimeError(f"Invalid kernel trace payload at {path}: {exc}") from exc
+    return KernelTraceTransit(payload=payload)
+
+
 async def run_trace_summary_mode(
     chapter_id: str,
     max_iterations: int,
@@ -413,12 +437,12 @@ async def run_trace_summary_mode(
             print(f"FAIL: kernel trace file missing at {trace_path}")
             return 1
 
-        trace_entries = [
-            KernelTraceEntryPayload.model_validate(json.loads(line))
-            for line in trace_path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        ]
-        phase_entries = [entry for entry in trace_entries if entry.event == "phase_trace"]
+        try:
+            trace_transit = _load_kernel_trace(trace_path)
+        except RuntimeError as exc:
+            print(f"FAIL: {exc}")
+            return 1
+        phase_entries = trace_transit.phase_entries()
         if run_kernel and phase_entries:
             if inject_malformed_phase_trace:
                 payload = phase_entries[0].payload
