@@ -142,4 +142,10 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 07-production-ai-infrastructure | 3 | failed(1) | none | `b973111` |
 | 99-future-directions | 1 | failed(1) | none | `a5201f1` |
 | 99-future-directions | 2 | failed(1) | none | `a50f8f1` |
-| 99-future-directions | 3 | failed(1) | none | `pending` |
+| 99-future-directions | 3 | failed(1) | none | `6159386` |
+
+### Re-run Summary (2026-02-22T17:41:06Z)
+- Completed 24/24 chapter passes with one commit per pass.
+- Kernel runs were executed with governance unlock/unhold before each pass.
+- Total commits created for this re-run loop: 24.
+
