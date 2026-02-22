@@ -89,3 +89,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` now validates planner/critic LLM JSON response ingestion through `JSONMappingPayload` and forwards parsed objects via `JSONMappingTransit` before role output persistence.
 - `state/kernel.py` now validates critic eval input ingestion (`evals/chapter-quality.yaml`, `evals/style-guard.yaml`, `evals/drift-detection.yaml`) through `CriticEvalInputsPayload` and forwards values via `CriticEvalInputsTransit` before critic prompt assembly.
 - `state/kernel.py` now validates active chapter markdown ingestion through `ChapterTextPayload` and forwards validated text via `ChapterTextTransit` before planner input assembly and writer/diff evaluation checks.
+- `state/kernel.py` now validates `out/writer.md` ingestion through `WriterOutputPayload` and forwards validated markdown via `WriterOutputTransit` before critic prompt assembly and runtime evaluation checks.

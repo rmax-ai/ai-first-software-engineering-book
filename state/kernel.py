@@ -94,6 +94,12 @@ class ChapterTextPayload(BaseModel):
     text: str
 
 
+class WriterOutputPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
 class CriticEvalInputsPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -274,6 +280,14 @@ class ChapterTextTransit:
     payload: ChapterTextPayload
 
     def to_text(self) -> str:
+        return self.payload.text
+
+
+@dataclass(frozen=True)
+class WriterOutputTransit:
+    payload: WriterOutputPayload
+
+    def to_markdown(self) -> str:
         return self.payload.text
 
 
@@ -459,6 +473,14 @@ def _load_chapter_text(path: Path) -> ChapterTextTransit:
     except ValidationError as exc:
         raise KernelError(f"Invalid chapter text payload: {path}: {exc}") from exc
     return ChapterTextTransit(payload=payload)
+
+
+def _load_writer_output(path: Path) -> WriterOutputTransit:
+    try:
+        payload = WriterOutputPayload.model_validate({"text": _read_text(path)})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid writer output payload: {path}: {exc}") from exc
+    return WriterOutputTransit(payload=payload)
 
 
 def _load_critic_eval_inputs() -> CriticEvalInputsTransit:
@@ -1315,7 +1337,7 @@ def run_kernel(
                         planner_json=planner_json_text,
                     )
 
-                revised_md = _read_text(writer_out) if writer_out.exists() else ""
+                revised_md = _load_writer_output(writer_out).to_markdown() if writer_out.exists() else ""
 
                 if not critic_out.exists():
                     _llm_generate_critic(itdir, llm, revised_md=revised_md)
@@ -1360,7 +1382,7 @@ def run_kernel(
             evaluation_phase_started_at = _time.perf_counter()
             plan_transit = _load_planner_plan(planner_out)
             plan = plan_transit.plan
-            revised = _read_text(writer_out)
+            revised = _load_writer_output(writer_out).to_markdown()
             critic_transit = _load_critic_report(critic_out)
             critic = critic_transit.report
 
