@@ -1,19 +1,17 @@
-# Recommended Next Iteration Task
+# Next Iteration Recommendation
 
 ## Task
-Implement deterministic trace-summary observability in `state/kernel.py` and expose aligned role I/O scaffolds in `state/role_io_templates.py`.
+Implement the smallest observability slice in `state/kernel.py` by adding deterministic trace-summary logging for one additional kernel decision point.
 
 ## Why this is next
-- It is the highest-value harness feature from this plan and unblocks meaningful smoke/eval assertions.
-- It creates concrete output signals that later eval updates can measure.
+This converts the new planning backlog into a measurable code change with low risk and immediately improves harness visibility.
 
 ## Acceptance criteria
-1. Kernel emits a stable trace-summary structure for each loop with bounded fields.
-2. Role I/O template helpers include explicit sections matching the trace-summary contract.
-3. Add/extend targeted deterministic checks in `state/copilot_sdk_uv_smoke.py` that assert the new structure.
-4. Validation evidence includes `uv run python state/copilot_sdk_uv_smoke.py` with relevant mode(s) and observed pass/fail.
+- Add a focused kernel trace output for one decision branch without changing public CLI behavior.
+- Add/adjust targeted tests under `state/` that prove deterministic output shape.
+- Run relevant harness verification (including a focused `uv run python state/copilot_sdk_uv_smoke.py` mode if applicable) and record evidence.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/role_io_templates.py`
-- `state/copilot_sdk_uv_smoke.py`
+- Targeted test file(s) under `state/`
+- `state/feature_iterations/iter_002/04-validation.md`

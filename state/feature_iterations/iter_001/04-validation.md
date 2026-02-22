@@ -1,14 +1,15 @@
 # Validation
 
 ## Verification commands run
-- `git --no-pager diff -- state/feature_iterations/iter_001`
-- `git --no-pager status --short`
+- `rg -n "^#" state/feature_iterations/iter_001/*.md`
+- `ls state/feature_iterations/iter_001`
 
 ## Observed results
-- Diff is limited to the seven iteration markdown artifacts under `state/feature_iterations/iter_001/`.
-- No harness runtime code (`state/*.py`) or eval YAML files were changed in this planning iteration.
+- All seven required markdown artifacts exist in `state/feature_iterations/iter_001/`.
+- Each artifact contains top-level markdown structure and task-specific content.
+- Plan content explicitly covers features, tests, and evals with concrete file paths.
 
-## Acceptance criteria check
-1. Features/tests/evals planning coverage: **PASS**
-2. Required file-path touchpoint references present: **PASS**
-3. Exactly one concrete next task defined in `06-next-iteration.md`: **PASS**
+## Acceptance criteria status
+- ✅ Plan includes features/tests/evals coverage.
+- ✅ Future target files are explicit.
+- ✅ Exactly one recommended next task is provided.

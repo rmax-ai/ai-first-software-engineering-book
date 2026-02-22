@@ -1,12 +1,11 @@
 # Risks and Decisions
 
 ## Risks discovered
-- Plan-only iterations can drift unless next-step acceptance criteria are precise and testable.
-- Kernel observability additions may increase log volume and require guardrails to keep outputs deterministic.
+- The planning iteration does not execute harness code, so assumptions about implementation effort and test granularity still need confirmation during execution iterations.
 
-## Decisions and trade-offs
-- Chose a planning-only scope to satisfy the seed iteration contract from `prompts/incremental-improvements/execute.md`.
-- Deferred implementation so future iterations can apply minimal, test-backed diffs with clear sequencing.
+## Decisions made
+- Chose a planning-only iteration, as required by the seed instructions.
+- Prioritized minimal, concrete backlog items over broad architectural rewrite proposals.
 
 ## Deferred items
-- No code or eval contract edits were made in this iteration by design.
+- Implementation details and code-level trade-offs are deferred to subsequent iteration tasks.
