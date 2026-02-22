@@ -80,6 +80,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_uv_smoke.py` now validates `kernel_trace.jsonl` JSON-object line mappings through `JSONLinesPayload` and forwards parsed entries via `JSONLinesTransit` before `KernelTracePayload` parsing.
 - `state/copilot_sdk_uv_smoke.py` now validates each `kernel_trace.jsonl` line through `JSONLinePayload` (including source line numbers) before forwarding line mappings through `JSONLinesTransit`.
 - `state/copilot_sdk_uv_smoke.py` now forwards each validated `kernel_trace.jsonl` line through `JSONLineTransit` before aggregating them into `JSONLinesTransit`.
+- `state/copilot_sdk_uv_smoke.py` now validates Copilot SDK prompt-mode session events through `SDKSessionEventPayload` and forwards normalized event data via `SDKSessionEventTransit` before assistant content/session-error checks.
 - `state/copilot_sdk_uv_smoke.py` now validates `metrics.json` ingestion via `MetricsPayload` and forwards validated payloads through `MetricsTransit` before chapter history checks.
 - `state/copilot_sdk_uv_smoke.py` now validates raw JSON text via `JSONTextPayload` and forwards source-path text through `JSONTextTransit` before JSON mapping parsing.
 - `state/copilot_sdk_uv_smoke.py` now validates raw JSON mapping roots via `JSONMappingPayload` and forwards parsed mappings via `JSONMappingTransit` before `MetricsPayload` parsing.
