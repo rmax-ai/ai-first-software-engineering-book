@@ -1,13 +1,12 @@
-# Risks and decisions
+# Risks and Decisions
 
 ## Risks
-- Plan-level ambiguity may remain until concrete constraints in `state/kernel.py` are inspected during implementation.
-- Future eval tightening in `evals/*.yaml` may fail existing flows if acceptance thresholds are set too aggressively.
+- Planning artifacts can drift from implementation reality if future iterations skip targeted verification.
+- Kernel and eval updates may require synchronized changes to avoid false regression failures.
 
 ## Decisions and trade-offs
-- Chose strict planning-only scope to satisfy the seed-iteration requirement and avoid accidental behavior changes.
-- Prioritized deterministic observability and role-IO clarity first, because these reduce debugging cost for later feature work.
+- Chose planning-only execution because seed-iteration rules in `prompts/incremental-improvements/execute.md` explicitly require it.
+- Kept scope to one task (backlog planning) and deferred code edits to maintain minimal, reviewable diffs.
 
 ## Deferred items
-- Exact metric keys and trace payload schemas are deferred to the next implementation iteration.
-- Any refactors outside the listed harness/eval surfaces are intentionally deferred.
+- Actual implementation in `state/kernel.py` and related files is deferred to the next iteration.
