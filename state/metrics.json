@@ -51680,6 +51680,91 @@
             "diff_ratio": 0.0,
             "drift_score": 0.0
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.84,
+            "decision": "refine",
+            "drift_score": 0.12,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "## System Breakdown gating matrix uses informal labels (\u201cnone\u201d, \u201coptional\u201d); criteria for \u201coptional\u201d are not defined and are not directly checkable.",
+              "## Concrete Example 1 includes pseudo-trace fields but does not show a concrete query or retrieval step that uses the structured fields (it states queries earlier but does not demonstrate one end-to-end).",
+              "## Concrete Example 2 drift thresholds reference a \u201c50-run window\u201d and \u201c5 percentage points\u201d but does not specify the baseline period/source for comparison (e.g., prior release tag, prior week), making the detection rule underspecified."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.30286791215994757,
+            "passed": false,
+            "similarity_max": 0.7344215092880384
+          },
+          "iteration": 371,
+          "timestamp": "2026-02-22T19:38:06Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 1.0,
+            "drift_score": 0.30286791215994757
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "refine",
+            "drift_score": 0.1,
+            "example_density": 0.82,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": [
+              "## System Breakdown contains an implicit new requirement (\u201csmallest available unit test command\u201d) without specifying how to determine it (e.g., from config, a fixed command list), making the gate partially non-executable.",
+              "## Concrete Example 1 query step shows a filter and summary but does not show the concrete next decision rule that uses the returned fields (e.g., a rule like \u201cif last_success_repo_sha matches and missing files pattern repeats, expand patch scope to include imports and rerun tests\u201d)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.34669272772400095,
+            "passed": false,
+            "similarity_max": 0.7247840575453383
+          },
+          "iteration": 372,
+          "timestamp": "2026-02-22T19:38:50Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.46226415094339623,
+            "drift_score": 0.34669272772400095
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.08,
+            "example_density": 0.84,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": [
+              "## System Breakdown correctness selection rule references \u201cdetected stack\u201d but does not define a deterministic detection method or a fixed precedence order for resolving multi-language repos.",
+              "Revised chapter markdown includes a trailing <reminder>...</reminder> block that is not part of the chapter and may violate the expected chapter-only content boundary for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.34644990046449897,
+            "passed": false,
+            "similarity_max": 0.7219487362169529
+          },
+          "iteration": 373,
+          "timestamp": "2026-02-22T19:39:31Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.11450381679389313,
+            "drift_score": 0.34644990046449897
+          }
         }
       ]
     },
