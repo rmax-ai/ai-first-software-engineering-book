@@ -174,6 +174,10 @@ def _dump_json(data: Any) -> str:
     return json.dumps(data, indent=2, sort_keys=True)
 
 
+def _save_json(path: Path, data: Any) -> None:
+    path.write_text(_dump_json(data) + "\n", encoding="utf-8")
+
+
 def _load_ledger(path: Path) -> LedgerTransit:
     json_mapping = _load_json(path)
     raw = json_mapping.to_mapping()
@@ -502,6 +506,43 @@ def _cmd_promotions(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_unhold(args: argparse.Namespace) -> int:
+    ledger_transit = _load_ledger(args.ledger)
+    ledger = ledger_transit.as_ledger_dict()
+    errors = validate_ledger(ledger)
+    if errors:
+        sys.stderr.write("Ledger validation failed; refusing to unhold.\n")
+        for err in errors:
+            sys.stderr.write(f"- {err}\n")
+        return 1
+
+    new_status = str(args.status)
+    if new_status in {"hold", "locked"}:
+        sys.stderr.write("Refusing to set status to hold/locked; choose an eligible status.\n")
+        return 2
+
+    chapters = _get_chapters(ledger)
+    changed = 0
+    for chapter_id in args.chapter_id:
+        if chapter_id not in chapters:
+            sys.stderr.write(f"Unknown chapter_id: {chapter_id}\n")
+            return 2
+        chapter = chapters[chapter_id]
+        if not isinstance(chapter, dict):
+            sys.stderr.write(f"Invalid chapter payload type for {chapter_id}: expected object\n")
+            return 2
+
+        if chapter.get("status") == "hold":
+            chapter["status"] = new_status
+            changed += 1
+
+    if changed:
+        _save_json(args.ledger, ledger)
+
+    sys.stdout.write(f"unhold: updated {changed} chapter(s)\n")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="governance_engine", description="Operational governance utilities for state/ledger.json")
     parser.add_argument("--ledger", type=Path, default=LEDGER_DEFAULT_PATH, help="Path to ledger.json")
@@ -516,6 +557,15 @@ def main(argv: list[str] | None = None) -> int:
 
     p_promotions = sub.add_parser("promotions", help="Compute lifecycle promotions (draft->refined)")
     p_promotions.set_defaults(func=_cmd_promotions)
+
+    p_unhold = sub.add_parser("unhold", help="Clear hold status for one or more chapters")
+    p_unhold.add_argument("--chapter-id", nargs="+", required=True, help="Chapter id(s) to unhold")
+    p_unhold.add_argument(
+        "--status",
+        default="active_refinement",
+        help="New status to apply when current status is 'hold' (default: active_refinement)",
+    )
+    p_unhold.set_defaults(func=_cmd_unhold)
 
     args = parser.parse_args(argv)
     return int(args.func(args))
