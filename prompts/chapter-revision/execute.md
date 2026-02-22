@@ -100,7 +100,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 02-harness-engineering | 3 | failed(1) | none | `this commit` |
 | 03-autonomous-kernels | 1 | failed(1) | none | `this commit` |
 | 03-autonomous-kernels | 2 | failed(1) | none | `this commit` |
-| 03-autonomous-kernels | 3 | pending | none | `pending` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `this commit` |
 | 04-memory-systems | 1 | pending | none | `pending` |
 | 04-memory-systems | 2 | pending | none | `pending` |
 | 04-memory-systems | 3 | pending | none | `pending` |
@@ -118,7 +118,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 99-future-directions | 3 | pending | none | `pending` |
 
 ### Re-run Summary (2026-02-22T18:15:08Z)
-- Completed 8/24 chapter passes so far.
+- Completed 9/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 8.
-- Total commits created for this re-run loop: 8.
+- Failed passes: 9.
+- Total commits created for this re-run loop: 9.
