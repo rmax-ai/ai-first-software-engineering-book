@@ -84,6 +84,20 @@ class SDKChatResponsePayload(BaseModel):
     usage: SDKUsagePayload | None = None
 
 
+class SDKEventPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    type: str | None = None
+    usage: SDKUsagePayload | None = None
+    data: SDKUsagePayload | None = None
+
+
+class SDKEventsPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    events: list[SDKEventPayload]
+
+
 @dataclass(frozen=True)
 class ChatMessagesTransit:
     payload: ChatMessagesPayload
@@ -117,6 +131,19 @@ class SDKChatResponseTransit:
         if self.payload.usage is None:
             return None
         return self.payload.usage.to_usage()
+
+
+@dataclass(frozen=True)
+class SDKEventsTransit:
+    payload: SDKEventsPayload
+
+    @classmethod
+    def from_raw(cls, events: list[dict[str, Any]]) -> "SDKEventsTransit":
+        return cls(payload=SDKEventsPayload.model_validate({"events": events}))
+
+    @property
+    def event_payloads(self) -> list[SDKEventPayload]:
+        return self.payload.events
 
 
 class LLMClient:
@@ -486,6 +513,13 @@ class LLMClient:
         if events is None:
             events = getattr(result, "events", None)
         if isinstance(events, list):
+            event_dicts = [event for event in events if isinstance(event, dict)]
+            if len(event_dicts) == len(events):
+                try:
+                    parsed_events = SDKEventsTransit.from_raw(event_dicts).event_payloads
+                except ValidationError as exc:
+                    raise LLMClientError(f"Invalid Copilot SDK events payload: {exc}") from exc
+                events = [event.model_dump(exclude_none=True) for event in parsed_events]
             prompt_tokens = 0
             completion_tokens = 0
             for event in events:
