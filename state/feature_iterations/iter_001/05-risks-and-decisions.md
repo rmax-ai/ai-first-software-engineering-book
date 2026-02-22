@@ -1,13 +1,12 @@
-# Risks and decisions
+# Risks and Decisions
 
-## Risks
-- Planned trace-schema additions in `state/kernel.py` may break consumers if output contracts are not versioned or tested.
-- Tightening role I/O templates can surface latent prompt-shape assumptions in existing harness flows.
-- Eval-rule updates may cause false negatives if thresholds are too strict before telemetry baselines are refreshed.
+## Risks discovered
+- Planning quality depends on future iterations preserving deterministic behavior and eval compatibility.
+- Expanding observability in `state/kernel.py` can add output churn if metrics contracts are not updated in lockstep.
 
-## Decisions and trade-offs
-- Chose a planning-only iteration to establish implementation order and test/eval contracts before code edits.
-- Chose minimal scope (artifact creation only) to avoid speculative harness modifications without explicit acceptance tests.
+## Decisions made
+- Keep this iteration planning-only to minimize risk and establish an auditable backlog.
+- Prioritize kernel observability before role-IO/eval expansion so downstream tests target stable signals.
 
-## Deferred items
-- No code changes to kernel/templates/smoke/evals in this iteration; these are intentionally deferred to the next task.
+## Deferred intentionally
+- Any implementation changes to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.

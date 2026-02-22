@@ -1,19 +1,18 @@
-# Next iteration recommendation
+# Next Iteration Recommendation
 
-## Recommended task
-Implement deterministic trace-summary contract updates in `state/kernel.py` and validate them with smoke coverage.
+## Next task
+Implement deterministic trace-summary diagnostics in `state/kernel.py` and expose the signals required for smoke/eval checks.
 
 ## Why this is next
-- It is the highest-leverage feature from the seed plan and unlocks observable signals needed by both smoke tests and eval gates.
-- Completing kernel trace shape first reduces rework in `state/copilot_sdk_uv_smoke.py` and `evals/*.yaml`.
+Trace diagnostics are foundational for validating later role-IO and eval-contract updates; they provide the observability baseline needed by follow-up tests.
 
 ## Acceptance criteria
-- Add/adjust trace-summary fields in `state/kernel.py` with deterministic behavior.
-- Add or update at least one smoke mode in `state/copilot_sdk_smoke_test.py` that fails on missing/invalid trace shape.
-- Validate with `uv run python state/copilot_sdk_smoke_test.py --mode <new-or-updated-mode>`.
-- Record evidence in `state/feature_iterations/iter_002/04-validation.md`.
+- Add structured trace-summary output for each kernel loop stage.
+- Record deterministic metrics fields consumed by eval gates.
+- Add/adjust targeted smoke coverage in `state/copilot_sdk_uv_smoke.py` for new trace signals.
+- Update validation notes with executed `uv run python ...` commands and observed pass/fail evidence.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_smoke_test.py`
-- `state/copilot_sdk_uv_smoke.py` (only if needed for trace plumbing)
+- `state/copilot_sdk_uv_smoke.py`
+- `state/metrics.json`
