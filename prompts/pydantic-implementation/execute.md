@@ -123,4 +123,5 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_smoke_test.py` now validates ledger snapshot JSON roots through `_load_json_mapping()` and forwards raw JSON text plus parsed mappings via `JSONMappingTransit` before `LedgerSnapshotTransit` assembly.
 - `state/llm_client.py` now validates Copilot SDK session event objects through `SDKSessionEventPayload` and forwards normalized event data via `SDKSessionEventTransit` before usage aggregation and assistant message extraction.
 - `state/llm_client.py` now validates Copilot SDK session event lists through `SDKSessionEventsPayload` and forwards them via `SDKSessionEventsTransit` before per-event usage aggregation/message extraction.
+- `state/llm_client.py` now routes non-dict Copilot SDK usage objects through `_sdk_usage_mapping()` so token attributes are validated by `SDKUsagePayload`/`SDKUsageTransit` before runtime usage accounting.
 - `state/role_io_templates.py` now validates raw ledger JSON text through `JSONTextPayload` and forwards source-path text via `JSONTextTransit` before JSON mapping parsing.

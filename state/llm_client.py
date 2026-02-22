@@ -620,16 +620,28 @@ class LLMClient:
                 raise LLMClientError(f"Invalid SDK usage payload: {exc}") from exc
             return usage
         usage_attr = getattr(payload, "usage", None)
-        if isinstance(usage_attr, dict):
-            return self._usage_from_any(usage_attr)
+        usage_mapping = self._sdk_usage_mapping(usage_attr)
+        if usage_mapping is not None:
+            return self._usage_from_any(usage_mapping)
+        payload_usage_mapping = self._sdk_usage_mapping(payload)
+        if payload_usage_mapping is not None:
+            return self._usage_from_any(payload_usage_mapping)
+        return None
+
+    def _sdk_usage_mapping(self, payload: Any) -> dict[str, Any] | None:
+        if isinstance(payload, dict):
+            token_keys = {"prompt_tokens", "completion_tokens", "input_tokens", "output_tokens"}
+            if any(key in payload for key in token_keys):
+                return payload
+            return None
         prompt_attr = getattr(payload, "prompt_tokens", getattr(payload, "input_tokens", None))
         completion_attr = getattr(payload, "completion_tokens", getattr(payload, "output_tokens", None))
-        if prompt_attr is not None or completion_attr is not None:
-            return LLMUsage(
-                prompt_tokens=int(prompt_attr or 0),
-                completion_tokens=int(completion_attr or 0),
-            )
-        return None
+        if prompt_attr is None and completion_attr is None:
+            return None
+        return {
+            "prompt_tokens": prompt_attr,
+            "completion_tokens": completion_attr,
+        }
 
     def _sdk_event_to_mapping(self, event: Any) -> dict[str, Any]:
         def _object_mapping(value: Any) -> dict[str, Any]:
