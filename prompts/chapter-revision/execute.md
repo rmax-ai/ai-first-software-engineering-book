@@ -448,6 +448,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Re-run 2026-02-22T17:05:27Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
+| 99-future-directions | 2 | failed(1) | none |  |
 | 99-future-directions | 1 | failed(1) | none |  |
 | 07-production-ai-infrastructure | 3 | failed(1) | none |  |
 | 07-production-ai-infrastructure | 2 | failed(1) | none |  |
