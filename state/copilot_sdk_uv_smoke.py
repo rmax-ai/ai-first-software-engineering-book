@@ -74,6 +74,16 @@ class PhaseTracePayload(BaseModel):
     budget_signal: str
 
 
+class KernelFixtureLedgerChapterPayload(BaseModel):
+    path: str
+    status: str | None = None
+    lifecycle: str | None = None
+
+
+class KernelFixtureLedgerPayload(BaseModel):
+    chapters: dict[str, KernelFixtureLedgerChapterPayload]
+
+
 @dataclass(frozen=True)
 class MetricsHistoryTransit:
     iteration: int
@@ -95,6 +105,20 @@ class PhaseTraceTransit:
             duration_ms=payload.duration_ms,
             budget_signal=payload.budget_signal,
         )
+
+
+@dataclass(frozen=True)
+class KernelFixtureChapterTransit:
+    chapter_id: str
+    raw_chapter: dict[str, Any]
+    payload: KernelFixtureLedgerChapterPayload
+
+    def to_fixture_chapter(self) -> dict[str, Any]:
+        chapter_meta = dict(self.raw_chapter)
+        chapter_meta["status"] = "draft"
+        if chapter_meta.get("lifecycle") == "frozen":
+            chapter_meta["lifecycle"] = "draft"
+        return chapter_meta
 
 
 def _event_type_name(event_type: Any) -> str:
@@ -184,6 +208,22 @@ async def run_prompt_mode(model: str, prompt: str, timeout_s: float) -> int:
     return 0
 
 
+def _load_kernel_fixture_chapter(chapter_id: str) -> KernelFixtureChapterTransit:
+    try:
+        source_ledger = json.loads((REPO_ROOT / "state" / "ledger.json").read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Invalid ledger JSON for fixture: {exc}") from exc
+    try:
+        payload = KernelFixtureLedgerPayload.model_validate(source_ledger)
+    except ValidationError as exc:
+        raise RuntimeError(f"Invalid ledger payload for fixture: {exc}") from exc
+    chapter_payload = payload.chapters.get(chapter_id)
+    raw_chapter = source_ledger.get("chapters", {}).get(chapter_id)
+    if chapter_payload is None or not isinstance(raw_chapter, dict):
+        raise RuntimeError(f"Unknown chapter_id for fixture: {chapter_id}")
+    return KernelFixtureChapterTransit(chapter_id=chapter_id, raw_chapter=raw_chapter, payload=chapter_payload)
+
+
 def _build_trace_summary_fixture(
     chapter_id: str,
     fixture_root: Path,
@@ -237,17 +277,9 @@ def _build_trace_summary_kernel_fixture(chapter_id: str, fixture_root: Path) -> 
         shutil.rmtree(fixture_repo_root)
     fixture_repo_root.mkdir(parents=True, exist_ok=True)
 
-    source_ledger = json.loads((REPO_ROOT / "state" / "ledger.json").read_text(encoding="utf-8"))
-    source_chapter = source_ledger.get("chapters", {}).get(chapter_id)
-    if not isinstance(source_chapter, dict):
-        raise RuntimeError(f"Unknown chapter_id for fixture: {chapter_id}")
-    chapter_meta = dict(source_chapter)
-    chapter_meta["status"] = "draft"
-    if chapter_meta.get("lifecycle") == "frozen":
-        chapter_meta["lifecycle"] = "draft"
-    chapter_path = chapter_meta.get("path")
-    if not isinstance(chapter_path, str) or not chapter_path:
-        raise RuntimeError(f"Invalid chapter path for fixture chapter: {chapter_id}")
+    chapter_transit = _load_kernel_fixture_chapter(chapter_id)
+    chapter_meta = chapter_transit.to_fixture_chapter()
+    chapter_path = chapter_transit.payload.path
 
     (fixture_repo_root / "state").mkdir(parents=True, exist_ok=True)
     shutil.copy2(REPO_ROOT / "state" / "kernel.py", fixture_repo_root / "state" / "kernel.py")
