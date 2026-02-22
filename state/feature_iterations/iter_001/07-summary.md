@@ -1,10 +1,8 @@
-# Iteration summary
+# Summary
 
-This seed iteration created `state/feature_iterations/iter_001/` and completed the required seven-artifact contract.
-The selected task was planning-only: define a practical harness improvement backlog before implementation.
-The backlog covers three areas explicitly: kernel/role-template/smoke **features**, targeted **tests**, and regression **evals**.
-The plan maps future work to concrete files in `state/` and `evals/` to keep follow-on changes scoped and auditable.
-Validation confirmed there were no prior iterations, making `iter_001` the correct index.
-No runtime behavior changed in this iteration, reducing risk while establishing execution structure.
-A single next task was chosen: deterministic trace-summary observability with matching smoke validation.
-That recommendation is designed to produce the first measurable harness improvement with minimal surface area.
+This seed iteration created `state/feature_iterations/iter_001/` and completed the full seven-file handoff contract.
+The selected task was planning-only: define the custom `state/` harness improvement backlog without implementation edits.
+The plan explicitly covers feature targets (`state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`), test strategy, and eval/regression linkage (`evals/*.yaml`, `state/metrics.json` signals).
+Validation confirms all required artifacts exist and referenced future-touch files are present.
+Primary decision: prioritize deterministic kernel diagnostics in the next iteration as the first executable backlog slice.
+Deferred work is intentional and bounded to future iterations, with concrete acceptance criteria documented in `06-next-iteration.md`.

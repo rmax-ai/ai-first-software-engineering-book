@@ -1,17 +1,23 @@
-# Next iteration recommendation
+# Next Iteration Recommendation
 
-## Task
-Implement deterministic trace-summary observability in `state/kernel.py` with corresponding smoke verification in `state/copilot_sdk_uv_smoke.py`.
+## Recommended next task
 
-## Why next
-This delivers the smallest implementation slice from the new backlog while creating direct, testable evidence for harness behavior and establishing a pattern for later role-template/eval enhancements.
+Implement deterministic trace diagnostics in `state/kernel.py` with targeted validation hooks.
+
+## Why this is next
+
+It is the highest-impact feature slice from the new plan and unblocks downstream smoke/eval enhancements by producing stable, machine-checkable signals.
 
 ## Acceptance criteria
-- `state/kernel.py` emits stable trace-summary fields for each required phase in a deterministic structure.
-- `state/copilot_sdk_uv_smoke.py` adds/updates one smoke mode that fails when trace-summary structure is missing or malformed.
-- Validation includes `uv run python state/copilot_sdk_uv_smoke.py --mode <new-or-updated-mode>` with captured pass/fail evidence in iteration artifacts.
+
+1. `state/kernel.py` emits explicit phase-level diagnostic fields for guardrail/budget outcomes.
+2. Added targeted tests for new diagnostics behavior in `state/` test surface.
+3. `uv run python state/copilot_sdk_uv_smoke.py` includes at least one mode asserting the new diagnostic shape.
+4. Iteration artifacts capture command evidence and pass/fail outcomes.
 
 ## Expected files to touch
+
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `state/` test files related to kernel behavior
+- `state/feature_iterations/iter_002/01-task.md` to `07-summary.md`

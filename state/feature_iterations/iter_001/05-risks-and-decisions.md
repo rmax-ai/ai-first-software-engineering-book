@@ -1,12 +1,16 @@
-# Risks and decisions
+# Risks and Decisions
 
 ## Risks discovered
-- Kernel observability and smoke/eval updates can drift if implemented separately.
-- Changes to eval contracts may increase false positives without synchronized fixture updates.
+
+- Plan quality risk: future implementation may drift if feature/test/eval linkage is not kept explicit per task.
+- Regression visibility risk: adding diagnostics without updating eval gates can create false confidence.
 
 ## Decisions and trade-offs
-- Chose planning-only scope to satisfy seed iteration contract with minimal diff.
-- Prioritized a single next task that couples kernel behavior with smoke verification to reduce drift risk.
 
-## Deferred intentionally
-- No code changes in `state/` or `evals/` this iteration; implementation is deferred to the next iteration task.
+- Chose planning-only execution to satisfy the seed-iteration contract exactly.
+- Chose concise backlog slices over detailed pseudo-code to keep next iterations flexible and minimal-diff.
+
+## Intentionally deferred
+
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+- Running harness smoke/unit tests, since no executable code changes were made in this iteration.
