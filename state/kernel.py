@@ -340,6 +340,8 @@ class YAMLMappingTransit:
 
 @dataclass(frozen=True)
 class JSONMappingTransit:
+    source_path: Path
+    raw_text: str
     payload: JSONMappingPayload
 
     def to_mapping(self) -> dict[str, Any]:
@@ -352,16 +354,18 @@ def _utc_now_iso() -> str:
 
 def _load_json(path: Path) -> JSONMappingTransit:
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        raw_text = path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
         raise KernelError(f"Missing JSON file: {path}") from exc
+    try:
+        data = json.loads(raw_text)
     except json.JSONDecodeError as exc:
         raise KernelError(f"Invalid JSON: {path}: {exc}") from exc
     try:
         payload = JSONMappingPayload.model_validate({"data": data})
     except ValidationError as exc:
         raise KernelError(f"Invalid JSON mapping payload: {path}: {exc}") from exc
-    return JSONMappingTransit(payload=payload)
+    return JSONMappingTransit(source_path=path, raw_text=raw_text, payload=payload)
 
 
 def _load_ledger(path: Path) -> LedgerTransit:
