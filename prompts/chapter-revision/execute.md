@@ -119,3 +119,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Re-run 2026-02-22T18:50:31Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
+| 01-paradigm-shift | 1 | failed(1) | none | pending |
