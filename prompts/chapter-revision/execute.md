@@ -7,24 +7,24 @@
 
 ## Command Template
 ```bash
-uv run python state/kernel.py --chapter-id <chapter> --llm --verbose
+uv run python state/kernel.py --chapter-id <chapter> --llm --llm-model gpt-5 --verbose
 ```
 Replace `<chapter>` with the chapter identifier listed below.
 
 ## Chapter Inventory
 | Chapter ID | Source File | Title |
 |-----------:|-------------|-------|
-| 01 | `book/chapters/01-paradigm-shift.md` | Paradigm Shift |
-| 02 | `book/chapters/02-harness-engineering.md` | Harness Engineering |
-| 03 | `book/chapters/03-autonomous-kernels.md` | Autonomous Kernels |
-| 04 | `book/chapters/04-memory-systems.md` | Memory Systems |
-| 05 | `book/chapters/05-evaluation-and-traces.md` | Evaluation and Traces |
-| 06 | `book/chapters/06-agent-governance.md` | Agent Governance |
-| 07 | `book/chapters/07-production-ai-infrastructure.md` | Production AI Infrastructure |
-| 99 | `book/chapters/99-future-directions.md` | Future Directions |
+| 01-paradigm-shift | `book/chapters/01-paradigm-shift.md` | Paradigm Shift |
+| 02-harness-engineering | `book/chapters/02-harness-engineering.md` | Harness Engineering |
+| 03-autonomous-kernels | `book/chapters/03-autonomous-kernels.md` | Autonomous Kernels |
+| 04-memory-systems | `book/chapters/04-memory-systems.md` | Memory Systems |
+| 05-evaluation-and-traces | `book/chapters/05-evaluation-and-traces.md` | Evaluation and Traces |
+| 06-agent-governance | `book/chapters/06-agent-governance.md` | Agent Governance |
+| 07-production-ai-infrastructure | `book/chapters/07-production-ai-infrastructure.md` | Production AI Infrastructure |
+| 99-future-directions | `book/chapters/99-future-directions.md` | Future Directions |
 
 ## Loop Procedure
-1. Iterate chapters in ascending order (01 through 07, then 99).
+1. Iterate chapters in ascending order (`01-paradigm-shift` through `07-production-ai-infrastructure`, then `99-future-directions`).
 2. For each chapter, run the command template once per pass, logging output and capturing artifacts.
 3. After every pass:
    - Inspect `state/kernel.py` output for failures or warnings.
