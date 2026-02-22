@@ -1,17 +1,23 @@
-# Iteration plan
+# Plan
 
-1. Review `DEVELOPMENT.md` and extract constraints for UV usage, deterministic behavior, and evaluation gates.
-2. Define feature backlog slices for harness observability, deterministic controls, and role-IO clarity, mapped to `state/kernel.py` and `state/role_io_templates.py`.
-3. Define test backlog slices for deterministic and live harness checks in `state/copilot_sdk_uv_smoke.py` plus targeted harness tests under `state/`.
-4. Define eval alignment work for `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` with expected regression signals and metric checks in `state/metrics.json`.
-5. Capture execution evidence, validation outcomes, and risks in iteration artifacts.
-6. Set one next task that starts implementation from the highest-value backlog item.
+1. Inspect `DEVELOPMENT.md` and existing harness surfaces to align constraints.
+2. Define feature workstreams:
+   - `state/kernel.py`: trace logging fields, deterministic loop controls, failure visibility.
+   - `state/role_io_templates.py`: clearer role input/output contract scaffolds.
+   - `state/copilot_sdk_uv_smoke.py`: deterministic smoke scenarios for new controls.
+3. Map tests:
+   - Add/extend targeted unit tests for kernel helper logic and role template validation.
+   - Add smoke coverage with `uv run python state/copilot_sdk_uv_smoke.py` modes for new behavior.
+4. Map evaluations:
+   - Validate outputs against `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+   - Confirm expected telemetry shape updates in `state/metrics.json` and iteration logs.
+5. Sequence follow-up implementation to keep diffs small and verifiable.
 
-## Files expected to change in later iterations
+## Expected files to change in later iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- Additional targeted tests under `state/` as needed
+- Harness test assets under `state/` and/or `book/`

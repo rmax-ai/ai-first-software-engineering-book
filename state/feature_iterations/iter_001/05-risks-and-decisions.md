@@ -1,13 +1,12 @@
-# Risks and decisions
+# Risks and Decisions
 
-## Risks discovered
-- Planning-only output may drift from current code if implementation is delayed.
-- Eval contract updates can introduce false positives if metric expectations are not synchronized.
+## Risks
+- Planning-only iteration does not validate runtime behavior changes yet.
+- Future iterations may discover tighter coupling in `state/kernel.py` than expected.
 
-## Decisions made
-- Chose a planning-first seed iteration exactly as required by `prompts/incremental-improvements/execute.md`.
-- Kept scope to one smallest unfinished task: produce a harness-improvement backlog and handoff artifacts.
+## Decisions
+- Chose planning scope only, per seed iteration instruction.
+- Prioritized deterministic verification hooks (smoke + eval contracts) to reduce regression risk.
 
-## Deferred intentionally
-- No harness code changes in `state/` during this iteration.
-- No eval YAML modifications until implementation iterations begin.
+## Deferred
+- Code implementation and test additions are deferred to the next iteration.
