@@ -128,3 +128,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 02-harness-engineering | 3 | ok | none | `n/a` |
 | 03-autonomous-kernels | 1 | ok | none | `n/a` |
 | 03-autonomous-kernels | 2 | ok | none | `n/a` |
+| 03-autonomous-kernels | 3 | ok | none | `n/a` |
