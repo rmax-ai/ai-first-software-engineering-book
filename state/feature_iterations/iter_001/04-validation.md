@@ -1,16 +1,17 @@
 # Validation
 
 ## Verification commands run
-- `glob state/feature_iterations/iter_*`
-- `glob state/{kernel.py,role_io_templates.py,copilot_sdk_uv_smoke.py}`
-- `view DEVELOPMENT.md`
+- `test -d state/feature_iterations/iter_001 && echo dir_ok`
+- `ls state/feature_iterations/iter_001 | sort`
+- `rg -n "features|tests|eval" state/feature_iterations/iter_001/*.md`
 
-## Observed results
-- Confirmed this is the first feature iteration; `iter_001` was created.
-- Confirmed planned target files exist in `state/`.
-- Confirmed plan aligns with `DEVELOPMENT.md` guidance (UV usage, deterministic harness focus, eval-driven verification).
+## Observed outputs/results
+- Iteration directory exists (`dir_ok`).
+- Exactly seven required artifacts are present (`01-task.md` through `07-summary.md`).
+- Plan artifacts include explicit coverage of features, tests, and eval alignment.
+- `uv run pytest -q` returned exit code 5 with `no tests ran`, so there is no runnable pytest suite for this surface.
 
 ## Acceptance criteria status
 - Feature/test/eval planning coverage: **PASS**
-- Step-by-step implementation plan with explicit file paths: **PASS**
-- Validation evidence documented: **PASS**
+- Required file-path references for future implementation surfaces: **PASS**
+- Single recommended next task in handoff: **PASS**

@@ -1,18 +1,19 @@
-# Next iteration recommendation
+# Next Iteration Recommendation
 
-## Task
-Implement deterministic trace outcome tagging in `state/kernel.py` with targeted tests.
+## Next task
+Add structured kernel trace events for deterministic decision points in `state/kernel.py`.
 
-## Why next
-- It is the highest-leverage foundation for observability and enables later smoke/eval assertions.
+## Why this is next
+Trace visibility is the narrowest high-value feature from the plan and enables faster debugging plus clearer validation evidence for later control and eval work.
 
 ## Acceptance criteria
-- Add explicit per-stage outcome tags (`pass`, `fail`, `blocked`) to kernel trace records.
-- Preserve current public CLI behavior and command-line interface.
-- Add/adjust targeted tests or deterministic smoke checks proving tags are emitted in success and failure paths.
-- Document validation commands and outputs in the next iteration artifacts.
+- Add a minimal structured trace emitter in `state/kernel.py` for key loop decisions (task selection, validation outcome, completion/abort).
+- Ensure trace records are deterministic in shape and written through existing harness logging paths.
+- Add/extend targeted smoke coverage in `state/copilot_sdk_uv_smoke.py` (or nearby harness test surface) to assert trace event presence and schema.
+- Document any eval hook updates needed in `evals/drift-detection.yaml` or related eval contracts.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_uv_smoke.py` (or targeted state test module if present)
-- `state/feature_iterations/iter_002/*.md`
+- `state/copilot_sdk_uv_smoke.py`
+- `evals/drift-detection.yaml`
+- `state/feature_iterations/iter_002/*`

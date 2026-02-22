@@ -1,8 +1,9 @@
-# Iteration summary
+# Summary
 
-This seed iteration completed one task: planning custom harness improvements in `state/`.
-All seven required markdown artifacts were created in `state/feature_iterations/iter_001/`.
-The plan covers features (kernel observability and role I/O structure), tests (deterministic UV smoke and targeted checks), and evals (regression guards in `evals/*.yaml`).
-No production code was changed; scope was intentionally planning-only.
-Validation confirmed required target files exist and that the plan aligns with `DEVELOPMENT.md`.
-The next iteration is narrowly scoped to implementing deterministic outcome tagging in `state/kernel.py`.
+This seed feature iteration established the first actionable backlog for improving the custom harness in `state/`.
+The task intentionally focused on planning, per the runner prompt contract.
+The resulting plan covers three required axes: new harness features, targeted tests, and regression evaluations.
+It explicitly maps expected future implementation files (`state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`).
+Risks and trade-offs were recorded to keep follow-on iterations narrow and deterministic.
+A single concrete next task was selected: implement structured kernel trace events with smoke and eval linkage.
+All seven required iteration artifacts were created under `state/feature_iterations/iter_001/` for clean handoff.

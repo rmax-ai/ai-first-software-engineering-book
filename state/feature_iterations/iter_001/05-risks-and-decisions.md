@@ -1,14 +1,12 @@
-# Risks and decisions
+# Risks and Decisions
 
-## Risks
-- The plan assumes existing kernel abstractions can accept additional trace metadata without expanding public interfaces.
-- New eval checks may become brittle if trace formats are not kept stable across iterations.
+## Risks discovered
+- Plan quality risk: backlog could be too broad for incremental execution.
+- Regression risk: future kernel changes may alter deterministic behavior if eval mappings are not enforced.
 
 ## Decisions and trade-offs
-- Chose planning-only scope for this seed iteration to satisfy prompt requirements and avoid premature code churn.
-- Chose deterministic, UV-runnable validation as the primary test strategy for future implementation iterations.
+- Chose a planning-only seed iteration to satisfy prompt requirements before touching runtime code.
+- Kept backlog concise and file-targeted to support minimal future diffs.
 
-## Deferred
-- Concrete schema for trace payloads in `state/kernel.py`.
-- Exact smoke mode additions in `state/copilot_sdk_uv_smoke.py`.
-- Final eval rule syntax updates in `evals/*.yaml`.
+## Intentionally deferred
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
