@@ -1,12 +1,12 @@
 # Risks and decisions
 
-## Risks discovered
-- Planning-only iterations can drift if the next task is too broad.
-- Trace schema changes in `state/kernel.py` may require synchronized smoke/eval updates.
+## Risks
+- Plan granularity may still leave sequencing ambiguity when implementation starts.
+- Existing eval schemas may require minor contract interpretation before adding new assertions.
 
-## Decisions made
-- Kept scope to roadmap creation only, with no harness code edits, to satisfy the seed-iteration contract.
-- Recommended a single narrow next task focused on trace schema formalization to reduce downstream churn.
+## Decisions and trade-offs
+- Chose a minimal, execution-ready backlog instead of speculative implementation details.
+- Deferred exact test fixture payload shapes to the next iteration to keep this seed scope planning-only.
 
 ## Deferred items
-- Actual implementation of trace payload updates and smoke/eval assertions is deferred to the next iteration.
+- Concrete code edits in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
