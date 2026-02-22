@@ -1,12 +1,15 @@
 # Minimal Agent Loop
 
 ## Context
+
 You need iterative work (planning + tool use + feedback) inside an engineering environment (repo, CI, tickets, docs). The primary risk is uncontrolled complexity: additional autonomy without corresponding observability and verification.
 
 ## Problem
+
 How do you get useful autonomous work while keeping the control surface small enough to debug, test, and govern?
 
 ## Forces
+
 - **Capability vs. determinism**: richer loops solve more tasks but increase variance across runs.
 - **Observability vs. speed**: more logging and checks slow iteration, but missing data makes incidents expensive.
 - **Safety vs. throughput**: tighter constraints reduce risk but may block progress on ambiguous tasks.
@@ -14,7 +17,9 @@ How do you get useful autonomous work while keeping the control surface small en
 - **Context limits**: the loop must decide what to read, summarize, and omit.
 
 ## Solution
+
 Implement the smallest loop that can:
+
 1. Load state (workspace snapshot + budgets + any session memory).
 2. Produce exactly one next action using a typed schema (tool call or stop).
 3. Execute the action with timeouts, error normalization, and side-effect capture.
@@ -25,6 +30,7 @@ Implement the smallest loop that can:
 Keep loop policy simple. Push sophistication into tools (typed boundaries) and verification (tests/evals).
 
 ## Implementation sketch
+
 A minimal state machine:
 
 - **Inputs**: goal, repo root, tool allowlist, budgets (steps/time/cost), memory handles.
@@ -58,6 +64,7 @@ Practical kernel requirements:
 - For side-effect tools, support an idempotency key (or a safe “dry run” mode) where possible.
 
 ### Concrete example
+
 Goal: “Add two glossary terms and ensure formatting.”
 
 1. `read_file(book/glossary.md)` to learn current format.
@@ -82,6 +89,7 @@ budgets:
 ```
 
 ## Failure modes
+
 - **Missing termination criteria**: the loop continues despite completion; budgets are consumed.
 - **Ambiguous tool failures**: errors are treated as partial success; corrupted state accumulates.
 - **Silent side effects**: tools mutate state without reporting what changed; traces cannot explain outcomes.
@@ -90,6 +98,7 @@ budgets:
 - **Planning without execution**: repeated re-planning without tool calls; no measurable progress.
 
 ## When not to use
+
 - The task is deterministic and can be solved with a single script/command.
 - Side effects are unacceptable without human approval (e.g., production mutations).
 - You cannot capture traces or run verification; you will be unable to debug or detect drift.

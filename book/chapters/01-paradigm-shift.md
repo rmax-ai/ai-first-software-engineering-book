@@ -1,16 +1,19 @@
 # Chapter 01 — Paradigm Shift
 
 ## Thesis
+
 AI-first software engineering is an architectural inversion. Machine reasoning becomes a primary execution substrate. The harness—tools, constraints, evaluation, and traceability—becomes the primary design surface.
 
 This inversion is practical. Reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable loop.
 
 A concrete, testable implication (holding the model constant):
+
 1. A stronger harness should reduce *iterations-to-pass*.
 2. A stronger harness should reduce *time-to-green*.
 3. A stronger harness should increase *attribution rate* (more failures have a primary cause you can act on).
 
 Operational definition:
+
 - **Model capability** changes when you swap models while holding tools, constraints, and evaluation constant.
 - **Harness capability** changes when you keep the model constant but alter tools, policies, evaluation gates, or trace capture.
 
@@ -19,11 +22,13 @@ In this framing, *attribution rate* is a harness outcome. It depends on what evi
 This chapter’s claim is a hypothesis: some observed “capability” gains in practice are attributable to harness engineering rather than model changes.
 
 ## Why This Matters
+
 - Without a clear boundary between model capability and harness capability, teams misattribute failures and waste effort.
 - Reliability depends on reproducible loops (plan → act → verify) rather than isolated prompts.
 - Production constraints (auditability, security, cost, regression control) require system design, not “prompting.”
 
 ## System Breakdown
+
 - **Actors**: human governor, agent loop, tools/runtime, evaluation/CI.
 - **Artifacts**: specs, plans, diffs, traces, eval results, decision records.
 - **Invariants** (hypotheses to test):
@@ -59,6 +64,7 @@ flowchart TB
 ```
 
 Legend:
+
 - **Solid arrows** are the operational loop (plan → act → verify).
 - **Dashed arrows** are trace capture and trace usage.
 
@@ -86,7 +92,9 @@ Takeaway: without a trace, attribution is guesswork. You will not know if the fi
     - Fixing the test changes outcomes without changing product behavior.
 
 ## Concrete Example 1
+
 Refactor a small library function using an agent loop.
+
 - Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).
 - Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.
 
@@ -123,7 +131,9 @@ Refactor a small library function using an agent loop.
     - the smallest reproducible failing case
 
 ## Concrete Example 2
+
 Ship a minor API change in a production service.
+
 - Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.
 - Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.
 
@@ -173,11 +183,13 @@ Ship a minor API change in a production service.
   - If any guardrail is violated (protected file touched, required test skipped, rollback unclear), stop immediately and require human intervention.
 
 ## Trade-offs
+
 - Strong harness constraints reduce freedom (and sometimes speed) but increase reproducibility.
 - More evaluation gates reduce regressions but add compute and latency.
 - Trace-heavy workflows improve debugging but increase storage and privacy considerations.
 
 ## Failure Modes
+
 - **Illusion of capability**: improvements credited to the model when they come from better tooling/evals.
 - **Unbounded autonomy**: loops run without budgets, causing tool thrash and unclear outcomes.
 - **Non-attributable failures**: missing traces make regressions un-debuggable.
@@ -185,6 +197,7 @@ Ship a minor API change in a production service.
 Synthesis: treat machine reasoning as an execution substrate, and treat the harness as the primary lever for reliability. Track *iterations-to-pass*, *time-to-green*, and *attribution rate* to separate harness effects from model effects and to make failures actionable.
 
 ## Research Directions
+
 - Metrics that separate model improvements from harness improvements.
 - Minimal trace schema that supports attribution and replay.
 - Formal definitions of autonomy envelopes and stop conditions.

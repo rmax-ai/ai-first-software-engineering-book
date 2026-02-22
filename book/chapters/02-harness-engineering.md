@@ -1,9 +1,11 @@
 # Chapter 02 — Harness Engineering
 
 ## Thesis
+
 Harness engineering is the discipline of turning a general-purpose model into a predictable system. It does that by defining tool contracts, constraints, loop control, and evaluation gates.
 
 In this chapter, “predictable” means three things:
+
 1. **Repeatability**: the same input context tends to produce the same classes of actions.
 2. **Boundedness**: the system’s allowed changes are limited by explicit constraints.
 3. **Verifiability**: outputs can be accepted or rejected by checks, not judgment calls.
@@ -13,11 +15,13 @@ Hypothesis (falsifiable): for a fixed set of tasks and repositories, tightening 
 This is not a model-selection argument. The claim is that, when you hold the model and task conditions constant, harness design is the primary lever that changes reliability outcomes.
 
 To test that hypothesis, hold these constant:
+
 - The task set (same prompts and acceptance criteria).
 - The repositories and their starting commits.
 - The agent instructions and tool availability (only harness strictness changes).
 
 ## Why This Matters
+
 - The same model can behave reliably or unreliably depending on tool schemas, budgets, and verification.
 - Teams can standardize harness practices even when models change.
 - Production safety and auditability primarily live in the harness layer.
@@ -25,6 +29,7 @@ To test that hypothesis, hold these constant:
 If you want evidence for the hypothesis, your experiments should explicitly keep the model constant (or compare models in the same capability band) and vary only harness strictness. Otherwise, it becomes difficult to attribute changes in regression rate and rework to harness design versus model behavior.
 
 ## System Breakdown
+
 - **Control plane**: prompts, policies, budgets, stop conditions.
 - **Tool plane**: filesystem edits, build/test runners, linters, browsers, APIs.
 - **Evaluation plane**: checks as gates; regression suites; quality rubrics.
@@ -54,6 +59,7 @@ flowchart TB
 ```
 
 Read the diagram as a loop with three distinct roles:
+
 - **Constraints** enter in the control plane (policies, budgets, stop conditions).
 - **Evidence** is produced by the tool and evaluation planes (outputs + pass/fail).
 - **Replay** depends on the state plane capturing enough artifacts to reproduce decisions.
@@ -114,15 +120,18 @@ A useful way to operationalize the planes is to name what each plane consumes, w
 The “minimal contract surface” is the set of interfaces that must be stable for predictability. It includes tool schemas (including error codes), patch discipline, and evaluation semantics.
 
 Boundary:
+
 - In scope: tool schemas, patch discipline, and gate semantics (including what evidence is recorded).
 - Out of scope: standardizing runtime infrastructure details, as long as the gate semantics stay consistent.
 
 ## Concrete Example 1
+
 Design a tool contract for “apply patch” operations.
 
 A minimal schema sketch can be made scannable by treating it like an interface spec. One goal is to make failures recoverable without expanding scope.
 
 Schema (fields + constraints to keep edits local and reviewable):
+
 - Required fields: `path`, `old_str`, `new_str`.
 - Optional field: `context` (only for disambiguation).
 - Constraints:
@@ -225,16 +234,19 @@ Error contract (examples):
 </table>
 
 Happy path flow:
+
 1. Agent proposes a patch using a unique `old_str` block with minimal scope.
 2. Harness validates: file exists, match is unique, diff stays within budgets.
 3. Tool applies the patch and returns a structured result: changed line counts, a before/after snippet, and a stable identifier for the diff.
 
 Conflict recovery (when the patch fails with `NO_MATCH` or `NON_UNIQUE_MATCH`):
+
 1. The harness returns the error code plus a short “fresh context” snippet around the closest match (or a list of candidate match ranges).
 2. The agent re-reads the relevant portion of the file and regenerates a smaller, more specific `old_str` (or narrows by adding `context`).
 3. If the second attempt fails, the harness forces a stop condition (“needs human review”) rather than allowing a whole-file overwrite.
 
 Mini-example (connecting the contract to measurable outcomes):
+
 - Task: “Update `timeout_ms` default from 5000 to 8000.”
 - Without a strict contract: the agent might run a broad search/replace and touch 6 files, including docs and unrelated constants.
 - With the contract and budgets:
@@ -243,10 +255,12 @@ Mini-example (connecting the contract to measurable outcomes):
   - Your tracked metrics should shift: **diff locality** stays low (1 file, a few lines), and **revert rate** should drop because the change is less likely to introduce incidental regressions.
 
 Evaluation: measure whether the tool contract is improving outcomes with two task-level metrics:
+
 - **Revert rate**: fraction of tasks where the patch is reverted in the next N commits/PR updates.
 - **Diff locality**: median number of files touched and lines changed per task, with an alert threshold for outliers.
 
 ## Concrete Example 2
+
 Add an evaluation gate to an agent loop.
 
 A diagram helps here because “attempt → gate → log → decide” is simple to say, but easy to implement incorrectly. Focus on the two decision points: whether the gate passed, and whether another iteration is allowed under budgets.
@@ -271,6 +285,7 @@ flowchart TB
 Takeaway: the harness should only permit another attempt when (a) budgets remain and (b) the failure is actionable. Otherwise, it should stop with evidence, not a guess.
 
 A minimal loop in prose looks like: attempt → gate → log → decide.
+
 1. **Attempt**: the agent makes the smallest change it believes will satisfy the task.
 2. **Gate**: the harness runs required checks (e.g., unit tests + static checks).
 3. **Log**: record the tool outputs, the diff identifier, and the gate result in the task ledger.
@@ -280,16 +295,19 @@ A minimal loop in prose looks like: attempt → gate → log → decide.
    - If repeated failures occur: stop with a concrete failure summary and evidence.
 
 Gate configuration checklist (minimal defaults):
+
 1. **Define the full gate**: a fixed set of commands, in order (for example: unit tests, then lint/typecheck, then build).
 2. **Define time and iteration budgets**: max gate time per iteration and max iterations per task.
 3. **Define evidence requirements**: always store exit codes, stdout/stderr (or paths to logs), and the diff identifier.
 4. **Define fallback eligibility**: when tests are missing or non-runnable, use a narrower fallback gate and tighten patch budgets.
 
 Pass/fail criteria should be explicit:
+
 - Pass = all configured checks return success (exit code 0) and no policy violations were triggered.
 - Fail = any check fails, any policy violation occurs, or budgets are exceeded.
 
 Fallback gate policy when tests are missing:
+
 - If unit tests are absent or non-runnable, the harness should not silently accept “looks good.”
 - Use a compact decision rule:
 
@@ -304,6 +322,7 @@ Fallback gate policy when tests are missing:
   - the change must be limited by stricter patch budgets (smaller allowed diffs).
 
 Mini-example (gate policy with metrics):
+
 - Task: “Rename `UserID` to `user_id` in a Python module.”
 - Budgets: max 2 iterations; max 10 changed lines per iteration.
 - Repo state: a documented test command exists, but it fails immediately due to a missing system dependency.
@@ -317,11 +336,13 @@ Mini-example (gate policy with metrics):
 - Recorded metric: iterations to first passing gate = 2.
 
 ## Trade-offs
+
 - Richer tool schemas reduce ambiguity but raise integration cost.
 - Strict budgets prevent runaway loops but can truncate legitimate work.
 - Strong gates improve safety but may block progress on tasks lacking tests.
 
 Decision checklist (recommended defaults and when to relax):
+
 - **Tool schemas**:
   - Default: prefer typed, validated arguments plus explicit error codes for recovery.
   - Relax when: prototyping a new tool where integration speed matters more than repeatability, but only in non-production contexts.
@@ -336,6 +357,7 @@ Decision checklist (recommended defaults and when to relax):
   - Relax when: failures are due to flaky infrastructure and you can rerun deterministically (record rerun count as part of the trace).
 
 ## Failure Modes
+
 - **Schema underspecification**: tools accept ambiguous inputs, producing inconsistent outcomes.
   - How you notice: frequent `NO_MATCH`/`NON_UNIQUE_MATCH`-style failures, large diffs for small tasks, and high variance in outcomes across reruns.
   - Harness fix: tighten required fields, add validation (uniqueness checks, size budgets), and return structured error codes plus fresh context to guide recovery.
@@ -347,6 +369,7 @@ Decision checklist (recommended defaults and when to relax):
   - Harness fix: make gates non-optional for PR-ready output (policy), require artifacts (logs, diff id, check results) attached to the task, and surface “stop reason” when evidence is missing.
 
 ## Research Directions
+
 - Harness quality metrics (iteration efficiency, regression rate, reproducibility).
   - Open question: which small set of metrics best predicts long-term reliability across repos?
   - Evaluation approach: track iterations to first passing gate, revert rate, and reproducibility rate using the plane metrics table, then compare distributions before/after harness changes.

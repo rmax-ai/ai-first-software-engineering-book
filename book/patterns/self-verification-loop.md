@@ -1,12 +1,15 @@
 # Self-Verification Loop
 
 ## Context
+
 Model outputs often look plausible but can be wrong in subtle ways: incorrect assumptions about repo structure, stale APIs, missing edge cases, or incomplete updates across files. In engineering work, “sounds right” is not an acceptance criterion.
 
 ## Problem
+
 How do you force the system to *prove work* against objective checks before it declares completion?
 
 ## Forces
+
 - **Verification cost** must be lower than expected rework cost.
 - **Signal alignment**: checks must reflect real acceptance criteria, not proxy metrics.
 - **Check gaming**: if checks are narrow, the system may satisfy them while violating intent.
@@ -14,6 +17,7 @@ How do you force the system to *prove work* against objective checks before it d
 - **Side-effect boundaries**: verification should not introduce additional risky mutations.
 
 ## Solution
+
 Make verification an explicit, mandatory phase with a stop gate:
 
 1. **Define acceptance checks** (tests, lint, build, schema validation, golden diffs) and/or a bounded human-review checklist.
@@ -23,6 +27,7 @@ Make verification an explicit, mandatory phase with a stop gate:
 The key behavior change is procedural: “done” becomes a claim that must be backed by artifacts.
 
 ## Implementation sketch
+
 Use a two-part contract per task:
 
 - **Work**: changes made (patches/files) and the intended behavior.
@@ -50,13 +55,16 @@ Practical gating logic:
 - If failures are environmental/flaky: stop with a “blocked” report and clear reproduction steps.
 
 ### Concrete example
+
 Task: “Add a new CLI flag and update docs.”
 
 Work:
+
 - Implement parsing for `--format json`.
 - Update `README` usage section.
 
 Verification:
+
 - Run unit tests that cover the new flag.
 - Run a help-text snapshot (golden file) test.
 - Run linter/formatter.
@@ -75,6 +83,7 @@ $ npm run lint
 ```
 
 ## Failure modes
+
 - **Rubber-stamp verification**: the system asserts checks passed without running them or without capturing outputs.
 - **Proxy mismatch**: checks pass but requirements are unmet (acceptance criteria were incomplete or untested).
 - **Check gaming**: tests are modified to match incorrect behavior; the suite becomes less meaningful.
@@ -83,6 +92,7 @@ $ npm run lint
 - **Unsafe verification**: verification steps include side-effectful actions (publishing, migrations) without approvals.
 
 ## When not to use
+
 - Low-impact drafts where verification cost dominates (early outlines, brainstorming, rough notes).
 - Environments where checks cannot run (missing tooling or permissions) and no acceptable substitutes exist.
 - Tasks where human judgment is the primary signal and objective checks are weak (copy tone, early design exploration).

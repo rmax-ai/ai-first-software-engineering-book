@@ -1,9 +1,11 @@
 # Chapter 99 — Future Directions
 
 ## Thesis
+
 The frontier is not larger models. It is system-level interfaces and verification.
 
 Concretely, that means investing in artifacts that scale across teams and models:
+
 - stronger tool contracts
 - better evaluations
 - structured memory
@@ -16,6 +18,7 @@ Here, “interfaces” means the concrete artifacts that let components interope
 Hypothesis: as autonomy scales, the limiting factor becomes organizational and infrastructural coupling, not raw inference capability. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.
 
 ## Why This Matters
+
 - Teams will operate heterogeneous models and tools; interoperability becomes a reliability constraint.
 - Long-horizon autonomy introduces new failure classes (compounded assumptions, policy drift, supply-chain issues).
 - Without standards, every team reinvents trace formats, eval suites, and governance mechanisms.
@@ -23,6 +26,7 @@ Hypothesis: as autonomy scales, the limiting factor becomes organizational and i
 So what changes for teams? Treat tool schemas, trace formats, and eval definitions as versioned products. Write contracts and test them. Require replayable traces so failures can be audited and compared across models.
 
 ## System Breakdown
+
 These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve. The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows: they show what must be versioned and validated before you can compare runs across teams or models.
 
 <pre class="mermaid">
@@ -41,6 +45,7 @@ Takeaway: you can improve one pillar in isolation, but cross-model portability d
 - **Ecosystem risks**: prompt/tool supply chain, dependency security, model updates.
 
 **Artifact map (concrete deliverables):**
+
 - **Interoperability**
   - Tool contract schema: JSON Schema for each tool’s inputs/outputs, error types, and retry semantics.
   - Trace interchange spec: required event taxonomy + field requirements so runs can be exported and replayed elsewhere.
@@ -58,14 +63,17 @@ Takeaway: you can improve one pillar in isolation, but cross-model portability d
   - Model update gates: pre-deploy regression evals + canary rollout criteria.
 
 ## Concrete Example 1
+
 Cross-model portability experiment.
 
 **Inputs**
+
 - A fixed harness (same prompts, tool set, budgets, retry policy, and stopping criteria).
 - A fixed eval suite with a versioned dataset and deterministic scoring.
 - A model set (e.g., Model A, Model B, Model C) that is intentionally heterogeneous (different vendors or major versions).
 
 **Procedure (minimal)**
+
 - Run N trials per task per model with identical harness inputs (same seeds where applicable; same tool sandbox state).
 - Record traces using the same trace interchange spec (see next section).
 - Compute:
@@ -75,20 +83,24 @@ Cross-model portability experiment.
   - Failure signatures (clusters based on trace event sequences, not just final answers).
 
 **Expected outputs**
+
 - A per-model result table, plus a “signature diff” report. The report shows which failure clusters are model-specific vs shared.
 - A set of “portability blockers” attributed to either:
   - Harness/tool coupling (e.g., a tool contract ambiguity that different models interpret differently), or
   - Model behavior (e.g., consistent violation of a particular tool precondition).
 
 **Interpreting disagreements**
+
 - If multiple models fail in the same way on the same tasks, prioritize harness-level fixes (tool contract clarity, validation, better stop conditions).
 - If one model fails with a distinct trace signature while others pass under identical contracts, treat it as model-dependent and capture it as a regression test.
 
 **What would falsify the goal**
+
 - If variance is dominated by harness nondeterminism (e.g., unstable tool responses or non-versioned datasets), differences cannot be attributed to models. The harness is not portable enough to support the comparison.
 - If success/failure flips under small, contract-preserving changes across models (e.g., harmless schema reordering), the tool contracts are underspecified.
 
 ## Concrete Example 2
+
 Standardized trace interchange.
 
 **Goal**
@@ -114,6 +126,7 @@ The point is not to standardize everything. It is to standardize the minimum nee
 **Minimal trace interchange contract (required fields)**
 
 **Run metadata**
+
 - `schema_version`: semantic version for the trace spec (e.g., `1.2.0`).
 - `run_id`: unique identifier for a single run; stable across exports.
 - `eval_id` and `eval_version`: eval definition and dataset/scoring version.
@@ -121,6 +134,7 @@ The point is not to standardize everything. It is to standardize the minimum nee
 - `model_id`: model name/version as reported by the provider.
 
 **Event schema**
+
 - `events[]`: ordered list of events.
   - `event_id`, `type`, `timestamp`, `parent_event_id` (when applicable)
   - Assistant/user text: content plus redaction markers (when redacted)
@@ -128,11 +142,13 @@ The point is not to standardize everything. It is to standardize the minimum nee
   - Policy gates: decision, rule id/version, rationale category (not freeform prose)
 
 **Versioning rule**
+
 - Backward-compatible additions increment MINOR.
 - Breaking changes increment MAJOR.
 - A replay tool must refuse to “verify” unsupported MAJOR versions; it may still “view” them.
 
 **Replay validity check (what must match)**
+
 - Under deterministic conditions, the tool-call sequence must match.
   Match means tool name plus validated arguments.
 - For deterministic, versioned tools, outcomes must also match.
@@ -142,6 +158,7 @@ The point is not to standardize everything. It is to standardize the minimum nee
 - If replay diverges in tool-call sequence under deterministic conditions, flag a portability failure.
 
 ## Trade-offs
+
 - Standardization improves portability but can slow experimentation.
 - Strong verification increases confidence but can increase compute and engineering effort.
 - More governance improves safety but can reduce developer autonomy.
@@ -149,6 +166,7 @@ The point is not to standardize everything. It is to standardize the minimum nee
 **Decision checklist (operational)**
 
 **Standardize**
+
 - Standardize when multiple teams depend on the same tools/traces.
 - Standardize when incidents require cross-team auditing.
 - Standardize when model swaps are frequent.
@@ -156,16 +174,19 @@ The point is not to standardize everything. It is to standardize the minimum nee
 - Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint, require semantic versioning, a contract test suite, and a changelog entry for every interface change.
 
 **Verify**
+
 - Use tests/contracts when failures are frequent, expensive, or safety-critical.
 - Prefer lighter checks for experimental, low-impact components.
 - Still enforce schema validation and basic budgets.
 
 **Govern**
+
 - Escalate governance when changes affect shared tool contracts, trace schemas, or eval definitions.
 - Keep governance minimal for isolated experiments that do not affect shared artifacts.
 - Set thresholds explicitly: acceptable tool error rate, maximum budget hits per run, and the severity that triggers an incident workflow.
 
 ## Failure Modes
+
 - **Lock-in**: traces and tools become proprietary and non-portable.
   Mitigation: adopt the trace interchange spec + semantic versioning, and require export/replay tooling as a release gate for shared runtimes.
 - **False comparability**: metrics appear comparable across systems but differ in hidden ways.
@@ -174,6 +195,7 @@ The point is not to standardize everything. It is to standardize the minimum nee
   Mitigation: treat policies as versioned artifacts, run a policy regression suite on traces, and use canary rollouts with explicit rollback criteria.
 
 ## Research Directions
+
 - Formal methods adapted to agent loops (bounded proofs, verified tool contracts).
   Research question: which tool contracts can be specified with pre/post-conditions that are checkable at runtime and useful in practice?
   Success signal: a library of contracts where violations predict real failures, plus a measurable reduction in incident rate or replay divergence.

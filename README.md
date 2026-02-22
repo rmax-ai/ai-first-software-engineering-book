@@ -48,29 +48,29 @@ python - <<'PY'
 from pathlib import Path
 
 required = [
-	'## Thesis',
-	'## Why This Matters',
-	'## System Breakdown',
-	'## Concrete Example 1',
-	'## Concrete Example 2',
-	'## Trade-offs',
-	'## Failure Modes',
-	'## Research Directions',
+ '## Thesis',
+ '## Why This Matters',
+ '## System Breakdown',
+ '## Concrete Example 1',
+ '## Concrete Example 2',
+ '## Trade-offs',
+ '## Failure Modes',
+ '## Research Directions',
 ]
 
 bad = []
 for p in sorted(Path('book/chapters').glob('*.md')):
-	text = p.read_text(encoding='utf-8')
-	missing = [h for h in required if h not in text]
-	if missing:
-		bad.append((p.as_posix(), missing))
+ text = p.read_text(encoding='utf-8')
+ missing = [h for h in required if h not in text]
+ if missing:
+  bad.append((p.as_posix(), missing))
 
 if bad:
-	for path, missing in bad:
-		print('FAIL', path)
-		for h in missing:
-			print('  missing:', h)
-	raise SystemExit(1)
+ for path, missing in bad:
+  print('FAIL', path)
+  for h in missing:
+   print('  missing:', h)
+ raise SystemExit(1)
 
 print('OK: chapter skeleton headings present')
 PY
@@ -90,7 +90,7 @@ By default, the kernel is **file-driven**: it prepares inputs under `state/role_
 python state/role_io_templates.py --chapter-id 01-paradigm-shift
 ```
 
-2. Populate the role outputs (planner, writer, and critic) either manually or with your own tooling. The kernel requires:
+1. Populate the role outputs (planner, writer, and critic) either manually or with your own tooling. The kernel requires:
 
 ```
 state/role_io/01-paradigm-shift/iter_XX/out/planner.json
@@ -98,7 +98,7 @@ state/role_io/01-paradigm-shift/iter_XX/out/writer.md
 state/role_io/01-paradigm-shift/iter_XX/out/critic.json
 ```
 
-3. Execute the kernel, which validates the provided outputs and enforces the evaluation contracts:
+1. Execute the kernel, which validates the provided outputs and enforces the evaluation contracts:
 
 ```bash
 python state/kernel.py --chapter-id 01-paradigm-shift
@@ -124,46 +124,46 @@ python state/kernel.py --chapter-id 01-paradigm-shift --llm
 
 ```mermaid
 flowchart TD
-	A[Plan] --> B[Generate Artifact]
-	B --> C[Self-evaluate]
-	C --> D{Meets gates?}
-	D -- No --> E[Refine]
-	E --> C
-	D -- Yes --> F[Commit]
-	F --> G[Log trace / update state]
+ A[Plan] --> B[Generate Artifact]
+ B --> C[Self-evaluate]
+ C --> D{Meets gates?}
+ D -- No --> E[Refine]
+ E --> C
+ D -- Yes --> F[Commit]
+ F --> G[Log trace / update state]
 ```
 
 ### Book system architecture
 
 ```mermaid
 flowchart LR
-	subgraph Governance
-		CON[CONSTITUTION.md]
-		AG[AGENTS.md]
-	end
+ subgraph Governance
+  CON[CONSTITUTION.md]
+  AG[AGENTS.md]
+ end
 
-	subgraph Content
-		CH[book/chapters/*]
-		PAT[book/patterns/*]
-		GLO[book/glossary.md]
-	end
+ subgraph Content
+  CH[book/chapters/*]
+  PAT[book/patterns/*]
+  GLO[book/glossary.md]
+ end
 
-	subgraph Evaluation
-		E1[evals/chapter-quality.yaml]
-		E2[evals/style-guard.yaml]
-		E3[evals/drift-detection.yaml]
-	end
+ subgraph Evaluation
+  E1[evals/chapter-quality.yaml]
+  E2[evals/style-guard.yaml]
+  E3[evals/drift-detection.yaml]
+ end
 
-	subgraph State
-		L[state/ledger.json]
-		V[state/version_map.json]
-		M[state/metrics.json]
-	end
+ subgraph State
+  L[state/ledger.json]
+  V[state/version_map.json]
+  M[state/metrics.json]
+ end
 
-	CON --> Content
-	AG --> Content
-	Content --> Evaluation
-	Evaluation --> State
+ CON --> Content
+ AG --> Content
+ Content --> Evaluation
+ Evaluation --> State
 ```
 
 ## Copilot autopilot execution

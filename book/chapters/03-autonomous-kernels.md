@@ -1,6 +1,7 @@
 # Chapter 03 — Autonomous Kernels
 
 ## Thesis
+
 An autonomous kernel is a minimal, well-specified control loop for bounded work: plan, apply tool actions, verify, and stop. It is designed for short-horizon execution with explicit budgets and explicit exit criteria, so its behavior is inspectable and repeatable. It is not a substitute for long-horizon project management or open-ended exploration.
 
 What this is (and is not):
@@ -18,11 +19,13 @@ Definitions:
 Hypothesis: small, well-governed autonomous kernels (tight loops with explicit budgets and evaluation gates) outperform broad autonomy in stability and debuggability.
 
 ## Why This Matters
+
 - Most failures in agentic work are operational: runaway loops, untraceable edits, and unverifiable outcomes.
 - Kernels enable composability: multiple kernels can run with different permissions and evaluation profiles.
 - “Kernel-first” design makes autonomy a system property, not a prompt trick.
 
 ## System Breakdown
+
 - **Kernel loop**: intent → plan → act → verify → record trace → stop/iterate.
 - **Budgets**: max iterations, time, tool calls, diff size.
 - **Permissions**: read/write scopes, protected paths, allowed tools.
@@ -111,7 +114,7 @@ A compact “must capture” checklist (minimum viable trace).
 This checklist is the smallest set of fields that enables replay, audit, and debugging without relying on memory or “it seemed fine.”
 
 | Loop stage | Budget signal | Permission signal | Verification signal | Persistence artifact |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | intent | remaining iterations/time | required read scope | success criteria defined | intent string + criteria |
 | plan | tool-call budget allocation | allowed tools list | planned gates named | plan steps + gate mapping |
 | act | diff size consumed | write scope used | N/A | patch/diff stats |
@@ -120,6 +123,7 @@ This checklist is the smallest set of fields that enables replay, audit, and deb
 | stop/iterate | budget exhausted? | permission insufficient? | gates satisfied? | final summary + next action |
 
 ## Concrete Example 1
+
 Bug-fix kernel for a CLI tool.
 
 - Input:
@@ -330,7 +334,7 @@ This avoids “fix-forward” drift by forcing an early gate (compile) to locali
 Detection signals should be tied to budgets and evaluation gates, not intuition.
 
 | Failure mode | Detection signals (operational) |
-|---|---|
+| --- | --- |
 | Local minima | Same verification failure repeats across iterations.<br>Edits stay confined to the same small area.<br>Diff size increases without new localized evidence (no tighter repro, no new failing test isolated).<br>Iteration budget is consumed with no change in selected gates or outcomes. |
 | Tool thrash | Tool-call count rises while the plan and hypothesis remain unchanged.<br>The same command is rerun without an intervening change that could affect its result.<br>Files touched increases despite a small, bounded intent. |
 | False confidence | Gates get narrower over time without a recorded waiver and risk note.<br>Fast gates pass, but the credibility gate is repeatedly deferred without an explicit waiver record.<br>Success is declared without a trace artifact that includes exact gate commands, exit codes, and summary lines. |

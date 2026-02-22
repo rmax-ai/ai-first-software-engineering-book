@@ -39,4 +39,3 @@ The intention is to make each chapter a testable unit: clear thesis, system brea
 1. Start with the chapter that matches your immediate constraint (evaluation, governance, infra).
 2. Use `book/glossary.md` to disambiguate terms.
 3. Treat pattern documents in `book/patterns/` as reusable design primitives.
-
