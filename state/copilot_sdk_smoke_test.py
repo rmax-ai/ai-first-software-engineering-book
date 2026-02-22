@@ -1584,6 +1584,32 @@ def run_usage_examples_duplicate_count_wrapper_all_mode_specs_guard_mode() -> in
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_delegation_guard_mode() -> int:
+    wrapper_functions = [
+        mode_handler
+        for mode_name, mode_handler, _description in TRACE_SUMMARY_MODE_SPECS
+        if mode_name.startswith("usage-examples-duplicate-count-mode-coverage-guard")
+    ]
+    assert wrapper_functions, "expected duplicate-count coverage-guard wrapper functions"
+
+    wrappers_missing_delegation = [
+        mode_handler.__name__
+        for mode_handler in wrapper_functions
+        if "_run_usage_examples_duplicate_count_mode_coverage_guard(" not in inspect.getsource(mode_handler)
+    ]
+    assert not wrappers_missing_delegation, (
+        "expected duplicate-count coverage-guard wrappers to delegate to "
+        "_run_usage_examples_duplicate_count_mode_coverage_guard(...), "
+        f"found regressions: {wrappers_missing_delegation}"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-delegation-guard mode validates duplicate-count "
+        "coverage-guard wrappers delegate to _run_usage_examples_duplicate_count_mode_coverage_guard(...)"
+    )
+    return 0
+
+
 def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
@@ -1877,6 +1903,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-all-mode-specs-guard",
         run_usage_examples_duplicate_count_wrapper_all_mode_specs_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper source regression assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-delegation-guard",
+        run_usage_examples_duplicate_count_wrapper_helper_delegation_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper delegation assertion",
     ),
     (
         "usage-examples-order-guard",
