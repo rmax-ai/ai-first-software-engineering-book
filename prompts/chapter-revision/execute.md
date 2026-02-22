@@ -101,9 +101,10 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 05-evaluation-and-traces | 1 | failed(1) | none | `f10c256]` |
 | 05-evaluation-and-traces | 2 | failed(1) | none | `ea2405e]` |
 | 05-evaluation-and-traces | 3 | failed(1) | none | `fc7a8bb]` |
+| 06-agent-governance | 1 | failed(1) | none | `ad34d6b]` |
 ### Re-run Summary (2026-02-22T18:25:03Z)
-- Completed 15/24 chapter passes so far.
+- Completed 16/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 15.
-- Total commits created for this re-run loop: 15.
+- Failed passes: 16.
+- Total commits created for this re-run loop: 16.
 
