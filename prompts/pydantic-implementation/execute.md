@@ -68,6 +68,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_uv_smoke.py` now forwards validated fixture ledgers through `KernelFixtureLedgerTransit` before extracting chapter fixture payloads.
 - `state/copilot_sdk_uv_smoke.py` now validates `phase_trace` kernel trace entries via `KernelTracePhaseEntryPayload` and forwards payload objects through `KernelTracePhaseTransit` before `PhaseTraceTransit` conversion.
 - `state/copilot_sdk_uv_smoke.py` now validates `kernel_trace.jsonl` ingestion via `KernelTracePayload` and forwards trace entries through `KernelTraceTransit` before phase extraction.
+- `state/copilot_sdk_uv_smoke.py` now validates `kernel_trace.jsonl` JSON-object line mappings through `JSONLinesPayload` and forwards parsed entries via `JSONLinesTransit` before `KernelTracePayload` parsing.
 - `state/copilot_sdk_uv_smoke.py` now validates `metrics.json` ingestion via `MetricsPayload` and forwards validated payloads through `MetricsTransit` before chapter history checks.
 - `state/copilot_sdk_uv_smoke.py` now validates raw JSON mapping roots via `JSONMappingPayload` and forwards parsed mappings via `JSONMappingTransit` before `MetricsPayload` parsing.
 - `state/copilot_sdk_uv_smoke.py` now validates fixture ledger JSON roots via `JSONMappingPayload` and forwards parsed mappings through `JSONMappingTransit` before `KernelFixtureLedgerPayload` parsing.

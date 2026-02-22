@@ -103,6 +103,10 @@ class JSONMappingPayload(BaseModel):
     data: dict[str, Any]
 
 
+class JSONLinesPayload(BaseModel):
+    entries: list[JSONMappingPayload]
+
+
 @dataclass(frozen=True)
 class KernelFixtureLedgerTransit:
     raw: dict[str, Any]
@@ -115,6 +119,14 @@ class JSONMappingTransit:
 
     def to_mapping(self) -> dict[str, Any]:
         return self.payload.data
+
+
+@dataclass(frozen=True)
+class JSONLinesTransit:
+    payload: JSONLinesPayload
+
+    def to_mappings(self) -> list[dict[str, Any]]:
+        return [entry.data for entry in self.payload.entries]
 
 
 @dataclass(frozen=True)
@@ -399,7 +411,11 @@ def _load_kernel_trace(path: Path) -> KernelTraceTransit:
     except json.JSONDecodeError as exc:
         raise RuntimeError(f"Invalid kernel trace entry JSON at {path}: {exc}") from exc
     try:
-        payload = KernelTracePayload.model_validate({"entries": raw_entries})
+        json_lines = JSONLinesTransit(payload=JSONLinesPayload.model_validate({"entries": [{"data": entry} for entry in raw_entries]}))
+    except ValidationError as exc:
+        raise RuntimeError(f"Invalid kernel trace JSON mapping payload at {path}: {exc}") from exc
+    try:
+        payload = KernelTracePayload.model_validate({"entries": json_lines.to_mappings()})
     except ValidationError as exc:
         raise RuntimeError(f"Invalid kernel trace payload at {path}: {exc}") from exc
     return KernelTraceTransit(payload=payload)
