@@ -21557,6 +21557,84 @@
             "diff_ratio": 0.0,
             "drift_score": 0.0010372214319582741
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.86,
+            "decision": "refine",
+            "drift_score": 0.05,
+            "example_density": 0.75,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard: at least one sentence exceeds 28 words (e.g., the 'Switch to `fallback_gate` only when...' sentence in ## Concrete Example 2).",
+              "## Concrete Example 2 lacks a concrete worked mini-example tying the gate policy to a measurable outcome (e.g., iterations to first passing gate, gate pass rate, or an explicit budget-driven stop)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3044529262086514,
+            "passed": false,
+            "similarity_max": 0.7708509258787943
+          },
+          "iteration": 387,
+          "timestamp": "2026-02-22T20:20:15Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.6567164179104478,
+            "drift_score": 0.3044529262086514
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "approve",
+            "drift_score": 0.05,
+            "example_density": 0.82,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.3077309236947791,
+            "passed": false,
+            "similarity_max": 0.7629348562878021
+          },
+          "iteration": 388,
+          "timestamp": "2026-02-22T20:21:17Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.11666666666666667,
+            "drift_score": 0.3077309236947791
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "approve",
+            "drift_score": 0.05,
+            "example_density": 0.82,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.3077309236947791,
+            "passed": false,
+            "similarity_max": 0.7629348562878021
+          },
+          "iteration": 389,
+          "timestamp": "2026-02-22T20:22:08Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.3077309236947791
+          }
         }
       ]
     },
@@ -31745,6 +31823,88 @@
             "deterministic_pass": false,
             "diff_ratio": 0.007575757575757576,
             "drift_score": 0.00953604234781255
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.86,
+            "decision": "refine",
+            "drift_score": 0.02,
+            "example_density": 0.75,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard hard fail: the sentence starting with \"A diagram helps here because the kernel has a clear execution order\" in ## System Breakdown exceeds 40 words.",
+              "Chapter ends with a trailing non-chapter block (<reminder>...</reminder>) after ## Research Directions; the chapter should end at the end of ## Research Directions."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.012036634810309874,
+            "passed": false,
+            "similarity_max": 0.7344736554618818
+          },
+          "iteration": 379,
+          "timestamp": "2026-02-22T20:23:59Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.6553030303030303,
+            "drift_score": 0.012036634810309874
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "refine",
+            "drift_score": 0.02,
+            "example_density": 0.75,
+            "failure_modes_present": true,
+            "structure_score": 0.91,
+            "tradeoff_presence": true,
+            "violations": [
+              "Chapter ends with a trailing non-chapter block (<reminder>...</reminder>) after ## Research Directions; the chapter should end immediately after the last bullet in ## Research Directions."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.012642681693396907,
+            "passed": false,
+            "similarity_max": 0.7335513701200026
+          },
+          "iteration": 380,
+          "timestamp": "2026-02-22T20:24:57Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.012307692307692308,
+            "drift_score": 0.012642681693396907
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "refine",
+            "drift_score": 0.02,
+            "example_density": 0.75,
+            "failure_modes_present": true,
+            "structure_score": 0.91,
+            "tradeoff_presence": true,
+            "violations": [
+              "Chapter ends with a trailing non-chapter block (<reminder>...</reminder>) after ## Research Directions; the chapter should end immediately after the last bullet in ## Research Directions."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.012642681693396907,
+            "passed": false,
+            "similarity_max": 0.7335513701200026
+          },
+          "iteration": 381,
+          "timestamp": "2026-02-22T20:25:53Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.012642681693396907
           }
         }
       ]
@@ -51845,6 +52005,64 @@
             "deterministic_pass": false,
             "diff_ratio": 0.11450381679389313,
             "drift_score": 0.34644990046449897
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.92,
+            "decision": "refine",
+            "drift_score": 0.24,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md.",
+              "Style-guard sentence length still likely violated in multiple list items, e.g., under ## System Breakdown the 'performance: required only if ...' bullets contain > 28 words.",
+              "Style-guard sentence length still likely violated in ## Concrete Example 1 under 'Decision rule using the query result', where the first bullet is > 28 words.",
+              "Mermaid diagram is embedded via <pre class=\"mermaid\"> instead of a standard mermaid code block, which may prevent rendering in common Markdown toolchains."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.267807943608716,
+            "passed": false,
+            "similarity_max": 0.7297335480476782
+          },
+          "iteration": 374,
+          "timestamp": "2026-02-22T20:28:51Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.45774647887323944,
+            "drift_score": 0.267807943608716
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.92,
+            "decision": "refine",
+            "drift_score": 0.22,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md.",
+              "Style-guard sentence length is still likely violated in ## System Breakdown (some bullets contain multiple clauses and exceed 28 words), e.g., the correctness-selection steps and some deploy/release bullets."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3370460623207503,
+            "passed": false,
+            "similarity_max": 0.7114942495378359
+          },
+          "iteration": 375,
+          "timestamp": "2026-02-22T20:30:03Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.5132275132275133,
+            "drift_score": 0.3370460623207503
           }
         }
       ]

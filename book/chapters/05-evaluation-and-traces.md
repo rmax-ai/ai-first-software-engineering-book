@@ -1,9 +1,12 @@
 # Chapter 05 — Evaluation and Traces
 
 ## Thesis
-Evaluation and traceability are the mechanisms that make AI-first engineering reproducible. Traces provide the evidence needed to attribute outcomes to the correct layer (model, tool, harness, or missing tests); evaluations turn that evidence into gates that prevent incorrect changes from being accepted.
+Evaluation and traceability make AI-first engineering reproducible.
+Traces provide evidence that links outcomes to the correct layer (model, tool, harness, or missing tests).
+Evaluations turn that evidence into gates that prevent incorrect changes from being accepted.
 
-Hypothesis: without trace-first design, teams cannot reliably distinguish model errors (wrong edit suggestion) from tool errors (command failed), harness errors (applied the wrong diff or wrong working directory), or missing tests (a real regression that was not checked).
+Hypothesis: without trace-first design, teams cannot reliably distinguish a model error (wrong edit suggestion) from a tool error (command failed).
+They also cannot distinguish harness errors (applied the wrong diff or wrong working directory) from missing tests (a real regression that was not checked).
 
 ## Why This Matters
 - Reproducibility is a prerequisite for iterative improvement.
@@ -33,34 +36,106 @@ Hypothesis: without trace-first design, teams cannot reliably distinguish model 
   - quality: lint, type checks, formatting, doc checks.
   - performance: benchmarks, latency/cost budgets.
 - **Gating model**: which evaluations are required for which action classes.
+  
+  A gating model is only useful if the trace explains the choice.
+  A reviewer should be able to see why a gate passed, failed, or was skipped.
+
+  Diagram: the flow below shows how an action class routes to gates.
+  Focus on the first safety decision and the first failing gate.
+
+```mermaid
+flowchart TB
+  A[Action class selected] --> B[Safety gate(s)\n(permission / protected-path / secret scan)]
+  B -->|fail| S1[STOP\nstop_reason set\nrecord: failure_signature + touched_paths]
+  B -->|pass| C[Required evaluations\nquality + correctness + performance]
+  C --> D{Any required eval missing?}
+  D -->|yes| S2[STOP\nstop_reason set\nrecord: skipped_reason + selection_reason]
+  D -->|no| E{Any eval failed?}
+  E -->|yes| S3[STOP\nstop_reason set\nrecord: command + exit_status + failure_signature]
+  E -->|no| F[CONTINUE / COMPLETE\nrecord: evaluation_results + budgets\nstop_reason=completed]
+```
+
+  Legend:
+  - Diamonds are harness decision points.
+  - Every STOP must record enough fields to replay the same checks.
+
   - Minimal gating matrix (example, stated as rules):
     - read-only (grep/view/list):
-      - safety: required permission check for the path(s) being accessed
+      - safety: required permission check for the accessed path(s)
       - quality: skipped; record `skipped_reason: "read_only_action"`
       - correctness: skipped; record `skipped_reason: "read_only_action"`
       - performance: skipped; record `skipped_reason: "read_only_action"`
     - patch edit (apply diff to code/docs):
-      - safety: required protected-path check for all touched files; if any are protected, stop with `stop_reason: "permission_denied"`
-      - quality: required if repo has lint/typecheck config; otherwise record `skipped_reason: "no_config"`
-      - correctness: required targeted tests covering touched modules; if no mapping exists, select a test command deterministically:
-        - if the plan declares `test_command`, run it
-        - else if the repo declares a default test command, run it (e.g., in `Makefile`, `package.json`, or a CI config) and record the source as `selection_reason`
-        - else run one fixed fallback based on detected stack and record `selection_reason`:
-          - Python: `pytest -q`
-          - Node: `npm test`
-          - Go: `go test ./...`
-        - else record `skipped_reason: "no_test_runner_detected"` and stop with `stop_reason: "blocked_by_correctness_gate"`
-      - performance: required only if the diff touches paths under `deploy/` or `prod/`, or if a `latency_budget_ms`/`cost_budget_usd` is present in the plan; otherwise record `skipped_reason: "not_applicable"`
+      - safety: required protected-path check for all touched files
+        - if any touched file is protected, stop with `stop_reason: "permission_denied"`
+      - quality: required if repo has lint/typecheck config
+        - otherwise record `skipped_reason: "no_config"`
+      - correctness: required targeted tests for touched modules
+        - if a module→test mapping exists:
+          - run the mapped command
+          - record `selection_reason: "mapping"`
+        - else if the plan declares `test_command`:
+          - run it
+          - record `selection_reason: "plan.test_command"`
+        - else if the repo declares a default test command:
+          - run it
+          - record `selection_reason` with the source path
+        - else if a stack can be detected:
+          - run the stack fallback command
+          - record `selection_reason: "fallback.detected_stack"`
+        - else:
+          - record `skipped_reason: "no_test_runner_detected"`
+          - stop with `stop_reason: "blocked_by_correctness_gate"`
+      - fallback by detected stack:
+        - Deterministic stack detection (precedence order):
+          - Inputs:
+            - touched file paths from the diff (after patch application)
+            - repo evidence files (repo root only)
+          - Step 1 — candidates from touched paths:
+            - Python if any touched path ends with `.py`
+            - Node if any touched path ends with `.js`, `.jsx`, `.ts`, `.tsx`
+            - Go if any touched path ends with `.go`
+          - Step 2 — if no candidates, use evidence files:
+            - Python if `pyproject.toml`, `pytest.ini`, `setup.cfg`, or `requirements.txt` exists
+            - Node if `package.json` exists
+            - Go if `go.mod` exists
+          - Step 3 — tie-break precedence:
+            - Python → Node → Go
+          - Trace requirements:
+            - record `selection_reason` (e.g., `touched_ext:.py`)
+            - record `detected_stacks` before tie-break (e.g., `[python,node]`)
+        - Python: `pytest -q`
+        - Node: `npm test`
+        - Go: `go test ./...`
+      - performance: required only when applicable
+        - required if any touched path is under `deploy/`
+        - required if any touched path is under `prod/`
+        - required if the plan declares `latency_budget_ms` or `cost_budget_usd`
+        - otherwise record `skipped_reason: "not_applicable"`
     - dependency install (lockfile changes, package adds):
-      - safety: required secret scan of the diff and updated lockfile(s); required protected-path check
-      - quality: required if repo has lint/typecheck config; otherwise record `skipped_reason: "no_config"`
-      - correctness: required test subset that imports the changed dependency; if unknown, select a test command using the same deterministic rule as patch edit and record `selection_reason`
-      - performance: required only if the change affects runtime images or deploy manifests (e.g., `Dockerfile`, `deploy/**`); otherwise record `skipped_reason: "not_applicable"`
+      - safety: required secret scan of the diff and updated lockfile(s)
+        - record scan tool name and any hit signatures
+      - safety: required protected-path check for touched files
+        - stop with `stop_reason: "permission_denied"` if blocked
+      - quality: required if repo has lint/typecheck config
+        - otherwise record `skipped_reason: "no_config"`
+      - correctness: required tests that import the changed dependency
+        - if unknown, select a command using the patch-edit rule
+        - record `selection_reason` for the path taken
+      - performance: required only when runtime or deploy files change
+        - examples: `Dockerfile`, `deploy/**`
+        - otherwise record `skipped_reason: "not_applicable"`
     - deploy/release (publish, migrate, prod config):
-      - safety: required explicit permission grant + secret scan; stop on any forbidden hit
-      - quality: required lint/typecheck if configured; otherwise record `skipped_reason: "no_config"`
-      - correctness: required full suite or contract tests defined for release; record suite name and command
-      - performance: required if a budget is declared in the plan; stop if budget exceeded and record measured values
+      - safety: required explicit permission grant
+        - record grant artifact (id or prompt) in the trace
+      - safety: required secret scan
+        - stop on any forbidden hit; record hit signatures
+      - quality: required lint/typecheck if configured
+        - otherwise record `skipped_reason: "no_config"`
+      - correctness: required full suite or contract tests for release
+        - record suite name and command
+      - performance: required if a budget is declared in the plan
+        - stop if exceeded; record measured values
 
 ## Concrete Example 1
 Tracing a refactor.
@@ -70,19 +145,25 @@ Tracing a refactor.
 Pseudo-trace excerpt (illustrative):
 
 - task_id: `refactor-auth-2026-02-22-001`
+
 - environment:
   - repo_sha: `a1b2c3d`
   - tool_versions: `{ "pytest": "8.1.1", "python": "3.12.1" }`
-- plan: “rename `AuthClient` → `CopilotClient`; update imports; run targeted tests; stop if tests fail.”
+
+- plan:
+  - “rename `AuthClient` → `CopilotClient`; update imports; run targeted tests; stop if tests fail.”
+
 - tool_calls:
   1) `{ "tool": "apply_patch", "files": ["src/auth/client.py"], "exit_status": 0 }`
   2) `{ "tool": "bash", "cmd": "pytest -q tests/test_auth_client.py::test_retry", "exit_status": 1, "failure_signature": "ImportError: cannot import name 'AuthClient'" }`
-- diffs:
-  - `src/auth/client.py`: renamed symbol
-  - `tests/test_auth_client.py`: unchanged
-- evaluation_results:
-  - correctness: `pytest -q ...` → FAIL (ImportError)
-- stop_reason: “blocked by correctness gate”
+
+- diffs + evaluation + stop:
+  - diffs:
+    - `src/auth/client.py`: renamed symbol
+    - `tests/test_auth_client.py`: unchanged
+  - evaluation_results:
+    - correctness: `pytest -q tests/test_auth_client.py::test_retry` → FAIL (ImportError)
+  - stop_reason: “blocked by correctness gate”
 
 Query step using structured fields (one possible workflow):
 - Query: `repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"`
@@ -93,8 +174,14 @@ Query step using structured fields (one possible workflow):
   - common_missing_patch_pattern: diffs do not include any files under `src/auth/__init__.py` or `src/auth/*` besides `client.py`
 
 Decision rule using the query result:
-- If `last_success_repo_sha` matches the current `repo_sha` and `common_missing_patch_pattern` shows only `client.py` was changed, then expand patch scope to import sites (e.g., update `src/auth/__init__.py` exports and any `from src.auth import AuthClient` usage) and rerun the same correctness command (`pytest -q tests/test_auth_client.py::test_retry`).
-- If `last_success_repo_sha` differs, first rebase/reset to the pinned `repo_sha` before applying the expanded patch; then rerun the same correctness command.
+- If `last_success_repo_sha` matches the current `repo_sha`:
+  - If only `client.py` was changed, expand patch scope to import sites.
+  - Update `src/auth/__init__.py` exports and import usages.
+  - Rerun `pytest -q tests/test_auth_client.py::test_retry`.
+- If `last_success_repo_sha` differs:
+  - Rebase/reset to the pinned `repo_sha` first.
+  - Apply the expanded patch.
+  - Rerun `pytest -q tests/test_auth_client.py::test_retry`.
 
 Attribution using the trace:
 - Not a model vs tool ambiguity: the patch tool succeeded and the test runner executed; the failure signature is a stable ImportError.
