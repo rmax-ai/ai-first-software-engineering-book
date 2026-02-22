@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Autonomous Authors">
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Self-Verification Loop - AI-First Software Engineering</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../../css/brands.min.css" rel="stylesheet">
+        <link href="../../../css/solid.min.css" rel="stylesheet">
+        <link href="../../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">AI-First Software Engineering</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../../docs/index.md" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../preface/" class="nav-link">Preface</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Chapters</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../chapters/01-paradigm-shift/" class="dropdown-item">01. Paradigm Shift</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/02-harness-engineering/" class="dropdown-item">02. Harness Engineering</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/03-autonomous-kernels/" class="dropdown-item">03. Autonomous Kernels</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/04-memory-systems/" class="dropdown-item">04. Memory Systems</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/05-evaluation-and-traces/" class="dropdown-item">05. Evaluation and Traces</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/06-agent-governance/" class="dropdown-item">06. Agent Governance</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/07-production-ai-infrastructure/" class="dropdown-item">07. Production AI Infrastructure</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/99-future-directions/" class="dropdown-item">99. Future Directions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../glossary/" class="nav-link">Glossary</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../" class="nav-link">Patterns Overview</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#self-verification-loop" class="nav-link">Self-Verification Loop</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#context" class="nav-link">Context</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#problem" class="nav-link">Problem</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#forces" class="nav-link">Forces</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#solution" class="nav-link">Solution</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#implementation-sketch" class="nav-link">Implementation sketch</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#failure-modes" class="nav-link">Failure modes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#when-not-to-use" class="nav-link">When not to use</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="self-verification-loop">Self-Verification Loop</h1>
+<h2 id="context">Context</h2>
+<p>Model outputs often look plausible but can be wrong in subtle ways: incorrect assumptions about repo structure, stale APIs, missing edge cases, or incomplete updates across files. In engineering work, “sounds right” is not an acceptance criterion.</p>
+<h2 id="problem">Problem</h2>
+<p>How do you force the system to <em>prove work</em> against objective checks before it declares completion?</p>
+<h2 id="forces">Forces</h2>
+<ul>
+<li><strong>Verification cost</strong> must be lower than expected rework cost.</li>
+<li><strong>Signal alignment</strong>: checks must reflect real acceptance criteria, not proxy metrics.</li>
+<li><strong>Check gaming</strong>: if checks are narrow, the system may satisfy them while violating intent.</li>
+<li><strong>Flakiness</strong>: verification tools can fail nondeterministically (network, timing, unstable tests).</li>
+<li><strong>Side-effect boundaries</strong>: verification should not introduce additional risky mutations.</li>
+</ul>
+<h2 id="solution">Solution</h2>
+<p>Make verification an explicit, mandatory phase with a stop gate:</p>
+<ol>
+<li><strong>Define acceptance checks</strong> (tests, lint, build, schema validation, golden diffs) and/or a bounded human-review checklist.</li>
+<li><strong>Require evidence</strong> in the trace: commands run, outputs captured, and artifacts produced.</li>
+<li><strong>Gate completion</strong>: the system may only stop when checks pass, or when it produces a bounded “blocked” report with reproduction steps and the smallest viable next action.</li>
+</ol>
+<p>The key behavior change is procedural: “done” becomes a claim that must be backed by artifacts.</p>
+<h2 id="implementation-sketch">Implementation sketch</h2>
+<p>Use a two-part contract per task:</p>
+<ul>
+<li><strong>Work</strong>: changes made (patches/files) and the intended behavior.</li>
+<li><strong>Verification</strong>: list of checks and their outcomes, including raw outputs or pointers to captured logs.</li>
+</ul>
+<p>Suggested verification record shape:</p>
+<pre><code class="language-yaml">verification:
+  - check: &quot;unit tests&quot;
+    command: &quot;npm test&quot;
+    status: pass
+    evidence: &quot;stdout excerpt or attached log&quot;
+  - check: &quot;lint&quot;
+    command: &quot;npm run lint&quot;
+    status: fail
+    evidence: &quot;...&quot;
+    next_action: &quot;Fix unused import in src/cli.ts&quot;
+</code></pre>
+<p>Practical gating logic:</p>
+<ul>
+<li>If checks pass: stop.</li>
+<li>If checks fail with actionable errors: attempt bounded repair (for example, up to 2 iterations).</li>
+<li>If failures are environmental/flaky: stop with a “blocked” report and clear reproduction steps.</li>
+</ul>
+<h3 id="concrete-example">Concrete example</h3>
+<p>Task: “Add a new CLI flag and update docs.”</p>
+<p>Work:
+- Implement parsing for <code>--format json</code>.
+- Update <code>README</code> usage section.</p>
+<p>Verification:
+- Run unit tests that cover the new flag.
+- Run a help-text snapshot (golden file) test.
+- Run linter/formatter.</p>
+<p>Example evidence-oriented trace snippet:</p>
+<pre><code class="language-text">$ mycli --help
+... includes &quot;--format&quot; ...
+
+$ npm test
+PASS cli.test.ts (12 tests)
+
+$ npm run lint
+0 problems
+</code></pre>
+<h2 id="failure-modes">Failure modes</h2>
+<ul>
+<li><strong>Rubber-stamp verification</strong>: the system asserts checks passed without running them or without capturing outputs.</li>
+<li><strong>Proxy mismatch</strong>: checks pass but requirements are unmet (acceptance criteria were incomplete or untested).</li>
+<li><strong>Check gaming</strong>: tests are modified to match incorrect behavior; the suite becomes less meaningful.</li>
+<li><strong>Flaky verification loop</strong>: intermittent failures trigger repeated repairs and wasted budget.</li>
+<li><strong>Over-verification</strong>: too many slow checks push verification out of the critical path and encourage skipping.</li>
+<li><strong>Unsafe verification</strong>: verification steps include side-effectful actions (publishing, migrations) without approvals.</li>
+</ul>
+<h2 id="when-not-to-use">When not to use</h2>
+<ul>
+<li>Low-impact drafts where verification cost dominates (early outlines, brainstorming, rough notes).</li>
+<li>Environments where checks cannot run (missing tooling or permissions) and no acceptable substitutes exist.</li>
+<li>Tasks where human judgment is the primary signal and objective checks are weak (copy tone, early design exploration).</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js"></script>
+        <script src="../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

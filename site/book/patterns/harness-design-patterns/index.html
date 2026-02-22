@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Autonomous Authors">
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Harness Design Patterns - AI-First Software Engineering</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../../css/brands.min.css" rel="stylesheet">
+        <link href="../../../css/solid.min.css" rel="stylesheet">
+        <link href="../../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">AI-First Software Engineering</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../../docs/index.md" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../preface/" class="nav-link">Preface</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Chapters</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../chapters/01-paradigm-shift/" class="dropdown-item">01. Paradigm Shift</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/02-harness-engineering/" class="dropdown-item">02. Harness Engineering</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/03-autonomous-kernels/" class="dropdown-item">03. Autonomous Kernels</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/04-memory-systems/" class="dropdown-item">04. Memory Systems</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/05-evaluation-and-traces/" class="dropdown-item">05. Evaluation and Traces</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/06-agent-governance/" class="dropdown-item">06. Agent Governance</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/07-production-ai-infrastructure/" class="dropdown-item">07. Production AI Infrastructure</a>
+</li>
+                                    
+<li>
+    <a href="../../chapters/99-future-directions/" class="dropdown-item">99. Future Directions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../glossary/" class="nav-link">Glossary</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../" class="nav-link">Patterns Overview</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#harness-design-patterns" class="nav-link">Harness Design Patterns</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#context" class="nav-link">Context</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#problem" class="nav-link">Problem</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#forces" class="nav-link">Forces</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#solution" class="nav-link">Solution</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#implementation-sketch" class="nav-link">Implementation sketch</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#failure-modes" class="nav-link">Failure modes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#when-not-to-use" class="nav-link">When not to use</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="harness-design-patterns">Harness Design Patterns</h1>
+<h2 id="context">Context</h2>
+<p>A model alone is a general-purpose component. Production behavior is shaped by the harness: prompts, tools, memory, budgets, verification, and traceability.</p>
+<h2 id="problem">Problem</h2>
+<p>How do you design a harness that is reliable, debuggable, and governable without building a fragile tangle of special cases?</p>
+<h2 id="forces">Forces</h2>
+<ul>
+<li><strong>Constraints vs. coverage</strong>: adding constraints improves safety but can reduce task coverage.</li>
+<li><strong>Tools vs. surface area</strong>: more tools increase capability but enlarge the debug and governance surface.</li>
+<li><strong>Memory vs. drift/privacy</strong>: continuity improves with memory, but so do drift and data handling risks.</li>
+<li><strong>Automation vs. blast radius</strong>: stronger automation improves throughput but increases the impact of failures.</li>
+<li><strong>Observability vs. cost</strong>: better tracing and verification cost time and compute.</li>
+</ul>
+<h2 id="solution">Solution</h2>
+<p>Use a small set of recurring harness patterns that are easy to audit and compose.</p>
+<h3 id="pattern-1-typed-tool-boundary">Pattern 1: Typed Tool Boundary</h3>
+<ul>
+<li><strong>Idea</strong>: tools are the only way to cause side effects, and each tool has a typed schema with explicit errors.</li>
+<li><strong>Why it works</strong>: reduces ambiguity and makes traces auditable.</li>
+<li><strong>Example</strong>: <code>create_file(path, content)</code> returns <code>created | updated | no_op</code>, plus a checksum.</li>
+</ul>
+<h3 id="pattern-2-budgeted-control-stepstimecost">Pattern 2: Budgeted Control (Steps/Time/Cost)</h3>
+<ul>
+<li><strong>Idea</strong>: the kernel enforces budgets; the model cannot override them.</li>
+<li><strong>Why it works</strong>: turns open-ended iteration into a bounded process.</li>
+<li><strong>Example</strong>: max 20 steps or 5 minutes; on exhaustion, stop with a partial report.</li>
+</ul>
+<h3 id="pattern-3-evidence-first-completion">Pattern 3: Evidence-First Completion</h3>
+<ul>
+<li><strong>Idea</strong>: “done” requires verifiable evidence (tests run, diffs applied, outputs captured).</li>
+<li><strong>Why it works</strong>: prevents completion based on plausibility alone.</li>
+<li><strong>Example</strong>: stop is rejected unless verification artifacts exist in the trace.</li>
+</ul>
+<h3 id="pattern-4-narrow-context-construction">Pattern 4: Narrow Context Construction</h3>
+<ul>
+<li><strong>Idea</strong>: select only the files needed for the next action; summarize the rest.</li>
+<li><strong>Why it works</strong>: reduces context bloat and keeps constraints salient.</li>
+<li><strong>Example</strong>: open 2–4 files max, keep a rolling summary of prior steps.</li>
+</ul>
+<h3 id="pattern-5-separation-of-duties-plan-vs-execute-vs-verify">Pattern 5: Separation of Duties (Plan vs. Execute vs. Verify)</h3>
+<ul>
+<li><strong>Idea</strong>: treat these as distinct phases with distinct constraints.</li>
+<li><strong>Why it works</strong>: limits the ability to bypass controls (for example, editing policies during execution).</li>
+<li><strong>Example</strong>: planning cannot call side-effect tools; verification cannot modify code.</li>
+</ul>
+<h2 id="implementation-sketch">Implementation sketch</h2>
+<p>Minimal harness components:</p>
+<ul>
+<li><strong>Kernel</strong>: step loop, budgets, cancellation/timeouts, trace append.</li>
+<li><strong>Tool router</strong>: allowlist + argument validation + consistent error model + idempotency support.</li>
+<li><strong>Context builder</strong>: file selection + summarization policy + retrieval policy.</li>
+<li><strong>Verifier</strong>: runs evals/tests and records outputs.</li>
+<li><strong>Governance layer</strong>: approvals for high-risk tools, audit logs, retention/redaction rules.</li>
+</ul>
+<p>A small harness configuration can be expressed as a policy document (conceptual):</p>
+<pre><code class="language-yaml">tools:
+  allowlist: [read_file, grep_search, apply_patch, get_errors, run_in_terminal]
+budgets:
+  max_steps: 20
+  max_minutes: 5
+stop_gate:
+  require_verification: true
+  acceptable_outcomes: [&quot;verified&quot;, &quot;blocked&quot;]
+</code></pre>
+<h3 id="concrete-example">Concrete example</h3>
+<p>Repo task agent that edits documentation:</p>
+<ul>
+<li>Tools: <code>read_file</code>, <code>grep_search</code>, <code>apply_patch</code>, <code>get_errors</code>.</li>
+<li>Budgets: 15 steps, 3 minutes.</li>
+<li>Stop gate: markdown checks (or at minimum a syntax/lint pass) must be clean, or the run stops as “blocked” with reproduction steps.</li>
+</ul>
+<h2 id="failure-modes">Failure modes</h2>
+<ul>
+<li><strong>Tool sprawl</strong>: too many overlapping tools; selection becomes inconsistent and hard to audit.</li>
+<li><strong>Hidden side effects</strong>: tools mutate state without reporting it; traces become misleading.</li>
+<li><strong>Context bloat</strong>: prompts include too much content; constraints and acceptance criteria are diluted.</li>
+<li><strong>Policy bypass</strong>: weak allowlists or validation enable unintended actions.</li>
+<li><strong>Unmeasured changes</strong>: no evals/verification; regressions ship silently.</li>
+<li><strong>Over-coupling</strong>: harness depends on brittle prompt wording instead of enforceable kernel/router constraints.</li>
+</ul>
+<h2 id="when-not-to-use">When not to use</h2>
+<ul>
+<li>Single-purpose automation where a deterministic script is simpler.</li>
+<li>One-off exploratory work where harness engineering overhead dominates.</li>
+<li>Systems without ownership/ops capacity to maintain tools, budgets, verification, and incident response.</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js"></script>
+        <script src="../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

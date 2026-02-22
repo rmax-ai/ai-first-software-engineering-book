@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Autonomous Authors">
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>01. Paradigm Shift - AI-First Software Engineering</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../../css/brands.min.css" rel="stylesheet">
+        <link href="../../../css/solid.min.css" rel="stylesheet">
+        <link href="../../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">AI-First Software Engineering</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../../docs/index.md" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../preface/" class="nav-link">Preface</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Chapters</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">01. Paradigm Shift</a>
+</li>
+                                    
+<li>
+    <a href="../02-harness-engineering/" class="dropdown-item">02. Harness Engineering</a>
+</li>
+                                    
+<li>
+    <a href="../03-autonomous-kernels/" class="dropdown-item">03. Autonomous Kernels</a>
+</li>
+                                    
+<li>
+    <a href="../04-memory-systems/" class="dropdown-item">04. Memory Systems</a>
+</li>
+                                    
+<li>
+    <a href="../05-evaluation-and-traces/" class="dropdown-item">05. Evaluation and Traces</a>
+</li>
+                                    
+<li>
+    <a href="../06-agent-governance/" class="dropdown-item">06. Agent Governance</a>
+</li>
+                                    
+<li>
+    <a href="../07-production-ai-infrastructure/" class="dropdown-item">07. Production AI Infrastructure</a>
+</li>
+                                    
+<li>
+    <a href="../99-future-directions/" class="dropdown-item">99. Future Directions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../glossary/" class="nav-link">Glossary</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../patterns/" class="nav-link">Patterns Overview</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../../preface/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../02-harness-engineering/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#chapter-01-paradigm-shift" class="nav-link">Chapter 01 — Paradigm Shift</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#thesis" class="nav-link">Thesis</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#why-this-matters" class="nav-link">Why This Matters</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#system-breakdown" class="nav-link">System Breakdown</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#concrete-example-1" class="nav-link">Concrete Example 1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#concrete-example-2" class="nav-link">Concrete Example 2</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#trade-offs" class="nav-link">Trade-offs</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#failure-modes" class="nav-link">Failure Modes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#research-directions" class="nav-link">Research Directions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="chapter-01-paradigm-shift">Chapter 01 — Paradigm Shift</h1>
+<h2 id="thesis">Thesis</h2>
+<p>AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evaluation, traceability) becomes the primary design surface.</p>
+<p>The inversion is practical: reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable, testable loop.</p>
+<p>A concrete, testable implication: holding the model constant, improving the harness should predictably reduce iteration count, increase pass rates, and improve failure attribution.</p>
+<p>Operational definition:
+- <strong>Model capability</strong> changes when you swap models while holding tools, constraints, and evaluation constant.
+- <strong>Harness capability</strong> changes when you keep the model constant but alter tools, policies, evaluation gates, or trace capture.</p>
+<p>This chapter’s claim is a hypothesis: many observed “capability” gains in practice are attributable to harness engineering rather than model changes.</p>
+<h2 id="why-this-matters">Why This Matters</h2>
+<ul>
+<li>Without a clear boundary between model capability and harness capability, teams misattribute failures and waste effort.</li>
+<li>Reliability depends on reproducible loops (plan → act → verify) rather than isolated prompts.</li>
+<li>Production constraints (auditability, security, cost, regression control) require system design, not “prompting.”</li>
+</ul>
+<h2 id="system-breakdown">System Breakdown</h2>
+<ul>
+<li><strong>Actors</strong>: human governor, agent loop, tools/runtime, evaluation/CI.</li>
+<li><strong>Artifacts</strong>: specs, plans, diffs, traces, eval results, decision records.</li>
+<li><strong>Invariants</strong> (hypotheses to test):</li>
+<li>Every non-trivial change is traceable to a plan and verified by checks.</li>
+<li>The system can attribute regressions to a layer (prompt, tool, code, eval).</li>
+<li>Autonomy is gated by evaluations and budgets.</li>
+<li><strong>Measurable signals</strong> (to separate model vs harness effects):</li>
+<li><em>Iterations-to-pass</em>: number of propose→verify cycles until all required checks pass.</li>
+<li><em>Time-to-green</em>: wall-clock time from first attempt to passing evaluation gates.</li>
+<li><em>Attribution rate</em>: fraction of failures with a clear primary cause (prompt/spec vs tool/runtime vs code vs eval).</li>
+<li><strong>Attribution checklist</strong> (what evidence makes a failure “belong” to a layer):</li>
+<li><strong>Spec/prompt</strong>: requirement is ambiguous or contradictory; different reasonable interpretations change expected output; clarifying text resolves the failure without code changes.</li>
+<li><strong>Tool/runtime</strong>: tool errors, timeouts, missing permissions, flaky environment, or nondeterministic command outputs; rerun under identical inputs yields different results.</li>
+<li><strong>Code</strong>: deterministic failing tests or typechecks tied to a specific diff; reverting the diff restores the previous behavior.</li>
+<li><strong>Eval/CI</strong>: mismatch between what is asserted and what is intended; tests are incorrect, overly strict, or missing a required case; fixing the test changes outcomes without changing product behavior.</li>
+</ul>
+<h2 id="concrete-example-1">Concrete Example 1</h2>
+<p>Refactor a small library function using an agent loop.
+- Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).
+- Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.
+- Measured outputs:
+  - Iterations-to-pass and time-to-green.
+  - Diff size (files touched, lines changed) and whether changes are localized to the intended function.
+  - Failure attribution per iteration (spec/prompt vs tool/runtime vs code vs eval) using the checklist above.
+- Stop rule:
+  - Stop when the originally failing unit test passes, the full unit test suite passes, and the diff is constrained to the intended surface area.
+  - If the loop reaches a fixed budget (e.g., N iterations or T minutes) without progress, stop and escalate to a human with the trace and the smallest reproducible failing case.</p>
+<h2 id="concrete-example-2">Concrete Example 2</h2>
+<p>Ship a minor API change in a production service.
+- Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.
+- Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.
+- Measured outputs:
+  - Iterations-to-pass and time-to-green (from first migration-plan draft to all required checks passing in staging).
+  - Attribution rate per iteration using the checklist above (spec/prompt vs tool/runtime vs code vs eval).
+  - Backward-compat outcomes: number of contract-test failures introduced, and whether rollback was exercised successfully in staging.
+- Guardrails:
+  - Protected paths or modules that require explicit human review before edits (e.g., auth, billing, infra).
+  - Required checks (contract tests, integration tests, lint/typecheck, and a staging smoke test).
+  - Rollback plan defined up front (feature flag, config switch, or revert procedure) and verified in staging.
+  - Approval gate: no deploy until a human reviews the migration plan, the diff, and the evaluation results.
+- Stop rule:
+  - Stop when all required checks pass in staging, the migration plan is consistent with backward-compat constraints, and the trace report can explain every material change.
+  - If any guardrail is violated (protected file touched, required test skipped, rollback unclear), stop immediately and require human intervention.</p>
+<h2 id="trade-offs">Trade-offs</h2>
+<ul>
+<li>Strong harness constraints reduce freedom (and sometimes speed) but increase reproducibility.</li>
+<li>More evaluation gates reduce regressions but add compute and latency.</li>
+<li>Trace-heavy workflows improve debugging but increase storage and privacy considerations.</li>
+</ul>
+<h2 id="failure-modes">Failure Modes</h2>
+<ul>
+<li><strong>Illusion of capability</strong>: improvements credited to the model when they come from better tooling/evals.</li>
+<li><strong>Unbounded autonomy</strong>: loops run without budgets, causing tool thrash and unclear outcomes.</li>
+<li><strong>Non-attributable failures</strong>: missing traces make regressions un-debuggable.</li>
+</ul>
+<p>Synthesis: treat machine reasoning as an execution substrate, and treat the harness as the primary lever for reliability. Track <em>iterations-to-pass</em>, <em>time-to-green</em>, and <em>attribution rate</em> to separate harness effects from model effects and to make failures actionable.</p>
+<h2 id="research-directions">Research Directions</h2>
+<ul>
+<li>Metrics that separate model improvements from harness improvements.</li>
+<li>Minimal trace schema that supports attribution and replay.</li>
+<li>Formal definitions of autonomy envelopes and stop conditions.</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js"></script>
+        <script src="../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
