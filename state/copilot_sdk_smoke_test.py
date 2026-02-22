@@ -3098,6 +3098,36 @@ def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_mode() -> int:
+    trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
+    adjacency_order_guard_mode = (
+        "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard"
+    )
+    paired_uniqueness_guard_mode = (
+        "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard-uniqueness-guard"
+    )
+    assert adjacency_order_guard_mode in trace_summary_mode_names, (
+        f"expected TRACE_SUMMARY_MODE_SPECS to include {adjacency_order_guard_mode}"
+    )
+    assert paired_uniqueness_guard_mode in trace_summary_mode_names, (
+        f"expected TRACE_SUMMARY_MODE_SPECS to include {paired_uniqueness_guard_mode}"
+    )
+
+    adjacency_order_guard_mode_index = trace_summary_mode_names.index(adjacency_order_guard_mode)
+    paired_uniqueness_guard_mode_index = trace_summary_mode_names.index(paired_uniqueness_guard_mode)
+    assert paired_uniqueness_guard_mode_index + 1 == adjacency_order_guard_mode_index, (
+        "expected usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard-uniqueness-guard "
+        "to appear immediately before usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard "
+        "in TRACE_SUMMARY_MODE_SPECS"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard "
+        "mode validates the paired uniqueness-count mode appears immediately before the long-form adjacency-order guard mode"
+    )
+    return 0
+
+
 def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_guard_adjacency_order_guard_mode() -> int:
     trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
     newest_uniqueness_order_mode = (
@@ -3644,8 +3674,8 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
     ),
     (
         "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard",
-        run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_mode,
-        "deterministic duplicate-count coverage-guard wrapper helper newest long-form uniqueness-order adjacency-order uniqueness then uniqueness adjacency-order adjacency assertion",
+        run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper newest long-form adjacency-order guard then paired uniqueness-count adjacency assertion",
     ),
     (
         "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard",
