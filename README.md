@@ -165,3 +165,26 @@ flowchart LR
 	Content --> Evaluation
 	Evaluation --> State
 ```
+
+## Copilot autopilot execution
+
+- The Copilot autopilot mode reads the `prompts/chapter-revision/execute.md` playbook and dispatches the iterative kernel run for each chapter.
+- Each pass instructs `kernel.py` to execute the deterministic planner → writer → critic loop, logging artifacts under `state/role_io/<chapter-id>/iter_XX`.
+- If the kernel or prompt feedback identifies a code issue, the parent Copilot orchestrator spawns a dedicated subagent (e.g., `code-reviewer`, `test`) to investigate, fix, and re-validate before the next pass.
+- Once a pass finishes without blockers, the orchestrator records the commit, updates the ledger, and moves to the next chapter.
+
+```mermaid
+flowchart TD
+    A[Copilot autopilot]
+    B[Load prompts/chapter-revision/execute.md]
+    C[Invoke python state/kernel.py --llm --chapter-id]
+    D[Planner → Writer → Critic loop]
+    E{Code issue reported?}
+    F[Launch subagent to fix (code-reviewer, test, etc.)]
+    G[Record commit + ledger update]
+
+    A --> B --> C --> D --> E
+    E -- Yes --> F --> D
+    E -- No --> G
+    F --> D
+```
