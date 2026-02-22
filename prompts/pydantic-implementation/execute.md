@@ -133,3 +133,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/llm_client.py` now validates `send_and_wait()` session event responses through `SDKSessionEventPayload` and forwards normalized event data via `SDKSessionEventTransit` before immediate content/usage extraction.
 - `state/llm_client.py` now validates Copilot SDK API key environment ingestion through `APIKeyEnvPayload` and forwards sanitized values via `APIKeyEnvTransit` before Copilot client options initialization.
 - `state/role_io_templates.py` now validates raw ledger JSON text through `JSONTextPayload` and forwards source-path text via `JSONTextTransit` before JSON mapping parsing.
+- `state/copilot_sdk_uv_smoke.py` now validates fixture chapter mappings through `KernelFixtureChapterMappingPayload` and forwards chapter metadata via `KernelFixtureChapterMappingTransit` before `KernelFixtureChapterTransit` builds fixture ledger chapter state.

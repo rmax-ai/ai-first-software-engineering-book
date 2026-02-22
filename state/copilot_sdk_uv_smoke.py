@@ -19,7 +19,7 @@ import subprocess
 import sys
 from typing import Any
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 KERNEL_PATH = REPO_ROOT / "state" / "kernel.py"
@@ -91,6 +91,14 @@ class PhaseTracePayload(BaseModel):
 
 
 class KernelFixtureLedgerChapterPayload(BaseModel):
+    path: str
+    status: str | None = None
+    lifecycle: str | None = None
+
+
+class KernelFixtureChapterMappingPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
     path: str
     status: str | None = None
     lifecycle: str | None = None
@@ -238,15 +246,27 @@ class KernelTraceTransit:
 @dataclass(frozen=True)
 class KernelFixtureChapterTransit:
     chapter_id: str
-    raw_chapter: dict[str, Any]
+    chapter_mapping: "KernelFixtureChapterMappingTransit"
     payload: KernelFixtureLedgerChapterPayload
 
     def to_fixture_chapter(self) -> dict[str, Any]:
-        chapter_meta = dict(self.raw_chapter)
+        chapter_meta = self.chapter_mapping.to_mapping()
         chapter_meta["status"] = "draft"
         if chapter_meta.get("lifecycle") == "frozen":
             chapter_meta["lifecycle"] = "draft"
         return chapter_meta
+
+
+@dataclass(frozen=True)
+class KernelFixtureChapterMappingTransit:
+    payload: KernelFixtureChapterMappingPayload
+
+    @classmethod
+    def from_mapping(cls, raw_chapter: dict[str, Any]) -> "KernelFixtureChapterMappingTransit":
+        return cls(payload=KernelFixtureChapterMappingPayload.model_validate(raw_chapter))
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.model_dump()
 
 
 @dataclass(frozen=True)
@@ -386,7 +406,11 @@ def _load_kernel_fixture_chapter(chapter_id: str) -> KernelFixtureChapterTransit
     raw_chapter = ledger_transit.raw.get("chapters", {}).get(chapter_id)
     if chapter_payload is None or not isinstance(raw_chapter, dict):
         raise RuntimeError(f"Unknown chapter_id for fixture: {chapter_id}")
-    return KernelFixtureChapterTransit(chapter_id=chapter_id, raw_chapter=raw_chapter, payload=chapter_payload)
+    try:
+        chapter_mapping = KernelFixtureChapterMappingTransit.from_mapping(raw_chapter)
+    except ValidationError as exc:
+        raise RuntimeError(f"Invalid chapter mapping payload for fixture {chapter_id}: {exc}") from exc
+    return KernelFixtureChapterTransit(chapter_id=chapter_id, chapter_mapping=chapter_mapping, payload=chapter_payload)
 
 
 def _load_kernel_fixture_ledger(path: Path) -> KernelFixtureLedgerTransit:
