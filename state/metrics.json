@@ -31581,6 +31581,90 @@
             "diff_ratio": 0.0,
             "drift_score": 0.005217650566487776
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.83,
+            "decision": "refine",
+            "drift_score": 0.2,
+            "example_density": 0.72,
+            "failure_modes_present": true,
+            "structure_score": 0.88,
+            "tradeoff_presence": true,
+            "violations": [
+              "Chapter content includes a trailing <reminder>...</reminder> block that is not part of the chapter and should be removed from the revised markdown output.",
+              "Style-guard metaphor policy: uses the metaphorical term \"safety envelope\" without an explicit justification sentence.",
+              "Concrete Example 2 contains a malformed diff-stats line: \"pyproject.toml | 1 +-\" is split across lines (shows as \"pyproject.toml | 1 +-\" followed by a standalone newline), reducing readability and making the sample output inconsistent."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.009657836644591612,
+            "passed": false,
+            "similarity_max": 0.6986248505579133
+          },
+          "iteration": 376,
+          "timestamp": "2026-02-22T19:29:55Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.7689393939393939,
+            "drift_score": 0.009657836644591612
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.82,
+            "decision": "refine",
+            "drift_score": 0.03,
+            "example_density": 0.72,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "Chapter output contains a trailing non-chapter block: the final <reminder>...</reminder> section should be removed so the chapter ends at ## Research Directions.",
+              "## Thesis contains a sentence exceeding the 28-word sentence-length limit (\"Here, \u201csafety envelope\u201d means ... declare success.\"); it should be split into two shorter sentences to comply with evals/style-guard.yaml."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.00953604234781255,
+            "passed": false,
+            "similarity_max": 0.7046894607276032
+          },
+          "iteration": 377,
+          "timestamp": "2026-02-22T19:31:11Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.018867924528301886,
+            "drift_score": 0.00953604234781255
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.84,
+            "decision": "refine",
+            "drift_score": 0.03,
+            "example_density": 0.72,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "Chapter output contains a trailing non-chapter block: the final <reminder>...</reminder> section should be removed so the chapter ends at ## Research Directions."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.00953604234781255,
+            "passed": false,
+            "similarity_max": 0.7044293903481108
+          },
+          "iteration": 378,
+          "timestamp": "2026-02-22T19:32:11Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.007575757575757576,
+            "drift_score": 0.00953604234781255
+          }
         }
       ]
     },

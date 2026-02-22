@@ -1,7 +1,13 @@
 # Chapter 03 — Autonomous Kernels
 
 ## Thesis
-An autonomous kernel is a minimal, well-specified control loop that executes bounded work: plan, apply tool actions, verify, and stop. Its constraints (budgets, permissions, evaluation gates) define a safety envelope that makes outcomes inspectable and repeatable.
+An autonomous kernel is a minimal, well-specified control loop for bounded work: plan, apply tool actions, verify, and stop. It is designed for short-horizon execution with explicit budgets and explicit exit criteria, so its behavior is inspectable and repeatable. It is not a substitute for long-horizon project management or open-ended exploration.
+
+What this is (and is not):
+
+- A kernel **executes one bounded objective** and stops; it does not “keep going” to find adjacent work.
+- A kernel **operates inside a declared safety envelope** (budgets + permissions + evaluation gates); it does not expand scope implicitly. Here, “safety envelope” means the explicit combination of budgets, permissions, and evaluation gates. It bounds what actions are allowed and what evidence is required to declare success.
+- A kernel **treats verification as mandatory** (or explicitly waived with recorded justification); it does not declare success from intent or plausibility.
 
 Definitions:
 
@@ -23,14 +29,32 @@ Hypothesis: small, well-governed autonomous kernels (tight loops with explicit b
 - **Verification**: mandatory checks per action class (e.g., tests for code changes).
 - **Persistence**: ledger entries, trace logs, artifacts.
 
-To make this operational, treat each loop step as a checkpoint with a “must record” trace payload and a “must decide” stop condition:
+Treat each loop step as a checkpoint with two requirements: (1) what must be recorded, and (2) what stop condition must be evaluated.
 
-- **Intent**: state the task class and success condition (e.g., “tests pass,” “build passes,” “repro no longer fails”).
-- **Plan**: enumerate the next 1–3 actions only (not the whole project), each tied to a verification gate and a budget slice.
-- **Act**: perform the minimal change that addresses the current hypothesis; avoid speculative edits that cannot be evaluated.
-- **Verify**: run the smallest evaluation that is credible for the task class. Use unit tests for logic changes and typecheck/build for dependency changes; use end-to-end only when required. Verification can fail in two ways: the check fails, or the check is too narrow to detect the real regression.
-- **Record trace**: persist commands executed, files touched, diff stats, and evaluation outputs (or hashes/pointers to them) so a human can replay or audit.
-- **Stop/iterate**: stop when the success condition is met, or when a budget is exhausted, or when verification indicates the current plan cannot succeed without broader permissions/scope.
+1. **Intent**: state the task class and the success condition.
+   - Must record: intent string + success criteria (e.g., “repro no longer fails”).
+   - Stop condition: if success criteria are ambiguous, stop and request clarification.
+
+2. **Plan**: enumerate the next 1–3 actions only, each tied to a gate and a budget slice.
+   - Must record: planned steps + named gates + allocated budget slice.
+   - Stop condition: if the plan requires tools/paths outside permissions, stop and request escalation.
+
+3. **Act**: perform the minimal change that tests the current hypothesis.
+   - Must record: files touched + diff stats (and any migration steps taken).
+   - Stop condition: if diff budget or file-touch budget is exceeded, stop and escalate.
+
+4. **Verify**: run the smallest evaluation that is credible for the task class.
+   - Must record: exact command(s) + exit codes + summary lines (or pointers/hashes to full logs).
+   - Stop condition: if a gate fails, iterate; if no credible gate exists, stop and escalate.
+   - Gate waivers: acceptable only when the trace records (a) why the gate is not runnable, (b) what alternative check was run, and (c) what risk remains. A waiver is not a “pass”; it is a recorded exception.
+
+5. **Record trace**: persist replayable evidence for what happened and why.
+   - Must record: commands executed, outputs (or pointers), budgets consumed, permissions exercised.
+   - Stop condition: if persistence fails (cannot write trace), stop; do not continue “blind.”
+
+6. **Stop/iterate**: decide based on evidence and remaining budget.
+   - Must record: decision + rationale + the next action (either “done” or “what to try next”).
+   - Stop condition: stop on success, or when a budget is exhausted, or when permissions/scope are insufficient.
 
 Mermaid mapping of stages to controls and outputs:
 
@@ -51,7 +75,15 @@ flowchart LR
   S -->|stop| End[Exit with summary]
 ```
 
-A compact “must capture” checklist (minimum viable trace):
+How to read this diagram:
+
+- Solid arrows show the execution order; dotted arrows show constraints that shape what actions are allowed.
+- Gates flow into **Verify** because “done” is a verification outcome, not an intent.
+- Persistence flows out of **Record trace** because the trace is an output, not a side effect.
+
+A compact “must capture” checklist (minimum viable trace).
+
+This is the smallest set of fields that enables replay, audit, and debugging without relying on memory or “it seemed fine.”
 
 | Loop stage | Budget signal | Permission signal | Verification signal | Persistence artifact |
 |---|---|---|---|---|
@@ -75,65 +107,49 @@ Bug-fix kernel for a CLI tool.
 Mini-runbook (a single bounded kernel run):
 
 1. Localize failure (evidence-first)
-
-   - Action: run the smallest check that reproduces the failure.
-
+   - Action: reproduce with the smallest credible check.
      - Command: `pytest -k rejects_empty_input`
-
+   - Gate: the reproduction must fail in a controlled way (same assertion, same path).
    - Record:
-
-     - failing assertion excerpt (placeholder): `E assert 0 == 2`
-     - environment notes: OS, Python version, CLI args
-
-   - Stop/iterate rule:
-
-     - If the failure does not reproduce, stop and return “cannot reproduce” trace (do not edit).
+     - command + exit code: `pytest -k rejects_empty_input` (exit code `1`)
+     - failing excerpt (example):
+       - `>       assert parse("") != 0`
+       - `E       AssertionError: assert 0 != 0`
+     - test summary line (example): `1 failed, 42 deselected in 0.31s`
+   - Stop rule: if the failure does not reproduce, stop and return a “cannot reproduce” trace (no edits).
 
 2. Patch minimal surface (hypothesis-driven)
-
-   - Hypothesis: empty string is being treated as a valid token stream in `src/parser.py`.
-   - Action: make a minimal edit that rejects empty input at the boundary (not across unrelated call sites).
-   - Budget check:
-
-     - ensure diff size stays within 40 lines and touches only `src/parser.py` (or a single adjacent file if necessary).
-
+   - Action: implement the smallest boundary check consistent with the hypothesis.
+     - Hypothesis: empty string is being treated as a valid token stream in `src/parser.py`.
+     - Change: reject empty input at the parse entrypoint (avoid touching downstream call sites).
+   - Gate: diff must remain within 40 lines and touch only `src/parser.py` (unless escalation is explicitly allowed).
    - Record:
      - files touched: `src/parser.py`
-     - diff stats: `+6 -1` (placeholder)
+     - diff stats (example): `src/parser.py | 7 ++++++-`
+   - Stop rule: if a second file is required, stop and escalate (“write scope too narrow”).
 
 3. Run verification gate (tight but credible)
-
-   - Gate 1: rerun the failing test.
-
-     - Command: `pytest -k rejects_empty_input`
-
-   - Gate 2 (cheap regression check): run related unit tests only.
-
-     - Command: `pytest -k parse`
-
-   - Verification risk handling:
-
-     - If Gate 1 passes but Gate 2 fails, treat as “not fixed” (the patch likely broke a nearby invariant).
+   - Action: rerun the failing test, then a small related slice.
+   - Gate 1 (target): `pytest -k rejects_empty_input`
+     - Expected summary (example): `1 passed, 42 deselected in 0.28s`
+   - Gate 2 (related): `pytest -k parse`
+     - Expected summary (example): `12 passed, 0 failed, 31 deselected in 1.07s`
+   - Record: both commands, exit codes (`0`), and the summary lines.
+   - Stop rule: if Gate 1 passes but Gate 2 fails, treat as “not fixed” and iterate (the patch likely broke a nearby invariant).
 
 4. Record trace (auditable, replayable)
-
-   - Persist a kernel trace with:
-
-     - budgets consumed: iterations used, tool calls used, diff size
+   - Action: persist a kernel trace and a ledger entry.
+   - Record (minimum):
+     - budgets consumed: `iterations=1/3`, `tool_calls=3/10`, `diff_lines=7/40`
      - commands executed + exit codes
-     - final test summary line (placeholder): `2 passed, 0 failed`
-
-   - Write a ledger entry summarizing:
-
-     - what changed (one-sentence)
-     - why it changed (link to failing assertion)
-     - what verified it (gate list)
+     - final test summary lines:
+       - `12 passed, 0 failed, 31 deselected in 1.07s`
+   - Stop rule: if trace persistence fails, stop; do not continue with further edits.
 
 5. Stop criteria (explicit)
-
    - Stop success: Gate 1 and Gate 2 pass within budget.
    - Stop failure: tool-call budget exhausted, diff budget exceeded, or verification indicates a broader refactor is required.
-   - Stop escalation output: include “next action for a human” (e.g., “needs design change in tokenization; requires editing `src/lexer.py`, which is outside current write scope”).
+   - Stop escalation output: include the next action for a human (e.g., “tokenization treats whitespace-only as empty; requires editing `src/lexer.py`, outside current write scope”).
 
 ## Concrete Example 2
 
@@ -150,71 +166,56 @@ Dependency upgrade kernel.
 Kernel steps with an explicit remediation branch:
 
 1. Update manifest (narrow scope)
-
    - Action: bump version constraint in `pyproject.toml`.
    - Record:
-
-     - old/new constraint strings
-     - diff stats for manifest only
-
+     - old/new constraint strings (example): `libX>=4.2,<4.3` → `libX>=4.3,<4.4`
+     - diff stats for manifest only (example): `pyproject.toml | 1 +-`
    - Stop/iterate rule:
-
      - If the dependency resolver cannot produce a consistent lock, stop with resolver output (do not attempt ad-hoc pinning unless that is explicitly in scope).
 
 2. Run a fast build/type gate before full tests
-
    - Gate A (fast): import/type/compile smoke check.
-
      - Command: `python -m compileall src`
-
    - Record:
-
      - exit code
-     - compile summary line (placeholder): `Listing 'src'...` … `compileall: success` (or equivalent)
-
+     - compile summary lines (example):
+       - `Listing 'src'...`
+       - `Compiling 'src/app.py'...`
+       - `compileall: success`
    - Interpretation:
-
-     - If Gate A fails, this is often a missing symbol or incompatible API that will be faster to remediate than running the full suite.
+     - If Gate A fails, it is often a missing symbol or incompatible API; remediate before running the full suite.
 
 3. Remediation branch (compile errors vs failing tests)
-
    - If **compile/import fails**:
-
-     - Localize: identify first error site (file + symbol).
+     - Localize: capture the first error site (file + symbol) from the compile output.
+       - Example line: `***   File "src/integrations/libx.py", line 12`
+       - Example line: `ImportError: cannot import name 'OldClient' from 'libx'`
      - Patch: apply the minimal mechanical fix (e.g., rename `OldClient` to `Client`) in the smallest set of files.
-     - Verify: rerun Gate A only, then proceed.
+     - Verify: rerun Gate A only; proceed only when it returns exit code `0`.
      - Budget guard:
-
        - If more than 5 files are touched, stop and escalate (“requires broader refactor”).
-       - If the cumulative diff exceeds 120 lines changed, stop and escalate (“exceeds change budget for this kernel”).
+       - If cumulative diff exceeds 120 lines, stop and escalate (“exceeds change budget for this kernel”).
 
    - If **compile passes but tests fail**:
-
-     - Localize: run the single failing test file or test case.
-     - Patch: address behavioral change (e.g., new default timeout) with a targeted adjustment and a justification in the trace.
-     - Verify: rerun the failing tests, then run the full relevant suite.
+     - Localize: run the smallest failing unit (single file or single test) based on the first failure.
+       - Example: `pytest tests/test_libx_integration.py -q`
+       - Example summary: `1 failed, 18 passed in 4.92s`
+     - Patch: address the behavioral change with a targeted adjustment and record the reason (e.g., “libX now defaults timeout=None; set explicit timeout=5.0 in wrapper”).
+     - Verify: rerun the failing tests, then proceed to the full suite gate.
 
 4. Run full verification gate (credibility gate)
-
    - Gate B (full): run the test suite (or the project’s standard verification command).
-
      - Command: `pytest`
-
    - Record:
-
      - exit code
-     - test summary line (placeholder): `X passed, 0 failed` (or, on failure, `X passed, Y failed`)
-
+     - test summary line (example): `219 passed, 0 failed in 38.41s`
    - Verification risk handling:
-
-     - Treat a narrowed verification set as a failure mode unless the trace records why it is acceptable (e.g., “no integration tests exist; unit suite is the highest available gate”).
+     - A narrowed verification set is acceptable only as an explicit gate waiver: record why the full gate is unavailable, what alternative gate was run, and what risk remains. Do not label a waiver as “green”; label it as “waived.”
 
 5. Stop criteria and outputs
-
    - Stop success: Gate A and Gate B pass within budget.
    - Stop failure: repeated failures indicate the upgrade exceeds current permission/scope (e.g., requires API redesign), or budgets are exhausted.
    - Required outputs on stop:
-
      - change summary: files touched + primary reason
      - verification summary: Gate A command + result and Gate B command + result, including summary lines
      - rollback plan: “revert manifest bump and lockfile” (or equivalent) with the exact files to revert
@@ -242,20 +243,19 @@ Kernel steps with an explicit remediation branch:
 Detection signals (tie these to budgets and evaluation gates, not intuition):
 
 - Local minima:
-
-  - repeated edits in the same small area with no change in verification outcome across iterations
-  - steadily increasing diff size without new evidence (no new failing test localized, no new reproduction)
+  - same verification failure across iterations with edits confined to the same small area
+  - diff size steadily increases without any new localized evidence (no new failing test isolated, no tighter repro)
+  - iteration budget is consumed with no change in the selected gate set or its outcome
 
 - Tool thrash:
-
-  - tool-call count rising while the plan does not change (same commands rerun without a new hypothesis)
-  - frequent context switches (many files touched) despite a small, bounded intent
+  - tool-call count rises while the plan and hypothesis remain unchanged
+  - the same command is rerun without any intervening change that could affect its result
+  - number of files touched increases despite a small, bounded intent
 
 - False confidence:
-
-  - verification gates becoming narrower over time (“only reran one test”) without a recorded justification
-  - “green” on fast gates but repeated regressions reported elsewhere (signals the gate set is mis-specified for the task class)
-  - success declared without a trace artifact that includes gate results and the exact commands used
+  - gates become narrower over time without a recorded waiver justification and risk note
+  - fast gates pass, but the credibility gate (broader suite) is repeatedly deferred without an explicit waiver record
+  - success is declared without a trace artifact that includes exact gate commands, exit codes, and summary lines
 
 ## Research Directions
 
