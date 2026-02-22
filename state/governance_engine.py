@@ -17,7 +17,7 @@ import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
@@ -81,7 +81,7 @@ class ChapterSelectionStrategyPayload(BaseModel):
 class GovernanceCLIArgsPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    cmd: str
+    cmd: Literal["validate", "select", "promotions", "unhold"]
     ledger: Path
     chapter_id: list[str] = Field(default_factory=list)
     status: str = "active_refinement"
@@ -162,7 +162,6 @@ class SelectionStrategyTransit:
 @dataclass(frozen=True)
 class GovernanceCLIArgsTransit:
     payload: GovernanceCLIArgsPayload
-    func: Any
 
     @classmethod
     def from_namespace(cls, args: argparse.Namespace) -> "GovernanceCLIArgsTransit":
@@ -177,7 +176,7 @@ class GovernanceCLIArgsTransit:
                 "status": str(getattr(args, "status", "active_refinement")),
             }
         )
-        return cls(payload=payload, func=args.func)
+        return cls(payload=payload)
 
     def to_namespace(self) -> argparse.Namespace:
         return argparse.Namespace(
@@ -185,7 +184,6 @@ class GovernanceCLIArgsTransit:
             ledger=self.payload.ledger,
             chapter_id=list(self.payload.chapter_id),
             status=self.payload.status,
-            func=self.func,
         )
 
 
@@ -611,7 +609,13 @@ def main(argv: list[str] | None = None) -> int:
         cli_args = GovernanceCLIArgsTransit.from_namespace(args)
     except ValidationError as exc:
         raise GovernanceError(f"Invalid CLI args payload: {exc}") from exc
-    return int(cli_args.func(cli_args.to_namespace()))
+    handler_map: dict[str, Any] = {
+        "validate": _cmd_validate,
+        "select": _cmd_select,
+        "promotions": _cmd_promotions,
+        "unhold": _cmd_unhold,
+    }
+    return int(handler_map[cli_args.payload.cmd](cli_args.to_namespace()))
 
 
 if __name__ == "__main__":
