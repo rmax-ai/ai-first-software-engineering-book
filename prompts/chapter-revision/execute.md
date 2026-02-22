@@ -91,9 +91,10 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 01-paradigm-shift | 3 | failed(1) | none | `0888388]` |
 | 02-harness-engineering | 1 | failed(1) | none | `70709b7]` |
 | 02-harness-engineering | 2 | failed(1) | none | `9c65b24]` |
+| 02-harness-engineering | 3 | failed(1) | none | `cb3dcfb]` |
 ### Re-run Summary (2026-02-22T18:25:03Z)
-- Completed 5/24 chapter passes so far.
+- Completed 6/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 5.
-- Total commits created for this re-run loop: 5.
+- Failed passes: 6.
+- Total commits created for this re-run loop: 6.
 
