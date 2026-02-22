@@ -176,3 +176,8 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 99-future-directions | 1 | failed(1) | none | `2932256` |
 | 99-future-directions | 2 | failed(1) | none | `944f735` |
 | 99-future-directions | 3 | failed(1) | none | `5820f83` |
+### Re-run Summary (2026-02-22T18:53:52Z)
+- Completed 24/24 chapter passes so far.
+- Kernel runs were executed with governance unlock/unhold before each pass.
+- Failed passes: 96.
+- Total commits created for this re-run loop: 24.
