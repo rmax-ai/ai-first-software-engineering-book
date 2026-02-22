@@ -112,6 +112,10 @@ class JSONLinesPayload(BaseModel):
     entries: list[JSONLinePayload]
 
 
+class KernelTraceTextPayload(BaseModel):
+    text: str
+
+
 @dataclass(frozen=True)
 class KernelFixtureLedgerTransit:
     raw: dict[str, Any]
@@ -138,6 +142,15 @@ class JSONLinesTransit:
 
     def to_mappings(self) -> list[dict[str, Any]]:
         return [entry.data for entry in self.payload.entries]
+
+
+@dataclass(frozen=True)
+class KernelTraceTextTransit:
+    source_path: Path
+    payload: KernelTraceTextPayload
+
+    def lines(self) -> list[str]:
+        return self.payload.text.splitlines()
 
 
 @dataclass(frozen=True)
@@ -422,11 +435,15 @@ def _load_metrics(path: Path) -> MetricsTransit:
 
 def _load_kernel_trace(path: Path) -> KernelTraceTransit:
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        raw_text = path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
         raise RuntimeError(f"Kernel trace file not found: {path}") from exc
+    trace_text_transit = KernelTraceTextTransit(
+        source_path=path,
+        payload=KernelTraceTextPayload.model_validate({"text": raw_text}),
+    )
     raw_entries: list[dict[str, Any]] = []
-    for line_number, line in enumerate(lines, start=1):
+    for line_number, line in enumerate(trace_text_transit.lines(), start=1):
         if not line.strip():
             continue
         try:
