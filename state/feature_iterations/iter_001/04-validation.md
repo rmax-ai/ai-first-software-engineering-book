@@ -1,15 +1,16 @@
 # Validation
 
 ## Verification commands run
-- `ls -1 state/feature_iterations/iter_001`
-- `rg -n "features|tests|eval|Acceptance criteria|Expected files to touch" state/feature_iterations/iter_001/{01-task.md,02-plan.md,06-next-iteration.md}`
+- `glob state/feature_iterations/iter_*`
+- `view DEVELOPMENT.md`
+- `rg --files state evals | rg 'state/(kernel.py|role_io_templates.py|copilot_sdk_uv_smoke.py)|evals/(chapter-quality.yaml|style-guard.yaml|drift-detection.yaml)'`
 
 ## Observed results
-- `ls` listed all seven required artifacts (`01-task.md` through `07-summary.md`) in `state/feature_iterations/iter_001/`.
-- `rg` confirmed coverage of features/tests/evals, acceptance criteria, and expected-file mapping across `01-task.md`, `02-plan.md`, and `06-next-iteration.md`.
-- Manual source-of-truth review was completed against `prompts/incremental-improvements/execute.md` and `DEVELOPMENT.md`.
+- Confirmed this is the first feature iteration (`iter_001`).
+- Cross-checked planning scope against `DEVELOPMENT.md` harness guidelines.
+- Confirmed all referenced future-touchpoint files exist in the repository.
 
-## Pass/fail against acceptance criteria
-- A concise plan for harness features exists with explicit behavior scope: **Pass**
-- Targeted validation/test direction is documented with concrete files: **Pass**
-- Eval/regression mapping to `evals/*.yaml` and harness signals is documented: **Pass**
+## Acceptance criteria status
+- Plan includes features/tests/evals coverage: **PASS**.
+- Explicit future file touchpoints identified: **PASS**.
+- Exactly one next recommended task provided: **PASS**.

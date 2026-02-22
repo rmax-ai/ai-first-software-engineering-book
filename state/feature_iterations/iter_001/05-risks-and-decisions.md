@@ -1,12 +1,14 @@
 # Risks and decisions
 
 ## Risks discovered
-- Plan quality risk: if future work does not keep scope small, harness changes could sprawl across kernel and evals.
-- Verification risk: adding observability may increase noise unless deterministic assertions are explicitly defined.
+- Planning quality depends on future iterations keeping trace and eval updates synchronized; drift between code and eval contracts could reduce signal quality.
+- Smoke coverage may miss edge cases unless new deterministic guards are added with focused assertions.
 
-## Decisions made and trade-offs
-- Chose a planning-only first iteration per prompt seed requirements instead of code changes.
-- Prioritized explicit mapping between features, tests, and eval gates to reduce ambiguity in later implementation.
+## Decisions and trade-offs
+- Decision: Keep this seed iteration planning-only to satisfy the runner’s stop condition and minimize risk.
+- Trade-off: No immediate harness behavior change; value is deferred to next iteration execution.
 
 ## Intentionally deferred
-- Actual code changes in `state/kernel.py`, `state/role_io_templates.py`, smoke scripts, and eval YAML updates are deferred to the next iteration.
+- Implementation of kernel trace-schema updates.
+- Role I/O template tightening.
+- New smoke/eval assertions beyond the planning definition.

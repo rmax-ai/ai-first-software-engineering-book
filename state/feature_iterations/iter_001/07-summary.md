@@ -1,9 +1,10 @@
 # Iteration summary
 
-Created `iter_001` as the seed feature-improvement iteration and completed a planning-only task for custom harness improvements.
-The task defines why this planning pass is needed now and sets concrete acceptance criteria.
-The plan maps future implementation touchpoints across `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and eval contracts.
-It explicitly captures expected test strategy and regression detection surfaces tied to `evals/*.yaml` and `state/metrics.json`.
-Execution artifacts document commands used and files produced in this iteration.
-Risks and decisions highlight scope-control and verification-noise concerns.
-One bounded next task is provided: implement deterministic trace-summary observability with smoke validation evidence.
+This iteration created the initial feature-improvement handoff under `state/feature_iterations/iter_001/`.
+It followed the seed requirement to focus on planning custom harness upgrades rather than implementation.
+The task and plan define concrete workstreams for features, tests, and eval integration.
+Feature scope is anchored to `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
+Evaluation scope is tied to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+Validation captured discovery evidence, guideline alignment, and file-existence checks.
+Risks and deferrals were documented to keep future execution bounded and predictable.
+A single next task was provided: implement deterministic trace-summary guardrails with smoke coverage.
