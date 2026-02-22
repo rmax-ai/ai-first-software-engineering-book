@@ -1,20 +1,20 @@
-# Next Iteration Recommendation
+# Recommended next iteration task
 
 ## Task
-Implement deterministic trace checkpoint summaries in `state/kernel.py` and validate them with a focused UV smoke test extension.
+Implement deterministic trace summary instrumentation in `state/kernel.py` and wire it to smoke verification.
 
-## Why this is next
-The seed plan identified trace observability as the highest-leverage foundation; implementing it first improves diagnostics for every subsequent harness change.
+## Why next
+- The seed plan identified observability as the highest-value feature to improve harness debuggability and eval explainability.
+- This can be delivered as a minimal, testable increment without broad refactoring.
 
 ## Acceptance criteria
-- `state/kernel.py` emits structured checkpoint summaries at key loop boundaries without changing existing public CLI behavior.
-- `state/copilot_sdk_uv_smoke.py` includes at least one mode that asserts checkpoint summary presence and stable ordering.
-- Validation includes running `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` with captured pass/fail evidence in the next iteration’s `04-validation.md`.
+- Add a compact trace summary emitter in `state/kernel.py` for key loop outcomes (budget, eval pass/fail, write actions).
+- Update or add a targeted harness smoke check in `state/copilot_sdk_uv_smoke.py` validating trace summary presence and stable shape.
+- Update relevant eval contract(s) under `evals/` only if needed to assert new observability signals.
+- Record validation evidence with explicit `uv run python ...` command output references in the new iteration folder.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/01-task.md`
-- `state/feature_iterations/iter_002/02-plan.md`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `evals/chapter-quality.yaml` (only if required)
+- `state/feature_iterations/iter_002/*`

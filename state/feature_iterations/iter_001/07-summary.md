@@ -1,9 +1,10 @@
-# Iteration Summary
+# Iteration summary
 
-This seed iteration executed the planning-only contract from `prompts/incremental-improvements/execute.md`.
-A new iteration folder (`state/feature_iterations/iter_001/`) was created with all seven required artifacts.
-The selected task defined a concrete harness-improvement story and acceptance criteria.
-The plan outlines future work across `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-Validation documented prompt/development-guideline review and artifact completeness checks.
-Risks and trade-offs were captured to keep follow-up implementation iterations constrained and deterministic.
-A single next task was recommended: implement deterministic trace checkpoint summaries plus smoke verification.
+- Created the first feature-iteration folder at `state/feature_iterations/iter_001/`.
+- Completed one smallest unfinished task: planning custom harness improvements.
+- Captured scope, rationale, and acceptance criteria in `01-task.md`.
+- Produced an execution-ready roadmap covering features, tests, and eval strategy in `02-plan.md`.
+- Logged work performed and changed files in `03-execution.md`.
+- Documented validation evidence and acceptance criteria outcomes in `04-validation.md`.
+- Recorded risks, trade-offs, and intentional deferrals in `05-risks-and-decisions.md`.
+- Proposed exactly one concrete next task with acceptance criteria and target files in `06-next-iteration.md`.
