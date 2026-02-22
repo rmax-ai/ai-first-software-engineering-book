@@ -1,10 +1,10 @@
-# Plan custom state harness improvements
+# Task: Plan custom state harness improvements
 
 ## Why this task now
-- `state/feature_iterations/` has no prior iterations, so the seed iteration must establish a concrete backlog.
-- A clear first-pass plan reduces risk before touching harness execution code.
+- `prompts/incremental-improvements/execute.md` defines the seed iteration as a planning pass.
+- A concrete plan is needed before changing `state/kernel.py`, templates, and eval wiring.
 
 ## Acceptance criteria
-- Document concise feature improvements for the `state/` harness.
-- Define targeted tests that prove each improvement.
-- Define eval/regression checks tied to `evals/*.yaml` and metrics signals.
+1. Produce a concise backlog that covers harness **features**, **tests**, and **eval/regression gates**.
+2. Reference intended touchpoints: `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+3. Define exactly one next implementation task with concrete acceptance criteria and expected files.
