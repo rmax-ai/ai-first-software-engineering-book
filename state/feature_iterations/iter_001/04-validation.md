@@ -1,16 +1,14 @@
 # Validation
 
 ## Verification commands run
-- Confirmed no prior iteration folders existed before creation (`state/feature_iterations/iter_*`).
-- Verified required artifact files exist under `state/feature_iterations/iter_001/`.
-- Reviewed plan content against `DEVELOPMENT.md` to ensure required harness/eval file coverage is explicit.
+- `ls state/feature_iterations/iter_001`
+- `for f in state/feature_iterations/iter_001/{01-task,02-plan,03-execution,04-validation,05-risks-and-decisions,06-next-iteration,07-summary}.md; do test -f "$f"; done`
 
 ## Observed results
-- `iter_001` exists and contains all seven required markdown artifacts.
-- The plan explicitly references `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-- The next-iteration recommendation is a single concrete task with acceptance criteria.
+- Iteration folder contains all seven required markdown artifacts.
+- Presence checks passed for each required file.
 
 ## Acceptance criteria status
-- Planning coverage of features/tests/evals: **PASS**
-- Seven artifact contract satisfied: **PASS**
-- One-task iteration scope maintained: **PASS**
+- Features/tests/evals planning coverage: **PASS**
+- Explicit file paths and actionable next task: **PASS**
+- Planning-only scope (no harness code edits): **PASS**

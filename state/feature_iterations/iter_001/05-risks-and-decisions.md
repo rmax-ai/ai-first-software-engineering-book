@@ -1,12 +1,12 @@
-# Risks and Decisions
+# Risks and decisions
 
-## Risks
-- Planning artifacts can drift from implementation reality if future iterations skip targeted verification.
-- Kernel and eval updates may require synchronized changes to avoid false regression failures.
+## Risks discovered
+- Planning quality depends on later iterations preserving small, testable slices.
+- Harness behavior changes in `state/kernel.py` may affect deterministic outputs and eval stability.
 
-## Decisions and trade-offs
-- Chose planning-only execution because seed-iteration rules in `prompts/incremental-improvements/execute.md` explicitly require it.
-- Kept scope to one task (backlog planning) and deferred code edits to maintain minimal, reviewable diffs.
+## Decisions made
+- Keep iter_001 documentation-only to satisfy seed prompt constraints.
+- Prioritize first implementation work on observability hooks before broader refactors.
 
-## Deferred items
-- Actual implementation in `state/kernel.py` and related files is deferred to the next iteration.
+## Deferred intentionally
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, smoke tests, or eval YAMLs.

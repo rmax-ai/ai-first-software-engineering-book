@@ -1,19 +1,18 @@
-# Recommended next task
+# Next iteration recommendation
 
-## Task
-Implement deterministic trace logging controls in `state/kernel.py`.
+## Recommended task
+Add structured trace-summary logging in `state/kernel.py` and validate with targeted smoke coverage.
 
 ## Why this is next
-- It is the highest-value feature slice from this planning pass and improves harness observability.
-- It creates concrete behavior to validate in smoke tests and eval contracts.
+This is the smallest implementation step that improves observability while preserving current interfaces and creating measurable signals for later eval alignment.
 
 ## Acceptance criteria
-- Add a focused, minimal logging control path in `state/kernel.py` that emits deterministic trace entries for key loop stages.
-- Add/adjust targeted verification in `state/copilot_sdk_uv_smoke.py` to assert expected trace signals.
-- Update at least one relevant eval contract in `evals/*.yaml` so regressions in trace expectations are detectable.
-- Record command evidence and pass/fail outcomes in the next iteration artifacts.
+- Add deterministic trace-summary emission points in `state/kernel.py` behind existing execution flow.
+- Add/adjust targeted checks in `state/copilot_sdk_smoke_test.py` and/or `state/copilot_sdk_uv_smoke.py` proving the new summaries appear and remain stable.
+- Record expected signal touchpoints for later eval wiring in `evals/` and `state/metrics.json` notes within the next iteration artifacts.
 
 ## Expected files to touch
 - `state/kernel.py`
+- `state/copilot_sdk_smoke_test.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `evals/chapter-quality.yaml` (or another directly relevant `evals/*.yaml`)
+- `state/feature_iterations/iter_002/*`
