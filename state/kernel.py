@@ -1517,7 +1517,11 @@ def run_kernel(
         status = chapter_meta_payload.status
         lifecycle = chapter_meta_payload.lifecycle
         if status in {"locked", "hold"}:
-            raise KernelError(f"Chapter is not eligible (status={status!r}).")
+            if status == "hold":
+                hint = f" Try: uv run python state/governance_engine.py unhold --chapter-id {chapter_id}"
+            else:
+                hint = ""
+            raise KernelError(f"Chapter is not eligible (status={status!r})." + hint)
         if lifecycle == "frozen":
             raise KernelError("Chapter is frozen.")
 
