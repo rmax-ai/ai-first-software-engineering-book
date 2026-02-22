@@ -1,20 +1,20 @@
 # Validation
 
 ## Verification commands run
-- Verified source guidance by direct file inspection:
-  - `prompts/incremental-improvements/execute.md`
-  - `DEVELOPMENT.md`
-- Verified iteration discovery result:
-  - searched `state/feature_iterations/iter_*` and confirmed no prior folders
-- Verified artifact completeness:
-  - ensured seven required markdown files exist under `state/feature_iterations/iter_001/`
+- `test -f state/feature_iterations/iter_001/01-task.md`
+- `test -f state/feature_iterations/iter_001/02-plan.md`
+- `test -f state/feature_iterations/iter_001/03-execution.md`
+- `test -f state/feature_iterations/iter_001/04-validation.md`
+- `test -f state/feature_iterations/iter_001/05-risks-and-decisions.md`
+- `test -f state/feature_iterations/iter_001/06-next-iteration.md`
+- `test -f state/feature_iterations/iter_001/07-summary.md`
+- `rg -n "feature|test|eval" state/feature_iterations/iter_001/02-plan.md`
 
 ## Observed results
-- Seed iteration index resolved to `iter_001`.
-- All seven required artifacts were created with explicit task, plan, execution, validation, risk, next-step, and summary sections.
-- Planning coverage includes required features/tests/evals references.
+- All seven required artifact files are present in `state/feature_iterations/iter_001/`.
+- `02-plan.md` explicitly includes feature, test, and eval planning coverage.
 
 ## Acceptance criteria check
-- ✅ Concise plan spans features, tests, and evals.
-- ✅ Follow-on work references `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-- ✅ Full folder contract satisfied for this iteration.
+- Planning coverage for features/tests/evals: **PASS**
+- Concrete file targeting for future implementation: **PASS**
+- Single recommended next task with acceptance criteria: **PASS**

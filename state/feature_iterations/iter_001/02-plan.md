@@ -1,19 +1,23 @@
 # Plan
 
-1. Review `DEVELOPMENT.md` and extract harness constraints (UV workflow, deterministic guards, evidence requirements).
-2. Define feature backlog themes:
-   - richer kernel observability in `state/kernel.py`
-   - clearer role scaffolds in `state/role_io_templates.py`
-   - deterministic verification controls in `state/copilot_sdk_uv_smoke.py`
-3. Define test strategy for each feature area using targeted `uv run python ...` smoke or unit-style harness checks.
-4. Define evaluation strategy tying behavior to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-5. Publish one concrete next implementation task with acceptance criteria and files to touch.
+1. Review harness constraints from `DEVELOPMENT.md` and runner rules from `prompts/incremental-improvements/execute.md`.
+2. Define feature backlog items for:
+   - richer kernel trace observability in `state/kernel.py`
+   - clearer and stricter role I/O scaffolding in `state/role_io_templates.py`
+   - deterministic smoke/assertion expansion in `state/copilot_sdk_uv_smoke.py`
+3. Define test strategy:
+   - targeted UV smoke command(s) for changed harness surfaces
+   - focused unit-style checks for helpers touched in `state/`
+4. Define eval strategy tied to existing contracts:
+   - `evals/chapter-quality.yaml`
+   - `evals/style-guard.yaml`
+   - `evals/drift-detection.yaml`
+5. Stage next iteration as a single minimal implementation task that touches one surface first (trace logging scaffolding in `state/kernel.py`) with bounded validation.
 
-## Expected files to change this iteration
-- `state/feature_iterations/iter_001/01-task.md`
-- `state/feature_iterations/iter_001/02-plan.md`
-- `state/feature_iterations/iter_001/03-execution.md`
-- `state/feature_iterations/iter_001/04-validation.md`
-- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_001/06-next-iteration.md`
-- `state/feature_iterations/iter_001/07-summary.md`
+## Expected files to change in future iterations
+- `state/kernel.py`
+- `state/role_io_templates.py`
+- `state/copilot_sdk_uv_smoke.py`
+- `evals/chapter-quality.yaml`
+- `evals/style-guard.yaml`
+- `evals/drift-detection.yaml`

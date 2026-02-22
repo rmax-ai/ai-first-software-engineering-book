@@ -1,12 +1,12 @@
-# Risks and decisions
+# Risks and Decisions
 
-## Risks discovered
-- Planning-only iterations can drift from real constraints if not tied to concrete validations.
-- Future harness changes may unintentionally broaden scope across kernel, templates, and eval contracts in one pass.
+## Risks
+- Planning artifacts can drift from actual harness constraints if not revalidated before implementation.
+- Eval contract changes may require updates across multiple YAML files, increasing coordination cost.
 
-## Decisions and trade-offs
-- Chose strict seed scope: backlog planning only, with no production harness edits.
-- Prioritized deterministic verification hooks in the backlog to reduce future ambiguity.
+## Decisions
+- Kept this iteration strictly planning-only per seed-iteration contract.
+- Deferred all code changes to the next iteration to preserve minimal scope and clear evidence.
 
 ## Deferred intentionally
-- Any implementation in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml` is deferred to the next iteration.
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
