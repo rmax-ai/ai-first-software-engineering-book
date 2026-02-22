@@ -1,16 +1,22 @@
 # Validation
 
 ## Verification commands run
-- `test -d state/feature_iterations/iter_001`
-- `for f in 01-task.md 02-plan.md 03-execution.md 04-validation.md 05-risks-and-decisions.md 06-next-iteration.md 07-summary.md; do test -s state/feature_iterations/iter_001/$f; done`
+
+1. Confirmed source guidance was read:
+   - `prompts/incremental-improvements/execute.md`
+   - `DEVELOPMENT.md`
+2. Verified iteration folder exists: `state/feature_iterations/iter_001/`
+3. Verified required artifacts exist: `01-task.md` through `07-summary.md`
 
 ## Observed results
-- Iteration folder exists.
-- All seven required markdown artifacts exist and are non-empty.
-- Artifacts explicitly reference required feature/test/eval surfaces.
+
+- No prior `state/feature_iterations/iter_*` folders existed, so `iter_001` was correctly selected.
+- All seven required markdown artifacts were created in the new iteration folder.
+- Artifact content includes required planning coverage for features, tests, and evals.
 
 ## Acceptance criteria status
-- Features coverage: **pass**
-- Tests coverage: **pass**
-- Evals coverage: **pass**
-- Exactly one next task documented: **pass**
+
+1. Feature planning coverage: **PASS**
+2. Test planning coverage: **PASS**
+3. Evaluation planning coverage: **PASS**
+4. Folder contract and artifact completeness: **PASS**

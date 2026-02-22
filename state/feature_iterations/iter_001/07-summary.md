@@ -1,10 +1,10 @@
 # Iteration summary
 
-This seed iteration created `state/feature_iterations/iter_001/` and completed the seven required artifacts.
-The task intentionally focused on planning the custom harness improvements instead of implementation.
-The plan covers feature work for deterministic kernel observability and role-IO scaffolding.
-The plan defines targeted verification commands, including smoke and kernel execution paths.
-The plan maps regression detection to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-Risks and trade-offs were documented with explicit deferrals.
-A single concrete next task was selected to keep iteration 002 small and testable.
-The repository is now prepared for incremental implementation with clear acceptance criteria.
+This seed iteration completed one planning task: defining the custom harness improvement backlog.  
+The work followed `prompts/incremental-improvements/execute.md` and `DEVELOPMENT.md` as source guidance.  
+A new iteration folder `state/feature_iterations/iter_001/` was created with all seven required markdown artifacts.  
+The plan explicitly covers feature targets for kernel determinism/observability and role-IO contract clarity.  
+It also defines test targets centered on smoke and focused harness checks.  
+Evaluation coverage is mapped to existing eval contracts in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.  
+Implementation was intentionally deferred to keep this iteration planning-only per prompt contract.  
+A single concrete next task was recorded to implement deterministic trace boundary logging with smoke validation.

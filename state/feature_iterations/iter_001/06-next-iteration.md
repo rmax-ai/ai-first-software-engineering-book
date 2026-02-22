@@ -1,17 +1,28 @@
 # Next iteration recommendation
 
-## Task
-Add deterministic loop self-evaluation logging to `state/kernel.py` and validate it in smoke output.
+## Recommended next task
+
+Implement deterministic trace logging boundaries in `state/kernel.py` and add targeted smoke coverage for those signals.
 
 ## Why this is next
-`execute.md` and `AGENTS.md` require loop-level goal/evidence/risk/next-step evaluation; kernel-level logging is the smallest high-value harness feature that unlocks measurable observability.
+
+This unlocks the highest-value observability feature from the new backlog and creates a concrete base for later role-IO and eval alignment work.
 
 ## Acceptance criteria
-- `state/kernel.py` emits one structured self-evaluation block per loop containing: goal check, evidence check, risk check, next-step decision.
-- `state/copilot_sdk_uv_smoke.py` includes an assertion that self-evaluation blocks appear in expected loop outputs.
-- `04-validation.md` in the new iteration records execution of `uv run python state/copilot_sdk_uv_smoke.py` with passing evidence.
+
+1. `state/kernel.py` emits bounded, deterministic trace events for major loop phases without changing public CLI behavior.
+2. `state/copilot_sdk_uv_smoke.py` adds assertions that verify the new trace boundaries.
+3. Validation includes running `uv run python state/copilot_sdk_uv_smoke.py` with recorded pass/fail evidence.
+4. Iteration artifacts are updated with exact commands, outputs, and risk notes.
 
 ## Expected files to touch
+
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
+- `state/feature_iterations/iter_002/01-task.md`
+- `state/feature_iterations/iter_002/02-plan.md`
+- `state/feature_iterations/iter_002/03-execution.md`
 - `state/feature_iterations/iter_002/04-validation.md`
+- `state/feature_iterations/iter_002/05-risks-and-decisions.md`
+- `state/feature_iterations/iter_002/06-next-iteration.md`
+- `state/feature_iterations/iter_002/07-summary.md`

@@ -1,12 +1,16 @@
 # Risks and decisions
 
-## Risks
-- Planned kernel observability changes could increase log noise if not constrained to deterministic summaries.
-- Smoke/eval expansions may fail if metric names drift from `state/metrics.json` conventions.
+## Risks discovered
+
+- Planning-only iteration can drift from implementation reality if follow-up tasks are not kept narrow and validated each step.
+- Kernel observability changes may increase output noise unless trace boundaries are explicit and test-gated.
 
 ## Decisions and trade-offs
-- Chose planning-only scope to honor seed-iteration requirement and avoid premature implementation churn.
-- Kept backlog concrete (files, commands, acceptance criteria) so next iteration can execute one small task safely.
 
-## Deferred items
-- No implementation changes to Python modules in this iteration; deferred to next iteration task.
+- Chose a strict seed-planning scope (no code edits) to match the prompt contract exactly.
+- Chose concrete file-level backlog items over speculative architecture changes to keep future tasks reviewable.
+
+## Deferred intentionally
+
+- Any implementation in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+- Any metrics schema changes until a specific feature requires them.
