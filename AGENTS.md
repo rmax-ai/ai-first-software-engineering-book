@@ -138,3 +138,17 @@ On errors:
   ```
 - Before writing, check if the `.lock` file exists and if its expiration is in the future. If so, verify the identifier matches the current agent’s intent. If an active lock belongs to another agent, abort and surface that conflict. If the lock has expired, it may be safely removed and replaced.
 - After the edit is complete (or if an error occurs), remove the `.lock` file to release the lock. If removal is not possible immediately (e.g., due to a crash), document the stale lock and its expiration in the activity log before proceeding.
+## 11) File locking protocol
+
+- Before touching any tracked file, create a sibling `.lock` file (e.g., editing `foo.md` requires creating `foo.md.lock`).
+- The `.lock` file must contain JSON metadata describing the lock owner, a unique identifier, the action being performed, and an expiration timestamp (UTC ISO-8601). Example:
+  ```json
+  {
+    "owner": "terminal-agent",
+    "identifier": "task-1234",
+    "action": "edit",
+    "expires_at": "2026-02-22T16:00:00Z"
+  }
+  ```
+- Before writing, check if the `.lock` file exists and if its expiration is in the future. If so, verify the identifier matches the current agent’s intent. If an active lock belongs to another agent, abort and surface that conflict. If the lock has expired, it may be safely removed and replaced.
+- After the edit is complete (or if an error occurs), remove the `.lock` file to release the lock. If removal is not possible immediately (e.g., due to a crash), document the stale lock and its expiration in the activity log before proceeding.
