@@ -1,14 +1,16 @@
 # Validation
 
 ## Verification commands run
-1. `glob state/feature_iterations/iter_*` (verified there was no prior iteration and this run should create `iter_001`)
-2. `view DEVELOPMENT.md` and `view prompts/incremental-improvements/execute.md` (verified plan constraints and seed-iteration requirements)
+- `glob state/feature_iterations/iter_*`
+- `view DEVELOPMENT.md`
+- `view prompts/incremental-improvements/execute.md`
 
 ## Observed results
-- No existing iteration folders were present before this run, so `iter_001` is the correct next index.
-- Seed prompt requirements were satisfied with planning-only artifacts that explicitly cover features, tests, and evals.
+- No prior iteration folders were present, so `iter_001` is the correct next index.
+- The task/plan explicitly include required features, tests, and eval coverage and cite the required future files.
+- Artifacts satisfy the seven-file folder contract under `state/feature_iterations/iter_001/`.
 
-## Acceptance criteria check
-1. **Plan covers features/tests/evals**: Pass (`02-plan.md` sections 2–4).
-2. **Concrete follow-up surface identified**: Pass (`02-plan.md` expected files list).
-3. **Verification evidence documented**: Pass (commands and outcomes above).
+## Acceptance criteria status
+- Backlog with features/tests/evals: **pass**
+- Future file touchpoints identified: **pass**
+- Validation evidence recorded: **pass**

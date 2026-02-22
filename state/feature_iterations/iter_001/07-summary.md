@@ -1,10 +1,10 @@
 # Iteration summary
 
-This run executed the seed iteration contract from `prompts/incremental-improvements/execute.md`.
-Because no prior `state/feature_iterations/iter_XXX` folders existed, this run created `iter_001`.
-The selected task was planning-only: define custom harness improvements before any code implementation.
-The plan now covers three required dimensions: feature enhancements, targeted tests, and eval/regression detection.
-Planned implementation surfaces include `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-Risk notes and trade-offs were captured to keep follow-up iterations minimal and deterministic.
-`06-next-iteration.md` provides exactly one concrete next task with acceptance criteria and expected file paths.
-Validation evidence records discovery and prompt-alignment checks used for this documentation-focused iteration.
+This seed iteration created `state/feature_iterations/iter_001/` and completed the required seven-artifact contract.
+The selected task was planning-only: define a practical harness improvement backlog before implementation.
+The backlog covers three areas explicitly: kernel/role-template/smoke **features**, targeted **tests**, and regression **evals**.
+The plan maps future work to concrete files in `state/` and `evals/` to keep follow-on changes scoped and auditable.
+Validation confirmed there were no prior iterations, making `iter_001` the correct index.
+No runtime behavior changed in this iteration, reducing risk while establishing execution structure.
+A single next task was chosen: deterministic trace-summary observability with matching smoke validation.
+That recommendation is designed to produce the first measurable harness improvement with minimal surface area.
