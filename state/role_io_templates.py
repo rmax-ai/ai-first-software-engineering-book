@@ -60,6 +60,7 @@ class TemplateContext:
 
 @dataclass(frozen=True)
 class LedgerTransit:
+    json_mapping: JSONMappingTransit
     raw: dict[str, Any]
     payload: LedgerPayload
 
@@ -99,12 +100,13 @@ def _load_json(path: Path) -> JSONMappingTransit:
 
 
 def _load_ledger(path: Path) -> LedgerTransit:
-    raw = _load_json(path).to_mapping()
+    json_mapping = _load_json(path)
+    raw = json_mapping.to_mapping()
     try:
         payload = LedgerPayload.model_validate(raw)
     except ValidationError as exc:
         raise TemplateError(f"Invalid ledger payload: {exc}") from exc
-    return LedgerTransit(raw=raw, payload=payload)
+    return LedgerTransit(json_mapping=json_mapping, raw=raw, payload=payload)
 
 
 def _write_if_missing(path: Path, content: str, *, force: bool) -> bool:
