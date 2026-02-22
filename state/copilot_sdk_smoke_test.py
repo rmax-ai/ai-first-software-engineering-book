@@ -927,6 +927,25 @@ def run_usage_examples_duplicates_guard_mode() -> int:
     return 0
 
 
+def run_usage_examples_order_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    usage_lines = _usage_doc_lines(all_mode_specs)
+    expected_mode_order = [name for name, _handler, _description in all_mode_specs if name != "stub"]
+    actual_mode_order = [
+        line.removeprefix("  uv run python state/copilot_sdk_smoke_test.py --mode ")
+        for line in usage_lines
+        if line.startswith("  uv run python state/copilot_sdk_smoke_test.py --mode ")
+    ]
+    assert actual_mode_order == expected_mode_order, (
+        "expected generated usage examples to preserve non-stub mode registration order"
+    )
+
+    print(
+        "PASS: usage-examples-order-guard mode validates generated usage examples preserve registration order"
+    )
+    return 0
+
+
 TraceSummaryModeHandler = Callable[[], int]
 TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] = (
     ("trace-summary", run_trace_summary_mode, "deterministic required-key assertion"),
@@ -987,6 +1006,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicates-guard",
         run_usage_examples_duplicates_guard_mode,
         "deterministic generated usage-example duplicate-line assertion",
+    ),
+    (
+        "usage-examples-order-guard",
+        run_usage_examples_order_guard_mode,
+        "deterministic generated usage-example ordering assertion",
     ),
 )
 
