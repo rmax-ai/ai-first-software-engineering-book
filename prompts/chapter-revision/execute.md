@@ -86,3 +86,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
 | 01-paradigm-shift | 1 | failed(1) | none | `chore: pass 1 for chapter 01-paradigm-shift` |
+| 01-paradigm-shift | 2 | failed(1) | none | `chore: pass 2 for chapter 01-paradigm-shift` |
