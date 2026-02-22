@@ -1415,18 +1415,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode()
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard mode coverage"
@@ -1437,18 +1426,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1459,18 +1437,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1481,18 +1448,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1503,18 +1459,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1525,18 +1470,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1547,18 +1481,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1569,18 +1492,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1591,18 +1503,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1613,18 +1514,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1635,18 +1525,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1657,18 +1536,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1679,18 +1547,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1701,18 +1558,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1723,18 +1569,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1745,18 +1580,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1767,18 +1591,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1789,18 +1602,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1810,18 +1612,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1832,18 +1623,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
@@ -1853,18 +1633,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    parser = _build_parser(all_mode_specs)
-    mode_action = _mode_action_for_parser(parser)
-    parser_mode_choices = list(mode_action.choices or [])
-    assert target_mode_name in parser_mode_choices, (
-        f"expected argparse --mode choices to include {target_mode_name}"
-    )
-
-    usage_lines = _usage_doc_lines(all_mode_specs)
-    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert target_mode_name in usage_mode_names, (
-        f"expected generated usage examples to include {target_mode_name}"
-    )
+    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
 
     print(
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
