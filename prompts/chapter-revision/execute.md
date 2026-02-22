@@ -127,4 +127,5 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 02-harness-engineering | 3 | failed(1) | none | `9bd53c7` |
 | 03-autonomous-kernels | 1 | failed(1) | none | `b28e617` |
 | 03-autonomous-kernels | 2 | failed(1) | none | `8c55cf3` |
-| 03-autonomous-kernels | 3 | failed(1) | none | `pending` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `f992ffd` |
+| 04-memory-systems | 1 | failed(1) | none | `pending` |
