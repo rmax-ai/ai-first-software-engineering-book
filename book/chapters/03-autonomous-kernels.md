@@ -4,6 +4,7 @@
 An autonomous kernel is a minimal, well-specified control loop that executes bounded work: plan, apply tool actions, verify, and stop. Its constraints (budgets, permissions, evaluation gates) define a safety envelope that makes outcomes inspectable and repeatable.
 
 Definitions:
+
 - **Autonomous kernel**: a control loop with explicit limits and explicit exit criteria; it is not “general autonomy,” long-horizon project management, or open-ended exploration.
 - **Budget**: a hard cap on resources (iterations, elapsed time, tool calls, diff size) that prevents runaway behavior and forces escalation when progress stalls.
 - **Evaluation gate**: a required check whose result must be recorded and must be satisfied (or explicitly waived with justification) before the kernel can declare success.
