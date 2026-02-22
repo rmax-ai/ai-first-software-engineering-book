@@ -48,6 +48,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Logging Expectations
 - Maintain a persistent markdown record (this file) describing the pass order, subagent usage, and git history references.
 - After finishing the loop for all chapters, append a summary section describing unresolved issues, additional observations, and the total number of commits created.
+- Keep historical rerun sections compact: retain the latest prior rerun plus the active rerun being executed, and rely on git history for older details.
 
 ## Execution Log
 | Chapter | Pass | Result | Subagents | Commit |
