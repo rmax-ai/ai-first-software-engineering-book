@@ -98,6 +98,26 @@ class SDKEventsPayload(BaseModel):
     events: list[SDKEventPayload]
 
 
+class SDKSessionEventDataPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    content: str | None = None
+    message_id: str | None = None
+    usage: SDKUsagePayload | None = None
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+
+
+class SDKSessionEventPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    type: str | None = None
+    data: SDKSessionEventDataPayload | None = None
+    usage: SDKUsagePayload | None = None
+
+
 @dataclass(frozen=True)
 class ChatMessagesTransit:
     payload: ChatMessagesPayload
@@ -156,6 +176,23 @@ class SDKUsageTransit:
 
     def to_usage(self) -> LLMUsage:
         return self.payload.to_usage()
+
+
+@dataclass(frozen=True)
+class SDKSessionEventTransit:
+    payload: SDKSessionEventPayload
+
+    @classmethod
+    def from_raw(cls, raw: dict[str, Any]) -> "SDKSessionEventTransit":
+        return cls(payload=SDKSessionEventPayload.model_validate(raw))
+
+    def event_type(self) -> str:
+        return str(self.payload.type or "")
+
+    def data_mapping(self) -> dict[str, Any]:
+        if self.payload.data is None:
+            return {}
+        return self.payload.data.model_dump(exclude_none=True)
 
 
 class LLMClient:
@@ -452,12 +489,18 @@ class LLMClient:
 
     def _response_from_sdk_events(self, events: Any, message_id: str | None = None) -> LLMResponse:
         if isinstance(events, list):
+            event_transits: list[SDKSessionEventTransit] = []
+            for event in events:
+                try:
+                    event_transits.append(SDKSessionEventTransit.from_raw(self._sdk_event_to_mapping(event)))
+                except ValidationError as exc:
+                    raise LLMClientError(f"Invalid Copilot SDK session event payload: {exc}") from exc
             prompt_tokens = 0
             completion_tokens = 0
 
-            for event in events:
-                event_type = self._sdk_event_type_name(getattr(event, "type", ""))
-                data = getattr(event, "data", None)
+            for event_transit in event_transits:
+                event_type = self._sdk_event_type_name(event_transit.event_type())
+                data = event_transit.data_mapping()
                 if event_type not in {"assistant.usage", "assistant_usage"}:
                     continue
                 usage = self._usage_from_any(data)
@@ -466,21 +509,21 @@ class LLMClient:
                 prompt_tokens += usage.prompt_tokens
                 completion_tokens += usage.completion_tokens
 
-            for event in reversed(events):
-                event_type = self._sdk_event_type_name(getattr(event, "type", ""))
-                data = getattr(event, "data", None)
+            for event_transit in reversed(event_transits):
+                event_type = self._sdk_event_type_name(event_transit.event_type())
+                data = event_transit.data_mapping()
                 if event_type in {"assistant.message", "assistant_message"}:
                     if message_id is not None:
-                        event_message_id = getattr(data, "message_id", None)
+                        event_message_id = data.get("message_id")
                         if event_message_id and event_message_id != message_id:
                             continue
-                    content = str(getattr(data, "content", "") or "")
+                    content = str(data.get("content", "") or "")
                     usage = self._usage_from_any(data)
                     if usage is None:
                         usage = LLMUsage(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens)
                     return LLMResponse(content=content, usage=usage, raw=None)
                 if event_type in {"session.error", "session_error"}:
-                    message = str(getattr(data, "message", "unknown session error"))
+                    message = str(data.get("message", "unknown session error"))
                     raise LLMClientError(f"Copilot SDK session error: {message}")
 
             if prompt_tokens or completion_tokens:
@@ -572,6 +615,34 @@ class LLMClient:
                 completion_tokens=int(completion_attr or 0),
             )
         return None
+
+    def _sdk_event_to_mapping(self, event: Any) -> dict[str, Any]:
+        def _object_mapping(value: Any) -> dict[str, Any]:
+            raw = getattr(value, "__dict__", None)
+            if not isinstance(raw, dict):
+                return {}
+            return {key: item for key, item in raw.items() if not key.startswith("_")}
+
+        if isinstance(event, dict):
+            event_type = event.get("type")
+            data = event.get("data")
+        else:
+            event_type = getattr(event, "type", None)
+            data = getattr(event, "data", None)
+        mapping: dict[str, Any] = {}
+        if event_type is not None:
+            mapping["type"] = event_type
+        if data is not None:
+            if isinstance(data, dict):
+                mapping["data"] = data
+            else:
+                mapping["data"] = _object_mapping(data)
+        usage = event.get("usage") if isinstance(event, dict) else getattr(event, "usage", None)
+        if isinstance(usage, dict):
+            mapping["usage"] = usage
+        elif usage is not None:
+            mapping["usage"] = _object_mapping(usage)
+        return mapping
 
     def _chat_mock(self, *, messages: list[ChatMessagePayload]) -> LLMResponse:
         # Deterministic, safe mock: always produces schema-conforming outputs that
