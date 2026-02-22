@@ -1,15 +1,13 @@
 # Risks and Decisions
 
-## Risks
-- Trace schema expansion in `state/kernel.py` can create compatibility drift with existing smoke expectations if not phased.
-- Tightening role template contracts may expose undocumented assumptions in current prompts.
-- Eval contract updates may fail if acceptance signals are not mapped to deterministic metrics.
+## Risks discovered
+- Plan breadth could lead to oversized future diffs if not split into single-surface iterations.
+- New trace signals may require synchronized updates across smoke tests and eval expectations.
 
-## Decisions and trade-offs
-- Chose a planning-only iteration to reduce implementation risk and preserve current runtime behavior.
-- Prioritized deterministic observability and verification pathways before feature coding.
-- Deferred implementation details until each item can be executed as a smallest single-task iteration.
+## Decisions made and trade-offs
+- Chosen scope is planning-only to satisfy seed-iteration contract and avoid premature code churn.
+- Backlog is organized by deterministic harness surfaces (`kernel`, role templates, smoke, evals) to keep later work reviewable.
 
-## Deferred items
-- Actual kernel/template/smoke/eval code changes.
-- New or updated tests tied to those implementation changes.
+## Intentionally deferred
+- No code implementation in `state/*.py` during this iteration.
+- No eval YAML edits until corresponding harness behavior exists.

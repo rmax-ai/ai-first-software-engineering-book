@@ -1,18 +1,19 @@
 # Next Iteration Recommendation
 
-## Next task (exactly one)
-Implement deterministic trace summary scaffolding in `state/kernel.py`.
+## Recommended next task
+Implement deterministic kernel trace enrichment in `state/kernel.py`.
 
 ## Why this is next
-It unlocks observability needed by all later template, smoke, and eval improvements while remaining a narrowly scoped code change.
+- It provides the observability foundation needed before tightening smoke assertions and eval signals.
+- It is a small, high-leverage slice that can be validated with targeted harness tests.
 
 ## Acceptance criteria
-- Add a small, documented trace summary structure in `state/kernel.py` for key loop events.
-- Ensure summary updates are deterministic and side-effect-safe.
-- Add/adjust targeted tests or smoke coverage proving event accounting is stable.
-- Record validation evidence with `uv run python state/copilot_sdk_uv_smoke.py` mode(s) relevant to new trace summary checks.
+1. `state/kernel.py` emits structured trace records for each major loop phase and gate decision.
+2. Failure traces include explicit reason codes for budget/eval/validation stops.
+3. Existing kernel behavior remains intact (no public interface drift).
+4. Validation includes a targeted run (for example: `uv run python state/kernel.py --chapter-id <id>`) and records observed trace evidence.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_uv_smoke.py`
-- Targeted tests under `state/` (if present for touched helpers)
+- `state/copilot_sdk_uv_smoke.py` (only if trace assertions are added immediately)
+- `state/feature_iterations/iter_002/*` artifacts
