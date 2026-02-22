@@ -1,15 +1,16 @@
 # Validation
 
 ## Verification commands run
-- `rg -n "^#" state/feature_iterations/iter_001/*.md`
-- `ls state/feature_iterations/iter_001`
+- `ls -1 state/feature_iterations/iter_001`
+- `rg -n "features|tests|evaluations|next task" state/feature_iterations/iter_001/*.md`
+- Manual cross-check against `prompts/incremental-improvements/execute.md` and `DEVELOPMENT.md` requirements.
 
 ## Observed results
-- All seven required markdown artifacts exist in `state/feature_iterations/iter_001/`.
-- Each artifact contains top-level markdown structure and task-specific content.
-- Plan content explicitly covers features, tests, and evals with concrete file paths.
+- Iteration folder contains all seven required artifacts (`01-task.md` through `07-summary.md`).
+- The plan explicitly covers feature backlog, test strategy, and evaluation mapping with concrete file paths.
+- `06-next-iteration.md` contains exactly one recommended next task with acceptance criteria and expected touched files.
 
 ## Acceptance criteria status
-- ✅ Plan includes features/tests/evals coverage.
-- ✅ Future target files are explicit.
-- ✅ Exactly one recommended next task is provided.
+- Seed plan written and scoped to harness improvements: **PASS**
+- Features/tests/evals coverage explicitly documented: **PASS**
+- Seven-artifact contract complete with actionable next task: **PASS**

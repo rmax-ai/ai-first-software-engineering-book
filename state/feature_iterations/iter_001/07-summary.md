@@ -1,9 +1,11 @@
-# Iteration Summary
+# Iteration summary
 
-This iteration established the first feature-improvement artifact set in `state/feature_iterations/iter_001/`.
-The selected task was planning custom harness improvements, per prompt seed guidance.
-The resulting plan is implementation-ready and explicitly covers feature enhancements, test strategy, and eval alignment.
-Future work is mapped to concrete files across `state/` and `evals/`.
-A single next task was defined to keep follow-up scope small and deterministic.
-No production code was modified in this planning iteration.
-Validation confirms all seven required artifacts exist and are populated.
+This seed iteration completed the required planning-only task for incremental improvements.
+A full seven-file handoff was created under `state/feature_iterations/iter_001/`.
+The plan now defines concrete harness feature work in `state/kernel.py` and `state/role_io_templates.py`.
+It also defines targeted verification expansion in `state/copilot_sdk_uv_smoke.py`.
+Evaluation alignment was explicitly mapped to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+No product code changed in this iteration by design.
+Risk notes capture determinism, noise, and runtime trade-offs for upcoming implementation.
+One next task was selected: deterministic trace-summary enrichment plus a dedicated smoke guard.
+The next iteration can begin implementation directly from `06-next-iteration.md`.
