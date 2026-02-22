@@ -1011,10 +1011,41 @@ def _llm_generate_writer(
     chapter_text: str,
     planner_json: str,
     adhoc_instructions: str | None,
+    violation_note: str | None = None,
 ) -> str:
     contract = _apply_adhoc_instructions(_read_prompt(REPO_ROOT / "prompts" / "writer.md"), adhoc_instructions)
+
+    allowlisted_sections: list[str] = []
+    try:
+        planner_obj = json.loads(planner_json)
+        plan_payload = PlannerPlanPayload.model_validate(planner_obj)
+        plan = PlannerPlan(
+            focus_areas=list(plan_payload.focus_areas),
+            structural_changes=list(plan_payload.structural_changes),
+            risk_flags=list(plan_payload.risk_flags),
+            target_word_delta=str(plan_payload.target_word_delta),
+        )
+        allowlisted_sections = sorted(_declared_section_set(plan, _markdown_headings(chapter_text)))
+    except Exception:
+        allowlisted_sections = []
+
+    allowlist_block = (
+        "\n".join(f"- {h}" for h in allowlisted_sections) if allowlisted_sections else "- (none parsed)"
+    )
+    violation_block = (
+        "IMPORTANT: The previous attempt violated kernel constraints. Fix this and re-output the full chapter.\n"
+        f"Violation: {violation_note.strip()}\n\n"
+        if violation_note is not None and violation_note.strip()
+        else ""
+    )
     user = (
-        "Output the full revised chapter markdown only. No code fences.\n\n"
+        violation_block
+        + "Output the full revised chapter markdown only. No code fences.\n\n"
+        + "SECTION_EDIT_ALLOWLIST (exact H2 headings you may modify):\n"
+        + allowlist_block
+        + "\n\n"
+        + "Hard rule: Only modify the section bodies under the allowlisted H2 headings. "
+        + "For every other '## ' section, copy the section body verbatim from the input chapter, including whitespace.\n\n"
         + "===CHAPTER_START===\n"
         + chapter_text.rstrip()
         + "\n===CHAPTER_END===\n\n"
@@ -1748,16 +1779,57 @@ def run_kernel(
                 planner_json_transit = _load_json(planner_out) if planner_out.exists() else None
                 planner_json_text = planner_json_transit.raw_text if planner_json_transit is not None else ""
 
-                if not writer_out.exists():
-                    _llm_generate_writer(
-                        itdir,
-                        llm,
-                        chapter_text=_load_chapter_text(chapter_file).to_text(),
-                        planner_json=planner_json_text,
-                        adhoc_instructions=adhoc_instructions,
-                    )
+                plan_transit_for_constraints = _load_planner_plan(planner_out) if planner_out.exists() else None
+                plan_for_constraints = plan_transit_for_constraints.plan if plan_transit_for_constraints is not None else None
 
-                revised_md = _load_writer_output(writer_out).to_markdown() if writer_out.exists() else ""
+                chapter_text_for_writer = _load_chapter_text(chapter_file).to_text()
+                current_chapter_text_for_constraints = chapter_text_for_writer
+
+                writer_violation_note: str | None = None
+                max_writer_retries = 2
+                retries_used = 0
+
+                while True:
+                    if (not writer_out.exists()) or writer_violation_note is not None:
+                        _llm_generate_writer(
+                            itdir,
+                            llm,
+                            chapter_text=chapter_text_for_writer,
+                            planner_json=planner_json_text,
+                            adhoc_instructions=adhoc_instructions,
+                            violation_note=writer_violation_note,
+                        )
+
+                    revised_md = _load_writer_output(writer_out).to_markdown() if writer_out.exists() else ""
+
+                    # If we can't validate (shouldn't happen in LLM mode), proceed and let the eval gate handle it.
+                    if plan_for_constraints is None or not revised_md:
+                        writer_violation_note = None
+                        break
+
+                    revised_headings = _markdown_headings(revised_md)
+                    if revised_headings != original_headings:
+                        writer_violation_note = "Writer changed headings; restore the original heading structure and ordering exactly."
+                    else:
+                        declared = _declared_section_set(plan_for_constraints, original_headings)
+                        changed = _changed_sections(current_chapter_text_for_constraints, revised_md)
+                        illegal = sorted(changed - declared)
+                        if illegal:
+                            writer_violation_note = (
+                                "Writer modified undeclared sections: "
+                                + ", ".join(illegal)
+                                + ". Undo those edits and copy those sections verbatim from the input chapter."
+                            )
+                        else:
+                            writer_violation_note = None
+
+                    if writer_violation_note is None:
+                        break
+                    if retries_used >= max_writer_retries:
+                        raise KernelError(
+                            "Writer output violated section constraints after retries: " + writer_violation_note
+                        )
+                    retries_used += 1
 
                 if not critic_out.exists():
                     _llm_generate_critic(itdir, llm, revised_md=revised_md, adhoc_instructions=adhoc_instructions)
