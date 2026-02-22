@@ -95,9 +95,10 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 03-autonomous-kernels | 1 | failed(1) | none | `004623a]` |
 | 03-autonomous-kernels | 2 | failed(1) | none | `c9af4a8]` |
 | 03-autonomous-kernels | 3 | failed(1) | none | `fc25aea]` |
+| 04-memory-systems | 1 | failed(1) | none | `be1d9a8]` |
 ### Re-run Summary (2026-02-22T18:25:03Z)
-- Completed 9/24 chapter passes so far.
+- Completed 10/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 9.
-- Total commits created for this re-run loop: 9.
+- Failed passes: 10.
+- Total commits created for this re-run loop: 10.
 
