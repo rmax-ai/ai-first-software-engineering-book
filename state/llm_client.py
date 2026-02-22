@@ -483,21 +483,30 @@ class LLMClient:
 
     async def _normalize_sdk_session_result(self, result: Any, session: Any) -> LLMResponse:
         if result is not None:
-            event_type = self._sdk_event_type_name(getattr(result, "type", ""))
-            data = getattr(result, "data", None)
+            event_mapping = self._sdk_event_to_mapping(result)
+            try:
+                event_transit = SDKSessionEventTransit.from_raw(event_mapping)
+            except ValidationError as exc:
+                raise LLMClientError(f"Invalid Copilot SDK session event payload: {exc}") from exc
+            event_type = self._sdk_event_type_name(event_transit.event_type())
+            data = event_transit.data_mapping()
             if event_type in {"assistant.message", "assistant_message"}:
-                content = str(getattr(data, "content", "") or "")
+                content = str(data.get("content", "") or "")
                 usage = self._usage_from_any(data)
                 if usage is None:
                     get_messages = getattr(session, "get_messages", None)
                     if callable(get_messages):
                         events = await get_messages()
-                        fallback = self._response_from_sdk_events(events, message_id=getattr(data, "message_id", None))
+                        message_id = data.get("message_id")
+                        fallback = self._response_from_sdk_events(
+                            events,
+                            message_id=str(message_id) if message_id is not None else None,
+                        )
                         usage = fallback.usage
                 usage = usage or LLMUsage()
                 return LLMResponse(content=content, usage=usage, raw=None)
             if event_type in {"session.error", "session_error"}:
-                message = str(getattr(data, "message", "unknown session error"))
+                message = str(data.get("message", "unknown session error"))
                 raise LLMClientError(f"Copilot SDK session error: {message}")
 
         get_messages = getattr(session, "get_messages", None)
