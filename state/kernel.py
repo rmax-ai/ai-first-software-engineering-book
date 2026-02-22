@@ -387,6 +387,7 @@ class WriterOutputTransit:
 @dataclass(frozen=True)
 class PromptTextTransit:
     source_path: Path
+    raw_text: str
     payload: PromptTextPayload
 
     def to_prompt(self) -> str:
@@ -628,7 +629,7 @@ def _load_prompt_text(path: Path) -> PromptTextTransit:
         payload = PromptTextPayload.model_validate({"text": _read_text(path)})
     except ValidationError as exc:
         raise KernelError(f"Invalid prompt text payload: {path}: {exc}") from exc
-    return PromptTextTransit(source_path=path, payload=payload)
+    return PromptTextTransit(source_path=path, raw_text=payload.text, payload=payload)
 
 
 def _load_roadmap_text(path: Path) -> RoadmapTextTransit:
