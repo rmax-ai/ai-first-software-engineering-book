@@ -1,12 +1,15 @@
 # Plan
 
-1. Baseline current harness observability in `state/kernel.py` by cataloging emitted trace/metrics structures and identifying missing deterministic checkpoints.
-2. Define a role-IO contract pass for `state/role_io_templates.py` to tighten schema consistency, required fields, and failure messaging for prompt scaffolds.
-3. Expand deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py` with table-driven scenarios that validate the new checkpoints and role-IO invariants.
-4. Align eval gates in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` so regressions in trace shape, role scaffolds, and smoke behavior are caught.
-5. Document expected metric and ledger impacts for each change so validation in future iterations is command-driven and repeatable.
+1. Review harness guidance in `DEVELOPMENT.md` and align the planning scope to `state/` components.
+2. Define feature backlog items for:
+   - deterministic execution controls in `state/kernel.py`
+   - richer role/IO scaffolding in `state/role_io_templates.py`
+   - stronger smoke observability in `state/copilot_sdk_uv_smoke.py`
+3. Map each feature item to targeted verification commands and expected evidence artifacts.
+4. Map each feature item to eval gates under `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+5. Record risks, trade-offs, and one concrete next implementation task.
 
-## Expected files to change in later iterations
+## Files expected to change in future iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
