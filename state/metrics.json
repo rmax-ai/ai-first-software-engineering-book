@@ -82969,6 +82969,93 @@
         }
       ]
     },
+    "glossary": {
+      "history": [
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.12,
+            "example_density": 0.75,
+            "failure_modes_present": true,
+            "structure_score": 0.68,
+            "tradeoff_presence": false,
+            "violations": [
+              "tradeoffs_discussed criterion is not satisfied: none of the revised sections explicitly states a trade-off (e.g., benefit vs cost) in a checkable form.",
+              "System_breakdown criterion is not satisfied: the glossary chapter does not contain a system breakdown section or equivalent decomposition.",
+              "Thesis_clarity criterion is not satisfied: the glossary chapter does not state a thesis; it only states that definitions are operational."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3,
+            "passed": false,
+            "similarity_max": 0.7603518223282584
+          },
+          "iteration": 1,
+          "timestamp": "2026-02-22T21:41:27Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.2875816993464052,
+            "drift_score": 0.3
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.1,
+            "example_density": 0.75,
+            "failure_modes_present": true,
+            "structure_score": 0.86,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard sentence_length limit may be exceeded in the ## Kernel sentence starting with \u201cRelative to the harness, the kernel is the minimal control plane...\u201d; it should be split if it is over 28 words.",
+              "Some required criteria may be only partially satisfied: thesis_clarity is expressed as a sentence inside ## Determinism, but it is not labeled as a thesis and may be missed by automated detectors.",
+              "System_breakdown is present as an inline list in ## Harness, but it may be missed by detectors expecting a clearer decomposition cue (e.g., \u201cComponents:\u201d with a colon)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3,
+            "passed": false,
+            "similarity_max": 0.781107454115921
+          },
+          "iteration": 2,
+          "timestamp": "2026-02-22T21:42:16Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.06557377049180328,
+            "drift_score": 0.3
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.92,
+            "decision": "approve",
+            "drift_score": 0.08,
+            "example_density": 0.75,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.3,
+            "passed": false,
+            "similarity_max": 0.779236203888226
+          },
+          "iteration": 3,
+          "timestamp": "2026-02-22T21:42:52Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.03076923076923077,
+            "drift_score": 0.3
+          }
+        }
+      ]
+    },
     "preface": {
       "history": [
         {
