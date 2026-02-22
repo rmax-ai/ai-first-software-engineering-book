@@ -112,13 +112,13 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 06-agent-governance | 3 | failed(1) | none | `this commit` |
 | 07-production-ai-infrastructure | 1 | failed(1) | none | `this commit` |
 | 07-production-ai-infrastructure | 2 | failed(1) | none | `this commit` |
-| 07-production-ai-infrastructure | 3 | pending | none | `pending` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `this commit` |
 | 99-future-directions | 1 | pending | none | `pending` |
 | 99-future-directions | 2 | pending | none | `pending` |
 | 99-future-directions | 3 | pending | none | `pending` |
 
 ### Re-run Summary (2026-02-22T18:15:08Z)
-- Completed 20/24 chapter passes so far.
+- Completed 21/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 20.
-- Total commits created for this re-run loop: 20.
+- Failed passes: 21.
+- Total commits created for this re-run loop: 21.
