@@ -1,11 +1,10 @@
 # Task: Plan custom state harness improvements
 
 ## Why this task now
-- This is the seed iteration requested by `prompts/incremental-improvements/execute.md`.
-- A concrete plan is required before any harness implementation work to keep subsequent diffs focused and verifiable.
+- `prompts/incremental-improvements/execute.md` defines the seed iteration as planning-only.
+- A clear backlog is needed before implementing kernel/harness behavior changes.
 
 ## Acceptance criteria
-1. The plan clearly lists harness feature improvements with target files under `state/`.
-2. The plan defines targeted tests for each improvement area (including `uv run python state/copilot_sdk_uv_smoke.py` where relevant).
-3. The plan maps changes to regression detection via existing eval gates in `evals/` and harness signals (`state/metrics.json`).
-4. Iteration artifacts are complete (01-07) and concise.
+- Produce a concise plan that covers required **features**, **tests**, and **evaluations**.
+- Explicitly scope follow-up implementation to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Keep this iteration documentation-only with no runtime behavior changes.

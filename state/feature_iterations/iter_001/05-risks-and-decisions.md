@@ -1,13 +1,12 @@
-# Risks and Decisions
+# Risks and decisions
 
 ## Risks discovered
-- Plan breadth could lead to oversized future diffs if not split into single-surface iterations.
-- New trace signals may require synchronized updates across smoke tests and eval expectations.
+- Planning artifacts can drift from real code if follow-up iterations skip targeted verification.
+- Trace-summary and smoke coverage growth can create brittle checks unless mode guards stay minimal and explicit.
 
-## Decisions made and trade-offs
-- Chosen scope is planning-only to satisfy seed-iteration contract and avoid premature code churn.
-- Backlog is organized by deterministic harness surfaces (`kernel`, role templates, smoke, evals) to keep later work reviewable.
+## Decisions made
+- Chose a planning-only seed iteration per prompt contract.
+- Scoped next iteration to one concrete implementation slice to reduce risk and keep diffs small.
 
-## Intentionally deferred
-- No code implementation in `state/*.py` during this iteration.
-- No eval YAML edits until corresponding harness behavior exists.
+## Deferred intentionally
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.

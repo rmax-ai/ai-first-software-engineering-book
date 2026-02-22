@@ -1,27 +1,18 @@
 # Plan
 
-1. Define the feature backlog for deterministic harness improvements in:
-   - `state/kernel.py`
-   - `state/role_io_templates.py`
-   - `state/copilot_sdk_uv_smoke.py`
-2. Specify observability and control upgrades for `state/kernel.py`:
-   - richer structured trace points for loop phases and gate outcomes
-   - deterministic budget/failure reason emission for easier diagnosis
-   - explicit invariants for heading-preservation and diff-cap checks
-3. Specify role I/O scaffold refinements in `state/role_io_templates.py`:
-   - tighter template contracts for planner/writer/critic payloads
-   - clearer required/optional fields to reduce ambiguous role exchanges
-4. Specify smoke-test coverage upgrades in `state/copilot_sdk_uv_smoke.py`:
-   - targeted modes that assert new trace and role-IO invariants
-   - guard tests proving deterministic ordering and failure messaging
-5. Map eval impacts under `evals/*.yaml`:
-   - identify chapter-quality/style/drift rules impacted by new logging and deterministic controls
-   - define expected observable signals so regressions are caught by eval gates
-6. Define rollout order for later iterations:
-   - implement kernel observability/control helpers first
-   - add/update smoke tests
-   - update eval configs/docs only where needed
-   - run targeted verification and record evidence in each iteration folder
+1. Review current harness contracts in `DEVELOPMENT.md`, `state/kernel.py`, and existing eval definitions under `evals/`.
+2. Define feature backlog slices for later implementation:
+   - richer phase-trace observability and deterministic trace summaries in `state/kernel.py`
+   - clearer role scaffolding and validation hooks in `state/role_io_templates.py`
+   - smoke-mode coverage and regression guards in `state/copilot_sdk_uv_smoke.py`
+3. Map each feature slice to targeted tests:
+   - focused unit coverage for parsing/validation helpers in `state/kernel.py`
+   - smoke invocations via `uv run python state/copilot_sdk_uv_smoke.py --mode <mode>`
+   - fixture/assertion updates for new trace guard paths
+4. Map each feature slice to eval signals:
+   - align with `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
+   - ensure metrics/trace outputs remain compatible with existing deterministic gates
+5. Capture one immediate follow-up implementation task in `06-next-iteration.md` with concrete acceptance criteria and touched files.
 
 ## Files expected to change in later iterations
 - `state/kernel.py`
