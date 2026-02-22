@@ -66,3 +66,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_uv_smoke.py` now validates `phase_trace` kernel trace entries via `KernelTracePhaseEntryPayload` and forwards payload objects through `KernelTracePhaseTransit` before `PhaseTraceTransit` conversion.
 - `state/copilot_sdk_smoke_test.py` now validates latest `trace_summary` fixture payloads through `TraceSummaryPayload` and forwards them via `TraceSummaryTransit` before key-presence checks.
 - `state/kernel.py` now validates cross-chapter markdown ingestion through `ChapterTextPayload` and forwards deterministic-eval chapter context via `OtherChaptersTransit`.
+- `state/llm_client.py` now validates external `chat()` message payload lists through `ChatMessagesPayload` and forwards validated messages via `ChatMessagesTransit` before mock/Copilot provider handling.

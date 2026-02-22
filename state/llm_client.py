@@ -20,6 +20,8 @@ import threading
 from dataclasses import dataclass
 from typing import Any, Literal
 
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
 
 Provider = Literal["copilot", "mock"]
 
@@ -39,6 +41,32 @@ class LLMResponse:
     content: str
     usage: LLMUsage
     raw: dict[str, Any] | None = None
+
+
+class ChatMessagePayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    role: str = Field(default="user")
+    content: str
+
+
+class ChatMessagesPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    messages: list[ChatMessagePayload]
+
+
+@dataclass(frozen=True)
+class ChatMessagesTransit:
+    payload: ChatMessagesPayload
+
+    @classmethod
+    def from_raw(cls, messages: list[dict[str, str]]) -> "ChatMessagesTransit":
+        return cls(payload=ChatMessagesPayload.model_validate({"messages": messages}))
+
+    @property
+    def message_payloads(self) -> list[ChatMessagePayload]:
+        return self.payload.messages
 
 
 class LLMClient:
@@ -166,11 +194,19 @@ class LLMClient:
         temperature: float = 0.0,
         max_tokens: int | None = None,
     ) -> LLMResponse:
+        try:
+            transit = ChatMessagesTransit.from_raw(messages)
+        except ValidationError as exc:
+            raise LLMClientError(f"Invalid chat messages payload: {exc}") from exc
         if self._provider == "mock":
-            return self._chat_mock(messages=messages)
+            return self._chat_mock(messages=transit.message_payloads)
         if self._provider != "copilot":
             raise LLMClientError(f"Unknown provider: {self._provider}")
-        return self._chat_copilot_sdk(messages=messages, temperature=temperature, max_tokens=max_tokens)
+        return self._chat_copilot_sdk(
+            messages=transit.message_payloads,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
 
     def _run_async(self, awaitable: Any) -> Any:
         """Run coroutine from sync code; nested-loop calls use a dedicated SDK worker loop."""
@@ -189,7 +225,7 @@ class LLMClient:
     def _chat_copilot_sdk(
         self,
         *,
-        messages: list[dict[str, str]],
+        messages: list[ChatMessagePayload],
         temperature: float,
         max_tokens: int | None,
     ) -> LLMResponse:
@@ -249,7 +285,10 @@ class LLMClient:
                         self._sdk_session = await create_session(session_cfg_dict)
                     except Exception:
                         raise self._sdk_stage_error("session creation", exc) from exc
-            payload: dict[str, Any] = {"messages": messages, "temperature": float(temperature)}
+            payload: dict[str, Any] = {
+                "messages": [message.model_dump() for message in messages],
+                "temperature": float(temperature),
+            }
             if max_tokens is not None:
                 payload["max_tokens"] = int(max_tokens)
             send_and_wait = getattr(self._sdk_session, "send_and_wait", None)
@@ -289,11 +328,11 @@ class LLMClient:
         detail = str(exc).strip() or exc.__class__.__name__
         return LLMClientError(f"Copilot SDK {stage} failed: {detail}")
 
-    def _messages_to_prompt(self, messages: list[dict[str, str]]) -> str:
+    def _messages_to_prompt(self, messages: list[ChatMessagePayload]) -> str:
         rendered: list[str] = []
         for item in messages:
-            role = str(item.get("role", "user")).strip().lower() or "user"
-            content = str(item.get("content", ""))
+            role = item.role.strip().lower() or "user"
+            content = item.content
             rendered.append(f"[{role}]\n{content}")
         return "\n\n".join(rendered).strip()
 
@@ -431,10 +470,10 @@ class LLMClient:
             )
         return None
 
-    def _chat_mock(self, *, messages: list[dict[str, str]]) -> LLMResponse:
+    def _chat_mock(self, *, messages: list[ChatMessagePayload]) -> LLMResponse:
         # Deterministic, safe mock: always produces schema-conforming outputs that
         # force the kernel to keep iterating (critic decision=refine).
-        joined = "\n".join(m.get("content", "") for m in messages)
+        joined = "\n".join(message.content for message in messages)
 
         if "===CHAPTER_START===" in joined and "===CHAPTER_END===" in joined:
             lo = joined.find("===CHAPTER_START===")
