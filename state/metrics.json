@@ -71810,6 +71810,31 @@
             "diff_ratio": 0.8913043478260869,
             "drift_score": 0.3
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "approve",
+            "drift_score": 0.2,
+            "example_density": 0.8,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.3,
+            "passed": false,
+            "similarity_max": 0.6823957199752758
+          },
+          "iteration": 372,
+          "timestamp": "2026-02-22T19:54:27Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.6727272727272727,
+            "drift_score": 0.3
+          }
         }
       ]
     },
