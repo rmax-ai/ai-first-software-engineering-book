@@ -1,13 +1,12 @@
-# Risks and Decisions
+# Risks and decisions
 
 ## Risks discovered
-- Planning-only iteration does not prove runtime behavior yet; implementation could reveal integration gaps.
-- Existing smoke/eval contracts may require minor interpretation when mapping new harness telemetry.
+- Planning without first implementation may miss hidden coupling in `state/kernel.py` and `state/role_io_templates.py`.
+- Eval YAML changes can be brittle if new signals are introduced without stable deterministic fixtures.
 
 ## Decisions made
-- Chose strict planning scope to satisfy the seed iteration requirement from the execution prompt.
-- Focused backlog on minimal, high-leverage harness surfaces: kernel tracing, role IO contract checks, and deterministic smoke assertions.
+- Prioritized observability improvements first to make later behavioral regressions easier to detect.
+- Kept this iteration strictly documentation/planning to satisfy seed-iteration requirements.
 
 ## Deferred intentionally
-- Any code changes in `state/kernel.py`, `state/role_io_templates.py`, or `state/copilot_sdk_uv_smoke.py`.
-- Any updates to `evals/*.yaml` until implementation iteration establishes concrete new signals.
+- Any direct code edits in `state/` or `evals/` are deferred to next iterations.

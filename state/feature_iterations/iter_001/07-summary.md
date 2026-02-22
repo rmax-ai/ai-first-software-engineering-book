@@ -1,8 +1,8 @@
-# Summary
-- Created the initial feature iteration folder at `state/feature_iterations/iter_001/`.
-- Executed the seed requirement as a planning-only iteration for custom harness improvements.
-- Documented task framing, acceptance criteria, and a concrete implementation plan.
-- Mapped future work across features, tests, and eval/regression detection surfaces.
-- Recorded execution evidence and validation checks for artifact completeness.
-- Captured risks and explicit deferrals to keep this iteration minimal.
-- Provided exactly one next recommended task with concrete acceptance criteria and target files.
+# Iteration summary
+
+This seed feature-improvement iteration established the initial backlog for custom harness enhancements.
+It selected a planning-only task and documented clear acceptance criteria for features, tests, and eval mapping.
+The plan targets `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and relevant eval YAML contracts.
+Validation confirmed all seven required artifacts exist and that scope remained documentation-only.
+Risks and trade-offs were captured to reduce surprise during implementation iterations.
+The next iteration is explicitly narrowed to deterministic trace-summary hardening with smoke-test enforcement.

@@ -1,17 +1,20 @@
 # Validation
 
-## Verification performed
-1. Reviewed `prompts/incremental-improvements/execute.md` to confirm required seven-artifact contract and seed planning constraints.
-2. Reviewed `DEVELOPMENT.md` to align plan scope with UV workflows, harness files, and eval contracts.
-3. Verified no previous feature iteration exists before creating `iter_001`.
+## Verification commands run
+- `test -f state/feature_iterations/iter_001/01-task.md`
+- `test -f state/feature_iterations/iter_001/02-plan.md`
+- `test -f state/feature_iterations/iter_001/03-execution.md`
+- `test -f state/feature_iterations/iter_001/04-validation.md`
+- `test -f state/feature_iterations/iter_001/05-risks-and-decisions.md`
+- `test -f state/feature_iterations/iter_001/06-next-iteration.md`
+- `test -f state/feature_iterations/iter_001/07-summary.md`
 
 ## Observed results
-- Iteration folder numbering starts at `iter_001` and all required markdown artifact paths are present.
-- Plan content includes explicit coverage of features, tests, and eval regression detection.
-- Next task recommendation is singular and actionable.
+- All seven required iteration artifacts exist in `state/feature_iterations/iter_001/`.
+- Content is planning-focused and includes explicit feature/test/eval coverage.
 
 ## Acceptance criteria status
-- Feature planning coverage: **PASS**
-- Test planning coverage: **PASS**
-- Eval planning coverage: **PASS**
-- Iteration folder contract completeness: **PASS**
+- Feature planning coverage: **pass**
+- Test planning coverage: **pass**
+- Eval/regression mapping coverage: **pass**
+- Planning-only scope maintained: **pass**
