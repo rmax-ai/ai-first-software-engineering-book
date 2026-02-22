@@ -14969,6 +14969,87 @@
             "diff_ratio": 0.0,
             "drift_score": 0.0010372214319582741
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 263,
+          "timestamp": "2026-02-22T18:12:37Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 264,
+          "timestamp": "2026-02-22T18:12:37Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.0,
+            "decision": "refine",
+            "drift_score": 1.0,
+            "example_density": 0.0,
+            "failure_modes_present": false,
+            "structure_score": 0.0,
+            "tradeoff_presence": false,
+            "violations": [
+              "MOCK: not a real evaluation"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0010372214319582741,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 265,
+          "timestamp": "2026-02-22T18:12:37Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0010372214319582741
+          }
         }
       ]
     },
