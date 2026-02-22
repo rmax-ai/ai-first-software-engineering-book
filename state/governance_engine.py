@@ -88,6 +88,12 @@ class LedgerPayload(BaseModel):
     chapters: dict[str, LedgerChapterPayload] = Field(default_factory=dict)
 
 
+class LedgerJSONPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: dict[str, Any]
+
+
 @dataclass(frozen=True)
 class LedgerTransit:
     raw: dict[str, Any]
@@ -119,11 +125,16 @@ class SelectionStrategyTransit:
 
 def _load_json(path: Path) -> dict[str, Any]:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        parsed = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise GovernanceError(f"Ledger not found: {path}") from exc
     except json.JSONDecodeError as exc:
         raise GovernanceError(f"Invalid JSON in ledger: {path}: {exc}") from exc
+    try:
+        payload = LedgerJSONPayload.model_validate({"data": parsed})
+    except ValidationError as exc:
+        raise GovernanceError(f"Invalid ledger JSON payload root at {path}: {exc}") from exc
+    return payload.data
 
 
 def _dump_json(data: Any) -> str:
