@@ -1,10 +1,12 @@
 # Execution
 
 ## Commands/tools run
-- Read: `prompts/incremental-improvements/execute.md`
-- Read: `DEVELOPMENT.md`
-- Inspected iteration root: `state/feature_iterations/iter_*`
-- Wrote iteration artifacts under `state/feature_iterations/iter_001/`
+- Read guidance with `view`:
+  - `prompts/incremental-improvements/execute.md`
+  - `AGENTS.md`
+  - `DEVELOPMENT.md`
+- Checked iteration baseline with `glob` on `state/feature_iterations/iter_*`.
+- Created the iteration artifact files in `state/feature_iterations/iter_001/`.
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -15,6 +17,7 @@
 - `state/feature_iterations/iter_001/06-next-iteration.md`
 - `state/feature_iterations/iter_001/07-summary.md`
 
-## Rationale
-- This seed iteration is explicitly planning-only and establishes a concrete, testable backlog for harness improvements before implementation.
-
+## Rationale per change
+- Added task definition to scope this seed iteration as planning only.
+- Added implementation-ready plan spanning harness features, tests, and eval linkage.
+- Added execution/validation/risk/next/summary handoff docs required by the iteration contract.

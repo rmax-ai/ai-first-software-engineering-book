@@ -1,13 +1,13 @@
-# Risks and Decisions
+# Risks and decisions
 
-## Risks
-- Planning-only output can drift from current code if follow-up iterations are delayed.
-- Expanded smoke/eval coverage may increase runtime and require careful scoping.
+## Risks discovered
+- Planning without immediate implementation can leave ambiguity around required refactors in `state/kernel.py`.
+- Expanding smoke coverage may increase runtime and maintenance cost if mode permutations grow unchecked.
 
-## Decisions and trade-offs
-- Chose a minimal, execution-ready backlog instead of speculative implementation details.
-- Deferred code edits to keep this iteration aligned with the seed requirement.
+## Decisions made and trade-offs
+- Chose a planning-only iteration to follow the seed prompt exactly; deferred code edits to later iterations.
+- Scoped backlog to deterministic, testable harness changes rather than broad architecture rewrite to keep subsequent diffs minimal.
 
-## Deferred intentionally
-- Any direct changes to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-
+## Intentionally deferred
+- Concrete code changes in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
+- Any eval YAML edits pending first implementation step and observed behavior deltas.
