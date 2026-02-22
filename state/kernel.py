@@ -413,6 +413,9 @@ class LLMJSONObjectTextTransit:
 @dataclass(frozen=True)
 class CriticEvalInputsTransit:
     payload: CriticEvalInputsPayload
+    chapter_quality: YAMLTextTransit
+    style_guard: YAMLTextTransit
+    drift_detection: YAMLTextTransit
 
 
 @dataclass(frozen=True)
@@ -656,17 +659,33 @@ def _load_writer_output(path: Path) -> WriterOutputTransit:
 
 
 def _load_critic_eval_inputs() -> CriticEvalInputsTransit:
+    chapter_quality = _load_yaml_text(EVAL_CHAPTER_QUALITY_PATH)
+    style_guard = _load_yaml_text(EVAL_STYLE_GUARD_PATH)
+    drift_detection = _load_yaml_text(EVAL_DRIFT_DETECTION_PATH)
     try:
         payload = CriticEvalInputsPayload.model_validate(
             {
-                "chapter_quality": _read_text(EVAL_CHAPTER_QUALITY_PATH),
-                "style_guard": _read_text(EVAL_STYLE_GUARD_PATH),
-                "drift_detection": _read_text(EVAL_DRIFT_DETECTION_PATH),
+                "chapter_quality": chapter_quality.to_text(),
+                "style_guard": style_guard.to_text(),
+                "drift_detection": drift_detection.to_text(),
             }
         )
     except ValidationError as exc:
         raise KernelError(f"Invalid critic eval inputs payload: {exc}") from exc
-    return CriticEvalInputsTransit(payload=payload)
+    return CriticEvalInputsTransit(
+        payload=payload,
+        chapter_quality=chapter_quality,
+        style_guard=style_guard,
+        drift_detection=drift_detection,
+    )
+
+
+def _load_yaml_text(path: Path) -> YAMLTextTransit:
+    try:
+        payload = YAMLTextPayload.model_validate({"text": _read_text(path)})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid YAML text payload: {path}: {exc}") from exc
+    return YAMLTextTransit(source_path=path, payload=payload)
 
 
 def _strip_wrapping_code_fence(text: str) -> str:
@@ -874,13 +893,13 @@ def _llm_generate_critic(itdir: Path, llm: LLMRun, *, revised_md: str) -> Any:
     user = (
         "Return JSON only. No code fences. No commentary.\n\n"
         + "evals/chapter-quality.yaml:\n"
-        + critic_eval_inputs.payload.chapter_quality
+        + critic_eval_inputs.chapter_quality.to_text()
         + "\n\n"
         + "evals/style-guard.yaml:\n"
-        + critic_eval_inputs.payload.style_guard
+        + critic_eval_inputs.style_guard.to_text()
         + "\n\n"
         + "evals/drift-detection.yaml:\n"
-        + critic_eval_inputs.payload.drift_detection
+        + critic_eval_inputs.drift_detection.to_text()
         + "\n\n"
         + "Revised chapter markdown:\n"
         + revised_md
