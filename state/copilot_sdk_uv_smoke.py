@@ -269,18 +269,26 @@ def _load_kernel_fixture_chapter(chapter_id: str) -> KernelFixtureChapterTransit
 
 def _load_kernel_fixture_ledger(path: Path) -> KernelFixtureLedgerTransit:
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
+        json_mapping = _load_json_mapping(path)
+    except RuntimeError as exc:
         raise RuntimeError(f"Invalid ledger JSON for fixture: {exc}") from exc
-    try:
-        json_mapping = JSONMappingTransit(payload=JSONMappingPayload.model_validate({"data": raw}))
-    except ValidationError as exc:
-        raise RuntimeError(f"Invalid ledger JSON mapping payload for fixture at {path}: {exc}") from exc
     try:
         payload = KernelFixtureLedgerPayload.model_validate(json_mapping.to_mapping())
     except ValidationError as exc:
         raise RuntimeError(f"Invalid ledger payload for fixture: {exc}") from exc
     return KernelFixtureLedgerTransit(raw=json_mapping.to_mapping(), payload=payload)
+
+
+def _load_json_mapping(path: Path) -> JSONMappingTransit:
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Invalid JSON at {path}: {exc}") from exc
+    try:
+        payload = JSONMappingPayload.model_validate({"data": raw})
+    except ValidationError as exc:
+        raise RuntimeError(f"Invalid JSON mapping payload at {path}: {exc}") from exc
+    return JSONMappingTransit(payload=payload)
 
 
 def _build_trace_summary_fixture(
@@ -375,14 +383,14 @@ def _build_trace_summary_kernel_fixture(chapter_id: str, fixture_root: Path) -> 
 
 def _load_metrics(path: Path) -> MetricsTransit:
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
+        json_mapping = _load_json_mapping(path)
+    except RuntimeError as exc:
         raise RuntimeError(f"Invalid metrics JSON at {path}: {exc}") from exc
     try:
-        payload = MetricsPayload.model_validate(raw)
+        payload = MetricsPayload.model_validate(json_mapping.to_mapping())
     except ValidationError as exc:
         raise RuntimeError(f"Invalid metrics payload at {path}: {exc}") from exc
-    return MetricsTransit(raw=raw, payload=payload)
+    return MetricsTransit(raw=json_mapping.to_mapping(), payload=payload)
 
 
 def _load_kernel_trace(path: Path) -> KernelTraceTransit:
