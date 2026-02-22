@@ -929,7 +929,57 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
 )
 
 
+ShutdownModeHandler = Callable[[], int]
+SHUTDOWN_MODE_SPECS: tuple[tuple[str, ShutdownModeHandler, str], ...] = (
+    ("shutdown-failure", run_shutdown_failure_mode, "forced SDK shutdown error"),
+    ("stop-unavailable", run_stop_unavailable_mode, "missing SDK stop() callable"),
+    ("destroy-unavailable", run_destroy_unavailable_mode, "missing session destroy() callable"),
+    ("destroy-failure", run_destroy_failure_mode, "forced session destroy error"),
+    ("force-stop-unavailable", run_force_stop_unavailable_mode, "stop() failure with missing force_stop()"),
+    (
+        "force-stop-close-idempotency",
+        run_force_stop_close_idempotency_mode,
+        "repeated close() after force_stop() unavailable",
+    ),
+    ("stop-close-idempotency", run_stop_close_idempotency_mode, "repeated close() after stop() unavailable"),
+    ("close-idempotency", run_close_idempotency_mode, "repeated close() after shutdown failure"),
+    ("destroy-close-idempotency", run_destroy_close_idempotency_mode, "repeated close() after destroy failure"),
+    (
+        "destroy-unavailable-close-idempotency",
+        run_destroy_unavailable_close_idempotency_mode,
+        "repeated close() after destroy() unavailable",
+    ),
+    (
+        "stop-destroy-unavailable-close-idempotency",
+        run_stop_destroy_unavailable_close_idempotency_mode,
+        "repeated close() after stop()/destroy() unavailable",
+    ),
+    (
+        "stop-unavailable-destroy-failure-close-idempotency",
+        run_stop_unavailable_destroy_failure_close_idempotency_mode,
+        "repeated close() after stop() unavailable and destroy() failure",
+    ),
+    (
+        "stop-failure-destroy-unavailable-close-idempotency",
+        run_stop_failure_destroy_unavailable_close_idempotency_mode,
+        "repeated close() after stop() failure and destroy() unavailable",
+    ),
+    (
+        "stop-failure-destroy-failure-close-idempotency",
+        run_stop_failure_destroy_failure_close_idempotency_mode,
+        "repeated close() after stop() and destroy() failures",
+    ),
+)
+
+
 def main() -> int:
+    shutdown_mode_names = [name for name, _handler, _description in SHUTDOWN_MODE_SPECS]
+    shutdown_mode_help = ", ".join(
+        f"{name} = {description}" for name, _handler, description in SHUTDOWN_MODE_SPECS
+    )
+    shutdown_mode_handlers = {
+        name: handler for name, handler, _description in SHUTDOWN_MODE_SPECS
+    }
     trace_summary_mode_names = [name for name, _handler, _description in TRACE_SUMMARY_MODE_SPECS]
     trace_summary_mode_help = ", ".join(
         f"{name} = {description}" for name, _handler, description in TRACE_SUMMARY_MODE_SPECS
@@ -944,35 +994,14 @@ def main() -> int:
             "stub",
             "sdk-unavailable",
             "bootstrap-failure",
-            "shutdown-failure",
-            "stop-unavailable",
-            "destroy-unavailable",
-            "destroy-failure",
-            "force-stop-unavailable",
-            "force-stop-close-idempotency",
-            "stop-close-idempotency",
-            "close-idempotency",
-            "destroy-close-idempotency",
-            "destroy-unavailable-close-idempotency",
-            "stop-destroy-unavailable-close-idempotency",
-            "stop-unavailable-destroy-failure-close-idempotency",
-            "stop-failure-destroy-unavailable-close-idempotency",
-            "stop-failure-destroy-failure-close-idempotency",
+            *shutdown_mode_names,
             *trace_summary_mode_names,
             "live",
         ],
         default="stub",
         help=(
             "stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, "
-            "shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, "
-            "destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), "
-            "force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, "
-            "close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, "
-            "destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, "
-            "stop-unavailable-destroy-failure-close-idempotency = repeated close() after stop() unavailable and destroy() failure, "
-            "stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, "
-            "stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, "
-            f"{trace_summary_mode_help}, live = real provider call"
+            f"{shutdown_mode_help}, {trace_summary_mode_help}, live = real provider call"
         ),
     )
     args = parser.parse_args()
@@ -983,34 +1012,8 @@ def main() -> int:
         return run_sdk_unavailable_mode()
     if args.mode == "bootstrap-failure":
         return run_bootstrap_failure_mode()
-    if args.mode == "shutdown-failure":
-        return run_shutdown_failure_mode()
-    if args.mode == "stop-unavailable":
-        return run_stop_unavailable_mode()
-    if args.mode == "destroy-unavailable":
-        return run_destroy_unavailable_mode()
-    if args.mode == "destroy-failure":
-        return run_destroy_failure_mode()
-    if args.mode == "force-stop-unavailable":
-        return run_force_stop_unavailable_mode()
-    if args.mode == "force-stop-close-idempotency":
-        return run_force_stop_close_idempotency_mode()
-    if args.mode == "stop-close-idempotency":
-        return run_stop_close_idempotency_mode()
-    if args.mode == "close-idempotency":
-        return run_close_idempotency_mode()
-    if args.mode == "destroy-close-idempotency":
-        return run_destroy_close_idempotency_mode()
-    if args.mode == "destroy-unavailable-close-idempotency":
-        return run_destroy_unavailable_close_idempotency_mode()
-    if args.mode == "stop-destroy-unavailable-close-idempotency":
-        return run_stop_destroy_unavailable_close_idempotency_mode()
-    if args.mode == "stop-unavailable-destroy-failure-close-idempotency":
-        return run_stop_unavailable_destroy_failure_close_idempotency_mode()
-    if args.mode == "stop-failure-destroy-unavailable-close-idempotency":
-        return run_stop_failure_destroy_unavailable_close_idempotency_mode()
-    if args.mode == "stop-failure-destroy-failure-close-idempotency":
-        return run_stop_failure_destroy_failure_close_idempotency_mode()
+    if args.mode in shutdown_mode_handlers:
+        return shutdown_mode_handlers[args.mode]()
     if args.mode in trace_summary_mode_handlers:
         return trace_summary_mode_handlers[args.mode]()
     return run_live_mode()
