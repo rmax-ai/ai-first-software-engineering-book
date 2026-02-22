@@ -448,6 +448,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Re-run 2026-02-22T17:05:27Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
+| 06-agent-governance | 1 | failed(1) | none |  |
 | 05-evaluation-and-traces | 3 | failed(1) | none |  |
 | 05-evaluation-and-traces | 2 | failed(1) | none |  |
 | 05-evaluation-and-traces | 1 | failed(1) | none |  |
