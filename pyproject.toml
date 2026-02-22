@@ -8,5 +8,6 @@ dependencies = [
     "github-copilot-sdk>=0.1.25",
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.7.2",
+    "mkdocs-mermaid2-plugin>=1.2.3",
     "pydantic>=2.0",
 ]
