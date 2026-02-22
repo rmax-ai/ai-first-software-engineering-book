@@ -112,6 +112,25 @@ class DeterministicEvalConfigPayload(BaseModel):
     version: int | None = None
 
 
+class MetricsChapterPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    history: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class MetricsPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    chapters: dict[str, MetricsChapterPayload] = Field(default_factory=dict)
+
+
+class VersionMapPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    chapters: dict[str, str] = Field(default_factory=dict)
+    generated_at: str | None = None
+
+
 @dataclass(frozen=True)
 class PlannerInputTransit:
     chapter_id: str
@@ -178,6 +197,32 @@ class DeterministicEvalTransit:
     drift_detection: DeterministicEvalConfigPayload
 
 
+@dataclass(frozen=True)
+class MetricsHistoryTransit:
+    iteration: int
+    critic: CriticReport
+    deterministic_eval: DeterministicEval
+    diff_ratio: float
+
+    def to_metrics_entry(self) -> dict[str, Any]:
+        return {
+            "timestamp": _utc_now_iso(),
+            "iteration": self.iteration,
+            "critic": dataclasses.asdict(self.critic),
+            "deterministic": {
+                "passed": self.deterministic_eval.passed,
+                "drift_score": self.deterministic_eval.drift_score,
+                "similarity_max": self.deterministic_eval.similarity_max,
+            },
+            "trace_summary": {
+                "decision": "approve" if self.deterministic_eval.passed else "refine",
+                "drift_score": float(self.deterministic_eval.drift_score),
+                "diff_ratio": float(self.diff_ratio),
+                "deterministic_pass": bool(self.deterministic_eval.passed),
+            },
+        }
+
+
 def _utc_now_iso() -> str:
     return _dt.datetime.now(tz=_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -220,6 +265,24 @@ def _load_eval_config(path: Path) -> DeterministicEvalConfigPayload:
         return DeterministicEvalConfigPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid eval config payload: {path}: {exc}") from exc
+
+
+def _load_metrics(path: Path) -> tuple[dict[str, Any], MetricsPayload]:
+    raw = _load_json(path)
+    try:
+        payload = MetricsPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise KernelError(f"Invalid metrics payload: {path}: {exc}") from exc
+    return raw, payload
+
+
+def _load_version_map(path: Path) -> tuple[dict[str, Any], VersionMapPayload]:
+    raw = _load_json(path)
+    try:
+        payload = VersionMapPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise KernelError(f"Invalid version_map payload: {path}: {exc}") from exc
+    return raw, payload
 
 
 def _run_git(args: list[str]) -> str:
@@ -1223,28 +1286,17 @@ def run_kernel(
             )
 
             # Update metrics.json (minimal, per schema)
-            metrics = _load_json(METRICS_PATH)
+            metrics, _ = _load_metrics(METRICS_PATH)
             metrics.setdefault("chapters", {})
             ch_metrics = metrics["chapters"].setdefault(chapter_id, {})
             ch_metrics.setdefault("history", [])
-            ch_metrics["history"].append(
-                {
-                    "timestamp": _utc_now_iso(),
-                    "iteration": iteration,
-                    "critic": dataclasses.asdict(critic),
-                    "deterministic": {
-                        "passed": det.passed,
-                        "drift_score": det.drift_score,
-                        "similarity_max": det.similarity_max,
-                    },
-                    "trace_summary": {
-                        "decision": "approve" if pass_now else "refine",
-                        "drift_score": float(det.drift_score),
-                        "diff_ratio": float(diff_ratio),
-                        "deterministic_pass": bool(det_pass),
-                    },
-                }
+            metrics_history = MetricsHistoryTransit(
+                iteration=iteration,
+                critic=critic,
+                deterministic_eval=det,
+                diff_ratio=diff_ratio,
             )
+            ch_metrics["history"].append(metrics_history.to_metrics_entry())
             _save_json(METRICS_PATH, metrics)
 
             # Update repo_iteration_log (minimal entry)
@@ -1325,7 +1377,7 @@ def run_kernel(
                         _run_git(["add", chapter_path, "state/ledger.json", "state/metrics.json"])
                         _run_git(["commit", "-m", f"refine: {chapter_id} (iter {iteration})"])
                         commit_hash = _run_git(["rev-parse", "HEAD"]).strip()
-                        version_map = _load_json(VERSION_MAP_PATH)
+                        version_map, _ = _load_version_map(VERSION_MAP_PATH)
                         version_map.setdefault("chapters", {})
                         version_map["chapters"][chapter_id] = commit_hash
                         version_map["generated_at"] = _utc_now_iso()
