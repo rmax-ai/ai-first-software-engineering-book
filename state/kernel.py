@@ -106,6 +106,12 @@ class LedgerPayload(BaseModel):
     chapters: dict[str, LedgerChapterPayload]
 
 
+@dataclass(frozen=True)
+class LedgerTransit:
+    raw: dict[str, Any]
+    payload: LedgerPayload
+
+
 class DeterministicEvalConfigPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -250,13 +256,13 @@ def _load_json(path: Path) -> dict[str, Any]:
         raise KernelError(f"Invalid JSON: {path}: {exc}") from exc
 
 
-def _load_ledger(path: Path) -> tuple[dict[str, Any], LedgerPayload]:
+def _load_ledger(path: Path) -> LedgerTransit:
     raw = _load_json(path)
     try:
         payload = LedgerPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid ledger payload: {exc}") from exc
-    return raw, payload
+    return LedgerTransit(raw=raw, payload=payload)
 
 
 def _save_json(path: Path, data: Any) -> None:
@@ -1077,7 +1083,9 @@ def run_kernel(
     )
 
     try:
-        ledger, ledger_payload = _load_ledger(LEDGER_PATH)
+        ledger_transit = _load_ledger(LEDGER_PATH)
+        ledger = ledger_transit.raw
+        ledger_payload = ledger_transit.payload
         chapters = ledger.get("chapters")
         if not isinstance(chapters, dict):
             raise KernelError("Invalid ledger structure: chapters must be a mapping")
