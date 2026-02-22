@@ -66,12 +66,14 @@ A compact “must capture” checklist (minimum viable trace):
 Bug-fix kernel for a CLI tool.
 
 - Input:
+
   - failing test case: `tests/test_parse.py::test_rejects_empty_input`
   - reproduction step: `python -m mycli parse ""` returns exit code `0` but should return non-zero
   - budgets: max 3 iterations, max 10 tool calls, max 40 lines changed
   - permissions: read `src/`, write `src/parser.py`, run `pytest -k parse`
 
 Mini-runbook (a single bounded kernel run):
+
 1. Localize failure (evidence-first)
    - Action: run the smallest check that reproduces the failure.
      - Command: `pytest -k rejects_empty_input`
