@@ -151,3 +151,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_uv_smoke.py` now constrains CLI `mode` ingestion through `SmokeCLIArgsPayload` literal mode values before forwarding parsed arguments via `SmokeCLIArgsTransit`.
 - `state/kernel.py` now validates CLI argument ingestion through `KernelCLIArgsPayload` and forwards parsed values via `KernelCLIArgsTransit` before chapter listing, LLM config validation, and `run_kernel()` dispatch.
 - `state/kernel.py` now validates extracted LLM JSON object slices through `LLMJSONObjectMappingPayload` and forwards them via `LLMJSONObjectMappingTransit` before `JSONMappingPayload` parsing.
+- `state/copilot_sdk_smoke_test.py` now validates CLI `--mode` ingestion against dynamically derived mode specs through `SmokeCLIArgsPayload` and forwards allowed mode options via `SmokeModeOptionsTransit` before dispatch.
