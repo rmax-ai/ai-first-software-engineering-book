@@ -148,3 +148,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_smoke_test.py` now validates CLI argument ingestion through `SmokeCLIArgsPayload` and forwards parsed values via `SmokeCLIArgsTransit` before mode dispatch.
 - `state/role_io_templates.py` now validates CLI argument ingestion through `TemplateCLIArgsPayload` and forwards parsed values via `TemplateCLIArgsTransit` before ledger iteration resolution and template writes.
 - `state/copilot_sdk_uv_smoke.py` now validates CLI argument ingestion through `SmokeCLIArgsPayload` and forwards parsed values via `SmokeCLIArgsTransit` before mode dispatch and trace-summary runner setup.
+- `state/kernel.py` now validates CLI argument ingestion through `KernelCLIArgsPayload` and forwards parsed values via `KernelCLIArgsTransit` before chapter listing, LLM config validation, and `run_kernel()` dispatch.

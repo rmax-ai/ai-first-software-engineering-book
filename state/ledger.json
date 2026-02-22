@@ -32,7 +32,7 @@
   },
   "chapters": {
     "01-paradigm-shift": {
-      "current_iteration": 7,
+      "current_iteration": 10,
       "drift_history": [],
       "human_validation": {
         "approved": false,
@@ -95,20 +95,51 @@
           "planner_focus": [
             "## Thesis: tighten scope"
           ]
+        },
+        {
+          "critic_score": 0.8133333333333334,
+          "diff_size": 0.8695652173913043,
+          "drift_score": 0.3086496638987742,
+          "iteration": 8,
+          "planner_focus": [
+            "Tighten the definition of \"architectural inversion\" in ## Thesis with one concrete, testable sentence",
+            "Make the model-vs-harness attribution claim falsifiable by adding 2\u20133 measurable signals in ## System Breakdown",
+            "Increase specificity of both examples by adding exact artifacts and stop conditions under ## Concrete Example 1 and ## Concrete Example 2",
+            "Ensure the chapter explicitly connects ## Trade-offs and ## Failure Modes back to the hypothesis with a short synthesis paragraph"
+          ]
+        },
+        {
+          "critic_score": 0.84,
+          "diff_size": 0.16666666666666666,
+          "drift_score": 0.32074215900802333,
+          "iteration": 9,
+          "planner_focus": [
+            "Enforce sentence-length limit in ## Thesis by splitting the operational definition into shorter sentences or bullets",
+            "Justify the \"architectural inversion\" claim in ## Thesis with one concrete, non-metaphorical sentence tied to the harness/model boundary",
+            "Align ## Concrete Example 2 with ## System Breakdown by adding an explicit \"Measured outputs\" list using the defined signals"
+          ]
+        },
+        {
+          "critic_score": 0.8466666666666667,
+          "diff_size": 0.04878048780487805,
+          "drift_score": 0.32189183987682835,
+          "iteration": 10,
+          "planner_focus": [
+            "Reduce minor repetition between ## Thesis and the Synthesis paragraph under ## Failure Modes by compressing repeated claims about harness constraints and evaluation gates",
+            "Lower drift risk by making the Synthesis paragraph explicitly point back to the named signals in ## System Breakdown (iterations-to-pass, time-to-green, attribution rate)"
+          ]
         }
       ],
       "last_eval": {
         "critic": {
-          "clarity_score": 0.0,
-          "decision": "refine",
-          "drift_score": 1.0,
-          "example_density": 0.0,
-          "failure_modes_present": false,
-          "structure_score": 0.0,
-          "tradeoff_presence": false,
-          "violations": [
-            "MOCK: not a real evaluation"
-          ]
+          "clarity_score": 0.87,
+          "decision": "approve",
+          "drift_score": 0.2,
+          "example_density": 0.74,
+          "failure_modes_present": true,
+          "structure_score": 0.93,
+          "tradeoff_presence": true,
+          "violations": []
         },
         "deterministic": {
           "chapter_quality": {
@@ -122,65 +153,77 @@
               "thesis_clarity": 1.0,
               "tradeoffs": 1.0
             },
-            "timestamp": "2026-02-22T15:27:47Z",
+            "timestamp": "2026-02-22T15:33:13Z",
             "total": 1.0
           },
           "drift_detection": {
             "drift_metrics": {
               "anchor_deltas": {
                 "agent": 0.0,
-                "harness": 0.0,
-                "model": 0.0
+                "harness": 0.47777777777777775,
+                "model": 0.5256410256410257
               },
               "cross_chapter_similarity_hits": []
             },
             "hype_hits": [],
-            "pass": true,
+            "pass": false,
             "repetition_metrics": {
               "duplicate_sentence_ratio": 0.0,
-              "near_duplicate_ngram_ratio": 0.0
+              "near_duplicate_ngram_ratio": 0.015011547344110854
             },
-            "timestamp": "2026-02-22T15:27:47Z"
+            "timestamp": "2026-02-22T15:33:13Z"
           },
-          "drift_score": 0.0,
-          "passed": true,
-          "similarity_max": 0.609577106460783,
+          "drift_score": 0.32189183987682835,
+          "passed": false,
+          "similarity_max": 0.6551811582916793,
           "style_guard": {
-            "adjective_density": 0.0893371757925072,
+            "adjective_density": 0.07011494252873564,
             "forbidden_hits": [],
             "pass": true,
             "sentence_length_violations": [
               {
                 "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
                 "words": 32
+              },
+              {
+                "sentence": "- **Attribution checklist** (what evidence makes a failure \u201cbelong\u201d to a layer): - **Spec/prompt**: requirement is ambiguous or contradictory; different reasonable interpretations change expected outp",
+                "words": 32
+              },
+              {
+                "sentence": "- **Eval/CI**: mismatch between what is asserted and what is intended; tests are incorrect, overly strict, or missing a required case; fixing the test changes outcomes without changing product behavio",
+                "words": 30
+              },
+              {
+                "sentence": "- If the loop reaches a fixed budget (e.g., N iterations or T minutes) without progress, stop and escalate to a human with the trace and the smallest reproducible failing case.",
+                "words": 31
               }
             ],
-            "timestamp": "2026-02-22T15:27:47Z"
+            "timestamp": "2026-02-22T15:33:13Z"
           }
         }
       },
       "lifecycle": "draft",
       "path": "book/chapters/01-paradigm-shift.md",
       "quality_metrics": {
-        "clarity_score": 0.0,
-        "drift_score": 0.0,
-        "example_density": 0.0,
-        "failure_mode_presence": false,
-        "structure_score": 0.0,
-        "tradeoff_presence": false
+        "clarity_score": 0.87,
+        "drift_score": 0.32189183987682835,
+        "example_density": 0.74,
+        "failure_mode_presence": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true
       },
       "research": {
         "falsifiable": true,
         "hypothesis": "",
         "validation_status": "untested"
       },
-      "revision_count": 7,
+      "revision_count": 10,
       "stability": {
         "consecutive_passes": 0,
         "frozen_candidate": false,
-        "last_modified_iteration": 7
+        "last_modified_iteration": 10
       },
-      "status": "active_refinement"
+      "status": "hold"
     },
     "02-harness-engineering": {
       "current_iteration": 1,
@@ -1030,6 +1073,283 @@
         "patterns_modified": []
       },
       "timestamp": "2026-02-22T15:27:47Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.87; drift_score=0.31"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T15:31:36Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.5154639175257731,
+              "model": 0.5487804878048781
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": false,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.005931198102016607
+          },
+          "timestamp": "2026-02-22T15:31:36Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.07201889020070838,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
+              "words": 32
+            },
+            {
+              "sentence": "Operational definition: **model capability** is what changes when you swap models while holding tools, constraints, and evaluation constant; **harness capability** is what changes when you keep the mo",
+              "words": 38
+            },
+            {
+              "sentence": "- **Attribution checklist** (what evidence makes a failure \u201cbelong\u201d to a layer): - **Spec/prompt**: requirement is ambiguous or contradictory; different reasonable interpretations change expected outp",
+              "words": 32
+            },
+            {
+              "sentence": "- **Eval/CI**: mismatch between what is asserted and what is intended; tests are incorrect, overly strict, or missing a required case; fixing the test changes outcomes without changing product behavio",
+              "words": 30
+            },
+            {
+              "sentence": "- If the loop reaches a fixed budget (e.g., N iterations or T minutes) without progress, stop and escalate to a human with the trace and the smallest reproducible failing case.",
+              "words": 31
+            }
+          ],
+          "timestamp": "2026-02-22T15:31:36Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/01-paradigm-shift.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 8 for 01-paradigm-shift"
+      },
+      "iteration": 8,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "01-paradigm-shift"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T15:31:36Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.17; drift_score=0.32"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T15:32:35Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.5154639175257731,
+              "model": 0.5542168674698795
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": false,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.014223194748358862
+          },
+          "timestamp": "2026-02-22T15:32:35Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.07080610021786492,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
+              "words": 32
+            },
+            {
+              "sentence": "- **Attribution checklist** (what evidence makes a failure \u201cbelong\u201d to a layer): - **Spec/prompt**: requirement is ambiguous or contradictory; different reasonable interpretations change expected outp",
+              "words": 32
+            },
+            {
+              "sentence": "- **Eval/CI**: mismatch between what is asserted and what is intended; tests are incorrect, overly strict, or missing a required case; fixing the test changes outcomes without changing product behavio",
+              "words": 30
+            },
+            {
+              "sentence": "- If the loop reaches a fixed budget (e.g., N iterations or T minutes) without progress, stop and escalate to a human with the trace and the smallest reproducible failing case.",
+              "words": 31
+            }
+          ],
+          "timestamp": "2026-02-22T15:32:35Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/01-paradigm-shift.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 9 for 01-paradigm-shift"
+      },
+      "iteration": 9,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 6549,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 120377
+      },
+      "scope": {
+        "chapters_modified": [
+          "01-paradigm-shift"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T15:32:35Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.05; drift_score=0.32"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T15:33:13Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.47777777777777775,
+              "model": 0.5256410256410257
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": false,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.015011547344110854
+          },
+          "timestamp": "2026-02-22T15:33:13Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.07011494252873564,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [
+            {
+              "sentence": "# Chapter 01 \u2014 Paradigm Shift ## Thesis AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evalu",
+              "words": 32
+            },
+            {
+              "sentence": "- **Attribution checklist** (what evidence makes a failure \u201cbelong\u201d to a layer): - **Spec/prompt**: requirement is ambiguous or contradictory; different reasonable interpretations change expected outp",
+              "words": 32
+            },
+            {
+              "sentence": "- **Eval/CI**: mismatch between what is asserted and what is intended; tests are incorrect, overly strict, or missing a required case; fixing the test changes outcomes without changing product behavio",
+              "words": 30
+            },
+            {
+              "sentence": "- If the loop reaches a fixed budget (e.g., N iterations or T minutes) without progress, stop and escalate to a human with the trace and the smallest reproducible failing case.",
+              "words": 31
+            }
+          ],
+          "timestamp": "2026-02-22T15:33:13Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/01-paradigm-shift.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 10 for 01-paradigm-shift"
+      },
+      "iteration": 10,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 16361,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 359695
+      },
+      "scope": {
+        "chapters_modified": [
+          "01-paradigm-shift"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T15:33:13Z"
     }
   ],
   "version": 2

@@ -139,6 +139,85 @@
             "diff_ratio": 0.0,
             "drift_score": 0.0
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.82,
+            "decision": "refine",
+            "drift_score": 0.18,
+            "example_density": 0.72,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "At least one sentence in ## Thesis exceeds the 40-word hard limit (the 'Operational definition' sentence with two semicolon-linked clauses).",
+              "The phrase \"architectural inversion\" functions as a metaphor without an explicit justification sentence, conflicting with style-guard metaphor_policy.",
+              "## Concrete Example 2 does not include an explicit \"Measured outputs\" list (e.g., iterations-to-pass, time-to-green, attribution rate) even though ## System Breakdown defines these signals."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3086496638987742,
+            "passed": false,
+            "similarity_max": 0.6545777668628399
+          },
+          "iteration": 8,
+          "timestamp": "2026-02-22T15:31:36Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.8695652173913043,
+            "drift_score": 0.3086496638987742
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.86,
+            "decision": "approve",
+            "drift_score": 0.22,
+            "example_density": 0.74,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.32074215900802333,
+            "passed": false,
+            "similarity_max": 0.6472473911596751
+          },
+          "iteration": 9,
+          "timestamp": "2026-02-22T15:32:35Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.16666666666666666,
+            "drift_score": 0.32074215900802333
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "approve",
+            "drift_score": 0.2,
+            "example_density": 0.74,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.32189183987682835,
+            "passed": false,
+            "similarity_max": 0.6551811582916793
+          },
+          "iteration": 10,
+          "timestamp": "2026-02-22T15:33:13Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.04878048780487805,
+            "drift_score": 0.32189183987682835
+          }
         }
       ]
     }
