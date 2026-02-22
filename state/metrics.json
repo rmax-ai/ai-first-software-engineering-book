@@ -61732,6 +61732,88 @@
             "diff_ratio": 0.0,
             "drift_score": 0.0
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.86,
+            "decision": "refine",
+            "drift_score": 0.12,
+            "example_density": 0.82,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Concrete Example 2 does not specify at least one concrete pass/fail threshold for the regression signal (e.g., which metric drops by how much, or which smoke test name fails).",
+              "## Concrete Example 2 does not specify a concrete SLO for containment (e.g., target time-to-rollback), even though ## Trade-offs lists it as a governance effectiveness metric.",
+              "## System Breakdown includes a reference to adding a run id in a commit trailer, but does not state the exact required field name or format (making enforcement less checkable)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3,
+            "passed": false,
+            "similarity_max": 0.6738632259466008
+          },
+          "iteration": 371,
+          "timestamp": "2026-02-22T19:44:08Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 1.0,
+            "drift_score": 0.3
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "approve",
+            "drift_score": 0.1,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "## System Breakdown (Audit) uses a regex-like format (`run_[a-z0-9]{12}`) without stating whether the check is case-sensitive, which can lead to inconsistent enforcement.",
+              "## Concrete Example 2 detection threshold uses two alternative conditions (5xx rate, p95 latency) but does not state whether both are evaluated simultaneously or if either one failing is sufficient (ambiguity for a check)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3,
+            "passed": false,
+            "similarity_max": 0.6676283742167987
+          },
+          "iteration": 372,
+          "timestamp": "2026-02-22T19:44:45Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.06363636363636363,
+            "drift_score": 0.3
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.92,
+            "decision": "approve",
+            "drift_score": 0.09,
+            "example_density": 0.86,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.3034530386740331,
+            "passed": false,
+            "similarity_max": 0.6677308139816897
+          },
+          "iteration": 373,
+          "timestamp": "2026-02-22T19:45:25Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.02654867256637168,
+            "drift_score": 0.3034530386740331
+          }
         }
       ]
     },
