@@ -146,6 +146,18 @@ class SDKEventsTransit:
         return self.payload.events
 
 
+@dataclass(frozen=True)
+class SDKUsageTransit:
+    payload: SDKUsagePayload
+
+    @classmethod
+    def from_raw(cls, raw: dict[str, Any]) -> "SDKUsageTransit":
+        return cls(payload=SDKUsagePayload.model_validate(raw))
+
+    def to_usage(self) -> LLMUsage:
+        return self.payload.to_usage()
+
+
 class LLMClient:
     def __init__(
         self,
@@ -544,9 +556,11 @@ class LLMClient:
             token_keys = {"prompt_tokens", "completion_tokens", "input_tokens", "output_tokens"}
             if not any(key in usage_raw for key in token_keys):
                 return None
-            prompt = usage_raw.get("prompt_tokens", usage_raw.get("input_tokens", 0))
-            completion = usage_raw.get("completion_tokens", usage_raw.get("output_tokens", 0))
-            return LLMUsage(prompt_tokens=int(prompt or 0), completion_tokens=int(completion or 0))
+            try:
+                usage = SDKUsageTransit.from_raw(usage_raw).to_usage()
+            except ValidationError as exc:
+                raise LLMClientError(f"Invalid SDK usage payload: {exc}") from exc
+            return usage
         usage_attr = getattr(payload, "usage", None)
         if isinstance(usage_attr, dict):
             return self._usage_from_any(usage_attr)
