@@ -120,7 +120,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
 
-| 01-paradigm-shift | 1 | failed(1) | none | `pending` |
+| 01-paradigm-shift | 1 | failed(1) | none | `d87ffcb` |
 | 01-paradigm-shift | 2 | ok | none | `n/a` |
 | 01-paradigm-shift | 3 | ok | none | `n/a` |
 | 02-harness-engineering | 1 | ok | none | `n/a` |
@@ -144,3 +144,9 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 99-future-directions | 1 | ok | none | `n/a` |
 | 99-future-directions | 2 | ok | none | `n/a` |
 | 99-future-directions | 3 | ok | none | `n/a` |
+
+### Re-run Summary (2026-02-22T18:02:04Z)
+- Completed 24/24 chapter passes with one commit per pass.
+- Kernel runs were executed with governance unlock/unhold before each pass.
+- Total commits created for this re-run loop: 24.
+
