@@ -82968,6 +82968,124 @@
           }
         }
       ]
+    },
+    "preface": {
+      "history": [
+        {
+          "critic": {
+            "clarity_score": 0.82,
+            "decision": "refine",
+            "drift_score": 0.12,
+            "example_density": 0.7,
+            "failure_modes_present": true,
+            "structure_score": 0.62,
+            "tradeoff_presence": false,
+            "violations": [
+              "Required criterion 'system_breakdown' is not present in any section of the Preface (no description of components/interactions beyond brief bullets).",
+              "Required criterion 'tradeoffs_discussed' is missing: the chapter contains no explicit trade-offs or downsides of the proposed approach.",
+              "One sentence likely exceeds the style guard max_words=28: \u201cIn practice, the harness is what turns suggestions into an engineering workflow by enforcing invariants such as:\u201d",
+              "The mini-example does not include a measurable outcome (e.g., reduction in regressions, improved pass rate, time-to-detect), making it weaker against the 'vague_claims' guardrail."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3026323706377858,
+            "passed": false,
+            "similarity_max": 0.7080676493577478
+          },
+          "iteration": 2,
+          "timestamp": "2026-02-22T21:31:14Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.5609756097560976,
+            "drift_score": 0.3026323706377858
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.86,
+            "decision": "refine",
+            "drift_score": 0.26,
+            "example_density": 0.55,
+            "failure_modes_present": false,
+            "structure_score": 0.78,
+            "tradeoff_presence": true,
+            "violations": [
+              "Required criterion '>=2_examples' is still missing: only one concrete mini-example is provided under ## Key distinction: model vs harness.",
+              "Required criterion 'failure_modes_present' is missing: there is no explicit failure mode discussion anywhere in the chapter.",
+              "Style-guard sentence length violation likely persists: \u201cThe harness turns suggestions into an engineering workflow. It does this by enforcing invariants:\u201d combined with the following list reads as a single long sentence-plus-list construct.",
+              "The Mermaid diagram is introduced without an explicit justification sentence, which may violate metaphor_policy if diagrams are treated as analogy rather than literal flow.",
+              "The sentence \u201cAcceptance is measurable.\u201d is followed by a binary gate, but no measurable outcome metric (e.g., regression rate, time-to-detect) is stated, so the example partially violates 'vague_claims' guidance."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.2876744111623144,
+            "passed": false,
+            "similarity_max": 0.7367097127282615
+          },
+          "iteration": 3,
+          "timestamp": "2026-02-22T21:32:10Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.828125,
+            "drift_score": 0.2876744111623144
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "refine",
+            "drift_score": 0.23,
+            "example_density": 0.72,
+            "failure_modes_present": true,
+            "structure_score": 0.86,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard max_words=28 may be exceeded in: \u201cSecond mini-example: PR review gating can be treated the same way.\u201d when combined with the following sentence in the same paragraph, depending on sentence splitting in the tokenizer.",
+              "The measurable outcome claim \u201cThis reduces time-to-detect from \u201clater review\u201d to \u201cthe same iteration.\u201d is directional but not quantified; consider specifying an acceptance metric (e.g., \u2018time-to-detect \u2264 1 iteration\u2019) to avoid 'vague_claims' risk."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.30164411875234876,
+            "passed": false,
+            "similarity_max": 0.7563519870177366
+          },
+          "iteration": 4,
+          "timestamp": "2026-02-22T21:32:42Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.22857142857142856,
+            "drift_score": 0.30164411875234876
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "approve",
+            "drift_score": 0.21,
+            "example_density": 0.74,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.3016609719058466,
+            "passed": false,
+            "similarity_max": 0.7529455437991462
+          },
+          "iteration": 5,
+          "timestamp": "2026-02-22T21:33:07Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.056,
+            "drift_score": 0.3016609719058466
+          }
+        }
+      ]
     }
   },
   "generated_at": "2026-02-18T23:05:36Z",
