@@ -1,13 +1,15 @@
 # Risks and decisions
 
 ## Risks discovered
-- Planning-only iteration defers implementation risk discovery (runtime regressions remain untested until follow-up slices).
-- Trace schema additions in `state/kernel.py` could drift from existing smoke/eval expectations if introduced without synchronized test updates.
+- Planning-only output can become stale if implementation iterations drift from the declared sequence.
+- Existing smoke matrix in `state/copilot_sdk_uv_smoke.py` is already dense; adding modes without factoring helpers may increase maintenance cost.
+- Eval contract updates can create false negatives if metrics/trace expectations are not synchronized with kernel changes.
 
-## Decisions made
-- Kept this iteration strictly planning-only to satisfy the seed iteration contract.
-- Chose a vertical-slice next task (kernel trace schema first) to minimize blast radius and produce early executable evidence.
+## Decisions made and trade-offs
+- Decision: keep this iteration strictly planning-only to follow prompt seed constraints.
+  - Trade-off: no immediate runtime behavior improvement yet.
+- Decision: prioritize deterministic trace quality and role scaffold clarity before broader feature expansion.
+  - Trade-off: some downstream ergonomics improvements are deferred.
 
-## Trade-offs and deferrals
-- Deferred concrete code changes and test execution to the next iteration by design.
-- Deferred broader eval YAML edits until initial trace schema exists to avoid speculative contracts.
+## Intentionally deferred
+- Any code edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.

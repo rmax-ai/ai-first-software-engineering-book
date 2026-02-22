@@ -1,18 +1,14 @@
 # Validation
 
 ## Verification commands run
-- Context inspection via repository file reads:
-  - `prompts/incremental-improvements/execute.md`
-  - `DEVELOPMENT.md`
-- Artifact presence check:
-  - `ls state/feature_iterations/iter_001`
+- `python - <<'PY'\nfrom pathlib import Path\nbase = Path('state/feature_iterations/iter_001')\nrequired = [f'{i:02d}-{name}.md' for i, name in [(1,'task'),(2,'plan'),(3,'execution'),(4,'validation'),(5,'risks-and-decisions'),(6,'next-iteration'),(7,'summary')]]\nmissing = [p for p in required if not (base / p).exists()]\nprint('PASS' if not missing else f'FAIL missing: {missing}')\nPY`
+- `rg -n "state/kernel.py|state/role_io_templates.py|state/copilot_sdk_uv_smoke.py|evals/" state/feature_iterations/iter_001/*.md`
 
 ## Observed results
-- Prompt requirements confirmed: one-task scope, seven markdown artifacts, seed iteration is planning-focused.
-- Harness development guidance confirmed: UV execution, deterministic kernel design, eval alignment expectations.
-- Iteration directory contains all required files (`01`-`07` markdown artifacts).
+- PASS: all seven required iteration artifacts are present in `state/feature_iterations/iter_001/`.
+- PASS: plan artifacts explicitly reference required harness and eval file paths.
 
 ## Acceptance criteria status
-- ✅ Feature/tests/evals planning story documented.
-- ✅ Step-by-step future implementation plan documented with explicit target files.
-- ✅ Validation evidence recorded with concrete inspection outputs.
+1. Plan includes features/tests/evals coverage: **PASS**
+2. Future file-touch scope is concrete and path-specific: **PASS**
+3. Next iteration task is singular with measurable criteria: **PASS**
