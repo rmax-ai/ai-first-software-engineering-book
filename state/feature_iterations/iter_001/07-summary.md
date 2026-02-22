@@ -1,8 +1,9 @@
-# Iteration summary
+# Iteration Summary
 
-This seed feature iteration established the first `state/feature_iterations/iter_001` handoff set.
-The work intentionally stayed planning-only, matching the prompt requirement to avoid implementation changes.
-The backlog now describes concrete harness improvements across `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
-It also maps future regression checks to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-Validation confirmed folder discovery, artifact completeness, and acceptance-criteria coverage.
-The next iteration should implement deterministic trace-summary enrichment in the kernel with targeted evidence.
+This seed feature iteration created the required seven-artifact handoff under `state/feature_iterations/iter_001/`.
+The selected task was planning custom harness improvements rather than implementing runtime changes.
+The plan covers three dimensions: feature upgrades (kernel observability and template contracts), testing strategy (unit + deterministic smoke), and evaluation/regression gates (alignment with `evals/*.yaml` and metrics evidence).
+Execution remained minimal and scoped to documentation artifacts only.
+Validation steps confirm folder completeness, required path references, and narrow diff surface.
+Risks and explicit deferrals were recorded to prevent accidental scope expansion.
+The next iteration is concretely defined as trace-summary schema hardening with targeted smoke-backed verification.

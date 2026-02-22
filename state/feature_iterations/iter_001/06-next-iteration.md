@@ -1,19 +1,21 @@
-# Recommended next task
+# Next Iteration Recommendation
 
-## Task
-Define and implement deterministic trace-summary enrichment in `state/kernel.py`.
+## Recommended task
+Implement deterministic trace-summary schema hardening in `state/kernel.py` with targeted tests.
 
 ## Why this is next
-- It unlocks measurable observability improvements that downstream template and smoke-test work can validate.
-- It creates the concrete data contract needed before touching eval expectations.
+- It is the highest-impact foundation for observability and downstream eval reliability.
+- It unlocks safer iteration on role templates and smoke coverage by stabilizing core trace outputs.
 
 ## Acceptance criteria
-1. `state/kernel.py` emits a stable trace-summary structure with explicit fields for phase timings, tool usage counts, and guardrail outcomes.
-2. Existing kernel behavior remains unchanged aside from additive trace data.
-3. A targeted verification run demonstrates the new trace-summary fields are present and well-formed.
+- Add/adjust kernel logic so trace summaries always include stable required fields and explicit missing-data handling.
+- Add targeted tests for the updated trace summary shape and failure metadata.
+- Validate with deterministic smoke run(s), e.g.:
+  - `uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-shape-guard`
+  - `uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-missing-entry-guard`
+- Document evidence in the next iteration artifacts.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_uv_smoke.py` (only if needed for targeted verification)
-- `state/feature_iterations/iter_002/04-validation.md` (evidence capture)
-
+- `state/copilot_sdk_smoke_test.py`
+- relevant test files under `state/` (if present/needed)
