@@ -106,6 +106,12 @@ class PromptTextPayload(BaseModel):
     text: str
 
 
+class LLMJSONResponseTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
 class CriticEvalInputsPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -358,6 +364,14 @@ class PromptTextTransit:
 
 
 @dataclass(frozen=True)
+class LLMJSONResponseTextTransit:
+    payload: LLMJSONResponseTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
+
+
+@dataclass(frozen=True)
 class CriticEvalInputsTransit:
     payload: CriticEvalInputsPayload
 
@@ -594,7 +608,12 @@ def _strip_wrapping_code_fence(text: str) -> str:
 def _extract_json_object(text: str) -> JSONMappingTransit:
     """Best-effort parse of a JSON object from an LLM response."""
 
-    t = _strip_wrapping_code_fence(text).strip()
+    try:
+        text_payload = LLMJSONResponseTextPayload.model_validate({"text": text})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid LLM JSON response text payload: {exc}") from exc
+    text_transit = LLMJSONResponseTextTransit(payload=text_payload)
+    t = _strip_wrapping_code_fence(text_transit.to_text()).strip()
     try:
         obj = json.loads(t)
     except json.JSONDecodeError:
