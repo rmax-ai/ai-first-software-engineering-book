@@ -56,6 +56,34 @@ class ChatMessagesPayload(BaseModel):
     messages: list[ChatMessagePayload]
 
 
+class SDKUsagePayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+
+    def to_usage(self) -> LLMUsage:
+        prompt = self.prompt_tokens if self.prompt_tokens is not None else self.input_tokens
+        completion = self.completion_tokens if self.completion_tokens is not None else self.output_tokens
+        return LLMUsage(prompt_tokens=int(prompt or 0), completion_tokens=int(completion or 0))
+
+
+class SDKMessagePayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    content: str | None = None
+
+
+class SDKChatResponsePayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    content: str | None = None
+    message: SDKMessagePayload | None = None
+    usage: SDKUsagePayload | None = None
+
+
 @dataclass(frozen=True)
 class ChatMessagesTransit:
     payload: ChatMessagesPayload
@@ -67,6 +95,28 @@ class ChatMessagesTransit:
     @property
     def message_payloads(self) -> list[ChatMessagePayload]:
         return self.payload.messages
+
+
+@dataclass(frozen=True)
+class SDKChatResponseTransit:
+    raw: dict[str, Any]
+    payload: SDKChatResponsePayload
+
+    @classmethod
+    def from_raw(cls, raw: dict[str, Any]) -> "SDKChatResponseTransit":
+        return cls(raw=raw, payload=SDKChatResponsePayload.model_validate(raw))
+
+    def content_text(self) -> str:
+        if isinstance(self.payload.content, str):
+            return self.payload.content
+        if self.payload.message and isinstance(self.payload.message.content, str):
+            return self.payload.message.content
+        return ""
+
+    def usage(self) -> LLMUsage | None:
+        if self.payload.usage is None:
+            return None
+        return self.payload.usage.to_usage()
 
 
 class LLMClient:
@@ -407,18 +457,23 @@ class LLMClient:
 
     def _normalize_sdk_response(self, result: Any) -> LLMResponse:
         raw: dict[str, Any] | None = result if isinstance(result, dict) else None
-        content = ""
+        transit: SDKChatResponseTransit | None = None
+        if raw is not None:
+            try:
+                transit = SDKChatResponseTransit.from_raw(raw)
+            except ValidationError as exc:
+                raise LLMClientError(f"Invalid Copilot SDK response payload: {exc}") from exc
+        content = transit.content_text() if transit is not None else ""
         usage = self._extract_sdk_usage(result)
-        if isinstance(result, dict):
-            if isinstance(result.get("content"), str):
-                content = result["content"]
-            elif isinstance(result.get("message"), dict):
-                content = str(result["message"].get("content", ""))
+        if transit is not None:
+            payload_usage = transit.usage()
+            if payload_usage is not None:
+                usage = payload_usage
         if not content:
             content_attr = getattr(result, "content", None)
             if isinstance(content_attr, str):
                 content = content_attr
-        return LLMResponse(content=str(content), usage=usage, raw=raw)
+        return LLMResponse(content=str(content), usage=usage, raw=transit.raw if transit is not None else raw)
 
     def _extract_sdk_usage(self, result: Any) -> LLMUsage:
         direct = self._usage_from_any(result)
