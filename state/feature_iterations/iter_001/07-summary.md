@@ -1,10 +1,8 @@
 # Iteration Summary
 
-This seed feature iteration established the first backlog contract at `state/feature_iterations/iter_001/`.
-The task was intentionally planning-only to match the prompt's seed requirement.
-Artifacts define a concrete improvement roadmap for `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
-The plan ties each feature track to explicit verification commands in the UV-managed runtime.
-Evaluation alignment is documented against `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-Execution and validation logs record prompt compliance and folder-contract completion.
-Risks and trade-offs were captured to prevent scope drift and preserve deterministic checks.
-One next task is specified with bounded acceptance criteria and expected files for `iter_002`.
+- Created `state/feature_iterations/iter_001/` as the first feature-improvement iteration folder.
+- Executed a planning-only task: **Plan custom state harness improvements**.
+- Defined a concise backlog framing required harness features, test surfaces, and eval/regression checkpoints.
+- Captured execution evidence and validation steps with explicit file paths and commands.
+- Logged risks around plan drift and eval/metric coupling, with intentional deferral of implementation edits.
+- Produced one concrete next task targeting deterministic trace-summary observability and smoke verification.
