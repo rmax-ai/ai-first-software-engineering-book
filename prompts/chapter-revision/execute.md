@@ -120,4 +120,5 @@ Replace `<chapter>` with the chapter identifier listed below.
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
 | 01-paradigm-shift | 1 | failed(1) | none | `497f1e9` |
-| 01-paradigm-shift | 2 | failed(1) | none | `pending` |
+| 01-paradigm-shift | 2 | failed(1) | none | `adbfd04` |
+| 01-paradigm-shift | 3 | failed(1) | none | `pending` |
