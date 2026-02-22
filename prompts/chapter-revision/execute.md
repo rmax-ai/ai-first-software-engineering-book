@@ -162,3 +162,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 03-autonomous-kernels | 2 | failed(1) | none | `9982fa5` |
 | 03-autonomous-kernels | 3 | failed(1) | none | `302691a` |
 | 04-memory-systems | 1 | failed(1) | none | `a62625f` |
+| 04-memory-systems | 2 | failed(1) | none | `3d85759` |
