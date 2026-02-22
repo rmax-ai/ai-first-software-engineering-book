@@ -159,3 +159,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 02-harness-engineering | 1 | failed(1) | none | `this commit` |
 | 02-harness-engineering | 2 | failed(1) | none | `this commit` |
 | 02-harness-engineering | 3 | failed(1) | none | `this commit` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `this commit` |
