@@ -78,6 +78,15 @@ class ChapterSelectionStrategyPayload(BaseModel):
     lifecycle_priority: list[str] = Field(default_factory=list)
 
 
+class GovernanceCLIArgsPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    cmd: str
+    ledger: Path
+    chapter_id: list[str] = Field(default_factory=list)
+    status: str = "active_refinement"
+
+
 class LedgerPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -148,6 +157,36 @@ class SelectionStrategyTransit:
     def from_payload(cls, payload: ChapterSelectionStrategyPayload) -> "SelectionStrategyTransit":
         lifecycle_priority = tuple(item for item in payload.lifecycle_priority if isinstance(item, str) and item.strip())
         return cls(lifecycle_priority=lifecycle_priority)
+
+
+@dataclass(frozen=True)
+class GovernanceCLIArgsTransit:
+    payload: GovernanceCLIArgsPayload
+    func: Any
+
+    @classmethod
+    def from_namespace(cls, args: argparse.Namespace) -> "GovernanceCLIArgsTransit":
+        chapter_ids = getattr(args, "chapter_id", [])
+        if not isinstance(chapter_ids, list):
+            chapter_ids = []
+        payload = GovernanceCLIArgsPayload.model_validate(
+            {
+                "cmd": str(args.cmd),
+                "ledger": Path(args.ledger),
+                "chapter_id": [str(chapter_id) for chapter_id in chapter_ids],
+                "status": str(getattr(args, "status", "active_refinement")),
+            }
+        )
+        return cls(payload=payload, func=args.func)
+
+    def to_namespace(self) -> argparse.Namespace:
+        return argparse.Namespace(
+            cmd=self.payload.cmd,
+            ledger=self.payload.ledger,
+            chapter_id=list(self.payload.chapter_id),
+            status=self.payload.status,
+            func=self.func,
+        )
 
 
 def _load_json(path: Path) -> LedgerJSONTransit:
@@ -568,7 +607,11 @@ def main(argv: list[str] | None = None) -> int:
     p_unhold.set_defaults(func=_cmd_unhold)
 
     args = parser.parse_args(argv)
-    return int(args.func(args))
+    try:
+        cli_args = GovernanceCLIArgsTransit.from_namespace(args)
+    except ValidationError as exc:
+        raise GovernanceError(f"Invalid CLI args payload: {exc}") from exc
+    return int(cli_args.func(cli_args.to_namespace()))
 
 
 if __name__ == "__main__":
