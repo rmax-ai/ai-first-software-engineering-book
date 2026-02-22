@@ -137,3 +137,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 06-agent-governance | 1 | failed(1) | none | `7108efd` |
 | 06-agent-governance | 2 | failed(1) | none | `8accd95` |
 | 06-agent-governance | 3 | failed(1) | none | `78c8a5e` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `c4e1991` |
