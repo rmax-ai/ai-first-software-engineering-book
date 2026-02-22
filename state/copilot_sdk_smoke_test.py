@@ -1884,6 +1884,46 @@ def run_usage_examples_duplicate_count_wrapper_pass_message_delimiter_guard_mode
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_literal_only_guard_mode() -> int:
+    wrapper_mode_specs = [
+        (mode_name, mode_handler)
+        for mode_name, mode_handler, _description in TRACE_SUMMARY_MODE_SPECS
+        if mode_name.startswith("usage-examples-duplicate-count-mode-coverage-guard")
+    ]
+    assert wrapper_mode_specs, "expected duplicate-count coverage-guard wrapper functions"
+
+    wrappers_with_non_literal_helper_args: list[str] = []
+    for _mode_name, mode_handler in wrapper_mode_specs:
+        helper_calls = [
+            node
+            for node in ast.walk(ast.parse(inspect.getsource(mode_handler)))
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "_run_usage_examples_duplicate_count_mode_coverage_guard"
+        ]
+        if len(helper_calls) != 1:
+            wrappers_with_non_literal_helper_args.append(mode_handler.__name__)
+            continue
+        helper_args = helper_calls[0].args
+        if any(
+            isinstance(arg, ast.JoinedStr) or (isinstance(arg, ast.BinOp) and isinstance(arg.op, ast.Add))
+            for arg in helper_args
+        ):
+            wrappers_with_non_literal_helper_args.append(mode_handler.__name__)
+
+    assert not wrappers_with_non_literal_helper_args, (
+        "expected duplicate-count coverage-guard wrappers to pass literal-only helper arguments (no f-strings "
+        "or concatenation), "
+        f"found regressions: {wrappers_with_non_literal_helper_args}"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-literal-only-guard mode validates duplicate-count "
+        "coverage-guard wrappers use literal-only helper arguments"
+    )
+    return 0
+
+
 def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
@@ -2217,6 +2257,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-pass-message-delimiter-guard",
         run_usage_examples_duplicate_count_wrapper_pass_message_delimiter_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper helper second-argument PASS message delimiter assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-literal-only-guard",
+        run_usage_examples_duplicate_count_wrapper_helper_literal_only_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper literal-only argument assertion",
     ),
     (
         "usage-examples-order-guard",
