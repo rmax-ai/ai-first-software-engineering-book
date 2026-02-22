@@ -439,7 +439,7 @@ def _strip_wrapping_code_fence(text: str) -> str:
     return inner.strip("\n")
 
 
-def _extract_json_object(text: str) -> dict[str, Any]:
+def _extract_json_object(text: str) -> JSONMappingTransit:
     """Best-effort parse of a JSON object from an LLM response."""
 
     t = _strip_wrapping_code_fence(text).strip()
@@ -456,9 +456,11 @@ def _extract_json_object(text: str) -> dict[str, Any]:
         except json.JSONDecodeError as exc:
             raise KernelError(f"LLM response contained invalid JSON: {exc}") from exc
 
-    if not isinstance(obj, dict):
-        raise KernelError("LLM response JSON must be an object")
-    return obj
+    try:
+        payload = JSONMappingPayload.model_validate({"data": obj})
+    except ValidationError as exc:
+        raise KernelError(f"LLM response JSON must be an object mapping: {exc}") from exc
+    return JSONMappingTransit(payload=payload)
 
 
 def _extract_markdown(text: str) -> str:
@@ -558,7 +560,7 @@ def _llm_generate_planner(itdir: Path, llm: LLMRun) -> Any:
         raise KernelError(f"Planner LLM call failed: {exc}") from exc
 
     _llm_write_trace(itdir, name="planner", prompt=f"SYSTEM\n{contract}\n\nUSER\n{user}\n", response=resp.content)
-    obj = _extract_json_object(resp.content)
+    obj = _extract_json_object(resp.content).to_mapping()
     _write_text(itdir / "out" / "planner.json", json.dumps(obj, indent=2, sort_keys=True) + "\n")
     llm.usage = _llm_add_usage(llm.usage, resp.usage)
     return obj
@@ -614,7 +616,7 @@ def _llm_generate_critic(itdir: Path, llm: LLMRun, *, revised_md: str) -> Any:
         raise KernelError(f"Critic LLM call failed: {exc}") from exc
 
     _llm_write_trace(itdir, name="critic", prompt=f"SYSTEM\n{contract}\n\nUSER\n{user}\n", response=resp.content)
-    obj = _extract_json_object(resp.content)
+    obj = _extract_json_object(resp.content).to_mapping()
     _write_text(itdir / "out" / "critic.json", json.dumps(obj, indent=2, sort_keys=True) + "\n")
     llm.usage = _llm_add_usage(llm.usage, resp.usage)
     return obj
