@@ -1,17 +1,15 @@
 # Next Iteration Recommendation
 
 ## Recommended next task
-Implement deterministic trace-summary enrichment in `state/kernel.py` with matching smoke assertions.
+Implement structured trace lifecycle logging in `state/kernel.py` and validate it via smoke coverage updates.
 
 ## Why this is next
-- It is the smallest executable slice from the plan that directly improves harness observability.
-- It can be validated with focused smoke execution before touching eval contract files.
+Trace lifecycle visibility is the foundational dependency for confidently evolving role-IO scaffolds and eval gating without regressions.
 
 ## Acceptance criteria
-- Add a minimal trace-summary enrichment helper path in `state/kernel.py` that records deterministic per-loop summary fields.
-- Update `state/copilot_sdk_uv_smoke.py` with one targeted mode that asserts the new trace-summary fields.
-- Execute `uv run python state/copilot_sdk_uv_smoke.py` with the targeted mode and record pass/fail evidence in the new iteration artifacts.
-- Keep public CLI/kernel interfaces unchanged.
+- Add deterministic trace lifecycle event emission (start, tool-call, validation, completion/failure) in `state/kernel.py`.
+- Add/adjust smoke mode(s) in `state/copilot_sdk_uv_smoke.py` that assert lifecycle event presence and ordering.
+- Document verification evidence from `uv run python state/copilot_sdk_uv_smoke.py` in the new iteration `04-validation.md`.
 
 ## Expected files to touch
 - `state/kernel.py`

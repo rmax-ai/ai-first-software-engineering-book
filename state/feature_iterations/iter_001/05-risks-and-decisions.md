@@ -1,13 +1,12 @@
 # Risks and Decisions
 
 ## Risks discovered
-- Future harness updates may couple `state/kernel.py` behavior and smoke assertions more tightly, increasing maintenance overhead.
-- Adding eval assertions too early may create brittle gates before trace schema stabilizes.
+- Expanding kernel trace observability may increase output volume and require careful signal-to-noise controls.
+- Tightening role-IO constraints could expose latent prompt/template inconsistencies.
 
-## Decisions and trade-offs
-- Chose planning-only execution to honor seed-iteration requirements and avoid premature implementation churn.
-- Kept planned coverage anchored to existing eval contracts instead of introducing new eval files immediately.
+## Decisions made and trade-offs
+- Chose planning-only scope to satisfy seed-iteration directive and avoid premature implementation churn.
+- Scoped next work to one measurable implementation slice to preserve minimal, reviewable diffs.
 
 ## Deferred intentionally
-- Any concrete Python code changes in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
-- Any eval YAML modifications until first implementation iteration validates baseline behavior deltas.
+- Direct code/eval edits are deferred to the next iteration after plan acceptance.
