@@ -1,10 +1,10 @@
 # Execution
 
 ## Commands/tools run
-- `view prompts/incremental-improvements/execute.md`
-- `view DEVELOPMENT.md`
-- `glob state/feature_iterations/iter_*`
-- `apply_patch` to create iteration artifacts in `state/feature_iterations/iter_001/`
+- Read `prompts/incremental-improvements/execute.md`.
+- Read `DEVELOPMENT.md`.
+- Inspected existing `state/feature_iterations/iter_*` folders (none existed).
+- Created `state/feature_iterations/iter_001/` and wrote all required artifacts.
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -15,6 +15,5 @@
 - `state/feature_iterations/iter_001/06-next-iteration.md`
 - `state/feature_iterations/iter_001/07-summary.md`
 
-## Rationale
-- Created the seed planning iteration exactly as requested by the prompt.
-- Kept scope to a single task: plan backlog, no harness code implementation.
+## Rationale per change
+- Added the minimum required iteration documentation to seed the feature-improvement backlog with concrete features/tests/evals coverage.

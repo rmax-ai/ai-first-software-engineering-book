@@ -1,13 +1,15 @@
 # Validation
 
 ## Verification commands run
-- `for f in state/feature_iterations/iter_001/{01-task.md,02-plan.md,03-execution.md} state/kernel.py state/role_io_templates.py state/copilot_sdk_uv_smoke.py evals/chapter-quality.yaml evals/style-guard.yaml evals/drift-detection.yaml; do test -f "$f" && echo "OK $f"; done`
+- `rg -n "^#" state/feature_iterations/iter_001/*.md`
+- `ls state/feature_iterations/iter_001`
 
 ## Observed results
-- Command exited with code `0`.
-- Verified all required seed-artifact files and planned future touchpoints exist.
+- All seven required markdown artifacts exist in `state/feature_iterations/iter_001/`.
+- Each artifact contains top-level markdown structure and task-specific content.
+- Plan content explicitly covers features, tests, and evals with concrete file paths.
 
-## Acceptance criteria check
-- Seed task documented with rationale and acceptance criteria: **pass**.
-- Plan covers features/tests/evals and explicit target files: **pass**.
-- Next iteration task is concrete and bounded: **pass**.
+## Acceptance criteria status
+- ✅ Plan includes features/tests/evals coverage.
+- ✅ Future target files are explicit.
+- ✅ Exactly one recommended next task is provided.
