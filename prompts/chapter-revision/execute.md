@@ -83,39 +83,6 @@ Replace `<chapter>` with the chapter identifier listed below.
 - All kernel runs exited with code `1` after hitting max-iteration hold; chapters were re-opened via governance `unlock`/`unhold` before each pass as needed.
 - Total commits created for this loop: 24 (`chore: pass N for chapter ...`).
 
-## Re-run 2026-02-22T18:42:29Z
-| Chapter | Pass | Result | Subagents | Commit |
-|--------:|-----:|--------|-----------|--------|
-| 01-paradigm-shift | 1 | failed(1) | none | `c8c1185` |
-| 01-paradigm-shift | 2 | failed(1) | none | `4c5cc58` |
-| 01-paradigm-shift | 3 | failed(1) | none | `3f58d9d` |
-| 02-harness-engineering | 1 | failed(1) | none | `7765216` |
-| 02-harness-engineering | 2 | failed(1) | none | `106d0d3` |
-| 02-harness-engineering | 3 | failed(1) | none | `e80461f` |
-| 03-autonomous-kernels | 1 | failed(1) | none | `37f278d` |
-| 03-autonomous-kernels | 2 | failed(1) | none | `3a80476` |
-| 03-autonomous-kernels | 3 | failed(1) | none | `331671e` |
-| 04-memory-systems | 1 | failed(1) | none | `e9f67b1` |
-| 04-memory-systems | 2 | failed(1) | none | `5b65f86` |
-| 04-memory-systems | 3 | failed(1) | none | `d66261f` |
-| 05-evaluation-and-traces | 1 | failed(1) | none | `6e911ac` |
-| 05-evaluation-and-traces | 2 | failed(1) | none | `36b641f` |
-| 05-evaluation-and-traces | 3 | failed(1) | none | `0573cf4` |
-| 06-agent-governance | 1 | failed(1) | none | `74af5f6` |
-| 06-agent-governance | 2 | failed(1) | none | `38e925a` |
-| 06-agent-governance | 3 | failed(1) | none | `325fa99` |
-| 07-production-ai-infrastructure | 1 | failed(1) | none | `d32e835` |
-| 07-production-ai-infrastructure | 2 | failed(1) | none | `dda6bba` |
-| 07-production-ai-infrastructure | 3 | failed(1) | none | `0ef999e` |
-| 99-future-directions | 1 | failed(1) | none | `409f774` |
-| 99-future-directions | 2 | failed(1) | none | `3aa2039` |
-| 99-future-directions | 3 | failed(1) | none | `23d7591` |
-### Re-run Summary (2026-02-22T18:42:29Z)
-- Completed 24/24 chapter passes so far.
-- Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 24.
-- Total commits created for this re-run loop: 24.
-
 ## Re-run 2026-02-22T18:46:17Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
@@ -148,3 +115,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Failed passes: 24.
 - Total commits created for this re-run loop: 24.
+
+## Re-run 2026-02-22T18:50:31Z
+| Chapter | Pass | Result | Subagents | Commit |
+|--------:|-----:|--------|-----------|--------|
