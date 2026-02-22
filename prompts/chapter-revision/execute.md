@@ -160,3 +160,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 02-harness-engineering | 3 | failed(1) | none | `518f76b` |
 | 03-autonomous-kernels | 1 | failed(1) | none | `a642e61` |
 | 03-autonomous-kernels | 2 | failed(1) | none | `9982fa5` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `302691a` |
