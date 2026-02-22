@@ -1260,7 +1260,7 @@ def _run_usage_examples_duplicate_count_mode_coverage_guard(
 
 def run_usage_examples_duplicate_count_mode_coverage_guard_mode() -> int:
     return _run_usage_examples_duplicate_count_mode_coverage_guard(
-        "usage-examples-duplicate-count-regression-guard",
+        "usage-examples-duplicate-count-mode-coverage-guard",
         "PASS: usage-examples-duplicate-count-mode-coverage-guard mode validates duplicate-count regression mode coverage",
     )
 
@@ -1410,7 +1410,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_uniquen
 
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode() -> int:
     return _run_usage_examples_duplicate_count_mode_coverage_guard(
-        "usage-examples-duplicate-count-mode-coverage-guard",
+        "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard",
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard mode coverage",
     )
 
@@ -1672,6 +1672,47 @@ def run_usage_examples_duplicate_count_wrapper_helper_signature_guard_mode() -> 
     print(
         "PASS: usage-examples-duplicate-count-wrapper-helper-signature-guard mode validates duplicate-count "
         "coverage-guard wrappers delegate with canonical two-string helper arguments"
+    )
+    return 0
+
+
+def run_usage_examples_duplicate_count_wrapper_helper_mode_name_literal_guard_mode() -> int:
+    wrapper_mode_specs = [
+        (mode_name, mode_handler)
+        for mode_name, mode_handler, _description in TRACE_SUMMARY_MODE_SPECS
+        if mode_name.startswith("usage-examples-duplicate-count-mode-coverage-guard")
+    ]
+    assert wrapper_mode_specs, "expected duplicate-count coverage-guard wrapper functions"
+
+    wrappers_with_non_canonical_mode_name_literal: list[str] = []
+    for mode_name, mode_handler in wrapper_mode_specs:
+        helper_calls = [
+            node
+            for node in ast.walk(ast.parse(inspect.getsource(mode_handler)))
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "_run_usage_examples_duplicate_count_mode_coverage_guard"
+        ]
+        if len(helper_calls) != 1:
+            wrappers_with_non_canonical_mode_name_literal.append(mode_handler.__name__)
+            continue
+        first_arg = helper_calls[0].args[0] if helper_calls[0].args else None
+        if (
+            not isinstance(first_arg, ast.Constant)
+            or not isinstance(first_arg.value, str)
+            or first_arg.value != mode_name
+        ):
+            wrappers_with_non_canonical_mode_name_literal.append(mode_handler.__name__)
+
+    assert not wrappers_with_non_canonical_mode_name_literal, (
+        "expected duplicate-count coverage-guard wrappers to pass their registered mode name as the first helper "
+        "argument to _run_usage_examples_duplicate_count_mode_coverage_guard(...), "
+        f"found regressions: {wrappers_with_non_canonical_mode_name_literal}"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-mode-name-literal-guard mode validates duplicate-count "
+        "coverage-guard wrappers pass their registered mode name as the first helper argument"
     )
     return 0
 
@@ -1984,6 +2025,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-helper-signature-guard",
         run_usage_examples_duplicate_count_wrapper_helper_signature_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper helper signature assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-mode-name-literal-guard",
+        run_usage_examples_duplicate_count_wrapper_helper_mode_name_literal_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper first-argument mode-name literal assertion",
     ),
     (
         "usage-examples-order-guard",
