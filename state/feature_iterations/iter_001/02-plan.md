@@ -1,19 +1,21 @@
 # Plan
 
-1. Reconfirm governance and engineering constraints from `DEVELOPMENT.md` for harness work in `state/`.
-2. Define a feature backlog for later iterations:
-   - Kernel observability and deterministic trace outputs in `state/kernel.py`.
-   - Role I/O scaffold tightening in `state/role_io_templates.py`.
-   - Stronger smoke coverage and scenario matrix updates in `state/copilot_sdk_uv_smoke.py`.
-3. Define test strategy for each backlog item, prioritizing deterministic `uv run python ...` harness checks.
-4. Define eval integration strategy for `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-5. Capture risks, sequencing, and one next actionable implementation task.
+1. Confirm governance and execution inputs from `DEVELOPMENT.md` and this iteration prompt.
+2. Define planned feature work for `state/kernel.py`:
+   - richer deterministic trace logging around loop phases and failure edges,
+   - explicit execution constraints and guardrail reporting outputs.
+3. Define planned scaffolding work for `state/role_io_templates.py`:
+   - clearer role-specific IO templates with stricter required sections for planner/writer/critic exchanges.
+4. Define planned validation work for `state/copilot_sdk_uv_smoke.py`:
+   - targeted smoke cases that prove new observability and deterministic behavior.
+5. Define planned eval updates for `evals/*.yaml`:
+   - add or tighten checks that detect missing trace signals and regressions in harness guarantees.
+6. Sequence the backlog so the next iteration executes one smallest vertical slice first, then validates via `uv run` commands and eval contracts.
 
-## Expected files to change in later iterations
+## Expected files in later implementation iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- Targeted harness tests under `state/` and/or `book/` as needed
