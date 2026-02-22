@@ -1396,7 +1396,7 @@
       "status": "hold"
     },
     "03-autonomous-kernels": {
-      "current_iteration": 57,
+      "current_iteration": 60,
       "drift_history": [],
       "human_validation": {
         "approved": false,
@@ -1912,6 +1912,33 @@
           "planner_focus": [
             "## Thesis: tighten scope"
           ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.005217650566487776,
+          "iteration": 58,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.005217650566487776,
+          "iteration": 59,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.005217650566487776,
+          "iteration": 60,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
         }
       ],
       "last_eval": {
@@ -1939,7 +1966,7 @@
               "thesis_clarity": 1.0,
               "tradeoffs": 1.0
             },
-            "timestamp": "2026-02-22T16:21:18Z",
+            "timestamp": "2026-02-22T16:21:19Z",
             "total": 1.0
           },
           "drift_detection": {
@@ -1957,7 +1984,7 @@
               "duplicate_sentence_ratio": 0.0,
               "near_duplicate_ngram_ratio": 0.0035778175313059034
             },
-            "timestamp": "2026-02-22T16:21:18Z"
+            "timestamp": "2026-02-22T16:21:19Z"
           },
           "drift_score": 0.005217650566487776,
           "passed": false,
@@ -2016,7 +2043,7 @@
                 "words": 135
               }
             ],
-            "timestamp": "2026-02-22T16:21:18Z"
+            "timestamp": "2026-02-22T16:21:19Z"
           }
         }
       },
@@ -2035,11 +2062,11 @@
         "hypothesis": "",
         "validation_status": "untested"
       },
-      "revision_count": 57,
+      "revision_count": 60,
       "stability": {
         "consecutive_passes": 0,
         "frozen_candidate": false,
-        "last_modified_iteration": 57
+        "last_modified_iteration": 60
       },
       "status": "hold"
     },
@@ -40924,6 +40951,375 @@
         "patterns_modified": []
       },
       "timestamp": "2026-02-22T16:21:18Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.01"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:21:19Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0035778175313059034
+          },
+          "timestamp": "2026-02-22T16:21:19Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.057108863771564544,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "To make this operational, treat each loop step as a checkpoint with a \u201cmust record\u201d trace payload and a \u201cmust decide\u201d stop condition: - **Intent**: state the task class and success condition (e.g., \u201ct",
+              "words": 41
+            },
+            {
+              "sentence": "Mermaid mapping of stages to controls and outputs: ```mermaid flowchart LR I[Intent] --> P[Plan] --> A[Act] --> V[Verify] --> R[Record trace] --> S{Stop / iterate} B[(Budgets\\niterations/time/tool cal",
+              "words": 33
+            },
+            {
+              "sentence": "produced .-> R V -->|pass| S V -->|fail| P S -->|iterate| P S -->|stop| End[Exit with summary] ``` A compact \u201cmust capture\u201d checklist (minimum viable trace): | Loop stage | Budget signal | Permission ",
+              "words": 106
+            },
+            {
+              "sentence": "- Input: - failing test case: `tests/test_parse.py::test_rejects_empty_input` - reproduction step: `python -m mycli parse \"\"` returns exit code `0` but should return non-zero - budgets: max 3 iteratio",
+              "words": 54
+            },
+            {
+              "sentence": "- Command: `pytest -k rejects_empty_input` - Record: - failing assertion excerpt (placeholder): `E assert 0 == 2` - environment notes: OS, Python version, CLI args - Stop/iterate rule: - If the failur",
+              "words": 38
+            },
+            {
+              "sentence": "Record trace (auditable, replayable) - Persist a kernel trace with: - budgets consumed: iterations used, tool calls used, diff size - commands executed + exit codes - final test summary line (placehol",
+              "words": 53
+            },
+            {
+              "sentence": "- Input: - target version: `libX 4.2.0 \u2192 4.3.0` - constraints: Python `>=3.10`, cannot change public API, CI must stay green - upgrade guide: notes a breaking rename `OldClient` \u2192 `Client` - budgets: ",
+              "words": 62
+            },
+            {
+              "sentence": "- Record: - old/new constraint strings - diff stats for manifest only - Stop/iterate rule: - If the dependency resolver cannot produce a consistent lock, stop with resolver output (do not attempt ad-h",
+              "words": 38
+            },
+            {
+              "sentence": "- Command: `python -m compileall src` - Record: - exit code - compile summary line (placeholder): `Listing 'src'...` \u2026 `compileall: success` (or equivalent) - Interpretation: - If Gate A fails, this i",
+              "words": 43
+            },
+            {
+              "sentence": "- Command: `pytest` - Record: - exit code - test summary line (placeholder): `X passed, 0 failed` (or, on failure, `X passed, Y failed`) - Verification risk handling: - Treat a narrowed verification s",
+              "words": 53
+            },
+            {
+              "sentence": "- Required outputs on stop: - change summary: files touched + primary reason - verification summary: Gate A command + result and Gate B command + result, including summary lines - rollback plan: \u201creve",
+              "words": 53
+            },
+            {
+              "sentence": "Detection signals (tie these to budgets and evaluation gates, not intuition): - Local minima: - repeated edits in the same small area with no change in verification outcome across iterations - steadil",
+              "words": 135
+            }
+          ],
+          "timestamp": "2026-02-22T16:21:19Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/03-autonomous-kernels.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 58 for 03-autonomous-kernels"
+      },
+      "iteration": 406,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "03-autonomous-kernels"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:21:19Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.01"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:21:19Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0035778175313059034
+          },
+          "timestamp": "2026-02-22T16:21:19Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.057108863771564544,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "To make this operational, treat each loop step as a checkpoint with a \u201cmust record\u201d trace payload and a \u201cmust decide\u201d stop condition: - **Intent**: state the task class and success condition (e.g., \u201ct",
+              "words": 41
+            },
+            {
+              "sentence": "Mermaid mapping of stages to controls and outputs: ```mermaid flowchart LR I[Intent] --> P[Plan] --> A[Act] --> V[Verify] --> R[Record trace] --> S{Stop / iterate} B[(Budgets\\niterations/time/tool cal",
+              "words": 33
+            },
+            {
+              "sentence": "produced .-> R V -->|pass| S V -->|fail| P S -->|iterate| P S -->|stop| End[Exit with summary] ``` A compact \u201cmust capture\u201d checklist (minimum viable trace): | Loop stage | Budget signal | Permission ",
+              "words": 106
+            },
+            {
+              "sentence": "- Input: - failing test case: `tests/test_parse.py::test_rejects_empty_input` - reproduction step: `python -m mycli parse \"\"` returns exit code `0` but should return non-zero - budgets: max 3 iteratio",
+              "words": 54
+            },
+            {
+              "sentence": "- Command: `pytest -k rejects_empty_input` - Record: - failing assertion excerpt (placeholder): `E assert 0 == 2` - environment notes: OS, Python version, CLI args - Stop/iterate rule: - If the failur",
+              "words": 38
+            },
+            {
+              "sentence": "Record trace (auditable, replayable) - Persist a kernel trace with: - budgets consumed: iterations used, tool calls used, diff size - commands executed + exit codes - final test summary line (placehol",
+              "words": 53
+            },
+            {
+              "sentence": "- Input: - target version: `libX 4.2.0 \u2192 4.3.0` - constraints: Python `>=3.10`, cannot change public API, CI must stay green - upgrade guide: notes a breaking rename `OldClient` \u2192 `Client` - budgets: ",
+              "words": 62
+            },
+            {
+              "sentence": "- Record: - old/new constraint strings - diff stats for manifest only - Stop/iterate rule: - If the dependency resolver cannot produce a consistent lock, stop with resolver output (do not attempt ad-h",
+              "words": 38
+            },
+            {
+              "sentence": "- Command: `python -m compileall src` - Record: - exit code - compile summary line (placeholder): `Listing 'src'...` \u2026 `compileall: success` (or equivalent) - Interpretation: - If Gate A fails, this i",
+              "words": 43
+            },
+            {
+              "sentence": "- Command: `pytest` - Record: - exit code - test summary line (placeholder): `X passed, 0 failed` (or, on failure, `X passed, Y failed`) - Verification risk handling: - Treat a narrowed verification s",
+              "words": 53
+            },
+            {
+              "sentence": "- Required outputs on stop: - change summary: files touched + primary reason - verification summary: Gate A command + result and Gate B command + result, including summary lines - rollback plan: \u201creve",
+              "words": 53
+            },
+            {
+              "sentence": "Detection signals (tie these to budgets and evaluation gates, not intuition): - Local minima: - repeated edits in the same small area with no change in verification outcome across iterations - steadil",
+              "words": 135
+            }
+          ],
+          "timestamp": "2026-02-22T16:21:19Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/03-autonomous-kernels.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 59 for 03-autonomous-kernels"
+      },
+      "iteration": 407,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "03-autonomous-kernels"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:21:19Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.01"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:21:19Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0035778175313059034
+          },
+          "timestamp": "2026-02-22T16:21:19Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.057108863771564544,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "To make this operational, treat each loop step as a checkpoint with a \u201cmust record\u201d trace payload and a \u201cmust decide\u201d stop condition: - **Intent**: state the task class and success condition (e.g., \u201ct",
+              "words": 41
+            },
+            {
+              "sentence": "Mermaid mapping of stages to controls and outputs: ```mermaid flowchart LR I[Intent] --> P[Plan] --> A[Act] --> V[Verify] --> R[Record trace] --> S{Stop / iterate} B[(Budgets\\niterations/time/tool cal",
+              "words": 33
+            },
+            {
+              "sentence": "produced .-> R V -->|pass| S V -->|fail| P S -->|iterate| P S -->|stop| End[Exit with summary] ``` A compact \u201cmust capture\u201d checklist (minimum viable trace): | Loop stage | Budget signal | Permission ",
+              "words": 106
+            },
+            {
+              "sentence": "- Input: - failing test case: `tests/test_parse.py::test_rejects_empty_input` - reproduction step: `python -m mycli parse \"\"` returns exit code `0` but should return non-zero - budgets: max 3 iteratio",
+              "words": 54
+            },
+            {
+              "sentence": "- Command: `pytest -k rejects_empty_input` - Record: - failing assertion excerpt (placeholder): `E assert 0 == 2` - environment notes: OS, Python version, CLI args - Stop/iterate rule: - If the failur",
+              "words": 38
+            },
+            {
+              "sentence": "Record trace (auditable, replayable) - Persist a kernel trace with: - budgets consumed: iterations used, tool calls used, diff size - commands executed + exit codes - final test summary line (placehol",
+              "words": 53
+            },
+            {
+              "sentence": "- Input: - target version: `libX 4.2.0 \u2192 4.3.0` - constraints: Python `>=3.10`, cannot change public API, CI must stay green - upgrade guide: notes a breaking rename `OldClient` \u2192 `Client` - budgets: ",
+              "words": 62
+            },
+            {
+              "sentence": "- Record: - old/new constraint strings - diff stats for manifest only - Stop/iterate rule: - If the dependency resolver cannot produce a consistent lock, stop with resolver output (do not attempt ad-h",
+              "words": 38
+            },
+            {
+              "sentence": "- Command: `python -m compileall src` - Record: - exit code - compile summary line (placeholder): `Listing 'src'...` \u2026 `compileall: success` (or equivalent) - Interpretation: - If Gate A fails, this i",
+              "words": 43
+            },
+            {
+              "sentence": "- Command: `pytest` - Record: - exit code - test summary line (placeholder): `X passed, 0 failed` (or, on failure, `X passed, Y failed`) - Verification risk handling: - Treat a narrowed verification s",
+              "words": 53
+            },
+            {
+              "sentence": "- Required outputs on stop: - change summary: files touched + primary reason - verification summary: Gate A command + result and Gate B command + result, including summary lines - rollback plan: \u201creve",
+              "words": 53
+            },
+            {
+              "sentence": "Detection signals (tie these to budgets and evaluation gates, not intuition): - Local minima: - repeated edits in the same small area with no change in verification outcome across iterations - steadil",
+              "words": 135
+            }
+          ],
+          "timestamp": "2026-02-22T16:21:19Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/03-autonomous-kernels.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 60 for 03-autonomous-kernels"
+      },
+      "iteration": 408,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "03-autonomous-kernels"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:21:19Z"
     }
   ],
   "version": 2
