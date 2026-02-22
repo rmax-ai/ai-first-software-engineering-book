@@ -85,6 +85,12 @@ class KernelFixtureLedgerPayload(BaseModel):
 
 
 @dataclass(frozen=True)
+class KernelFixtureLedgerTransit:
+    raw: dict[str, Any]
+    payload: KernelFixtureLedgerPayload
+
+
+@dataclass(frozen=True)
 class MetricsHistoryTransit:
     iteration: int
     trace_summary: TraceSummaryPayload
@@ -209,19 +215,24 @@ async def run_prompt_mode(model: str, prompt: str, timeout_s: float) -> int:
 
 
 def _load_kernel_fixture_chapter(chapter_id: str) -> KernelFixtureChapterTransit:
-    try:
-        source_ledger = json.loads((REPO_ROOT / "state" / "ledger.json").read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise RuntimeError(f"Invalid ledger JSON for fixture: {exc}") from exc
-    try:
-        payload = KernelFixtureLedgerPayload.model_validate(source_ledger)
-    except ValidationError as exc:
-        raise RuntimeError(f"Invalid ledger payload for fixture: {exc}") from exc
-    chapter_payload = payload.chapters.get(chapter_id)
-    raw_chapter = source_ledger.get("chapters", {}).get(chapter_id)
+    ledger_transit = _load_kernel_fixture_ledger(REPO_ROOT / "state" / "ledger.json")
+    chapter_payload = ledger_transit.payload.chapters.get(chapter_id)
+    raw_chapter = ledger_transit.raw.get("chapters", {}).get(chapter_id)
     if chapter_payload is None or not isinstance(raw_chapter, dict):
         raise RuntimeError(f"Unknown chapter_id for fixture: {chapter_id}")
     return KernelFixtureChapterTransit(chapter_id=chapter_id, raw_chapter=raw_chapter, payload=chapter_payload)
+
+
+def _load_kernel_fixture_ledger(path: Path) -> KernelFixtureLedgerTransit:
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Invalid ledger JSON for fixture: {exc}") from exc
+    try:
+        payload = KernelFixtureLedgerPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise RuntimeError(f"Invalid ledger payload for fixture: {exc}") from exc
+    return KernelFixtureLedgerTransit(raw=raw, payload=payload)
 
 
 def _build_trace_summary_fixture(
