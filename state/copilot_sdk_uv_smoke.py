@@ -145,6 +145,18 @@ class JSONLinesTransit:
 
 
 @dataclass(frozen=True)
+class JSONLineTransit:
+    payload: JSONLinePayload
+
+    @classmethod
+    def from_mapping(cls, line_number: int, parsed_line: dict[str, Any]) -> "JSONLineTransit":
+        return cls(payload=JSONLinePayload.model_validate({"line_number": line_number, "data": parsed_line}))
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.model_dump()
+
+
+@dataclass(frozen=True)
 class KernelTraceTextTransit:
     source_path: Path
     payload: KernelTraceTextPayload
@@ -452,7 +464,11 @@ def _load_kernel_trace(path: Path) -> KernelTraceTransit:
             raise RuntimeError(f"Invalid kernel trace entry JSON at {path}:{line_number}: {exc}") from exc
         if not isinstance(parsed_line, dict):
             raise RuntimeError(f"Invalid kernel trace entry JSON at {path}:{line_number}: expected object mapping")
-        raw_entries.append({"line_number": line_number, "data": parsed_line})
+        try:
+            line_transit = JSONLineTransit.from_mapping(line_number=line_number, parsed_line=parsed_line)
+        except ValidationError as exc:
+            raise RuntimeError(f"Invalid kernel trace line payload at {path}:{line_number}: {exc}") from exc
+        raw_entries.append(line_transit.to_mapping())
     try:
         json_lines_payload = JSONLinesPayload.model_validate({"entries": raw_entries})
     except ValidationError as exc:
