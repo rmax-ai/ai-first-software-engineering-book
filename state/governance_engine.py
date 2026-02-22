@@ -72,12 +72,18 @@ class ChapterLifecycleRulesPayload(BaseModel):
     transitions: LifecycleTransitionsPayload = Field(default_factory=LifecycleTransitionsPayload)
 
 
+class ChapterSelectionStrategyPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    lifecycle_priority: list[str] = Field(default_factory=list)
+
+
 class LedgerPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     version: int | None = None
     chapter_lifecycle_rules: ChapterLifecycleRulesPayload = Field(default_factory=ChapterLifecycleRulesPayload)
-    chapter_selection_strategy: dict[str, Any] = Field(default_factory=dict)
+    chapter_selection_strategy: ChapterSelectionStrategyPayload = Field(default_factory=ChapterSelectionStrategyPayload)
     repo_iteration_log: list[dict[str, Any]] = Field(default_factory=list)
     chapters: dict[str, LedgerChapterPayload] = Field(default_factory=dict)
 
@@ -99,6 +105,16 @@ class PromotionRulesTransit:
     def from_payload(cls, payload: ChapterLifecycleRulesPayload) -> "PromotionRulesTransit":
         required = payload.transitions.draft_to_refined.required_consecutive_passes
         return cls(required_consecutive_passes=int(required if required is not None else 2))
+
+
+@dataclass(frozen=True)
+class SelectionStrategyTransit:
+    lifecycle_priority: tuple[str, ...]
+
+    @classmethod
+    def from_payload(cls, payload: ChapterSelectionStrategyPayload) -> "SelectionStrategyTransit":
+        lifecycle_priority = tuple(item for item in payload.lifecycle_priority if isinstance(item, str) and item.strip())
+        return cls(lifecycle_priority=lifecycle_priority)
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -287,7 +303,7 @@ def _is_chapter_eligible(chapter: dict[str, Any]) -> bool:
     return True
 
 
-def select_next_chapter_id(ledger: dict[str, Any]) -> str:
+def select_next_chapter_id(ledger: dict[str, Any], strategy: SelectionStrategyTransit | None = None) -> str:
     """Select the next chapter deterministically per ledger.chapter_selection_strategy."""
 
     chapters = _get_chapters(ledger)
@@ -329,16 +345,14 @@ def select_next_chapter_id(ledger: dict[str, Any]) -> str:
     if not candidates:
         raise GovernanceError("No eligible chapters found (all locked/frozen?)")
 
+    configured_order = strategy.lifecycle_priority if strategy is not None else ()
+    if configured_order:
+        lifecycle_rank_map = {name: idx for idx, name in enumerate(configured_order)}
+    else:
+        lifecycle_rank_map = {"draft": 0, "refined": 1, "approved": 2, "frozen": 3}
+
     def lifecycle_rank(lifecycle: str) -> int:
-        if lifecycle == "draft":
-            return 0
-        if lifecycle == "refined":
-            return 1
-        if lifecycle == "approved":
-            return 2
-        if lifecycle == "frozen":
-            return 3
-        return 99
+        return lifecycle_rank_map.get(lifecycle, 99)
 
     # Priority:
     # 1) lifecycle == draft
@@ -412,7 +426,8 @@ def _cmd_validate(args: argparse.Namespace) -> int:
 
 
 def _cmd_select(args: argparse.Namespace) -> int:
-    ledger = _load_ledger(args.ledger).as_ledger_dict()
+    ledger_transit = _load_ledger(args.ledger)
+    ledger = ledger_transit.as_ledger_dict()
     errors = validate_ledger(ledger)
     if errors:
         sys.stderr.write("Ledger validation failed; refusing to select.\n")
@@ -420,7 +435,8 @@ def _cmd_select(args: argparse.Namespace) -> int:
             sys.stderr.write(f"- {err}\n")
         return 1
 
-    chapter_id = select_next_chapter_id(ledger)
+    strategy_transit = SelectionStrategyTransit.from_payload(ledger_transit.payload.chapter_selection_strategy)
+    chapter_id = select_next_chapter_id(ledger, strategy=strategy_transit)
     sys.stdout.write(chapter_id + "\n")
     return 0
 
