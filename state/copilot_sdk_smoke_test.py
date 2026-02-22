@@ -1339,6 +1339,49 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_uniqueness_guard_mode(
     return 0
 
 
+def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_adjacency_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    target_modes = (
+        "trace-summary-fixture-root-cleanup-parity",
+        "trace-summary-fixture-cleanup-parity",
+    )
+    parser = _build_parser(all_mode_specs)
+    mode_action = next(
+        (
+            action
+            for action in parser._actions
+            if "--mode" in getattr(action, "option_strings", [])
+        ),
+        None,
+    )
+    assert mode_action is not None, "expected argparse --mode action to exist"
+    parser_mode_choices = list(mode_action.choices or [])
+    assert all(name in parser_mode_choices for name in target_modes), (
+        "expected argparse --mode choices to include both parity cleanup modes"
+    )
+    parser_first_index = parser_mode_choices.index(target_modes[0])
+    parser_second_index = parser_mode_choices.index(target_modes[1])
+    assert parser_second_index - parser_first_index == 1, (
+        "expected parity cleanup modes to be adjacent in argparse --mode choices"
+    )
+
+    usage_lines = _usage_doc_lines(all_mode_specs)
+    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
+    assert all(name in usage_mode_names for name in target_modes), (
+        "expected generated usage examples to include both parity cleanup modes"
+    )
+    usage_first_index = usage_mode_names.index(target_modes[0])
+    usage_second_index = usage_mode_names.index(target_modes[1])
+    assert usage_second_index - usage_first_index == 1, (
+        "expected parity cleanup modes to be adjacent in generated usage examples"
+    )
+
+    print(
+        "PASS: trace-summary-fixture-cleanup-parity-mode-choices-usage-examples-adjacency-guard mode validates parity mode adjacency in parser choices and usage examples"
+    )
+    return 0
+
+
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard"
@@ -2130,6 +2173,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-fixture-cleanup-parity-mode-choices-uniqueness-guard",
         run_trace_summary_fixture_cleanup_parity_mode_choices_uniqueness_guard_mode,
         "deterministic parity cleanup mode argparse choice uniqueness assertion",
+    ),
+    (
+        "trace-summary-fixture-cleanup-parity-mode-choices-usage-examples-adjacency-guard",
+        run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_adjacency_guard_mode,
+        "deterministic parity cleanup mode adjacency assertion across argparse choices and usage examples",
     ),
     (
         "docstring-mode-coverage-guard",
