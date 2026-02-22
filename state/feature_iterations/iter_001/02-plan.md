@@ -1,29 +1,21 @@
 # Plan
 
-1. Inventory current harness touchpoints from `DEVELOPMENT.md` to anchor the backlog around:
-   - `state/kernel.py`
-   - `state/role_io_templates.py`
-   - `state/copilot_sdk_uv_smoke.py`
-   - `evals/*.yaml`
-2. Define feature backlog items for determinism and observability:
-   - structured trace logging boundaries in kernel flow,
-   - clearer role IO scaffold contracts,
-   - deterministic execution constraints and error surfacing.
-3. Define test backlog items:
-   - expand smoke assertions in `state/copilot_sdk_uv_smoke.py`,
-   - add targeted kernel helper coverage for trace/constraint behavior,
-   - add fixture-based checks for role IO template expectations.
-4. Define evaluation backlog items:
-   - map feature/test changes to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`,
-   - identify expected telemetry/metrics confirmations in `state/metrics.json`.
-5. Sequence implementation into future single-task iterations, each with one narrow acceptance target and explicit file list.
+1. Inventory current harness surfaces in `state/` and identify gaps in trace visibility, role IO consistency, and deterministic execution controls.
+2. Propose feature work for:
+   - `state/kernel.py`: richer trace-summary telemetry and stricter loop-level guard checks.
+   - `state/role_io_templates.py` and `state/role_io/`: clearer role input/output scaffold parity checks.
+   - `state/copilot_sdk_uv_smoke.py`: smoke modes proving new telemetry and guard behavior.
+3. Map future verification:
+   - Script-level checks via `uv run python state/copilot_sdk_uv_smoke.py`.
+   - Focused kernel execution checks via `uv run python state/kernel.py --chapter-id <id>`.
+4. Map eval regression detection to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`, plus metrics verification in `state/metrics.json`.
+5. Write follow-up iteration task that implements the smallest high-leverage slice first (trace-summary coverage guard wiring).
 
-## Files expected to change in later iterations
-
+## Files expected to change in future implementation iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- `state/metrics.json` (only if metric schema/signals need updates)
+- `state/metrics.json`

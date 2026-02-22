@@ -1,16 +1,13 @@
 # Risks and decisions
 
 ## Risks discovered
+- Planning quality depends on future implementation discipline; broad edits could weaken deterministic harness behavior.
+- Eval coupling risk: adding checks in smoke mode without aligning `evals/*.yaml` may cause false confidence.
 
-- Planning-only iteration can drift from implementation reality if follow-up tasks are not kept narrow and validated each step.
-- Kernel observability changes may increase output noise unless trace boundaries are explicit and test-gated.
-
-## Decisions and trade-offs
-
-- Chose a strict seed-planning scope (no code edits) to match the prompt contract exactly.
-- Chose concrete file-level backlog items over speculative architecture changes to keep future tasks reviewable.
+## Decisions made
+- Kept this iteration strictly planning-only to satisfy the seed prompt and reduce churn.
+- Chose a single, smallest follow-up implementation task focused on trace-summary guard wiring for fast feedback.
 
 ## Deferred intentionally
-
-- Any implementation in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
-- Any metrics schema changes until a specific feature requires them.
+- No code changes to `state/kernel.py`, `state/role_io_templates.py`, or eval YAML files in this iteration.
+- No runtime harness execution beyond artifact validation, because this iteration's deliverable is the plan itself.
