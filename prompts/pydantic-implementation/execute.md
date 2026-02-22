@@ -55,6 +55,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - Kernel runtime logic continues consuming internal dataclasses (`PlannerPlan`, `CriticReport`) after validation.
 - `state/role_io_templates.py` now validates `state/ledger.json` through `LedgerPayload` and forwards chapter data via the `TemplateContext` dataclass before template writes.
 - `state/role_io_templates.py` now also forwards validated ledger payloads between template preparation steps via `LedgerTransit`.
+- `state/role_io_templates.py` now validates chapter markdown file ingestion via `ChapterTextPayload` and forwards validated chapter text via `ChapterTextTransit` before template context assembly.
 - `state/governance_engine.py` now validates `state/ledger.json` through `LedgerPayload` and passes parsed ledger data between CLI handlers via `LedgerTransit`.
 - `state/governance_engine.py` now parses lifecycle transition thresholds via `ChapterLifecycleRulesPayload` and forwards promotion thresholds via `PromotionRulesTransit` before lifecycle promotion computation.
 - `state/governance_engine.py` now parses chapter selection strategy ordering via `ChapterSelectionStrategyPayload` and forwards lifecycle selection order via `SelectionStrategyTransit` before deterministic chapter selection.

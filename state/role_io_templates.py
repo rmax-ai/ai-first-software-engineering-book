@@ -38,6 +38,12 @@ class LedgerPayload(BaseModel):
     chapters: dict[str, LedgerChapterPayload]
 
 
+class ChapterTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
 @dataclass(frozen=True)
 class TemplateContext:
     chapter_id: str
@@ -50,6 +56,14 @@ class TemplateContext:
 class LedgerTransit:
     raw: dict[str, Any]
     payload: LedgerPayload
+
+
+@dataclass(frozen=True)
+class ChapterTextTransit:
+    payload: ChapterTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -96,20 +110,29 @@ def _resolve_iteration(ledger: LedgerTransit, chapter_id: str, iteration: int | 
     return current_iteration + 1
 
 
+def _load_chapter_text(path: Path) -> ChapterTextTransit:
+    try:
+        raw_text = path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise TemplateError(f"Chapter file not found: {path}") from exc
+    try:
+        payload = ChapterTextPayload.model_validate({"text": raw_text})
+    except ValidationError as exc:
+        raise TemplateError(f"Invalid chapter text payload: {path}: {exc}") from exc
+    return ChapterTextTransit(payload=payload)
+
+
 def _build_template_context(ledger: LedgerTransit, chapter_id: str, iteration: int) -> TemplateContext:
     chapter = ledger.payload.chapters.get(chapter_id)
     if chapter is None:
         raise TemplateError(f"Unknown chapter_id: {chapter_id}")
     chapter_file = REPO_ROOT / chapter.path
-    try:
-        chapter_text = chapter_file.read_text(encoding="utf-8")
-    except FileNotFoundError as exc:
-        raise TemplateError(f"Chapter file not found: {chapter_file}") from exc
+    chapter_text_transit = _load_chapter_text(chapter_file)
     return TemplateContext(
         chapter_id=chapter_id,
         iteration=iteration,
         chapter_path=chapter.path,
-        chapter_text=chapter_text,
+        chapter_text=chapter_text_transit.to_text(),
     )
 
 
