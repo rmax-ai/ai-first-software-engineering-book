@@ -21,7 +21,7 @@ nav:
       - Minimal Agent Loop: book/patterns/minimal-agent-loop.md
       - Self-Verification Loop: book/patterns/self-verification-loop.md
 theme:
-  #name: material
+  name: material
 plugins:
   - search
   - mermaid2
