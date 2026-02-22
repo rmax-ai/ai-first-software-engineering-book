@@ -140,3 +140,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 06-agent-governance | 3 | ok | none | `n/a` |
 | 07-production-ai-infrastructure | 1 | ok | none | `n/a` |
 | 07-production-ai-infrastructure | 2 | ok | none | `n/a` |
+| 07-production-ai-infrastructure | 3 | ok | none | `n/a` |
