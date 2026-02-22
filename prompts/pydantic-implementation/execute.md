@@ -41,3 +41,9 @@ Implement a Pydantic-powered ingestion and transit layer in the custom harness u
 ## Stop Condition
 
 Stop after you have implemented the typed ingestion/transit layer, documented the new structure, and recorded verification evidence for the validation commands. If blocked, describe the blocker, the last successful observation, and the smallest actionable unblock step.
+
+## Typed Flow Notes
+
+- `state/kernel.py` validates `in/planner_input.json`, `out/planner.json`, and `out/critic.json` with Pydantic payload models before use.
+- The planner input payload is converted into a `PlannerInputTransit` dataclass before being forwarded to the planner LLM prompt.
+- Kernel runtime logic continues consuming internal dataclasses (`PlannerPlan`, `CriticReport`) after validation.

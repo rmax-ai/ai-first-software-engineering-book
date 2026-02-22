@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Any, Iterable, Literal
 
 import yaml
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -75,6 +76,75 @@ class LLMConfig:
 class LLMRun:
     client: Any
     usage: Any
+
+
+class PlannerInputPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    chapter_id: str
+    chapter_content: str
+    quality_metrics: dict[str, Any] = Field(default_factory=dict)
+    previous_critic_feedback: dict[str, Any] | None = None
+    chapter_hypothesis: str
+
+
+@dataclass(frozen=True)
+class PlannerInputTransit:
+    chapter_id: str
+    chapter_content: str
+    quality_metrics: dict[str, Any]
+    previous_critic_feedback: dict[str, Any] | None
+    chapter_hypothesis: str
+
+    @classmethod
+    def from_payload(cls, payload: PlannerInputPayload) -> "PlannerInputTransit":
+        data = payload.model_dump()
+        return cls(
+            chapter_id=data["chapter_id"],
+            chapter_content=data["chapter_content"],
+            quality_metrics=data["quality_metrics"],
+            previous_critic_feedback=data["previous_critic_feedback"],
+            chapter_hypothesis=data["chapter_hypothesis"],
+        )
+
+    def to_prompt_json(self) -> str:
+        return json.dumps(dataclasses.asdict(self), indent=2, sort_keys=True)
+
+
+class PlannerPlanPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    focus_areas: list[str]
+    structural_changes: list[str]
+    risk_flags: list[str]
+    target_word_delta: str
+
+    @field_validator("focus_areas")
+    @classmethod
+    def _validate_focus_areas(cls, value: list[str]) -> list[str]:
+        if not value:
+            raise ValueError("must not be empty")
+        return value
+
+    @field_validator("target_word_delta")
+    @classmethod
+    def _validate_target_word_delta(cls, value: str) -> str:
+        if not re.match(r"^[+-]\d+$", value.strip()):
+            raise ValueError("must look like '+400' or '-100'")
+        return value.strip()
+
+
+class CriticReportPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    structure_score: float = Field(ge=0.0, le=1.0)
+    clarity_score: float = Field(ge=0.0, le=1.0)
+    example_density: float = Field(ge=0.0, le=1.0)
+    tradeoff_presence: bool
+    failure_modes_present: bool
+    drift_score: float = Field(ge=0.0, le=1.0)
+    violations: list[str]
+    decision: Literal["approve", "refine"]
 
 
 def _utc_now_iso() -> str:
@@ -264,8 +334,13 @@ def _maybe_init_llm(cfg: LLMConfig) -> LLMRun | None:
 
 def _llm_generate_planner(itdir: Path, llm: LLMRun) -> Any:
     contract = _read_prompt(REPO_ROOT / "prompts" / "planner.md")
-    planner_input = _read_text(itdir / "in" / "planner_input.json")
-    user = "Return JSON only. No code fences. No commentary.\n\n" + "Planner input (JSON):\n" + planner_input
+    planner_input_raw = _load_json(itdir / "in" / "planner_input.json")
+    try:
+        planner_input_payload = PlannerInputPayload.model_validate(planner_input_raw)
+    except ValidationError as exc:
+        raise KernelError(f"Invalid planner input payload: {exc}") from exc
+    planner_input = PlannerInputTransit.from_payload(planner_input_payload)
+    user = "Return JSON only. No code fences. No commentary.\n\n" + "Planner input (JSON):\n" + planner_input.to_prompt_json()
     messages = [{"role": "system", "content": contract}, {"role": "user", "content": user}]
     try:
         resp = llm.client.chat(messages=messages, temperature=0.0)
@@ -505,73 +580,33 @@ def _require_exact_keys(obj: dict[str, Any], keys: set[str], ctx: str) -> None:
 
 def _load_planner_plan(path: Path) -> PlannerPlan:
     raw = _load_json(path)
-    if not isinstance(raw, dict):
-        raise KernelError("Planner output must be a JSON object")
-    _require_exact_keys(raw, {"focus_areas", "structural_changes", "risk_flags", "target_word_delta"}, "planner")
-
-    def _require_str_list(v: Any, name: str) -> list[str]:
-        if not isinstance(v, list) or not all(isinstance(x, str) for x in v):
-            raise KernelError(f"planner.{name} must be an array of strings")
-        return list(v)
-
-    focus = _require_str_list(raw["focus_areas"], "focus_areas")
-    structural = _require_str_list(raw["structural_changes"], "structural_changes")
-    risk = _require_str_list(raw["risk_flags"], "risk_flags")
-    target = raw["target_word_delta"]
-    if not isinstance(target, str) or not re.match(r"^[+-]\d+$", target.strip()):
-        raise KernelError("planner.target_word_delta must look like '+400' or '-100'")
-
-    if len(focus) < 1:
-        raise KernelError("planner.focus_areas must not be empty")
-
-    return PlannerPlan(focus_areas=focus, structural_changes=structural, risk_flags=risk, target_word_delta=target.strip())
+    try:
+        payload = PlannerPlanPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise KernelError(f"Invalid planner output payload: {exc}") from exc
+    return PlannerPlan(
+        focus_areas=list(payload.focus_areas),
+        structural_changes=list(payload.structural_changes),
+        risk_flags=list(payload.risk_flags),
+        target_word_delta=payload.target_word_delta,
+    )
 
 
 def _load_critic_report(path: Path) -> CriticReport:
     raw = _load_json(path)
-    if not isinstance(raw, dict):
-        raise KernelError("Critic output must be a JSON object")
-    _require_exact_keys(
-        raw,
-        {
-            "structure_score",
-            "clarity_score",
-            "example_density",
-            "tradeoff_presence",
-            "failure_modes_present",
-            "drift_score",
-            "violations",
-            "decision",
-        },
-        "critic",
-    )
-
-    def _require_float_01(v: Any, name: str) -> float:
-        try:
-            f = float(v)
-        except (TypeError, ValueError):
-            raise KernelError(f"critic.{name} must be a number")
-        if f < 0.0 or f > 1.0:
-            raise KernelError(f"critic.{name} must be in [0,1]")
-        return f
-
-    violations = raw["violations"]
-    if not isinstance(violations, list) or not all(isinstance(x, str) for x in violations):
-        raise KernelError("critic.violations must be an array of strings")
-
-    decision = raw["decision"]
-    if decision not in {"approve", "refine"}:
-        raise KernelError("critic.decision must be 'approve' or 'refine'")
-
+    try:
+        payload = CriticReportPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise KernelError(f"Invalid critic output payload: {exc}") from exc
     return CriticReport(
-        structure_score=_require_float_01(raw["structure_score"], "structure_score"),
-        clarity_score=_require_float_01(raw["clarity_score"], "clarity_score"),
-        example_density=_require_float_01(raw["example_density"], "example_density"),
-        tradeoff_presence=bool(raw["tradeoff_presence"]),
-        failure_modes_present=bool(raw["failure_modes_present"]),
-        drift_score=_require_float_01(raw["drift_score"], "drift_score"),
-        violations=list(violations),
-        decision=decision,
+        structure_score=payload.structure_score,
+        clarity_score=payload.clarity_score,
+        example_density=payload.example_density,
+        tradeoff_presence=payload.tradeoff_presence,
+        failure_modes_present=payload.failure_modes_present,
+        drift_score=payload.drift_score,
+        violations=list(payload.violations),
+        decision=payload.decision,
     )
 
 
