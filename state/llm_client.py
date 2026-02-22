@@ -124,6 +124,12 @@ class SDKSessionEventsPayload(BaseModel):
     events: list[SDKSessionEventPayload]
 
 
+class SDKEventObjectPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    data: dict[str, Any] = Field(default_factory=dict)
+
+
 class APIKeyEnvPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -231,6 +237,18 @@ class APIKeyEnvTransit:
 
     def value(self) -> str:
         return self.payload.value.strip()
+
+
+@dataclass(frozen=True)
+class SDKEventObjectTransit:
+    payload: SDKEventObjectPayload
+
+    @classmethod
+    def from_raw(cls, raw: dict[str, Any]) -> "SDKEventObjectTransit":
+        return cls(payload=SDKEventObjectPayload.model_validate({"data": raw}))
+
+    def mapping(self) -> dict[str, Any]:
+        return self.payload.data
 
 
 class LLMClient:
@@ -680,7 +698,12 @@ class LLMClient:
             raw = getattr(value, "__dict__", None)
             if not isinstance(raw, dict):
                 return {}
-            return {key: item for key, item in raw.items() if not key.startswith("_")}
+            cleaned = {key: item for key, item in raw.items() if not key.startswith("_")}
+            try:
+                transit = SDKEventObjectTransit.from_raw(cleaned)
+            except ValidationError as exc:
+                raise LLMClientError(f"Invalid SDK event object payload: {exc}") from exc
+            return transit.mapping()
 
         if isinstance(event, dict):
             event_type = event.get("type")
