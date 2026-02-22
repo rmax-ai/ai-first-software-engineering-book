@@ -64,6 +64,7 @@ class MetricsPayload(BaseModel):
 
 @dataclass(frozen=True)
 class MetricsTransit:
+    json_mapping: JSONMappingTransit
     raw: dict[str, Any]
     payload: MetricsPayload
 
@@ -118,6 +119,7 @@ class KernelTraceTextPayload(BaseModel):
 
 @dataclass(frozen=True)
 class KernelFixtureLedgerTransit:
+    json_mapping: JSONMappingTransit
     raw: dict[str, Any]
     payload: KernelFixtureLedgerPayload
 
@@ -324,7 +326,7 @@ def _load_kernel_fixture_ledger(path: Path) -> KernelFixtureLedgerTransit:
         payload = KernelFixtureLedgerPayload.model_validate(json_mapping.to_mapping())
     except ValidationError as exc:
         raise RuntimeError(f"Invalid ledger payload for fixture: {exc}") from exc
-    return KernelFixtureLedgerTransit(raw=json_mapping.to_mapping(), payload=payload)
+    return KernelFixtureLedgerTransit(json_mapping=json_mapping, raw=json_mapping.to_mapping(), payload=payload)
 
 
 def _load_json_mapping(path: Path) -> JSONMappingTransit:
@@ -442,7 +444,7 @@ def _load_metrics(path: Path) -> MetricsTransit:
         payload = MetricsPayload.model_validate(json_mapping.to_mapping())
     except ValidationError as exc:
         raise RuntimeError(f"Invalid metrics payload at {path}: {exc}") from exc
-    return MetricsTransit(raw=json_mapping.to_mapping(), payload=payload)
+    return MetricsTransit(json_mapping=json_mapping, raw=json_mapping.to_mapping(), payload=payload)
 
 
 def _load_kernel_trace(path: Path) -> KernelTraceTransit:
