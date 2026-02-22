@@ -7,7 +7,7 @@
 
 ## Command Template
 ```bash
-uv run python state/kernel.py --chapter-id <chapter> --llm --llm-model gpt-5 --verbose
+uv run python state/kernel.py --chapter-id <chapter> --llm --llm-model gpt-5.2 --verbose
 ```
 Replace `<chapter>` with the chapter identifier listed below.
 
