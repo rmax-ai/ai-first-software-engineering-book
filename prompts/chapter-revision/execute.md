@@ -131,3 +131,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 04-memory-systems | 1 | failed(1) | none |  |
 | 04-memory-systems | 2 | failed(1) | none |  |
 | 04-memory-systems | 3 | failed(1) | none |  |
+| 05-evaluation-and-traces | 1 | failed(1) | none |  |
