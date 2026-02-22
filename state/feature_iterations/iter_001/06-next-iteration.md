@@ -1,17 +1,17 @@
-# Next iteration recommendation
+# Next Iteration Recommendation
 
 ## Task
-Add deterministic phase-trace validation and emission checkpoints in `state/kernel.py`.
+Implement deterministic phase-trace observability in `state/kernel.py` and validate it via smoke coverage updates.
 
 ## Why this is next
-The plan's highest-leverage gap is reliable observability in the kernel loop; without stable phase traces, smoke/eval expansions will be less precise and harder to diagnose.
+The backlog prioritizes visibility and execution determinism first; trace improvements unlock safer follow-on changes to role-IO scaffolds and eval contracts.
 
 ## Acceptance criteria
-- `state/kernel.py` emits a structured phase trace payload at key loop stages (plan, execution, validation, completion).
-- Phase trace payload shape is validated before write-out; malformed payloads fail loudly with actionable error text.
-- Existing behavior remains intact for successful runs (no public CLI contract break).
-- Targeted verification command(s) are documented and executed in the iteration artifacts.
+1. `state/kernel.py` emits structured phase trace records for each major loop phase with stable keys.
+2. `state/copilot_sdk_uv_smoke.py` gains one focused mode validating presence and shape of phase trace output.
+3. `04-validation.md` for that iteration includes executed `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` evidence.
 
 ## Expected files to touch
 - `state/kernel.py`
-- Optional helper tests under `state/` for phase trace validators
+- `state/copilot_sdk_uv_smoke.py`
+- `state/feature_iterations/iter_002/04-validation.md`

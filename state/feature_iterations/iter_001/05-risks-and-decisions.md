@@ -1,12 +1,12 @@
-# Risks and decisions
+# Risks and Decisions
 
-## Risks discovered
-- The initial plan may under-specify edge cases in trace payload schemas until `state/kernel.py` is inspected in detail.
-- Eval YAML changes can over-constrain iteration throughput if acceptance thresholds are tightened too early.
+## Risks
+- Planned scope may still be broad if a future iteration attempts multiple harness behaviors at once.
+- Eval mappings may drift if implementation lands without updating corresponding `evals/*.yaml` assertions.
 
-## Decisions made
-- Prioritized observability and deterministic guardrails before broader refactors.
-- Deferred implementation to future iterations to satisfy the seed iteration planning requirement.
+## Decisions and trade-offs
+- Chose planning-only execution for this seed iteration to match prompt requirements and minimize risk.
+- Deferred implementation details in favor of one concrete next task to keep iteration granularity tight.
 
-## Deferred intentionally
-- Any code edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+## Deferred items
+- Actual kernel/role-IO/smoke/eval code updates are intentionally deferred to the next iteration.
