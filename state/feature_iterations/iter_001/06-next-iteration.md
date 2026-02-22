@@ -1,18 +1,17 @@
-# Next iteration recommendation
+# Recommended next iteration
 
-## Recommended task
-Implement kernel trace-summary observability and smoke assertions.
+## Next task (exactly one)
+Add deterministic trace-summary observability scaffolding in `state/kernel.py` and assert it in `state/copilot_sdk_uv_smoke.py`.
 
 ## Why this is next
-It is the smallest implementation slice that exercises the planned feature/test/eval loop and produces measurable evidence for future eval contract updates.
+- It is the smallest implementation slice from the new plan.
+- It establishes measurable signals required for later eval alignment.
 
 ## Acceptance criteria
-- Add deterministic trace-summary fields in `state/kernel.py` for key loop stages.
-- Update `state/copilot_sdk_uv_smoke.py` to assert new trace-summary fields are present and well-formed.
-- Run `uv run python state/copilot_sdk_uv_smoke.py` and record pass/fail evidence.
-- Document whether `evals/*.yaml` changes are required based on observed outputs.
+- `state/kernel.py` emits a stable, parseable trace-summary payload for a representative run path.
+- `state/copilot_sdk_uv_smoke.py` includes a targeted mode that validates the trace-summary payload structure.
+- Validation evidence includes running `uv run python state/copilot_sdk_uv_smoke.py` with the new mode and recording observed output.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/04-validation.md`

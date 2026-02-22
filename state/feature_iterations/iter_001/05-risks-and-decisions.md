@@ -1,12 +1,12 @@
 # Risks and decisions
 
-## Risks discovered
-- Expanding trace logging may increase output noise or break downstream parsers if schemas are not versioned.
-- Smoke assertions can become brittle if tied to unstable message text instead of structured fields.
+## Risks
+- Plan quality depends on later iterations preserving minimal-diff discipline while adding observability.
+- Eval updates may drift if new kernel signals are added without synchronized YAML contract updates.
 
 ## Decisions and trade-offs
-- Prioritize structured, additive trace fields in `state/kernel.py` over free-form log text.
-- Keep initial implementation scope narrow (kernel trace summary + smoke assertions) before touching eval YAMLs.
+- Chose planning-only execution to match seed-iteration requirements, deferring implementation risk.
+- Scoped next work to a single trace-summary observability slice to keep validation bounded.
 
-## Deferred items
-- Eval contract updates are deferred until concrete kernel outputs change and can be validated with evidence.
+## Deferred
+- Direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and eval YAMLs.

@@ -1,9 +1,10 @@
 # Iteration summary
 
-This seed iteration completed the planning-only backlog setup required by the incremental execution prompt.
-A new `iter_001` folder was created under `state/feature_iterations/` with all seven required artifacts.
-The task selected was planning custom state harness improvements rather than implementing code changes.
-The plan covers feature work in kernel/role-IO scaffolds, testing via UV smoke and targeted unit tests, and eval/regression alignment.
-Risks were documented around trace schema stability and smoke-test brittleness.
-A single next task was defined: implement deterministic kernel trace-summary observability and validate via smoke assertions.
-The handoff is concise and ready for the next autonomous iteration.
+- Created seed iteration folder `state/feature_iterations/iter_001/` with the full seven-artifact contract.
+- Selected and completed a planning-only task: custom harness improvement planning.
+- Documented why planning is first and defined measurable acceptance criteria.
+- Produced a concrete phased plan spanning features, tests, and eval/regression checks.
+- Anchored future implementation scope to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Captured validation approach and confirmed no unsupported test-pass claims.
+- Logged risks, decisions, and deliberate deferrals to keep this iteration minimal.
+- Defined one precise next task focused on deterministic trace-summary observability.
