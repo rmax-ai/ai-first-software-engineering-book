@@ -115,6 +115,7 @@ def _build_trace_summary_fixture(
     fixture_root: Path,
     malformed_phase_trace: bool = False,
     non_object_phase_payload: bool = False,
+    omit_evaluation_phase_trace: bool = False,
 ) -> tuple[Path, Path]:
     fixture_repo_root = fixture_root / "repo"
     metrics_path = fixture_repo_root / "state" / "metrics.json"
@@ -150,6 +151,8 @@ def _build_trace_summary_fixture(
         phase_entries[1]["payload"].pop("budget_signal", None)
     if non_object_phase_payload:
         phase_entries[1]["payload"] = "not-an-object"
+    if omit_evaluation_phase_trace:
+        phase_entries = [entry for entry in phase_entries if entry.get("payload", {}).get("phase") != "evaluation"]
     trace_path.write_text("\n".join(json.dumps(entry) for entry in phase_entries) + "\n", encoding="utf-8")
     return metrics_path, fixture_repo_root
 
@@ -161,7 +164,9 @@ async def run_trace_summary_mode(
     metrics_path: Path,
     fixture_root: Path,
     expect_phase_trace_failure: bool = False,
+    inject_malformed_phase_trace: bool = False,
     inject_non_object_phase_payload: bool = False,
+    inject_missing_required_phase_trace: bool = False,
 ) -> int:
     repo_root_for_trace = REPO_ROOT
     metrics_path_for_trace = metrics_path
@@ -169,8 +174,9 @@ async def run_trace_summary_mode(
         metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_fixture(
             chapter_id=chapter_id,
             fixture_root=fixture_root,
-            malformed_phase_trace=expect_phase_trace_failure,
+            malformed_phase_trace=inject_malformed_phase_trace,
             non_object_phase_payload=inject_non_object_phase_payload,
+            omit_evaluation_phase_trace=inject_missing_required_phase_trace,
         )
 
     if run_kernel:
@@ -278,6 +284,7 @@ async def main_async(args: argparse.Namespace) -> int:
             metrics_path=Path(args.metrics_path),
             fixture_root=Path(args.trace_summary_fixture_root),
             expect_phase_trace_failure=True,
+            inject_malformed_phase_trace=True,
         )
     if args.mode == "trace-summary-malformed-phase-payload":
         return await run_trace_summary_mode(
@@ -288,6 +295,16 @@ async def main_async(args: argparse.Namespace) -> int:
             fixture_root=Path(args.trace_summary_fixture_root),
             expect_phase_trace_failure=True,
             inject_non_object_phase_payload=True,
+        )
+    if args.mode == "trace-summary-missing-phase":
+        return await run_trace_summary_mode(
+            chapter_id=args.chapter_id,
+            max_iterations=args.kernel_max_iterations,
+            run_kernel=args.run_kernel_for_trace_summary,
+            metrics_path=Path(args.metrics_path),
+            fixture_root=Path(args.trace_summary_fixture_root),
+            expect_phase_trace_failure=True,
+            inject_missing_required_phase_trace=True,
         )
     return await run_trace_summary_mode(
         chapter_id=args.chapter_id,
@@ -308,6 +325,7 @@ def main() -> int:
             "trace-summary",
             "trace-summary-malformed-phase",
             "trace-summary-malformed-phase-payload",
+            "trace-summary-missing-phase",
         ],
         default="ping",
     )
