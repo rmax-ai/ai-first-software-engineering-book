@@ -91,6 +91,12 @@ class JSONMappingPayload(BaseModel):
     data: dict[str, Any]
 
 
+class JSONTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
 @dataclass(frozen=True)
 class LedgerSnapshotTransit:
     source_path: Path
@@ -107,6 +113,15 @@ class JSONMappingTransit:
 
     def to_mapping(self) -> dict[str, Any]:
         return self.payload.data
+
+
+@dataclass(frozen=True)
+class JSONTextTransit:
+    source_path: Path
+    payload: JSONTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
 
 
 def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
@@ -129,14 +144,18 @@ def _load_json_mapping(path: Path) -> JSONMappingTransit:
     except FileNotFoundError as exc:
         raise AssertionError(f"expected JSON file to exist: {path}") from exc
     try:
-        parsed = json.loads(raw_text)
+        json_text = JSONTextTransit(source_path=path, payload=JSONTextPayload.model_validate({"text": raw_text}))
+    except ValidationError as exc:
+        raise AssertionError(f"expected {path} to contain valid JSON text payload: {exc}") from exc
+    try:
+        parsed = json.loads(json_text.to_text())
     except json.JSONDecodeError as exc:
         raise AssertionError(f"expected {path} to contain valid JSON: {exc}") from exc
     try:
         payload = JSONMappingPayload.model_validate({"data": parsed})
     except ValidationError as exc:
         raise AssertionError(f"expected {path} to contain a JSON object mapping: {exc}") from exc
-    return JSONMappingTransit(source_path=path, raw_text=raw_text, payload=payload)
+    return JSONMappingTransit(source_path=path, raw_text=json_text.to_text(), payload=payload)
 
 
 def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:

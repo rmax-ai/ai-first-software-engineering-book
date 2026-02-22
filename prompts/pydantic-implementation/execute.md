@@ -85,6 +85,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_smoke_test.py` now validates latest `trace_summary` fixture payloads through `TraceSummaryPayload` and forwards them via `TraceSummaryTransit` before key-presence checks.
 - `state/copilot_sdk_smoke_test.py` now validates trace-summary metrics fixture roots through `TraceSummaryMetricsPayload` and forwards them via `TraceSummaryMetricsTransit` before chapter/history extraction.
 - `state/copilot_sdk_smoke_test.py` now validates `state/ledger.json` kernel-mode snapshots through `LedgerSnapshotPayload` and forwards them via `LedgerSnapshotTransit` before unchanged-ledger assertions.
+- `state/copilot_sdk_smoke_test.py` now validates raw `state/ledger.json` snapshot text through `JSONTextPayload` and forwards source-path text via `JSONTextTransit` before JSON mapping parsing.
 - `state/copilot_sdk_smoke_test.py` now validates raw ledger snapshot JSON mapping roots through `JSONMappingPayload` and forwards parsed mappings via `JSONMappingTransit` before `LedgerSnapshotPayload` parsing.
 - `state/copilot_sdk_smoke_test.py` now forwards ledger snapshot JSON source-path provenance through `JSONMappingTransit` before `LedgerSnapshotTransit` assembly.
 - `state/kernel.py` now validates cross-chapter markdown ingestion through `ChapterTextPayload` and forwards deterministic-eval chapter context via `OtherChaptersTransit`.
