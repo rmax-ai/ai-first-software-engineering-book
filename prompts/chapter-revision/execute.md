@@ -444,3 +444,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 - Completed 24/24 chapter passes with one commit per pass.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Total commits created for this re-run loop: 24.
+
+## Re-run $RUN_TS
+| Chapter | Pass | Result | Subagents | Commit |
+|--------:|-----:|--------|-----------|--------|
