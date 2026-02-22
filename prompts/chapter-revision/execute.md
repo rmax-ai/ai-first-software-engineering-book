@@ -405,3 +405,9 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 07-production-ai-infrastructure | 3 | failed(1) | none | `chore: pass 3 for chapter 07-production-ai-infrastructure` |
 | 99-future-directions | 1 | failed(1) | none | `chore: pass 1 for chapter 99-future-directions` |
 | 99-future-directions | 2 | failed(1) | none | `chore: pass 2 for chapter 99-future-directions` |
+| 99-future-directions | 3 | failed(1) | none | `chore: pass 3 for chapter 99-future-directions` |
+
+### Re-run Summary (2026-02-22T16:37:56Z)
+- Completed 24/24 chapter passes with one commit per pass.
+- Kernel runs were executed with governance unlock/unhold before each pass.
+- Total commits created for this re-run loop: 24.
