@@ -1,18 +1,23 @@
 # Plan
 
-1. Review harness constraints from `DEVELOPMENT.md` and runner rules from `prompts/incremental-improvements/execute.md`.
-2. Define feature backlog items for:
-   - richer kernel trace observability in `state/kernel.py`
-   - clearer and stricter role I/O scaffolding in `state/role_io_templates.py`
-   - deterministic smoke/assertion expansion in `state/copilot_sdk_uv_smoke.py`
-3. Define test strategy:
-   - targeted UV smoke command(s) for changed harness surfaces
-   - focused unit-style checks for helpers touched in `state/`
-4. Define eval strategy tied to existing contracts:
-   - `evals/chapter-quality.yaml`
-   - `evals/style-guard.yaml`
-   - `evals/drift-detection.yaml`
-5. Stage next iteration as a single minimal implementation task that touches one surface first (trace logging scaffolding in `state/kernel.py`) with bounded validation.
+1. Map current harness constraints from `DEVELOPMENT.md` and existing `state/` architecture to keep proposals deterministic and minimal-risk.
+2. Define feature work in `state/kernel.py`:
+   - add richer trace logging checkpoints (loop step, guard decisions, eval outcomes),
+   - add deterministic execution controls (explicit budget/step telemetry fields),
+   - preserve current public CLI behavior.
+3. Define scaffolding updates in `state/role_io_templates.py`:
+   - tighten role I/O templates for clearer tool/result boundaries,
+   - add explicit placeholders for validation/evidence capture.
+4. Define targeted smoke coverage in `state/copilot_sdk_uv_smoke.py`:
+   - extend smoke modes to assert trace fields and deterministic guard ordering,
+   - keep mode-level tests isolated for quick `uv run` execution.
+5. Define eval integration in `evals/*.yaml`:
+   - connect new trace/evidence signals to existing chapter-quality/style/drift gates,
+   - document expected pass/fail signals and non-goals.
+6. Sequence future iterations as minimal vertical slices:
+   - slice 1: kernel trace schema,
+   - slice 2: role I/O template alignment,
+   - slice 3: smoke + eval contract tightening.
 
 ## Expected files to change in future iterations
 - `state/kernel.py`
@@ -21,3 +26,4 @@
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
+- (if required) targeted test assets under `state/` or `book/`.

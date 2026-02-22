@@ -1,12 +1,13 @@
-# Risks and Decisions
+# Risks and decisions
 
-## Risks
-- Planning artifacts can drift from actual harness constraints if not revalidated before implementation.
-- Eval contract changes may require updates across multiple YAML files, increasing coordination cost.
+## Risks discovered
+- Planning-only iteration defers implementation risk discovery (runtime regressions remain untested until follow-up slices).
+- Trace schema additions in `state/kernel.py` could drift from existing smoke/eval expectations if introduced without synchronized test updates.
 
-## Decisions
-- Kept this iteration strictly planning-only per seed-iteration contract.
-- Deferred all code changes to the next iteration to preserve minimal scope and clear evidence.
+## Decisions made
+- Kept this iteration strictly planning-only to satisfy the seed iteration contract.
+- Chose a vertical-slice next task (kernel trace schema first) to minimize blast radius and produce early executable evidence.
 
-## Deferred intentionally
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+## Trade-offs and deferrals
+- Deferred concrete code changes and test execution to the next iteration by design.
+- Deferred broader eval YAML edits until initial trace schema exists to avoid speculative contracts.
