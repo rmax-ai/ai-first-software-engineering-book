@@ -48,6 +48,12 @@ class TraceSummaryPayload(BaseModel):
     deterministic_pass: bool | None = None
 
 
+class TraceSummaryMetricsPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    chapters: dict[str, Any]
+
+
 @dataclass(frozen=True)
 class TraceSummaryTransit:
     payload: TraceSummaryPayload
@@ -58,6 +64,19 @@ class TraceSummaryTransit:
 
     def to_mapping(self) -> dict[str, Any]:
         return self.payload.model_dump(exclude_none=True)
+
+
+@dataclass(frozen=True)
+class TraceSummaryMetricsTransit:
+    payload: TraceSummaryMetricsPayload
+
+    @classmethod
+    def from_mapping(cls, payload: dict[str, Any]) -> "TraceSummaryMetricsTransit":
+        return cls(payload=TraceSummaryMetricsPayload.model_validate(payload))
+
+    @property
+    def chapters(self) -> dict[str, Any]:
+        return self.payload.chapters
 
 
 class LedgerSnapshotPayload(BaseModel):
@@ -120,8 +139,10 @@ def _load_json_mapping(path: Path) -> JSONMappingTransit:
 
 
 def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:
-    chapters = metrics.get("chapters", {})
-    assert isinstance(chapters, dict), "expected chapters dictionary"
+    try:
+        chapters = TraceSummaryMetricsTransit.from_mapping(metrics).chapters
+    except ValidationError as exc:
+        raise AssertionError("expected chapters dictionary") from exc
     chapter_metrics = chapters.get(chapter_id, {})
     assert isinstance(chapter_metrics, dict), "expected chapter metrics dictionary"
     history = chapter_metrics.get("history", [])
