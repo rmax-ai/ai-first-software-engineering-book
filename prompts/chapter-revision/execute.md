@@ -122,3 +122,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 01-paradigm-shift | 1 | failed(1) | none | `4e09ecf` |
 | 01-paradigm-shift | 2 | failed(1) | none | `0d8a9c0` |
 | 01-paradigm-shift | 3 | failed(1) | none | `5b48c40` |
+| 02-harness-engineering | 1 | failed(1) | none | `93e5538` |
