@@ -1,10 +1,10 @@
-# Summary
+# Iteration summary
 
-This iteration initialized the feature-improvement workflow by creating `iter_001`.
-It selected one planning task: define custom harness improvements for `state/`.
-The resulting plan covers feature priorities in `state/kernel.py` and role-I/O contracts.
-It also defines verification strategy through smoke modes in `state/copilot_sdk_uv_smoke.py`.
-Eval alignment was mapped to existing `evals/*.yaml` contracts for regression detection.
-No runtime implementation changes were made in this iteration by design.
-All seven required markdown artifacts were created and validated as present/non-empty.
-The next iteration is narrowed to deterministic trace-summary implementation plus smoke evidence.
+- Created `state/feature_iterations/iter_001/` as the first incremental-improvements iteration.
+- Executed a planning-only task per prompt contract.
+- Documented task intent, acceptance criteria, and immediate rationale in `01-task.md`.
+- Produced a focused implementation roadmap across harness core, role templates, smoke tests, and eval gates in `02-plan.md`.
+- Recorded executed discovery/documentation steps and file outputs in `03-execution.md`.
+- Validated conformance to prompt requirements and acceptance criteria in `04-validation.md`.
+- Captured key risks/decisions and deferred implementation scope in `05-risks-and-decisions.md`.
+- Added a single, concrete next task with measurable acceptance criteria in `06-next-iteration.md`.

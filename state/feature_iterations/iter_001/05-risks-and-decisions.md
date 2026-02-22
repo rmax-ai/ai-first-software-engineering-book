@@ -1,14 +1,14 @@
 # Risks and decisions
 
-## Risks discovered
-- Planning quality depends on assumptions until implementation validates feasibility.
-- Trace/logging expansion in `state/kernel.py` may increase output noise if not scoped.
-- New eval constraints may cause false positives if signals are underspecified.
+## Risks
+- Plan quality depends on future iterations preserving deterministic behavior while adding observability in `state/kernel.py`.
+- Eval updates can become noisy if new checks are not scoped to measurable harness signals.
 
-## Decisions and trade-offs
-- Chose a planning-only first iteration to reduce implementation risk.
-- Prioritized deterministic observability and contract validation before broader features.
-- Limited scope to one backlog seed and one concrete next task for clean handoff.
+## Decisions
+- Keep this seed iteration planning-only per prompt contract; defer all runtime edits.
+- Prioritize small, test-backed follow-up tasks instead of multi-file implementation in one step.
 
 ## Deferred intentionally
-- Any runtime code edits in `state/` and `evals/` deferred to next iteration.
+- Implementation of kernel logging/control changes.
+- Role I/O scaffold updates.
+- Smoke/eval contract modifications and associated command runs.

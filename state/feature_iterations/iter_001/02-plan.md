@@ -1,26 +1,18 @@
 # Plan
 
-1. Baseline and observability hardening in `state/kernel.py`
-   - Add structured phase/event trace summaries with stable keys.
-   - Add explicit budget/guardrail decision logging for deterministic audits.
-2. Role I/O contract tightening in `state/role_io_templates.py`
-   - Normalize template constraints and required sections.
-   - Add small validation helpers to fail fast on malformed role outputs.
-3. Smoke coverage expansion in `state/copilot_sdk_uv_smoke.py`
-   - Add targeted modes for new trace and validation behaviors.
-   - Ensure mode matrix remains deterministic and table-driven.
-4. Eval alignment in `evals/*.yaml`
-   - Add or refine checks for new trace signals and role-output invariants.
-   - Keep contracts explicit so regressions are surfaced by eval gates.
-5. Verification scaffolding
-   - Run `uv run python state/copilot_sdk_uv_smoke.py` with focused modes.
-   - Run targeted kernel invocation(s) and compare expected trace/eval artifacts.
+1. Define the harness feature backlog with emphasis on deterministic controls and observability.
+2. Break future implementation into targeted edits for:
+   - `state/kernel.py` (trace/logging and deterministic execution controls)
+   - `state/role_io_templates.py` (clearer role input/output scaffolds)
+   - `state/copilot_sdk_uv_smoke.py` (smoke coverage for new harness behavior)
+   - `evals/*.yaml` (regression gates aligned to the new behavior)
+3. Specify verification commands for each future change, centered on `uv run python state/copilot_sdk_uv_smoke.py` and targeted kernel runs.
+4. Define rollout order to keep diffs small: kernel feature first, then role I/O template updates, then smoke/eval expansion.
 
-## Expected files to change in later iterations
+## Files expected to change in future iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- Focused test/harness assets under `state/` or `book/` as needed

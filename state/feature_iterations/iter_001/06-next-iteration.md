@@ -1,19 +1,18 @@
-# Next iteration recommendation
+# Recommended next task
 
 ## Task
-Implement deterministic trace-summary observability in `state/kernel.py` with smoke coverage updates.
+Implement deterministic trace-summary logging hooks in `state/kernel.py` and cover them in `state/copilot_sdk_uv_smoke.py`.
 
 ## Why this is next
-- It is the highest-leverage foundation for later eval hardening.
-- It converts the planning output into measurable harness behavior.
+- `state/kernel.py` is the harness orchestrator and the highest-value point for observability and deterministic controls.
+- Smoke coverage should be added immediately with the feature so regressions are detected early.
 
 ## Acceptance criteria
-- `state/kernel.py` emits stable trace-summary fields for key phases and guardrail decisions.
-- `state/copilot_sdk_uv_smoke.py` adds at least one focused mode validating trace-summary output.
-- Validation evidence includes `uv run python state/copilot_sdk_uv_smoke.py` for the new mode(s).
-- Iteration artifacts record commands, outcomes, and any residual risk.
+- Add a minimal, explicit trace-summary logging path in `state/kernel.py` that does not alter existing public CLI behavior.
+- Add or update smoke coverage in `state/copilot_sdk_uv_smoke.py` validating trace-summary artifacts/signals for both success and guarded-failure runs.
+- Run `uv run python state/copilot_sdk_uv_smoke.py` and capture results in the next iteration validation artifact.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/01-task.md` ... `07-summary.md`
+- `state/feature_iterations/iter_002/*`
