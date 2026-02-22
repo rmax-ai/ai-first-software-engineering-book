@@ -1309,6 +1309,36 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_order_g
     return 0
 
 
+def run_trace_summary_fixture_cleanup_parity_mode_choices_uniqueness_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    target_modes = (
+        "trace-summary-fixture-root-cleanup-parity",
+        "trace-summary-fixture-cleanup-parity",
+    )
+    parser = _build_parser(all_mode_specs)
+    mode_action = next(
+        (
+            action
+            for action in parser._actions
+            if "--mode" in getattr(action, "option_strings", [])
+        ),
+        None,
+    )
+    assert mode_action is not None, "expected argparse --mode action to exist"
+    parser_mode_choices = list(mode_action.choices or [])
+    mode_counts = Counter(parser_mode_choices)
+    unexpected_counts = {name: mode_counts.get(name, 0) for name in target_modes if mode_counts.get(name, 0) != 1}
+    assert not unexpected_counts, (
+        "expected parity cleanup modes to appear exactly once in argparse --mode choices; "
+        f"counts were {unexpected_counts}"
+    )
+
+    print(
+        "PASS: trace-summary-fixture-cleanup-parity-mode-choices-uniqueness-guard mode validates parity mode argparse choice uniqueness"
+    )
+    return 0
+
+
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard"
@@ -2095,6 +2125,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-fixture-cleanup-parity-mode-choices-usage-examples-order-guard",
         run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_order_guard_mode,
         "deterministic parity cleanup mode ordering assertion between argparse choices and usage examples",
+    ),
+    (
+        "trace-summary-fixture-cleanup-parity-mode-choices-uniqueness-guard",
+        run_trace_summary_fixture_cleanup_parity_mode_choices_uniqueness_guard_mode,
+        "deterministic parity cleanup mode argparse choice uniqueness assertion",
     ),
     (
         "docstring-mode-coverage-guard",
