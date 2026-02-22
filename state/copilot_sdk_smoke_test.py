@@ -933,10 +933,10 @@ def run_usage_examples_duplicates_guard_mode() -> int:
     expected_mode_names = _expected_non_stub_mode_names(all_mode_specs)
     actual_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
     mode_counts = Counter(actual_mode_names)
-    duplicate_mode_names = [name for name in expected_mode_names if mode_counts[name] > 1]
-    assert not duplicate_mode_names, (
+    duplicate_mode_counts = {name: mode_counts[name] for name in expected_mode_names if mode_counts[name] > 1}
+    assert not duplicate_mode_counts, (
         "expected generated usage examples to contain no duplicate non-stub mode lines; "
-        f"found duplicates for: {duplicate_mode_names}"
+        f"found duplicates with counts: {duplicate_mode_counts}"
     )
 
     print(
