@@ -77,6 +77,8 @@ class JSONMappingTransit:
 
 @dataclass(frozen=True)
 class ChapterTextTransit:
+    source_path: Path
+    raw_text: str
     payload: ChapterTextPayload
 
     def to_text(self) -> str:
@@ -144,7 +146,7 @@ def _load_chapter_text(path: Path) -> ChapterTextTransit:
         payload = ChapterTextPayload.model_validate({"text": raw_text})
     except ValidationError as exc:
         raise TemplateError(f"Invalid chapter text payload: {path}: {exc}") from exc
-    return ChapterTextTransit(payload=payload)
+    return ChapterTextTransit(source_path=path, raw_text=raw_text, payload=payload)
 
 
 def _build_template_context(ledger: LedgerTransit, chapter_id: str, iteration: int) -> TemplateContext:
