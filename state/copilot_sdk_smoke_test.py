@@ -1,66 +1,7 @@
 #!/usr/bin/env python3
 """Small Copilot SDK smoke test for state/llm_client.py.
 
-Usage:
-  uv run python state/copilot_sdk_smoke_test.py
-  uv run python state/copilot_sdk_smoke_test.py --mode sdk-unavailable
-  uv run python state/copilot_sdk_smoke_test.py --mode bootstrap-failure
-  uv run python state/copilot_sdk_smoke_test.py --mode shutdown-failure
-  uv run python state/copilot_sdk_smoke_test.py --mode stop-unavailable
-  uv run python state/copilot_sdk_smoke_test.py --mode destroy-unavailable
-  uv run python state/copilot_sdk_smoke_test.py --mode destroy-failure
-  uv run python state/copilot_sdk_smoke_test.py --mode force-stop-unavailable
-  uv run python state/copilot_sdk_smoke_test.py --mode force-stop-close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode stop-close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode destroy-close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode destroy-unavailable-close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode stop-destroy-unavailable-close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode stop-unavailable-destroy-failure-close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-unavailable-close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-missing-key
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-shape-guard
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-container-shape-guard
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-history-container-shape-guard
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-latest-history-entry-shape-guard
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-empty-history-guard
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-missing-chapter-guard
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-chapter-metrics-shape-guard
-  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-missing-entry-guard
-  uv run python state/copilot_sdk_smoke_test.py --mode live
-
-Modes:
-- stub (default): installs an in-process fake `copilot` module and verifies
-  that LLMClient uses the SDK path end-to-end without network or credentials.
-- sdk-unavailable: forces SDK import unavailability and verifies a clear SDK-required error.
-- bootstrap-failure: forces worker-loop bootstrap failure and verifies error context.
-- shutdown-failure: forces SDK shutdown failures and verifies stop/force_stop error context.
-- stop-unavailable: forces SDK client stop() to be unavailable and verifies shutdown error context.
-- destroy-unavailable: forces session.destroy() to be unavailable and verifies shutdown error context.
-- destroy-failure: forces session.destroy() failure and verifies shutdown error context.
-- force-stop-unavailable: forces stop() failure with non-callable force_stop and verifies shutdown error context.
-- force-stop-close-idempotency: forces stop() failure with force_stop unavailable, then verifies a second close() is a no-op.
-- stop-close-idempotency: forces stop() to be unavailable, then verifies a second close() is a no-op.
-- close-idempotency: forces shutdown failure then verifies a second close() is a no-op.
-- destroy-close-idempotency: forces session.destroy() failure then verifies a second close() is a no-op.
-- destroy-unavailable-close-idempotency: forces session.destroy() unavailable then verifies a second close() is a no-op.
-- stop-destroy-unavailable-close-idempotency: forces both stop() and session.destroy() unavailable, then verifies a second close() is a no-op.
-- stop-unavailable-destroy-failure-close-idempotency: forces stop() unavailable and session.destroy() failure, then verifies a second close() is a no-op.
-- stop-failure-destroy-unavailable-close-idempotency: forces stop() failure and session.destroy() unavailable, then verifies a second close() is a no-op.
-- stop-failure-destroy-failure-close-idempotency: forces stop() and session.destroy() failures, then verifies a second close() is a no-op.
-- trace-summary: validates required keys in a deterministic trace_summary fixture.
-- trace-summary-missing-key: verifies missing trace_summary keys are detected.
-- trace-summary-shape-guard: verifies non-dict trace_summary payloads are rejected.
-- trace-summary-container-shape-guard: verifies malformed metrics container payloads are rejected.
-- trace-summary-history-container-shape-guard: verifies malformed history container payloads are rejected.
-- trace-summary-latest-history-entry-shape-guard: verifies malformed latest history entries are rejected.
-- trace-summary-empty-history-guard: verifies empty history containers are rejected.
-- trace-summary-missing-chapter-guard: verifies missing chapter entries are rejected.
-- trace-summary-chapter-metrics-shape-guard: verifies malformed chapter metrics containers are rejected.
-- trace-summary-missing-entry-guard: verifies latest history entries missing trace_summary are rejected.
-- live: uses the real installed `copilot` package and your configured provider.
+Usage and mode details are generated from shared mode metadata below.
 """
 
 from __future__ import annotations
@@ -981,8 +922,39 @@ SHUTDOWN_MODE_SPECS: tuple[tuple[str, ShutdownModeHandler, str], ...] = (
 )
 
 
+def _all_mode_specs() -> tuple[tuple[str, Callable[[], int], str], ...]:
+    return (*BASE_MODE_SPECS, *SHUTDOWN_MODE_SPECS, *TRACE_SUMMARY_MODE_SPECS)
+
+
+def _usage_doc_lines(mode_specs: Sequence[tuple[str, Callable[[], int], str]]) -> list[str]:
+    lines = ["Usage:", "  uv run python state/copilot_sdk_smoke_test.py"]
+    lines.extend(f"  uv run python state/copilot_sdk_smoke_test.py --mode {name}" for name, _handler, _description in mode_specs if name != "stub")
+    return lines
+
+
+def _mode_doc_lines(mode_specs: Sequence[tuple[str, Callable[[], int], str]]) -> list[str]:
+    lines = ["Modes:"]
+    lines.extend(f"- {name}: {description}." for name, _handler, description in mode_specs)
+    return lines
+
+
+def _build_module_docstring() -> str:
+    mode_specs = _all_mode_specs()
+    sections = [
+        "Small Copilot SDK smoke test for state/llm_client.py.",
+        "",
+        *_usage_doc_lines(mode_specs),
+        "",
+        *_mode_doc_lines(mode_specs),
+    ]
+    return "\n".join(sections)
+
+
+__doc__ = _build_module_docstring()
+
+
 def main() -> int:
-    all_mode_specs = (*BASE_MODE_SPECS, *SHUTDOWN_MODE_SPECS, *TRACE_SUMMARY_MODE_SPECS)
+    all_mode_specs = _all_mode_specs()
     mode_names = [name for name, _handler, _description in all_mode_specs]
     mode_help = ", ".join(f"{name} = {description}" for name, _handler, description in all_mode_specs)
     mode_handlers = {name: handler for name, handler, _description in all_mode_specs}
