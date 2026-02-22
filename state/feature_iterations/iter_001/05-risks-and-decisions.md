@@ -1,14 +1,12 @@
-# Risks and Decisions
+# Risks and decisions
 
 ## Risks discovered
-- Plan quality depends on later iterations preserving strict one-task scope.
-- Harness behavior changes may require synchronized updates across kernel logic, smoke suites, and eval contracts.
+- Plan-level artifacts can drift from actual harness behavior if future iterations skip targeted smoke/eval checks.
+- Adding new trace/eval guards may create false positives unless schemas remain stable and explicit.
 
-## Decisions made
-- Chose a planning-only seed iteration per prompt instructions.
-- Prioritized deterministic observability and validation coverage before new behavior rollout.
-- Structured next tasks as minimal, independently verifiable slices.
+## Decisions and trade-offs
+- Chose a planning-only iteration to match the seed contract exactly, deferring all code edits.
+- Prioritized deterministic observability + guardrails first, trading short-term feature delivery for safer subsequent implementation.
 
 ## Deferred intentionally
-- Any implementation in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
-- Any broad refactor not directly tied to the first planned implementation slice.
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.

@@ -1,21 +1,17 @@
-# Next Iteration Recommendation
+# Next iteration recommendation
 
 ## Recommended task
-Implement deterministic trace-summary schema hardening in `state/kernel.py` with targeted tests.
+Implement deterministic trace-summary schema guards in `state/copilot_sdk_smoke_test.py` and wire them into the table-driven mode matrix.
 
 ## Why this is next
-- It is the highest-impact foundation for observability and downstream eval reliability.
-- It unlocks safer iteration on role templates and smoke coverage by stabilizing core trace outputs.
+The seed plan depends on observable, regression-testable traces; adding smoke guards first provides immediate safety before editing kernel orchestration logic.
 
 ## Acceptance criteria
-- Add/adjust kernel logic so trace summaries always include stable required fields and explicit missing-data handling.
-- Add targeted tests for the updated trace summary shape and failure metadata.
-- Validate with deterministic smoke run(s), e.g.:
-  - `uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-shape-guard`
-  - `uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-missing-entry-guard`
-- Document evidence in the next iteration artifacts.
+- Add one new deterministic smoke mode that validates trace-summary schema shape and required keys.
+- Ensure the new mode is registered in the shared table-driven mode spec used for CLI choices/help and dispatch.
+- Execute `uv run python state/copilot_sdk_smoke_test.py --mode <new-mode>` successfully and capture result in validation artifacts.
 
 ## Expected files to touch
-- `state/kernel.py`
 - `state/copilot_sdk_smoke_test.py`
-- relevant test files under `state/` (if present/needed)
+- `state/feature_iterations/iter_002/03-execution.md`
+- `state/feature_iterations/iter_002/04-validation.md`
