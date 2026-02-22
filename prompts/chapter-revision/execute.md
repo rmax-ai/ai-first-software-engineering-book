@@ -131,4 +131,5 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 04-memory-systems | 1 | failed(1) | none | `a684c87` |
 | 04-memory-systems | 2 | failed(1) | none | `1574def` |
 | 04-memory-systems | 3 | failed(1) | none | `d295673` |
-| 05-evaluation-and-traces | 1 | failed(1) | none | `pending` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `c420757` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `pending` |
