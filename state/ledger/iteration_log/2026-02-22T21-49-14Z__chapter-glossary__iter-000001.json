@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.7766666666666667,
+  "diff_size": 0.2875816993464052,
+  "drift_score": 0.3,
+  "iteration": 1,
+  "planner_focus": [
+    "Make each definition consistently operational (what it does + why it matters + when it fails)",
+    "Increase example density with one concrete, testable example per key term (especially: ## Acceptance criteria, ## Eval, ## Evidence, ## Verification, ## Trace)",
+    "Add lightweight cross-references to reduce redundancy and improve navigability (e.g., Evidence \u2194 Verification \u2194 Trace; Determinism \u2194 Non-determinism \u2194 Drift; Harness \u2194 Kernel \u2194 Agent loop)"
+  ]
+}

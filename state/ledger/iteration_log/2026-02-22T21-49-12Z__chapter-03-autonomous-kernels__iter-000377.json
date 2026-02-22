@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8133333333333334,
+  "diff_size": 0.018867924528301886,
+  "drift_score": 0.00953604234781255,
+  "iteration": 377,
+  "planner_focus": [
+    "Tighten terminology in ## Thesis by adding a one-sentence literal justification for the metaphorical term \"safety envelope\" (or replace it with a non-metaphorical synonym).",
+    "Improve sample-output readability by ensuring all example diff-stats and command outputs are consistently formatted (single-line, no stray line breaks), especially in ## Concrete Example 2.",
+    "Ensure chapter output boundaries are clean by removing any non-chapter blocks (e.g., trailing <reminder>...</reminder>) from the final markdown."
+  ]
+}

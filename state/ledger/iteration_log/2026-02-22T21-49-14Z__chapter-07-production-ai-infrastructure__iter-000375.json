@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.8733333333333334,
+  "diff_size": 0.0,
+  "drift_score": 0.05911330049261086,
+  "iteration": 375,
+  "planner_focus": [
+    "Ensure chapter markdown contains chapter content only, with no appended non-chapter blocks after ## Research Directions",
+    "Preserve current clarity and structure while making only the minimal change needed to pass the chapter-only content rule"
+  ]
+}

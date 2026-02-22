@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.9033333333333333,
+  "diff_size": 0.023255813953488372,
+  "drift_score": 0.057915057915057896,
+  "iteration": 374,
+  "planner_focus": [
+    "Fix the single sentence-length violation in ## Concrete Example 2 by splitting the nondeterminism sentence into two shorter sentences while preserving meaning",
+    "Keep the rest of ## Concrete Example 2 unchanged to avoid introducing new style-guard or drift issues"
+  ]
+}

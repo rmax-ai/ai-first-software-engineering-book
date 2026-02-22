@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.82,
+  "diff_size": 0.22857142857142856,
+  "drift_score": 0.30164411875234876,
+  "iteration": 4,
+  "planner_focus": [
+    "Add a second concrete, measurable example within ## Key distinction: model vs harness (without introducing new headings)",
+    "Add an explicit failure-modes paragraph within ## Key distinction: model vs harness to satisfy required 'failure_modes_present'",
+    "Tighten sentence lengths around the invariants paragraph and the acceptance paragraph to satisfy max_words=28",
+    "Make the Mermaid diagram explicitly literal (not metaphor) via a justification sentence immediately before it"
+  ]
+}

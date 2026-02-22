@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.84,
+  "diff_size": 1.0,
+  "drift_score": 0.30286791215994757,
+  "iteration": 371,
+  "planner_focus": [
+    "Tighten the causal link in ## Thesis between trace-first design and isolating model/tool/harness/test failures",
+    "Make ## System Breakdown more operational by specifying minimum required fields and how they are queried during incident review",
+    "Increase specificity in ## Concrete Example 1 and ## Concrete Example 2 with concrete artifacts (trace record excerpt, eval suite definition) rather than summaries",
+    "Add mitigations alongside problems in ## Failure Modes (how to detect and respond to each mode, using traces/evals)"
+  ]
+}

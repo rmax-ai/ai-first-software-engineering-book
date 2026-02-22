@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.0,
+  "diff_size": 0.0,
+  "drift_score": 0.0,
+  "iteration": 2,
+  "planner_focus": [
+    "clarify scope in ## Thesis",
+    "add measurable outcomes in ## Concrete Example 1",
+    "add operational risk in ## Trade-offs"
+  ]
+}

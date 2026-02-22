@@ -1,0 +1,107 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.46; drift_score=0.27"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-22T20:28:51Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.25806451612903225,
+          "model": 0.1964285714285714
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.031960996749729145
+      },
+      "timestamp": "2026-02-22T20:28:51Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.04594594594594595,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "## System Breakdown - **Trace schema** (minimum viable): - task id - plan (the intended steps and stop conditions) - tool calls (tool name, arguments, start/end timestamps, exit status) - tool outputs",
+          "words": 156
+        },
+        {
+          "sentence": "<pre class=\"mermaid\"> flowchart TB A[Action class selected] --> B[Safety gate(s)\\n(permission/protected-path/secret scan)] B -->|fail| S1[STOP: permission_denied / forbidden_hit\\nrecord: stop_reason +",
+          "words": 88
+        },
+        {
+          "sentence": "</pre> - Minimal gating matrix (example, stated as rules): - read-only (grep/view/list): - safety: required permission check for the path(s) being accessed - quality: skipped; record `skipped_reason: ",
+          "words": 473
+        },
+        {
+          "sentence": "Pseudo-trace excerpt (illustrative): - task_id: `refactor-auth-2026-02-22-001` - environment: - repo_sha: `a1b2c3d` - tool_versions: `{ \"pytest\": \"8.1.1\", \"python\": \"3.12.1\" }` - plan: - \u201crename `Auth",
+          "words": 207
+        },
+        {
+          "sentence": "- A \u201cgolden task\u201d should include: - fixed input prompt and any fixed attachments - fixed repo state (commit SHA) or a pinned fixture repository - expected outcome constraints (e.g., \u201ctouch only `src/f",
+          "words": 64
+        },
+        {
+          "sentence": "- Define a baseline as a pinned reference run-set, such as \u201cthe last green run-set on release tag `vX.Y`\u201d for the same golden task and the same repo_sha (or the same pinned fixture).",
+          "words": 35
+        },
+        {
+          "sentence": "- Example drift signals with thresholds (current window vs baseline window): - iteration drift: median loop iterations in the most recent 50 runs increases by \u2265 30% compared to the baseline\u2019s 50-run m",
+          "words": 93
+        },
+        {
+          "sentence": "- Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.",
+          "words": 31
+        }
+      ],
+      "timestamp": "2026-02-22T20:28:51Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/05-evaluation-and-traces.md",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 374 for 05-evaluation-and-traces"
+  },
+  "iteration": 3047,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 11390,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 144142
+  },
+  "scope": {
+    "chapters_modified": [
+      "05-evaluation-and-traces"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T20:28:51Z"
+}

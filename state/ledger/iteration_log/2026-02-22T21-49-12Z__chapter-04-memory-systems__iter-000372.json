@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.9199999999999999,
+  "diff_size": 0.10891089108910891,
+  "drift_score": 0.3140901771336554,
+  "iteration": 372,
+  "planner_focus": [
+    "Reduce sentence length in ## Why This Matters to meet style-guard max_words=28 while preserving meaning",
+    "Make provenance pointers in ## Concrete Example 1 checkable by replacing placeholders with generic-but-valid formats (e.g., commit hash shape, file path) and clarifying they are examples",
+    "Add a concrete measurable before/after outcome inside ## Concrete Example 2 (iterations-to-fix and regression rate) without moving content to other headings"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8566666666666668,
+  "diff_size": 0.03076923076923077,
+  "drift_score": 0.3,
+  "iteration": 3,
+  "planner_focus": [
+    "Make thesis_clarity machine-detectable by explicitly labeling a single thesis sentence within ## Determinism (e.g., start with \u201cThesis:\u201d)",
+    "Make system_breakdown machine-detectable by changing the ## Harness breakdown line to a \u201cComponents:\u201d label with a colon and a compact list",
+    "Reduce sentence-length risk by splitting the long ## Kernel contrast sentence into two shorter sentences without changing meaning"
+  ]
+}

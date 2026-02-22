@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.8466666666666667,
+  "diff_size": 0.04878048780487805,
+  "drift_score": 0.32189183987682835,
+  "iteration": 10,
+  "planner_focus": [
+    "Reduce minor repetition between ## Thesis and the Synthesis paragraph under ## Failure Modes by compressing repeated claims about harness constraints and evaluation gates",
+    "Lower drift risk by making the Synthesis paragraph explicitly point back to the named signals in ## System Breakdown (iterations-to-pass, time-to-green, attribution rate)"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8733333333333334,
+  "diff_size": 0.06770833333333333,
+  "drift_score": 0.005217650566487776,
+  "iteration": 3,
+  "planner_focus": [
+    "Resolve measurability gaps in ## Concrete Example 2 (replace placeholders with fixed thresholds tied to stated budgets; add concrete success artifacts)",
+    "Reduce style-guard risk in ## System Breakdown by splitting long sentences, especially the **Verify** bullet",
+    "Ensure verification framing stays concrete by recording explicit gate outputs in ## Concrete Example 2 (commands, exit codes, summarized results)"
+  ]
+}

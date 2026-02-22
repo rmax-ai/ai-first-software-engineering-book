@@ -1,0 +1,100 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.56; drift_score=0.30"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": false,
+      "required_missing": [
+        "## Thesis",
+        "## Why This Matters",
+        "## System Breakdown",
+        "## Concrete Example 1",
+        "## Concrete Example 2",
+        "## Trade-offs",
+        "## Failure Modes",
+        "## Research Directions"
+      ],
+      "scores": {
+        "examples_count": 0.0,
+        "failure_modes": 0.0,
+        "system_breakdown": 0.0,
+        "thesis_clarity": 0.0,
+        "tradeoffs": 0.0
+      },
+      "timestamp": "2026-02-22T21:31:14Z",
+      "total": 0.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.47619047619047616,
+          "harness": 0.360655737704918,
+          "model": 0.5074626865671642
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": false,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.0018050541516245488
+      },
+      "timestamp": "2026-02-22T21:31:14Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.043010752688172046,
+      "forbidden_hits": [],
+      "pass": true,
+      "sentence_length_violations": [
+        {
+          "sentence": "In practice, the harness is what turns suggestions into an engineering workflow by enforcing invariants such as: - What tools may be called, with what inputs/outputs (schemas, allowlists, budgets).",
+          "words": 29
+        },
+        {
+          "sentence": "Mini-example: two systems use the same model to \u201cfix failing tests.\u201d In System A, the model edits files freely and declares success; failures can go unnoticed until later.",
+          "words": 29
+        },
+        {
+          "sentence": "In System B, the harness requires (1) a minimal diff, (2) running the relevant test command, and (3) attaching the output to the change record; if the command fails or is skipped, the change cannot be",
+          "words": 38
+        },
+        {
+          "sentence": "A recurring hypothesis in the chapters is that many reliability gains in practice are harness-induced: schema design, verification discipline, and traceability change outcomes even when the model is u",
+          "words": 30
+        }
+      ],
+      "timestamp": "2026-02-22T21:31:14Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/preface.md",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 2 for preface"
+  },
+  "iteration": 3053,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 0,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 0
+  },
+  "scope": {
+    "chapters_modified": [
+      "preface"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T21:31:14Z"
+}

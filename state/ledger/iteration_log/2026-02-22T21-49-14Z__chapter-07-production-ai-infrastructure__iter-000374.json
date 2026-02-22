@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8766666666666666,
+  "diff_size": 0.15151515151515152,
+  "drift_score": 0.05911330049261086,
+  "iteration": 374,
+  "planner_focus": [
+    "Tighten and shorten sentences in ## Thesis to meet the 28-word maximum while keeping the tool/runtime plane definition intact",
+    "Strengthen the operational framing in ## Why This Matters by tying the listed signals to explicit SLO-style targets (examples only, not mandates)",
+    "Make the two concrete examples more \u201cproduction-like\u201d by adding one explicit runbook-style decision point each (e.g., when to stop retries / when to escalate)"
+  ]
+}

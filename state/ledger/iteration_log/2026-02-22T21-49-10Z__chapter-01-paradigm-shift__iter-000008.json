@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8133333333333334,
+  "diff_size": 0.8695652173913043,
+  "drift_score": 0.3086496638987742,
+  "iteration": 8,
+  "planner_focus": [
+    "Tighten the definition of \"architectural inversion\" in ## Thesis with one concrete, testable sentence",
+    "Make the model-vs-harness attribution claim falsifiable by adding 2\u20133 measurable signals in ## System Breakdown",
+    "Increase specificity of both examples by adding exact artifacts and stop conditions under ## Concrete Example 1 and ## Concrete Example 2",
+    "Ensure the chapter explicitly connects ## Trade-offs and ## Failure Modes back to the hypothesis with a short synthesis paragraph"
+  ]
+}

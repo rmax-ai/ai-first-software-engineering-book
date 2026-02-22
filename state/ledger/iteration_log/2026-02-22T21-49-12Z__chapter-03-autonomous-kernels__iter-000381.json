@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.8433333333333334,
+  "diff_size": 0.0,
+  "drift_score": 0.012642681693396907,
+  "iteration": 381,
+  "planner_focus": [
+    "Ensure the chapter output terminates immediately after the last bullet in ## Research Directions (no trailing non-chapter blocks)",
+    "Avoid introducing any new content elsewhere while removing the trailing block (keep changes confined to ## Research Directions only)"
+  ]
+}

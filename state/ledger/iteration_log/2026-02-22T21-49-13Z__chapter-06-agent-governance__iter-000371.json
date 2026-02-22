@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.86,
+  "diff_size": 1.0,
+  "drift_score": 0.3,
+  "iteration": 371,
+  "planner_focus": [
+    "Tighten the causal claim in ## Thesis (define \u201csafe operating envelope\u201d and explicitly link permissions/budgets/review/audit to reduced operational risk over time).",
+    "Increase operational concreteness in ## System Breakdown (for each component, add 1\u20132 enforceable rules and how they are enforced).",
+    "Make ## Concrete Example 1 and ## Concrete Example 2 stepwise and testable (inputs, checks, rejection/approval path, and artifacts produced).",
+    "Quantify governance outcomes in ## Trade-offs (add 2\u20133 example metrics that represent \u201cfriction cost\u201d vs \u201cprevented incidents\u201d)."
+  ]
+}

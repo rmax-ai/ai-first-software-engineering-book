@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8733333333333334,
+  "diff_size": 0.46226415094339623,
+  "drift_score": 0.34669272772400095,
+  "iteration": 372,
+  "planner_focus": [
+    "Make ## System Breakdown gating criteria checkable by replacing \u201cnone/optional/full\u201d with explicit required/skip conditions and thresholds",
+    "Demonstrate one end-to-end trace query in ## Concrete Example 1 that uses structured fields to retrieve the relevant prior runs and isolate the root cause",
+    "Specify baselines for drift thresholds in ## Concrete Example 2 (what window is compared against what reference) and keep the rule executable"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8233333333333333,
+  "diff_size": 0.8913043478260869,
+  "drift_score": 0.3,
+  "iteration": 371,
+  "planner_focus": [
+    "Clarify the ## Thesis by defining \u201ctool/runtime plane\u201d with 3\u20135 concrete components and a single-sentence restatement of the hypothesis",
+    "Increase specificity in ## Concrete Example 1 and ## Concrete Example 2 by adding explicit inputs/outputs, success criteria, and what gets recorded as artifacts",
+    "Make ## Failure Modes more actionable by pairing each failure mode with detection signals and mitigations",
+    "Reduce sentence-level abstraction and modifier density across all sections (prefer short, concrete statements over broad qualifiers)"
+  ]
+}

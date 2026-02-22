@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8466666666666667,
+  "diff_size": 1.0,
+  "drift_score": 0.3010328139754485,
+  "iteration": 2,
+  "planner_focus": [
+    "Tighten the causal claim in ## Thesis (why harness changes outperform model swaps in practice)",
+    "Make ## System Breakdown more operational by defining inputs/outputs for each plane and a minimal contract surface",
+    "Deepen ## Concrete Example 1 and ## Concrete Example 2 with step-by-step flows (happy path + recovery) and explicit pass/fail criteria",
+    "Strengthen ## Failure Modes by pairing each failure with detection signals and concrete mitigations in the harness"
+  ]
+}

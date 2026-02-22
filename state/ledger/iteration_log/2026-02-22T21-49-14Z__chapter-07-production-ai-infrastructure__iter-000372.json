@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8666666666666667,
+  "diff_size": 0.6727272727272727,
+  "drift_score": 0.3,
+  "iteration": 372,
+  "planner_focus": [
+    "## Thesis: split the long second paragraph into shorter sentences and reduce parenthetical density",
+    "## Thesis: replace the broad claim about improving despite model variance with 2\u20133 concrete improvement signals (e.g., lower tool-failure rate, lower time-to-replay, fewer flaky retries, lower cost per merged change)",
+    "## Concrete Example 2: break the 'Decision policy' bullet into a short definition + separate escalation criteria to eliminate the 55-word sentence",
+    "## System Breakdown and ## Trade-offs: trim repeated modifiers (e.g., strict/explicit/durable/structured) by removing duplicates and keeping one precise term per bullet"
+  ]
+}
