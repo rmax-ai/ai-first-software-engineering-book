@@ -1,14 +1,13 @@
-# Risks and decisions
+# Risks and Decisions
 
-## Risks
-- Planned feature slices may expose hidden coupling between kernel orchestration and trace/metrics emitters.
-- Eval YAML updates can accidentally broaden or tighten gates if not validated with representative runs.
+## Risks discovered
+- Planning quality risk: future implementation could drift without strict acceptance criteria tied to deterministic smoke outputs.
+- Coupling risk: logging changes in `state/kernel.py` may affect eval assumptions if trace formats are unstable.
 
-## Decisions and trade-offs
-- Chose a planning-only first iteration to reduce implementation risk and establish explicit acceptance boundaries.
-- Deferred code changes so the next iteration can execute one smallest implementation task with focused verification.
+## Decisions made
+- Keep this iteration planning-only per seed prompt to avoid premature code churn.
+- Require each future implementation step to include explicit smoke/eval evidence and measurable expected signals.
 
-## Deferred items
-- Implementation of kernel observability improvements.
-- Role I/O template refinements.
-- Smoke and eval contract adjustments tied to new behavior.
+## Deferred intentionally
+- No direct code edits to harness modules in this iteration.
+- No eval YAML edits until the first concrete behavior change is implemented.

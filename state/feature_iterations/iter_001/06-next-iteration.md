@@ -1,19 +1,18 @@
-# Recommended next task
+# Next Iteration Recommendation
 
 ## Task
-Implement deterministic trace-summary schema validation in `state/kernel.py`.
+Implement deterministic trace-summary logging enhancements in `state/kernel.py` with backward-safe output shape guarantees.
 
 ## Why this is next
-- It provides the highest leverage observability improvement while staying narrow and testable.
-- It creates concrete outputs that later role-template and eval-gate changes can build on.
+It unlocks the highest observability gain for subsequent harness changes while providing a focused, testable vertical slice touching core orchestration behavior.
 
 ## Acceptance criteria
-- Add a focused helper in `state/kernel.py` that validates the trace summary payload shape before persistence.
-- Emit actionable errors when required trace fields are missing or malformed; do not silently coerce invalid structures.
-- Add/extend deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py` proving both valid and invalid trace-summary paths.
-- Verification run includes at least one targeted smoke command and records expected pass/fail evidence.
+- Add trace-summary emission points in `state/kernel.py` for key loop decisions and outcomes.
+- Preserve existing public interfaces and current successful execution paths.
+- Add/extend deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py` that validates summary presence and shape.
+- Run targeted verification commands and record outputs in the new iteration `04-validation.md`.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/metrics.json` (only if trace validation adds a new stable signal)
+- `state/feature_iterations/iter_002/*`
