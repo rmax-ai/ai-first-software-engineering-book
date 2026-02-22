@@ -20,6 +20,7 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[1]
 KERNEL_PATH = REPO_ROOT / "state" / "kernel.py"
 METRICS_PATH = REPO_ROOT / "state" / "metrics.json"
+TRACE_SUMMARY_FIXTURE_ROOT = REPO_ROOT / "state" / ".smoke_fixtures" / "trace_summary"
 
 
 def _event_type_name(event_type: Any) -> str:
@@ -109,7 +110,53 @@ async def run_prompt_mode(model: str, prompt: str, timeout_s: float) -> int:
     return 0
 
 
-async def run_trace_summary_mode(chapter_id: str, max_iterations: int, run_kernel: bool, metrics_path: Path) -> int:
+def _build_trace_summary_fixture(chapter_id: str, fixture_root: Path) -> tuple[Path, Path]:
+    fixture_repo_root = fixture_root / "repo"
+    metrics_path = fixture_repo_root / "state" / "metrics.json"
+    trace_path = fixture_repo_root / "state" / "role_io" / chapter_id / "iter_01" / "out" / "kernel_trace.jsonl"
+    trace_path.parent.mkdir(parents=True, exist_ok=True)
+    metrics_path.parent.mkdir(parents=True, exist_ok=True)
+
+    metrics_payload = {
+        "chapters": {
+            chapter_id: {
+                "history": [
+                    {
+                        "iteration": 1,
+                        "trace_summary": {
+                            "decision": "accept",
+                            "drift_score": 0.0,
+                            "diff_ratio": 0.0,
+                            "deterministic_pass": True,
+                        },
+                    }
+                ]
+            }
+        }
+    }
+    metrics_path.write_text(json.dumps(metrics_payload, indent=2), encoding="utf-8")
+
+    phase_entries = [
+        {"event": "phase_trace", "payload": {"phase": "role_output_ready", "status": "ok", "duration_ms": 1, "budget_signal": "within"}},
+        {"event": "phase_trace", "payload": {"phase": "evaluation", "status": "ok", "duration_ms": 1, "budget_signal": "within"}},
+        {"event": "phase_trace", "payload": {"phase": "state_persistence", "status": "ok", "duration_ms": 1, "budget_signal": "within"}},
+    ]
+    trace_path.write_text("\n".join(json.dumps(entry) for entry in phase_entries) + "\n", encoding="utf-8")
+    return metrics_path, fixture_repo_root
+
+
+async def run_trace_summary_mode(
+    chapter_id: str,
+    max_iterations: int,
+    run_kernel: bool,
+    metrics_path: Path,
+    fixture_root: Path,
+) -> int:
+    repo_root_for_trace = REPO_ROOT
+    metrics_path_for_trace = metrics_path
+    if not run_kernel:
+        metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_fixture(chapter_id=chapter_id, fixture_root=fixture_root)
+
     if run_kernel:
         kernel_cmd = [
             sys.executable,
@@ -131,7 +178,7 @@ async def run_trace_summary_mode(chapter_id: str, max_iterations: int, run_kerne
                 print(proc.stderr.strip())
             return 1
 
-    metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+    metrics = json.loads(metrics_path_for_trace.read_text(encoding="utf-8"))
     chapter_metrics = metrics.get("chapters", {}).get(chapter_id, {})
     history = chapter_metrics.get("history", [])
     if not history:
@@ -154,7 +201,7 @@ async def run_trace_summary_mode(chapter_id: str, max_iterations: int, run_kerne
     if not isinstance(iteration, int):
         print("FAIL: latest metrics history entry missing integer iteration")
         return 1
-    trace_path = REPO_ROOT / "state" / "role_io" / chapter_id / f"iter_{iteration:02d}" / "out" / "kernel_trace.jsonl"
+    trace_path = repo_root_for_trace / "state" / "role_io" / chapter_id / f"iter_{iteration:02d}" / "out" / "kernel_trace.jsonl"
     if not trace_path.exists():
         print(f"FAIL: kernel trace file missing at {trace_path}")
         return 1
@@ -199,6 +246,7 @@ async def main_async(args: argparse.Namespace) -> int:
         max_iterations=args.kernel_max_iterations,
         run_kernel=args.run_kernel_for_trace_summary,
         metrics_path=Path(args.metrics_path),
+        fixture_root=Path(args.trace_summary_fixture_root),
     )
 
 
@@ -212,6 +260,7 @@ def main() -> int:
     parser.add_argument("--kernel-max-iterations", type=int, default=1)
     parser.add_argument("--run-kernel-for-trace-summary", action="store_true")
     parser.add_argument("--metrics-path", default=str(METRICS_PATH))
+    parser.add_argument("--trace-summary-fixture-root", default=str(TRACE_SUMMARY_FIXTURE_ROOT))
     args = parser.parse_args()
     return asyncio.run(main_async(args))
 
