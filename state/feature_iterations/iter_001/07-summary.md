@@ -1,10 +1,10 @@
 # Iteration summary
 
-- Created `state/feature_iterations/iter_001/` as the first discovered iteration folder.
-- Executed a planning-only seed iteration as required by the runner prompt.
-- Documented task framing, why-now context, and acceptance criteria in `01-task.md`.
-- Produced an implementation roadmap covering harness features, tests, and eval gates in `02-plan.md`.
-- Logged the execution actions and file outputs in `03-execution.md`.
-- Recorded validation evidence for folder discovery, guidance review, and artifact completeness in `04-validation.md`.
-- Captured risks, trade-offs, and intentional deferrals in `05-risks-and-decisions.md`.
-- Defined exactly one concrete next task with measurable criteria and target files in `06-next-iteration.md`.
+This iteration established the first `state/feature_iterations/iter_001` backlog entry.
+It selected a single planning task focused on custom harness improvements.
+The plan explicitly covers feature work for deterministic controls and observability.
+It also defines test strategy centered on UV smoke validation and targeted harness checks.
+Eval regression coverage is tied to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+Execution and validation artifacts capture discovery, created files, and acceptance checks.
+No harness runtime code was modified in this seed planning iteration.
+One concrete next task was provided for implementation in `iter_002`.
