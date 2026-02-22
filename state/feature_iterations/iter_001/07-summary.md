@@ -1,10 +1,9 @@
 # Iteration summary
 
-This seed feature-improvement iteration completed a planning-only task.
-The new artifacts establish a focused backlog for improving the custom harness in `state/`.
-Coverage explicitly includes three dimensions: feature behavior, targeted tests/smokes, and eval/regression detection.
-The plan names concrete follow-up files, including `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml` contracts.
-Risks were captured around telemetry shape drift and eval synchronization.
-Implementation was intentionally deferred to keep this iteration aligned with the prompt’s stop condition.
-A single next task was selected: add deterministic trace-summary scaffolding and validate it with smoke coverage.
-All required `01`–`07` markdown artifacts are now present in `state/feature_iterations/iter_001/`.
+This seed feature iteration established `state/feature_iterations/iter_001/` as the first backlog handoff folder.  
+The selected task was planning-only: define custom harness improvements before any implementation changes.  
+Artifacts now capture features, tests, and eval alignment for upcoming work on `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.  
+Validation confirms the plan is grounded in `DEVELOPMENT.md` and existing eval contracts under `evals/*.yaml`.  
+No runtime or product code behavior changed in this iteration.  
+The next iteration is scoped to deterministic trace-summary observability plus smoke assertions.  
+This keeps changes minimal, testable, and compatible with existing governance constraints.

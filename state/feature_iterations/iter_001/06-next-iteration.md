@@ -1,17 +1,19 @@
-# Next iteration recommendation
+# Next iteration task
 
-## Task
-Implement deterministic trace-summary logging scaffolding in `state/kernel.py` with initial smoke coverage hooks.
+## Recommended task
+Implement deterministic trace-observability enhancements in `state/kernel.py` and wire smoke validation in `state/copilot_sdk_uv_smoke.py`.
 
-## Why next
-The plan depends on trustworthy and structured observability first; downstream role I/O and eval updates should build on stable trace-summary outputs.
+## Why this is next
+- The seed plan identified trace metadata and deterministic decision visibility as the highest-leverage feature gap.
+- This unlocks measurable regression checks before broader template or evaluator extensions.
 
 ## Acceptance criteria
-- Add a minimal, deterministic trace-summary emitter path in `state/kernel.py` without breaking current interfaces.
-- Add or update targeted smoke coverage in `state/copilot_sdk_uv_smoke.py` to validate trace-summary presence/shape.
-- Document expected metric signal impact in `state/metrics.json` (or related writer path) for regression visibility.
+- Add explicit trace-summary fields for iteration decision context in `state/kernel.py` without changing existing public CLI arguments.
+- Extend `state/copilot_sdk_uv_smoke.py` with one deterministic mode that asserts the new trace-summary shape.
+- Update iteration validation artifacts with executed `uv run python state/copilot_sdk_uv_smoke.py --mode ...` evidence.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/metrics.json`
+- `state/feature_iterations/iter_002/04-validation.md`
+- `state/feature_iterations/iter_002/03-execution.md`

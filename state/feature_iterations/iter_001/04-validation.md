@@ -1,16 +1,21 @@
 # Validation
 
-## Verification actions run
-- Prompt contract review against `prompts/incremental-improvements/execute.md`.
-- Governance/engineering alignment review against `DEVELOPMENT.md`.
-- Artifact completeness check for required files `01-task.md` through `07-summary.md`.
+## Verification commands run
+- `glob state/feature_iterations/iter_*`
+- `view DEVELOPMENT.md`
+- `view state/kernel.py`
+- `view state/role_io_templates.py`
+- `view state/copilot_sdk_uv_smoke.py`
+- `view evals/chapter-quality.yaml`
+- `view evals/style-guard.yaml`
+- `view evals/drift-detection.yaml`
 
 ## Observed results
-- Seed objective met: this iteration contains a planning-only backlog with explicit features/tests/evals coverage.
-- All seven required markdown artifacts are present under `state/feature_iterations/iter_001/`.
-- No code path changed; runtime tests were not required for this documentation-only iteration.
+- Confirmed `iter_001` is the first `state/feature_iterations/` folder.
+- Confirmed plan references match current harness and eval files.
+- Confirmed this iteration remains planning-only with no runtime behavior changes.
 
-## Acceptance criteria status
-- Planning coverage for features/tests/evals: **PASS**
-- Concrete file path coverage for future work: **PASS**
-- Exactly one next task specified: **PASS**
+## Acceptance criteria check
+- Features/tests/evals planning coverage: **pass**
+- Single next task with concrete criteria/files: **pass**
+- Seven required artifacts present in `state/feature_iterations/iter_001/`: **pass**

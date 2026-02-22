@@ -1,14 +1,12 @@
 # Risks and decisions
 
-## Risks
-- Planning may under-specify implementation details for telemetry schema changes in `state/kernel.py`.
-- Eval contract updates can drift from real harness signals if `state/metrics.json` shape changes without synchronized eval edits.
+## Risks discovered
+- The plan depends on preserving deterministic kernel behavior while adding richer observability; uncontrolled schema changes in metrics could break downstream tooling.
+- New smoke modes may increase maintenance burden unless they stay table-driven and reuse existing mode dispatch patterns.
 
 ## Decisions and trade-offs
-- Kept scope strictly to planning artifacts to satisfy seed iteration constraints.
-- Deferred implementation details to next iteration to avoid speculative code churn.
+- Chose a planning-only iteration to satisfy seed requirements and minimize implementation risk.
+- Reused existing eval contracts (`evals/*.yaml`) as regression anchors instead of proposing new eval files in this step.
 
-## Deferred items
-- Concrete telemetry field additions in `state/kernel.py`.
-- New/expanded smoke assertions in `state/copilot_sdk_uv_smoke.py`.
-- Any `evals/*.yaml` threshold or rule adjustments.
+## Deferred intentionally
+- Direct edits to `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py` are deferred to the next iteration.
