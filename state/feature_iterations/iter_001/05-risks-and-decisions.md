@@ -1,12 +1,15 @@
 # Risks and Decisions
 
 ## Risks discovered
-- Existing harness assumptions in `state/kernel.py` may couple logging, eval gating, and ledger writes more tightly than expected.
-- Expanding smoke coverage can increase runtime and maintenance cost if scenarios are not deterministic.
+- Planning quality risk: without concrete acceptance checks, future iterations could drift into broad refactors.
+- Coverage risk: feature changes in `state/kernel.py` may outpace deterministic smoke coverage if `state/copilot_sdk_uv_smoke.py` is not expanded in lockstep.
 
 ## Decisions and trade-offs
-- Chose planning-only iteration to avoid speculative code churn and establish testable acceptance criteria first.
-- Kept backlog items small and file-scoped to support minimal diffs in follow-up iterations.
+- Decision: keep this iteration planning-only, as mandated by the seed-iteration guidance.
+- Decision: prioritize observability and deterministic controls before broader behavior changes to reduce debugging cost.
+- Trade-off: no executable harness code changes this iteration, so runtime behavior is unchanged until next iteration.
 
 ## Deferred intentionally
-- No direct code edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml` in this iteration.
+- Implementing trace logging in `state/kernel.py`.
+- Updating templates in `state/role_io_templates.py`.
+- Adding/adjusting smoke and eval artifacts in `state/copilot_sdk_uv_smoke.py` and `evals/*.yaml`.
