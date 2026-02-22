@@ -1,12 +1,13 @@
 # Risks and decisions
 
 ## Risks discovered
-- Planning without first implementation may miss hidden coupling in `state/kernel.py` and `state/role_io_templates.py`.
-- Eval YAML changes can be brittle if new signals are introduced without stable deterministic fixtures.
+- Planning quality may drift from actual harness constraints if future iterations skip command-backed verification.
+- Eval updates can accidentally widen scope if not tied to specific harness behaviors.
 
-## Decisions made
-- Prioritized observability improvements first to make later behavioral regressions easier to detect.
-- Kept this iteration strictly documentation/planning to satisfy seed-iteration requirements.
+## Decisions and trade-offs
+- Chose planning-only output for this seed iteration to establish a clean backlog before code edits.
+- Prioritized deterministic, test-first follow-up work over speculative refactors.
 
-## Deferred intentionally
-- Any direct code edits in `state/` or `evals/` are deferred to next iterations.
+## Intentionally deferred
+- Direct implementation in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
+- Eval YAML edits until the first concrete behavior change is selected.

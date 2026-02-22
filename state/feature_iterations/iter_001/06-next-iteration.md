@@ -1,18 +1,20 @@
-# Recommended next iteration
+# Recommended next task
 
-## Next task
-Implement deterministic trace-summary hardening in `state/kernel.py` and prove it through smoke coverage updates.
+## Task
+Implement deterministic trace-summary observability in `state/kernel.py` and validate via smoke coverage.
 
 ## Why this is next
-Trace-summary consistency is the foundation for validating future harness behavior, and it provides immediate observability benefits for every subsequent task in this backlog.
+- It is the highest-impact feature from the seed plan and directly improves harness transparency.
+- It can be validated with focused changes to smoke tests and eval guard expectations.
 
 ## Acceptance criteria
-- Add/adjust kernel helper logic so trace summaries always emit stable required fields.
-- Extend `state/copilot_sdk_uv_smoke.py` with at least one deterministic mode that fails if trace-summary shape regresses.
-- Update validation notes to reference the exact smoke command and expected pass signal.
+- Add a minimal trace-summary emitter path in `state/kernel.py` with stable output shape.
+- Extend `state/copilot_sdk_uv_smoke.py` with one deterministic mode that asserts the new trace summary shape.
+- Update relevant eval contract(s) under `evals/` only if required to gate the new behavior.
+- Run `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` and record pass/fail evidence.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `evals/chapter-quality.yaml` (if gating update is required)
+- `state/feature_iterations/iter_002/*.md`

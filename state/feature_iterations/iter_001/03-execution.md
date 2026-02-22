@@ -1,10 +1,10 @@
 # Execution log
 
 ## Commands/tools run
-- Read `prompts/incremental-improvements/execute.md`.
-- Read `DEVELOPMENT.md`.
-- Enumerated `state/feature_iterations/iter_*` (none existed).
-- Created `state/feature_iterations/iter_001/` and authored `01`-`07` artifacts.
+- `view prompts/incremental-improvements/execute.md`
+- `view DEVELOPMENT.md`
+- `glob state/feature_iterations/iter_*`
+- `apply_patch` to create `iter_001` artifacts
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -16,4 +16,5 @@
 - `state/feature_iterations/iter_001/07-summary.md`
 
 ## Rationale
-Created the seed feature-improvement backlog iteration as a planning-only slice so future iterations can execute one concrete harness task at a time.
+- Created the required seven-file contract for a seed planning iteration.
+- Kept scope to planning only, per prompt instructions.

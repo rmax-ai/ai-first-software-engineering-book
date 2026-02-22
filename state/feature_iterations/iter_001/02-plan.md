@@ -1,28 +1,19 @@
-# Iteration plan
+# Iteration plan (single task)
 
-1. Audit current harness responsibilities from `DEVELOPMENT.md` and identify planning surfaces in:
-   - `state/kernel.py`
-   - `state/role_io_templates.py`
-   - `state/copilot_sdk_uv_smoke.py`
-   - `evals/*.yaml`
-2. Define a features backlog for upcoming iterations:
-   - Structured trace logging and per-phase timing in `state/kernel.py`.
-   - Stronger role-IO template validation and schema checks in `state/role_io_templates.py`.
-   - Deterministic smoke coverage expansion in `state/copilot_sdk_uv_smoke.py` for new harness invariants.
-3. Define tests by surface:
-   - Add focused kernel unit tests for new trace/timing helpers.
-   - Extend smoke modes in `state/copilot_sdk_uv_smoke.py` to validate deterministic behaviors.
-   - Add/adjust assertions for role-IO template contract checks.
-4. Define evaluation integration:
-   - Map each feature to expected checks in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-   - Require metrics deltas to be recorded in `state/metrics.json` for added signals.
-5. Set the next single executable task to implement kernel trace summary hardening first, because it unlocks observability for subsequent work.
+1. Review harness guidance in `DEVELOPMENT.md` and align scope to deterministic, minimal-surface harness changes.
+2. Define feature backlog themes for:
+   - richer trace observability in `state/kernel.py`
+   - clearer role I/O scaffolding in `state/role_io_templates.py`
+   - stronger deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py`
+   - regression gates in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
+3. Map each theme to target verification commands (`uv run python ...`) and expected evidence artifacts.
+4. Record risks/trade-offs and defer implementation to subsequent iterations.
 
-## Files expected to change in later iterations
-- `state/kernel.py`
-- `state/role_io_templates.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `evals/chapter-quality.yaml`
-- `evals/style-guard.yaml`
-- `evals/drift-detection.yaml`
-- `state/metrics.json`
+## Expected files to change this iteration
+- `state/feature_iterations/iter_001/01-task.md`
+- `state/feature_iterations/iter_001/02-plan.md`
+- `state/feature_iterations/iter_001/03-execution.md`
+- `state/feature_iterations/iter_001/04-validation.md`
+- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
+- `state/feature_iterations/iter_001/06-next-iteration.md`
+- `state/feature_iterations/iter_001/07-summary.md`

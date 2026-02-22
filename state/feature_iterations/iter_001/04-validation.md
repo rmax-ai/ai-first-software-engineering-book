@@ -1,20 +1,16 @@
 # Validation
 
 ## Verification commands run
-- `test -f state/feature_iterations/iter_001/01-task.md`
-- `test -f state/feature_iterations/iter_001/02-plan.md`
-- `test -f state/feature_iterations/iter_001/03-execution.md`
-- `test -f state/feature_iterations/iter_001/04-validation.md`
-- `test -f state/feature_iterations/iter_001/05-risks-and-decisions.md`
-- `test -f state/feature_iterations/iter_001/06-next-iteration.md`
-- `test -f state/feature_iterations/iter_001/07-summary.md`
+- `glob state/feature_iterations/iter_*`
+- `glob state/feature_iterations/iter_001/*.md`
+- `rg "state/kernel.py|state/role_io_templates.py|state/copilot_sdk_uv_smoke.py|evals/" state/feature_iterations/iter_001/*.md`
 
 ## Observed results
-- All seven required iteration artifacts exist in `state/feature_iterations/iter_001/`.
-- Content is planning-focused and includes explicit feature/test/eval coverage.
+- `iter_001` exists and contains all seven required markdown artifacts.
+- Plan artifacts reference required harness and eval file paths.
+- Iteration remained planning-only (no production harness files changed).
 
 ## Acceptance criteria status
-- Feature planning coverage: **pass**
-- Test planning coverage: **pass**
-- Eval/regression mapping coverage: **pass**
-- Planning-only scope maintained: **pass**
+- Features/tests/evals planning coverage: **pass**
+- Seven-artifact folder contract: **pass**
+- One-task scope preserved: **pass**
