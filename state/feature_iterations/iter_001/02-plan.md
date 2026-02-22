@@ -1,25 +1,23 @@
 # Plan
 
-1. Define feature workstreams for harness observability, deterministic controls, and role I/O scaffolding quality.
-2. Break down follow-up implementation touchpoints in:
-   - `state/kernel.py` (trace logging + deterministic constraints)
-   - `state/role_io_templates.py` (clearer templates and validation hooks)
-   - `state/copilot_sdk_uv_smoke.py` (new smoke coverage for added controls)
-   - `evals/*.yaml` (regression detection expectations aligned to new signals)
-3. Specify test strategy:
-   - `uv run python state/copilot_sdk_uv_smoke.py` mode additions
-   - targeted kernel/unit checks for parser/constraint helpers
-   - fixture-based checks for role template behavior
-4. Specify evaluation strategy:
-   - map new behavior to existing eval contracts
-   - define expected metric/ledger signals and failure criteria
-5. Document one smallest next implementation task with explicit acceptance criteria.
+1. Review governance and implementation guidance in `DEVELOPMENT.md` and `prompts/incremental-improvements/execute.md`.
+2. Define harness feature backlog items focused on deterministic behavior, observability, and execution controls:
+   - richer phase/step trace summaries in `state/kernel.py`
+   - clearer role I/O schema scaffolds in `state/role_io_templates.py`
+   - expanded smoke-mode coverage and assertions in `state/copilot_sdk_uv_smoke.py`
+3. Map each feature item to tests:
+   - targeted unit tests for parser/validator helpers in `state/`
+   - smoke coverage via `uv run python state/copilot_sdk_uv_smoke.py --mode ...`
+4. Map each feature item to eval impact:
+   - confirm compatibility with `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
+   - define expected signal updates in `state/metrics.json` and iteration evidence docs
+5. Capture risks/decisions and recommend exactly one next implementation task with concrete acceptance criteria.
 
-## Files expected to change in later iterations
+## Expected files to change in later iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- `state/metrics.json` (only if expected signals change)
+- `state/copilot_sdk_smoke_test.py` (if smoke matrix coverage expands)

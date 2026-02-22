@@ -1,10 +1,12 @@
 # Execution
 
 ## Commands/tools run
-- `view prompts/incremental-improvements/execute.md`
-- `view DEVELOPMENT.md`
-- `mkdir -p state/feature_iterations/iter_001`
-- Markdown artifact creation via shell heredocs for `01-task.md` through `07-summary.md`
+- Read guidance with `view`:
+  - `prompts/incremental-improvements/execute.md`
+  - `AGENTS.md`
+  - `DEVELOPMENT.md`
+- Checked iteration baseline with `glob` on `state/feature_iterations/iter_*`.
+- Created the iteration artifact files in `state/feature_iterations/iter_001/`.
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -16,6 +18,6 @@
 - `state/feature_iterations/iter_001/07-summary.md`
 
 ## Rationale per change
-- Established the required seed iteration scope and acceptance criteria.
-- Captured a concrete follow-up implementation plan across features/tests/evals.
-- Recorded execution, validation, risk, and next-step handoff artifacts per contract.
+- Added task definition to scope this seed iteration as planning only.
+- Added implementation-ready plan spanning harness features, tests, and eval linkage.
+- Added execution/validation/risk/next/summary handoff docs required by the iteration contract.

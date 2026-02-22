@@ -1,12 +1,13 @@
 # Risks and decisions
 
 ## Risks discovered
-- The plan assumes current eval contracts can absorb additional harness signals without schema drift.
-- Smoke-test expansion may introduce longer runtime or flaky fixtures if deterministic setup is incomplete.
+- Planning without immediate implementation can leave ambiguity around required refactors in `state/kernel.py`.
+- Expanding smoke coverage may increase runtime and maintenance cost if mode permutations grow unchecked.
 
-## Decisions and trade-offs
-- Chose a planning-only iteration as required by the prompt seed guidance, deferring implementation to keep scope minimal and auditable.
-- Kept the next-step recommendation to one narrow kernel-focused task to reduce integration risk.
+## Decisions made and trade-offs
+- Chose a planning-only iteration to follow the seed prompt exactly; deferred code edits to later iterations.
+- Scoped backlog to deterministic, testable harness changes rather than broad architecture rewrite to keep subsequent diffs minimal.
 
 ## Intentionally deferred
-- Any direct code edits in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+- Concrete code changes in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
+- Any eval YAML edits pending first implementation step and observed behavior deltas.

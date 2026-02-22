@@ -1247,15 +1247,20 @@ def _assert_mode_in_parser_and_usage_examples(
     )
 
 
-def run_usage_examples_duplicate_count_mode_coverage_guard_mode() -> int:
+def _run_usage_examples_duplicate_count_mode_coverage_guard(
+    target_mode_name: str, pass_message: str
+) -> int:
     all_mode_specs = _all_mode_specs()
-    target_mode_name = "usage-examples-duplicate-count-regression-guard"
     _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
-
-    print(
-        "PASS: usage-examples-duplicate-count-mode-coverage-guard mode validates duplicate-count regression mode coverage"
-    )
+    print(pass_message)
     return 0
+
+
+def run_usage_examples_duplicate_count_mode_coverage_guard_mode() -> int:
+    return _run_usage_examples_duplicate_count_mode_coverage_guard(
+        "usage-examples-duplicate-count-regression-guard",
+        "PASS: usage-examples-duplicate-count-mode-coverage-guard mode validates duplicate-count regression mode coverage",
+    )
 
 
 def _trace_summary_fixture_cleanup_parity_target_modes() -> tuple[str, str]:
@@ -1402,14 +1407,10 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_uniquen
 
 
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode() -> int:
-    all_mode_specs = _all_mode_specs()
-    target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard"
-    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
-
-    print(
-        "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard mode coverage"
+    return _run_usage_examples_duplicate_count_mode_coverage_guard(
+        "usage-examples-duplicate-count-mode-coverage-guard",
+        "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard mode coverage",
     )
-    return 0
 
 
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
