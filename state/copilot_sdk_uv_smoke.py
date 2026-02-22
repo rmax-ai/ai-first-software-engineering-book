@@ -67,6 +67,11 @@ class KernelTraceEntryPayload(BaseModel):
     payload: Any
 
 
+class KernelTracePhaseEntryPayload(BaseModel):
+    event: str
+    payload: dict[str, Any]
+
+
 class PhaseTracePayload(BaseModel):
     phase: str
     status: str
@@ -111,6 +116,15 @@ class PhaseTraceTransit:
             duration_ms=payload.duration_ms,
             budget_signal=payload.budget_signal,
         )
+
+
+@dataclass(frozen=True)
+class KernelTracePhaseTransit:
+    payload: dict[str, Any]
+
+    @classmethod
+    def from_payload(cls, payload: KernelTracePhaseEntryPayload) -> "KernelTracePhaseTransit":
+        return cls(payload=payload.payload)
 
 
 @dataclass(frozen=True)
@@ -419,6 +433,7 @@ async def run_trace_summary_mode(
                     if not (isinstance(entry.payload, dict) and entry.payload.get("phase") == "evaluation")
                 ]
         phase_transits: list[PhaseTraceTransit] = []
+        phase_entry_transits: list[KernelTracePhaseTransit] = []
         if not phase_entries:
             observed_phase_trace_failure = "no phase_trace events in kernel trace"
         else:
@@ -426,12 +441,19 @@ async def run_trace_summary_mode(
 
         if not observed_phase_trace_failure:
             for entry in phase_entries:
-                payload = entry.payload
-                if not isinstance(payload, dict):
-                    observed_phase_trace_failure = "phase_trace payload is not an object"
-                    break
                 try:
-                    phase_transits.append(PhaseTraceTransit.from_payload(PhaseTracePayload.model_validate(payload)))
+                    phase_entry_transits.append(
+                        KernelTracePhaseTransit.from_payload(
+                            KernelTracePhaseEntryPayload.model_validate(
+                                {"event": entry.event, "payload": entry.payload}
+                            )
+                        )
+                    )
+                    phase_transits.append(
+                        PhaseTraceTransit.from_payload(
+                            PhaseTracePayload.model_validate(phase_entry_transits[-1].payload)
+                        )
+                    )
                 except ValidationError as exc:
                     missing_keys = sorted(
                         {
