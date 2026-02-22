@@ -1962,6 +1962,54 @@ def run_usage_examples_duplicate_count_wrapper_helper_positional_only_guard_mode
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_arg_order_guard_mode() -> int:
+    wrapper_mode_specs = [
+        (mode_name, mode_handler)
+        for mode_name, mode_handler, _description in TRACE_SUMMARY_MODE_SPECS
+        if mode_name.startswith("usage-examples-duplicate-count-mode-coverage-guard")
+    ]
+    assert wrapper_mode_specs, "expected duplicate-count coverage-guard wrapper functions"
+
+    wrappers_with_non_canonical_helper_arg_order: list[str] = []
+    for mode_name, mode_handler in wrapper_mode_specs:
+        helper_calls = [
+            node
+            for node in ast.walk(ast.parse(inspect.getsource(mode_handler)))
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "_run_usage_examples_duplicate_count_mode_coverage_guard"
+        ]
+        if len(helper_calls) != 1:
+            wrappers_with_non_canonical_helper_arg_order.append(mode_handler.__name__)
+            continue
+        helper_call = helper_calls[0]
+        first_arg = helper_call.args[0] if len(helper_call.args) > 0 else None
+        second_arg = helper_call.args[1] if len(helper_call.args) > 1 else None
+        expected_prefix = f"PASS: {mode_name} mode validates"
+        if (
+            not isinstance(first_arg, ast.Constant)
+            or not isinstance(first_arg.value, str)
+            or first_arg.value != mode_name
+            or not isinstance(second_arg, ast.Constant)
+            or not isinstance(second_arg.value, str)
+            or not second_arg.value.startswith(expected_prefix)
+        ):
+            wrappers_with_non_canonical_helper_arg_order.append(mode_handler.__name__)
+
+    assert not wrappers_with_non_canonical_helper_arg_order, (
+        "expected duplicate-count coverage-guard wrappers to call "
+        "_run_usage_examples_duplicate_count_mode_coverage_guard(...) with canonical argument order "
+        "(mode-name first, PASS-prefixed message second), "
+        f"found regressions: {wrappers_with_non_canonical_helper_arg_order}"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-arg-order-guard mode validates duplicate-count "
+        "coverage-guard wrappers pass mode-name first and canonical PASS-prefixed message second"
+    )
+    return 0
+
+
 def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
@@ -2305,6 +2353,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-helper-positional-only-guard",
         run_usage_examples_duplicate_count_wrapper_helper_positional_only_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper helper positional-only call-shape assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-arg-order-guard",
+        run_usage_examples_duplicate_count_wrapper_helper_arg_order_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper canonical argument-order assertion",
     ),
     (
         "usage-examples-order-guard",
