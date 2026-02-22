@@ -1,9 +1,10 @@
-# Iteration summary
+# Summary
 
-This seed feature iteration established the initial backlog and execution direction for custom harness improvements in `state/`.
-The work intentionally stayed planning-only and created the full seven-file iteration handoff contract.
-Artifacts define improvement themes across kernel observability, role I/O scaffolding, smoke coverage, and eval-gate alignment.
-The plan ties future validation to UV-run smoke commands and existing eval contracts under `evals/`.
-Primary risks (coupling and gate drift) were captured with explicit deferrals.
-A single concrete next task was selected: deterministic trace-summary schema validation in `state/kernel.py` with smoke proof.
-This leaves the repository ready for the next one-task implementation iteration with bounded scope and acceptance criteria.
+This seed iteration established `state/feature_iterations/iter_001/` as the first feature-improvement record.
+The selected task was planning-only, as required by the prompt, and focused on custom harness improvements in `state/`.
+The plan defines a backlog spanning feature behavior, deterministic test coverage, and eval regression protection.
+Feature scope targets `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
+Evaluation scope ties to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+Validation confirmed the plan includes explicit coverage for features, tests, and evals.
+Risks and trade-offs were documented to keep future diffs minimal and avoid speculative implementation.
+The handoff recommends exactly one next task: add a trace-summary observability guard with one matching smoke mode.

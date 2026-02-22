@@ -1,14 +1,17 @@
 # Risks and decisions
 
-## Risks
-- Planned feature slices may expose hidden coupling between kernel orchestration and trace/metrics emitters.
-- Eval YAML updates can accidentally broaden or tighten gates if not validated with representative runs.
+## Risks discovered
+
+- Current harness behavior details may evolve quickly; backlog tasks must stay minimal to avoid drift between plan and implementation.
+- Eval contract updates can be over-scoped if done before trace/role changes land, causing noisy iteration diffs.
 
 ## Decisions and trade-offs
-- Chose a planning-only first iteration to reduce implementation risk and establish explicit acceptance boundaries.
-- Deferred code changes so the next iteration can execute one smallest implementation task with focused verification.
+
+- Chose a planning-only seed iteration per prompt requirement instead of making speculative code changes.
+- Deferred implementation details to future single-task iterations to keep evidence and rollback boundaries clear.
 
 ## Deferred items
-- Implementation of kernel observability improvements.
-- Role I/O template refinements.
-- Smoke and eval contract adjustments tied to new behavior.
+
+- Exact trace-summary schema changes in `state/kernel.py`.
+- Exact smoke-mode names and assertions in `state/copilot_sdk_uv_smoke.py`.
+- Specific threshold/wording changes in `evals/*.yaml`.

@@ -1,18 +1,18 @@
 # Validation
 
 ## Verification commands run
-- `glob state/feature_iterations/iter_*` (confirmed `iter_001` creation path logic)
-- `git --no-pager status --short` (verified only iteration artifacts changed)
-- Content review against:
-  - `prompts/incremental-improvements/execute.md`
-  - `DEVELOPMENT.md`
+
+- `glob state/feature_iterations/iter_*`
+- `rg "Features|test|eval" state/feature_iterations/iter_001/0{1,2,6}-*.md`
 
 ## Observed results
-- All seven required files were created under `state/feature_iterations/iter_001/`.
-- Artifacts explicitly cover feature, test, and evaluation planning surfaces.
-- Scope remained planning-only with no harness runtime code edits.
+
+- Confirmed new iteration folder exists as `state/feature_iterations/iter_001/`.
+- Confirmed planning artifacts explicitly reference feature work, tests/smoke coverage, and eval contracts.
+- Confirmed next-iteration handoff is exactly one task with acceptance criteria and expected files.
 
 ## Acceptance criteria check
-- Backlog plan coverage (features/tests/evals): **pass**
-- Concrete next task with acceptance criteria and file targets: **pass**
-- Planning-only scope preserved: **pass**
+
+1. Plan covers features/tests/evals: **pass**.
+2. Concrete file paths are identified for future implementation: **pass**.
+3. One recommended next task is documented for continuation: **pass**.
