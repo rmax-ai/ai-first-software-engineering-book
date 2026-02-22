@@ -1,13 +1,14 @@
 # Risks and Decisions
 
 ## Risks discovered
-- Future iterations may over-scope changes across kernel, templates, smoke matrix, and eval contracts if not split into small deltas.
-- Trace logging additions in `state/kernel.py` can create noisy outputs unless logging schema is explicitly constrained.
+- Planning quality risk: future implementation may drift if backlog items are not tightly scoped per iteration.
+- Verification risk: kernel/eval changes can introduce regressions if deterministic smoke and eval checks are not run together.
 
 ## Decisions and trade-offs
-- Chose planning-only execution for this seed iteration to satisfy prompt requirements and avoid premature implementation.
-- Captured one integrated backlog that maps behaviors to tests/evals, trading immediate code delivery for clearer execution sequencing.
+- Decision: keep this seed iteration planning-only, as required by prompt.
+  - Trade-off: no immediate behavior improvement, but stronger execution guidance for subsequent iterations.
+- Decision: anchor proposed verification commands to UV-managed runtime (`uv run python ...`) from `DEVELOPMENT.md`.
+  - Trade-off: assumes existing runtime setup is available in later iterations.
 
 ## Deferred intentionally
-- No code changes to harness modules in this iteration.
-- No eval YAML edits until a concrete feature delta is selected in the next iteration.
+- Any direct modifications to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml` were deferred to future implementation iterations.

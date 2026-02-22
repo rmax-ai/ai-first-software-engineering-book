@@ -1,15 +1,17 @@
 # Next Iteration Recommendation
 
 ## Recommended next task
-Implement deterministic trace-summary checkpoints in `state/kernel.py` and cover them with targeted smoke validation.
+Implement structured kernel trace summaries in `state/kernel.py` so each run emits deterministic per-phase metrics suitable for regression checks.
 
 ## Why this is next
-Trace-summary visibility is the highest leverage foundation for subsequent template and eval work; it reduces debugging ambiguity and provides measurable regression signals.
+- It is the highest-leverage feature item from the new backlog because it improves observability and strengthens downstream validation.
+- It directly supports reliable interpretation of smoke/eval results before expanding role templates or test coverage.
 
 ## Acceptance criteria
-- `state/kernel.py` emits structured trace-summary checkpoints for key loop phases and terminal outcomes.
-- `state/copilot_sdk_uv_smoke.py` includes at least one deterministic mode that validates new trace-summary shape/fields.
-- Validation evidence includes one targeted command run and observed pass/fail output recorded in iteration artifacts.
+- Add deterministic trace-summary generation in `state/kernel.py` with stable field names and ordering.
+- Ensure trace output is consumed/validated by a targeted deterministic smoke mode in `state/copilot_sdk_uv_smoke.py`.
+- Document expected signals and regression behavior in the corresponding iteration validation artifact.
+- Run and record at least one targeted verification command using UV runtime.
 
 ## Expected files to touch
 - `state/kernel.py`
