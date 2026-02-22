@@ -94,10 +94,26 @@ class LedgerJSONPayload(BaseModel):
     data: dict[str, Any]
 
 
+class JSONTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
+@dataclass(frozen=True)
+class JSONTextTransit:
+    source_path: Path
+    payload: JSONTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
+
+
 @dataclass(frozen=True)
 class LedgerJSONTransit:
     source_path: Path
     raw_text: str
+    json_text: JSONTextTransit
     payload: LedgerJSONPayload
 
     def to_mapping(self) -> dict[str, Any]:
@@ -140,14 +156,18 @@ def _load_json(path: Path) -> LedgerJSONTransit:
     except FileNotFoundError as exc:
         raise GovernanceError(f"Ledger not found: {path}") from exc
     try:
-        parsed = json.loads(raw_text)
+        json_text = JSONTextTransit(source_path=path, payload=JSONTextPayload.model_validate({"text": raw_text}))
+    except ValidationError as exc:
+        raise GovernanceError(f"Invalid ledger JSON text payload at {path}: {exc}") from exc
+    try:
+        parsed = json.loads(json_text.to_text())
     except json.JSONDecodeError as exc:
         raise GovernanceError(f"Invalid JSON in ledger: {path}: {exc}") from exc
     try:
         payload = LedgerJSONPayload.model_validate({"data": parsed})
     except ValidationError as exc:
         raise GovernanceError(f"Invalid ledger JSON payload root at {path}: {exc}") from exc
-    return LedgerJSONTransit(source_path=path, raw_text=raw_text, payload=payload)
+    return LedgerJSONTransit(source_path=path, raw_text=json_text.to_text(), json_text=json_text, payload=payload)
 
 
 def _dump_json(data: Any) -> str:
