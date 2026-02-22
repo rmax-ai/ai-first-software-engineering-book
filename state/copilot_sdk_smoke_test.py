@@ -946,6 +946,28 @@ def run_usage_examples_order_guard_mode() -> int:
     return 0
 
 
+def run_usage_examples_mode_set_coverage_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    usage_lines = _usage_doc_lines(all_mode_specs)
+    expected_mode_names = [name for name, _handler, _description in all_mode_specs if name != "stub"]
+    actual_mode_names = [
+        line.removeprefix("  uv run python state/copilot_sdk_smoke_test.py --mode ")
+        for line in usage_lines
+        if line.startswith("  uv run python state/copilot_sdk_smoke_test.py --mode ")
+    ]
+    assert len(actual_mode_names) == len(expected_mode_names), (
+        "expected generated usage examples to include each non-stub mode exactly once by count"
+    )
+    assert set(actual_mode_names) == set(expected_mode_names), (
+        "expected generated usage examples to include each non-stub mode exactly once by set coverage"
+    )
+
+    print(
+        "PASS: usage-examples-mode-set-coverage-guard mode validates generated usage examples cover all non-stub modes exactly once"
+    )
+    return 0
+
+
 TraceSummaryModeHandler = Callable[[], int]
 TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] = (
     ("trace-summary", run_trace_summary_mode, "deterministic required-key assertion"),
@@ -1011,6 +1033,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-order-guard",
         run_usage_examples_order_guard_mode,
         "deterministic generated usage-example ordering assertion",
+    ),
+    (
+        "usage-examples-mode-set-coverage-guard",
+        run_usage_examples_mode_set_coverage_guard_mode,
+        "deterministic generated usage-example mode set/count coverage assertion",
     ),
 )
 
