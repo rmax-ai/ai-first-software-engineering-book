@@ -1,18 +1,16 @@
 # Validation
 
 ## Verification commands run
-- `view DEVELOPMENT.md`
-- `view prompts/incremental-improvements/execute.md`
 - `glob state/feature_iterations/iter_*`
+- `view DEVELOPMENT.md`
 - `git --no-pager status --short`
 
 ## Observed results
-- Governance guidance was available and reviewed from `DEVELOPMENT.md`.
-- Iteration discovery returned no prior folders, so `iter_001` was selected.
-- Seven required artifact paths were prepared under `state/feature_iterations/iter_001/`.
-- Working tree checks stayed clean between commits except for intentional artifact edits.
+- `state/feature_iterations/iter_001/` exists and is the first feature iteration folder.
+- Planning artifacts reference required future touch points: `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- No implementation claims or test-pass claims were made without execution.
 
 ## Acceptance criteria check
-1. Backlog covers features/tests/evals with concrete files: **PASS**.
-2. Seed planning iteration completed without implementation scope creep: **PASS**.
-3. Exactly one recommended next task will be provided in `06-next-iteration.md`: **PASS**.
+- Planning-only scope: **pass**
+- Features/tests/evals explicitly covered: **pass**
+- One next task with concrete criteria prepared: **pass**
