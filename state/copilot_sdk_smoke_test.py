@@ -1526,25 +1526,17 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_covera
 
 
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
-    all_mode_specs = _all_mode_specs()
-    target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
-
-    print(
+    return _run_usage_examples_duplicate_count_mode_coverage_guard(
+        "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard",
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
     )
-    return 0
 
 
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
-    all_mode_specs = _all_mode_specs()
-    target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard"
-    _assert_mode_in_parser_and_usage_examples(all_mode_specs, target_mode_name)
-
-    print(
+    return _run_usage_examples_duplicate_count_mode_coverage_guard(
+        "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard",
         "PASS: usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard-coverage-guard mode validates duplicate-count mode-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard-coverage guard mode coverage"
     )
-    return 0
 
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
