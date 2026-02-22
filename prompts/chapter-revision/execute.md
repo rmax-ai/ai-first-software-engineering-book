@@ -122,3 +122,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 
 | 01-paradigm-shift | 1 | failed(1) | none | `pending` |
 | 01-paradigm-shift | 2 | ok | none | `n/a` |
+| 01-paradigm-shift | 3 | ok | none | `n/a` |
