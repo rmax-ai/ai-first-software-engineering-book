@@ -98,9 +98,10 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 04-memory-systems | 1 | failed(1) | none | `be1d9a8]` |
 | 04-memory-systems | 2 | failed(1) | none | `e64738e]` |
 | 04-memory-systems | 3 | failed(1) | none | `cb2f6bb]` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `f10c256]` |
 ### Re-run Summary (2026-02-22T18:25:03Z)
-- Completed 12/24 chapter passes so far.
+- Completed 13/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 12.
-- Total commits created for this re-run loop: 12.
+- Failed passes: 13.
+- Total commits created for this re-run loop: 13.
 
