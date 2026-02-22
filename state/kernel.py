@@ -112,6 +112,14 @@ class LLMJSONResponseTextPayload(BaseModel):
     text: str
 
 
+class LLMJSONObjectTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+    start_index: int
+    end_index: int
+
+
 class YAMLTextPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -386,6 +394,15 @@ class PromptTextTransit:
 @dataclass(frozen=True)
 class LLMJSONResponseTextTransit:
     payload: LLMJSONResponseTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
+
+
+@dataclass(frozen=True)
+class LLMJSONObjectTextTransit:
+    response_text: LLMJSONResponseTextTransit
+    payload: LLMJSONObjectTextPayload
 
     def to_text(self) -> str:
         return self.payload.text
@@ -671,24 +688,35 @@ def _extract_json_object(text: str) -> JSONMappingTransit:
     except ValidationError as exc:
         raise KernelError(f"Invalid LLM JSON response text payload: {exc}") from exc
     text_transit = LLMJSONResponseTextTransit(payload=text_payload)
-    t = _strip_wrapping_code_fence(text_transit.to_text()).strip()
+    normalized_text = _strip_wrapping_code_fence(text_transit.to_text()).strip()
+    lo = 0
+    hi = len(normalized_text)
+    candidate = normalized_text
     try:
-        obj = json.loads(t)
+        json.loads(candidate)
     except json.JSONDecodeError:
         # Try to locate the first {...} block.
-        lo = t.find("{")
-        hi = t.rfind("}")
-        if lo == -1 or hi == -1 or hi <= lo:
+        lo = normalized_text.find("{")
+        hi = normalized_text.rfind("}") + 1
+        if lo == -1 or hi <= lo:
             raise KernelError("LLM response did not contain a JSON object")
-        try:
-            obj = json.loads(t[lo : hi + 1])
-        except json.JSONDecodeError as exc:
-            raise KernelError(f"LLM response contained invalid JSON: {exc}") from exc
+        candidate = normalized_text[lo:hi]
+    try:
+        object_text_payload = LLMJSONObjectTextPayload.model_validate(
+            {"text": candidate, "start_index": lo, "end_index": hi}
+        )
+    except ValidationError as exc:
+        raise KernelError(f"Invalid LLM response JSON object text payload: {exc}") from exc
+    object_text = LLMJSONObjectTextTransit(response_text=text_transit, payload=object_text_payload)
+    try:
+        obj = json.loads(object_text.to_text())
+    except json.JSONDecodeError as exc:
+        raise KernelError(f"LLM response contained invalid JSON: {exc}") from exc
 
     try:
         json_text = JSONTextTransit(
             source_path=Path("<llm-response>"),
-            payload=JSONTextPayload.model_validate({"text": t}),
+            payload=JSONTextPayload.model_validate({"text": object_text.to_text()}),
         )
     except ValidationError as exc:
         raise KernelError(f"Invalid LLM response JSON text payload: {exc}") from exc

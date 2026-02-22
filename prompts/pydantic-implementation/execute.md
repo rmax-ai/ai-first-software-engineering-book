@@ -112,6 +112,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` now validates iteration `out/planner.json` ingestion through `JSONMappingPayload` and forwards the parsed planner output via `JSONMappingTransit` before writer prompt assembly.
 - `state/kernel.py` now validates raw JSON file text through `JSONTextPayload` and forwards source-path text via `JSONTextTransit` before JSON mapping parsing.
 - `state/kernel.py` now validates raw planner/critic LLM JSON response text through `LLMJSONResponseTextPayload` and forwards it via `LLMJSONResponseTextTransit` before JSON object extraction.
+- `state/kernel.py` now validates extracted planner/critic JSON object text via `LLMJSONObjectTextPayload` and forwards selected JSON slices through `LLMJSONObjectTextTransit` before JSON mapping parsing.
 - `state/kernel.py` now validates critic eval input ingestion (`evals/chapter-quality.yaml`, `evals/style-guard.yaml`, `evals/drift-detection.yaml`) through `CriticEvalInputsPayload` and forwards values via `CriticEvalInputsTransit` before critic prompt assembly.
 - `state/kernel.py` now validates planner/writer/critic prompt markdown ingestion through `PromptTextPayload` and forwards prompt text via `PromptTextTransit` before assembling LLM system messages.
 - `state/kernel.py` now validates active chapter markdown ingestion through `ChapterTextPayload` and forwards validated text via `ChapterTextTransit` before planner input assembly and writer/diff evaluation checks.
