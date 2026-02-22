@@ -1,23 +1,21 @@
 # Plan
 
-1. Inspect `DEVELOPMENT.md` and existing harness surfaces to align constraints.
-2. Define feature workstreams:
-   - `state/kernel.py`: trace logging fields, deterministic loop controls, failure visibility.
-   - `state/role_io_templates.py`: clearer role input/output contract scaffolds.
-   - `state/copilot_sdk_uv_smoke.py`: deterministic smoke scenarios for new controls.
-3. Map tests:
-   - Add/extend targeted unit tests for kernel helper logic and role template validation.
-   - Add smoke coverage with `uv run python state/copilot_sdk_uv_smoke.py` modes for new behavior.
-4. Map evaluations:
-   - Validate outputs against `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-   - Confirm expected telemetry shape updates in `state/metrics.json` and iteration logs.
-5. Sequence follow-up implementation to keep diffs small and verifiable.
+1. Capture target feature improvements for the harness:
+   - richer trace/loop observability in `state/kernel.py`
+   - clearer structured role I/O scaffolds in `state/role_io_templates.py`
+   - deterministic smoke coverage updates in `state/copilot_sdk_uv_smoke.py`
+2. Define validation updates:
+   - map feature changes to targeted smoke/unit checks in `state/`
+   - identify eval contract updates in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
+3. Sequence future execution:
+   - implement observability plumbing first
+   - extend smoke and eval assertions second
+   - then document/verify via iteration artifacts.
 
-## Expected files to change in later iterations
+## Files expected to change in future iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- Harness test assets under `state/` and/or `book/`
