@@ -95,7 +95,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 01-paradigm-shift | 1 | failed(1) | none | `this commit` |
 | 01-paradigm-shift | 2 | failed(1) | none | `this commit` |
 | 01-paradigm-shift | 3 | failed(1) | none | `this commit` |
-| 02-harness-engineering | 1 | pending | none | `pending` |
+| 02-harness-engineering | 1 | failed(1) | none | `this commit` |
 | 02-harness-engineering | 2 | pending | none | `pending` |
 | 02-harness-engineering | 3 | pending | none | `pending` |
 | 03-autonomous-kernels | 1 | pending | none | `pending` |
@@ -118,7 +118,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 99-future-directions | 3 | pending | none | `pending` |
 
 ### Re-run Summary (2026-02-22T18:15:08Z)
-- Completed 3/24 chapter passes so far.
+- Completed 4/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 3.
-- Total commits created for this re-run loop: 3.
+- Failed passes: 4.
+- Total commits created for this re-run loop: 4.
