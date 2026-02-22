@@ -11,6 +11,7 @@ import importlib
 import os
 import sys
 import types
+from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -929,8 +930,14 @@ def run_usage_examples_coverage_guard_mode() -> int:
 def run_usage_examples_duplicates_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
+    expected_mode_names = _expected_non_stub_mode_names(all_mode_specs)
     actual_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
-    assert len(actual_mode_names) == len(set(actual_mode_names)), "expected generated usage examples to contain no duplicate non-stub mode lines"
+    mode_counts = Counter(actual_mode_names)
+    duplicate_mode_names = [name for name in expected_mode_names if mode_counts[name] > 1]
+    assert not duplicate_mode_names, (
+        "expected generated usage examples to contain no duplicate non-stub mode lines; "
+        f"found duplicates for: {duplicate_mode_names}"
+    )
 
     print(
         "PASS: usage-examples-duplicates-guard mode validates generated usage examples contain no duplicates"
