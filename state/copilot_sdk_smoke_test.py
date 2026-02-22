@@ -25,6 +25,7 @@ Usage:
   uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-container-shape-guard
   uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-history-container-shape-guard
   uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-latest-history-entry-shape-guard
+  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-empty-history-guard
   uv run python state/copilot_sdk_smoke_test.py --mode live
 
 Modes:
@@ -52,6 +53,7 @@ Modes:
 - trace-summary-container-shape-guard: verifies malformed metrics container payloads are rejected.
 - trace-summary-history-container-shape-guard: verifies malformed history container payloads are rejected.
 - trace-summary-latest-history-entry-shape-guard: verifies malformed latest history entries are rejected.
+- trace-summary-empty-history-guard: verifies empty history containers are rejected.
 - live: uses the real installed `copilot` package and your configured provider.
 """
 
@@ -828,6 +830,19 @@ def run_trace_summary_latest_history_entry_shape_guard_mode() -> int:
     return 0
 
 
+def run_trace_summary_empty_history_guard_mode() -> int:
+    metrics_fixture = {"chapters": {"01-paradigm-shift": {"history": []}}}
+
+    try:
+        _get_latest_trace_summary(metrics_fixture, "01-paradigm-shift")
+        raise AssertionError("expected empty history fixture to fail shape validation")
+    except AssertionError as exc:
+        assert str(exc) == "expected metrics history for chapter 01-paradigm-shift"
+
+    print("PASS: trace-summary-empty-history-guard mode detects empty history containers")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
     parser.add_argument(
@@ -856,10 +871,11 @@ def main() -> int:
             "trace-summary-container-shape-guard",
             "trace-summary-history-container-shape-guard",
             "trace-summary-latest-history-entry-shape-guard",
+            "trace-summary-empty-history-guard",
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, stop-unavailable-destroy-failure-close-idempotency = repeated close() after stop() unavailable and destroy() failure, stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, trace-summary = deterministic required-key assertion, trace-summary-missing-key = deterministic missing-key detection, trace-summary-shape-guard = deterministic non-dict shape detection, trace-summary-container-shape-guard = deterministic malformed metrics container detection, trace-summary-history-container-shape-guard = deterministic malformed history container detection, trace-summary-latest-history-entry-shape-guard = deterministic malformed latest history entry detection, live = real provider call",
+        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, stop-unavailable-destroy-failure-close-idempotency = repeated close() after stop() unavailable and destroy() failure, stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, trace-summary = deterministic required-key assertion, trace-summary-missing-key = deterministic missing-key detection, trace-summary-shape-guard = deterministic non-dict shape detection, trace-summary-container-shape-guard = deterministic malformed metrics container detection, trace-summary-history-container-shape-guard = deterministic malformed history container detection, trace-summary-latest-history-entry-shape-guard = deterministic malformed latest history entry detection, trace-summary-empty-history-guard = deterministic empty history detection, live = real provider call",
     )
     args = parser.parse_args()
 
@@ -909,6 +925,8 @@ def main() -> int:
         return run_trace_summary_history_container_shape_guard_mode()
     if args.mode == "trace-summary-latest-history-entry-shape-guard":
         return run_trace_summary_latest_history_entry_shape_guard_mode()
+    if args.mode == "trace-summary-empty-history-guard":
+        return run_trace_summary_empty_history_guard_mode()
     return run_live_mode()
 
 
