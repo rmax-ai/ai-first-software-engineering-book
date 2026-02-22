@@ -3808,7 +3808,7 @@
       "status": "hold"
     },
     "99-future-directions": {
-      "current_iteration": 40,
+      "current_iteration": 43,
       "drift_history": [],
       "human_validation": {
         "approved": false,
@@ -4166,6 +4166,33 @@
           "planner_focus": [
             "## Thesis: tighten scope"
           ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 41,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 42,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 43,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
         }
       ],
       "last_eval": {
@@ -4193,7 +4220,7 @@
               "thesis_clarity": 1.0,
               "tradeoffs": 1.0
             },
-            "timestamp": "2026-02-22T16:18:44Z",
+            "timestamp": "2026-02-22T16:18:46Z",
             "total": 1.0
           },
           "drift_detection": {
@@ -4211,7 +4238,7 @@
               "duplicate_sentence_ratio": 0.0,
               "near_duplicate_ngram_ratio": 0.0
             },
-            "timestamp": "2026-02-22T16:18:44Z"
+            "timestamp": "2026-02-22T16:18:46Z"
           },
           "drift_score": 0.0,
           "passed": false,
@@ -4221,7 +4248,7 @@
             "forbidden_hits": [],
             "pass": false,
             "sentence_length_violations": [],
-            "timestamp": "2026-02-22T16:18:44Z"
+            "timestamp": "2026-02-22T16:18:46Z"
           }
         }
       },
@@ -4240,11 +4267,11 @@
         "hypothesis": "",
         "validation_status": "untested"
       },
-      "revision_count": 40,
+      "revision_count": 43,
       "stability": {
         "consecutive_passes": 0,
         "frozen_candidate": false,
-        "last_modified_iteration": 40
+        "last_modified_iteration": 43
       },
       "status": "hold"
     },
@@ -37582,6 +37609,228 @@
         "patterns_modified": []
       },
       "timestamp": "2026-02-22T16:18:44Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:18:46Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-22T16:18:46Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.125,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [],
+          "timestamp": "2026-02-22T16:18:46Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/99-future-directions.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 41 for 99-future-directions"
+      },
+      "iteration": 376,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "99-future-directions"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:18:46Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:18:46Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-22T16:18:46Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.125,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [],
+          "timestamp": "2026-02-22T16:18:46Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/99-future-directions.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 42 for 99-future-directions"
+      },
+      "iteration": 377,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "99-future-directions"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:18:46Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:18:46Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-22T16:18:46Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.125,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [],
+          "timestamp": "2026-02-22T16:18:46Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/99-future-directions.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 43 for 99-future-directions"
+      },
+      "iteration": 378,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "99-future-directions"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:18:46Z"
     }
   ],
   "version": 2
