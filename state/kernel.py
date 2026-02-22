@@ -100,6 +100,12 @@ class WriterOutputPayload(BaseModel):
     text: str
 
 
+class PromptTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
 class CriticEvalInputsPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -343,6 +349,15 @@ class WriterOutputTransit:
 
 
 @dataclass(frozen=True)
+class PromptTextTransit:
+    source_path: Path
+    payload: PromptTextPayload
+
+    def to_prompt(self) -> str:
+        return self.payload.text.strip() + "\n"
+
+
+@dataclass(frozen=True)
 class CriticEvalInputsTransit:
     payload: CriticEvalInputsPayload
 
@@ -512,9 +527,16 @@ def _write_text(path: Path, text: str) -> None:
 
 
 def _read_prompt(path: Path) -> str:
-    txt = _read_text(path)
-    # Prompts are authored as markdown files; keep as-is.
-    return txt.strip() + "\n"
+    # Prompts are authored as markdown files; keep as-is after payload validation.
+    return _load_prompt_text(path).to_prompt()
+
+
+def _load_prompt_text(path: Path) -> PromptTextTransit:
+    try:
+        payload = PromptTextPayload.model_validate({"text": _read_text(path)})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid prompt text payload: {path}: {exc}") from exc
+    return PromptTextTransit(source_path=path, payload=payload)
 
 
 def _load_roadmap_text(path: Path) -> RoadmapTextTransit:
