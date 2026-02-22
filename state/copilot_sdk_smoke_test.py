@@ -74,12 +74,15 @@ class JSONMappingPayload(BaseModel):
 
 @dataclass(frozen=True)
 class LedgerSnapshotTransit:
+    source_path: Path
     raw_text: str
+    json_mapping: JSONMappingTransit
     payload: LedgerSnapshotPayload
 
 
 @dataclass(frozen=True)
 class JSONMappingTransit:
+    raw_text: str
     payload: JSONMappingPayload
 
     def to_mapping(self) -> dict[str, Any]:
@@ -87,18 +90,33 @@ class JSONMappingTransit:
 
 
 def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
-    raw_text = path.read_text(encoding="utf-8")
-    try:
-        json_mapping = JSONMappingTransit(payload=JSONMappingPayload.model_validate({"data": json.loads(raw_text)}))
-    except json.JSONDecodeError as exc:
-        raise AssertionError(f"expected {path} to contain valid JSON: {exc}") from exc
-    except ValidationError as exc:
-        raise AssertionError(f"expected {path} to contain a JSON object mapping: {exc}") from exc
+    json_mapping = _load_json_mapping(path)
     try:
         payload = LedgerSnapshotPayload.model_validate(json_mapping.to_mapping())
     except ValidationError as exc:
         raise AssertionError(f"expected {path} to match LedgerSnapshotPayload: {exc}") from exc
-    return LedgerSnapshotTransit(raw_text=raw_text, payload=payload)
+    return LedgerSnapshotTransit(
+        source_path=path,
+        raw_text=json_mapping.raw_text,
+        json_mapping=json_mapping,
+        payload=payload,
+    )
+
+
+def _load_json_mapping(path: Path) -> JSONMappingTransit:
+    try:
+        raw_text = path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise AssertionError(f"expected JSON file to exist: {path}") from exc
+    try:
+        parsed = json.loads(raw_text)
+    except json.JSONDecodeError as exc:
+        raise AssertionError(f"expected {path} to contain valid JSON: {exc}") from exc
+    try:
+        payload = JSONMappingPayload.model_validate({"data": parsed})
+    except ValidationError as exc:
+        raise AssertionError(f"expected {path} to contain a JSON object mapping: {exc}") from exc
+    return JSONMappingTransit(raw_text=raw_text, payload=payload)
 
 
 def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:
