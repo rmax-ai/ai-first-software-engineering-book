@@ -53,7 +53,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` now forwards validated metrics payloads through `MetricsTransit` before updating chapter metrics history.
 - `state/kernel.py` now forwards validated version map payloads through `VersionMapTransit` before updating chapter commit pointers.
 - `state/kernel.py` now carries `JSONMappingTransit` inside `MetricsTransit` and `VersionMapTransit` so source-path and raw JSON provenance remain explicit after payload parsing.
-- `state/kernel.py` now validates `ROADMAP.md` ingestion through `ChapterTextPayload` and forwards roadmap content via `RoadmapTextTransit` before hypothesis extraction.
+- `state/kernel.py` now validates `ROADMAP.md` ingestion through `RoadmapTextPayload` and forwards roadmap content via `RoadmapTextTransit` before hypothesis extraction.
 - `state/kernel.py` now carries `ROADMAP.md` source-path and raw markdown text through `RoadmapTextTransit` so roadmap-ingestion provenance remains explicit before hypothesis extraction.
 - The planner input payload is converted into a `PlannerInputTransit` dataclass before being forwarded to the planner LLM prompt.
 - Metrics history entries are now forwarded through `MetricsHistoryTransit` before append/write operations.
