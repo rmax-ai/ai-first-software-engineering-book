@@ -56,6 +56,15 @@ class ChapterTextPayload(BaseModel):
     text: str
 
 
+class TemplateCLIArgsPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    chapter_id: str
+    io_dir: Path
+    iteration: int | None = None
+    force: bool = False
+
+
 @dataclass(frozen=True)
 class TemplateContext:
     chapter_id: str
@@ -103,6 +112,24 @@ class ChapterTextTransit:
 
     def to_text(self) -> str:
         return self.payload.text
+
+
+@dataclass(frozen=True)
+class TemplateCLIArgsTransit:
+    payload: TemplateCLIArgsPayload
+
+    @classmethod
+    def from_namespace(cls, args: argparse.Namespace) -> "TemplateCLIArgsTransit":
+        return cls(
+            payload=TemplateCLIArgsPayload.model_validate(
+                {
+                    "chapter_id": str(args.chapter_id),
+                    "io_dir": Path(args.io_dir),
+                    "iteration": args.iteration,
+                    "force": bool(args.force),
+                }
+            )
+        )
 
 
 def _load_json(path: Path) -> JSONMappingTransit:
@@ -195,13 +222,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--force", action="store_true", help="Overwrite existing template files")
 
     args = parser.parse_args(argv)
+    try:
+        cli_args = TemplateCLIArgsTransit.from_namespace(args)
+    except ValidationError as exc:
+        raise TemplateError(f"Invalid CLI args payload: {exc}") from exc
 
     ledger = _load_ledger(LEDGER_PATH)
-    chapter_id = str(args.chapter_id)
-    iteration = _resolve_iteration(ledger, chapter_id, args.iteration)
+    chapter_id = cli_args.payload.chapter_id
+    iteration = _resolve_iteration(ledger, chapter_id, cli_args.payload.iteration)
     context = _build_template_context(ledger, chapter_id, iteration)
 
-    it_dir = Path(args.io_dir) / context.chapter_id / f"iter_{context.iteration:02d}" / "out"
+    it_dir = cli_args.payload.io_dir / context.chapter_id / f"iter_{context.iteration:02d}" / "out"
 
     planner_template = {
         "focus_areas": [
@@ -225,11 +256,19 @@ def main(argv: list[str] | None = None) -> int:
     }
 
     created = []
-    if _write_if_missing(it_dir / "planner.json", json.dumps(planner_template, indent=2, sort_keys=True) + "\n", force=args.force):
+    if _write_if_missing(
+        it_dir / "planner.json",
+        json.dumps(planner_template, indent=2, sort_keys=True) + "\n",
+        force=cli_args.payload.force,
+    ):
         created.append("planner.json")
-    if _write_if_missing(it_dir / "critic.json", json.dumps(critic_template, indent=2, sort_keys=True) + "\n", force=args.force):
+    if _write_if_missing(
+        it_dir / "critic.json",
+        json.dumps(critic_template, indent=2, sort_keys=True) + "\n",
+        force=cli_args.payload.force,
+    ):
         created.append("critic.json")
-    if _write_if_missing(it_dir / "writer.md", context.chapter_text, force=args.force):
+    if _write_if_missing(it_dir / "writer.md", context.chapter_text, force=cli_args.payload.force):
         created.append("writer.md")
 
     if created:
