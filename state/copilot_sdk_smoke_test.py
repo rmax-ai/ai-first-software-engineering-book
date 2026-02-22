@@ -20,6 +20,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, cast
 
+from pydantic import BaseModel, ConfigDict
+
 
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
@@ -36,6 +38,27 @@ TRACE_SUMMARY_NON_KERNEL_FIXTURE_REPO = ROOT / "state" / ".smoke_fixtures" / "tr
 TRACE_SUMMARY_KERNEL_FIXTURE_REPO = ROOT / "state" / ".smoke_fixtures" / "trace_summary" / "kernel_repo"
 
 
+class TraceSummaryPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    decision: str | None = None
+    drift_score: float | int | None = None
+    diff_ratio: float | int | None = None
+    deterministic_pass: bool | None = None
+
+
+@dataclass(frozen=True)
+class TraceSummaryTransit:
+    payload: TraceSummaryPayload
+
+    @classmethod
+    def from_mapping(cls, payload: dict[str, Any]) -> "TraceSummaryTransit":
+        return cls(payload=TraceSummaryPayload.model_validate(payload))
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.model_dump(exclude_none=True)
+
+
 def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:
     chapters = metrics.get("chapters", {})
     assert isinstance(chapters, dict), "expected chapters dictionary"
@@ -47,7 +70,7 @@ def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[
     assert isinstance(latest, dict), "expected latest history entry to be a dictionary"
     trace_summary = latest.get("trace_summary")
     assert isinstance(trace_summary, dict), "expected latest history entry to contain trace_summary dictionary"
-    return trace_summary
+    return TraceSummaryTransit.from_mapping(trace_summary).to_mapping()
 
 
 def _missing_trace_summary_keys(trace_summary: dict[str, Any]) -> list[str]:

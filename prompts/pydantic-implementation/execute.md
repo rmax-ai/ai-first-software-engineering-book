@@ -57,3 +57,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/governance_engine.py` now validates `state/ledger.json` through `LedgerPayload` and passes parsed ledger data between CLI handlers via `LedgerTransit`.
 - `state/copilot_sdk_uv_smoke.py` now validates trace-summary metrics and `kernel_trace.jsonl` phase payloads with Pydantic models and forwards validated values through `MetricsHistoryTransit` and `PhaseTraceTransit`.
 - `state/copilot_sdk_uv_smoke.py` now validates fixture `state/ledger.json` chapter metadata with `KernelFixtureLedgerPayload` and forwards chapter setup through `KernelFixtureChapterTransit` before kernel smoke fixture writes.
+- `state/copilot_sdk_smoke_test.py` now validates latest `trace_summary` fixture payloads through `TraceSummaryPayload` and forwards them via `TraceSummaryTransit` before key-presence checks.
