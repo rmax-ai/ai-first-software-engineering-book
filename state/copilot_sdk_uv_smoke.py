@@ -139,6 +139,12 @@ class SDKSessionEventPayload(BaseModel):
     data: SDKSessionEventDataPayload | None = None
 
 
+class SDKEventObjectPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    data: dict[str, Any]
+
+
 @dataclass(frozen=True)
 class KernelFixtureLedgerTransit:
     json_mapping: JSONMappingTransit
@@ -293,6 +299,18 @@ class SDKSessionEventTransit:
         return data.message
 
 
+@dataclass(frozen=True)
+class SDKEventObjectTransit:
+    payload: SDKEventObjectPayload
+
+    @classmethod
+    def from_raw(cls, raw: dict[str, Any]) -> "SDKEventObjectTransit":
+        return cls(payload=SDKEventObjectPayload.model_validate({"data": raw}))
+
+    def mapping(self) -> dict[str, Any]:
+        return self.payload.data
+
+
 def _event_type_name(event_type: Any) -> str:
     value = getattr(event_type, "value", event_type)
     return str(value).strip().lower()
@@ -301,10 +319,13 @@ def _event_type_name(event_type: Any) -> str:
 def _sdk_event_to_mapping(event: Any) -> dict[str, Any]:
     event_type = event.get("type") if isinstance(event, dict) else getattr(event, "type", None)
     data = event.get("data") if isinstance(event, dict) else getattr(event, "data", None)
-    data_mapping = data if isinstance(data, dict) else getattr(data, "__dict__", {})
     mapping: dict[str, Any] = {"type": event_type}
+    data_mapping = data if isinstance(data, dict) else getattr(data, "__dict__", {})
     if isinstance(data_mapping, dict):
-        mapping["data"] = {key: value for key, value in data_mapping.items() if not str(key).startswith("_")}
+        data_transit = SDKEventObjectTransit.from_raw(data_mapping)
+        mapping["data"] = {
+            key: value for key, value in data_transit.mapping().items() if not str(key).startswith("_")
+        }
     return mapping
 
 
