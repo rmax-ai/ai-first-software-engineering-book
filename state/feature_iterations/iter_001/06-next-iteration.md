@@ -1,20 +1,18 @@
-# Next iteration recommendation
+# Next Iteration Recommendation
 
-## Recommended task (exactly one)
-Add deterministic trace-summary event emission in `state/kernel.py` for major harness phase transitions.
+## Next task (exactly one)
+Implement deterministic trace summary scaffolding in `state/kernel.py`.
 
 ## Why this is next
-- It is the smallest concrete feature that improves observability and can be validated without touching multiple systems at once.
-- It creates a stable signal that later smoke and eval improvements can assert against.
+It unlocks observability needed by all later template, smoke, and eval improvements while remaining a narrowly scoped code change.
 
 ## Acceptance criteria
-1. `state/kernel.py` emits a structured trace-summary event at each major phase boundary (planning, execution, validation, handoff).
-2. Event schema is documented and deterministic (stable keys/order and bounded values).
-3. A targeted harness check verifies presence and shape of the new events.
-4. Iteration artifacts include command evidence and pass/fail outcomes.
+- Add a small, documented trace summary structure in `state/kernel.py` for key loop events.
+- Ensure summary updates are deterministic and side-effect-safe.
+- Add/adjust targeted tests or smoke coverage proving event accounting is stable.
+- Record validation evidence with `uv run python state/copilot_sdk_uv_smoke.py` mode(s) relevant to new trace summary checks.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/`
-
+- Targeted tests under `state/` (if present for touched helpers)

@@ -1,16 +1,20 @@
 # Validation
 
 ## Verification commands run
-- `git --no-pager status --short`
 - `ls state/feature_iterations/iter_001`
+- `test -f state/feature_iterations/iter_001/01-task.md`
+- `test -f state/feature_iterations/iter_001/02-plan.md`
+- `test -f state/feature_iterations/iter_001/03-execution.md`
+- `test -f state/feature_iterations/iter_001/04-validation.md`
+- `test -f state/feature_iterations/iter_001/05-risks-and-decisions.md`
+- `test -f state/feature_iterations/iter_001/06-next-iteration.md`
+- `test -f state/feature_iterations/iter_001/07-summary.md`
 
 ## Observed results
-- New iteration folder exists and contains all seven required markdown artifacts.
-- Changes are limited to iteration documentation for a planning-only task.
+- Iteration directory exists and contains all seven required markdown artifacts.
+- Artifact content cross-check references `DEVELOPMENT.md` guidance and the seed planning scope from `prompts/incremental-improvements/execute.md`.
 
-## Acceptance criteria check
-- **Features coverage:** Pass (documented in `01-task.md` and `02-plan.md`)
-- **Tests coverage:** Pass (targeted smoke/unit strategy documented in `02-plan.md`)
-- **Evaluations coverage:** Pass (mapped to `evals/*.yaml` and `state/metrics.json` in `02-plan.md`)
-- **Planning-only scope:** Pass (no production code files modified)
-
+## Acceptance criteria status
+- ✅ Features/tests/evals planning coverage documented.
+- ✅ Future file touchpoints explicitly identified.
+- ✅ Planning-only scope preserved (no code behavior changes).

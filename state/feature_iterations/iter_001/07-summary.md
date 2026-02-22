@@ -1,10 +1,11 @@
-# Iteration summary
+# Iteration Summary
 
-This seed iteration completed the planning-only requirement from `prompts/incremental-improvements/execute.md`.  
-No prior `state/feature_iterations/iter_*` folders were present, so `iter_001` was initialized.  
-The iteration produced the full seven-artifact contract under `state/feature_iterations/iter_001/`.  
-`01-task.md` defines the story and acceptance criteria focused on features, tests, and eval mappings.  
-`02-plan.md` provides a concise backlog and sequencing across `state/kernel.py`, role IO scaffolds, smoke checks, and eval YAMLs.  
-Validation confirms artifact completeness and planning-only scope.  
-Risks and trade-offs were captured to avoid broad follow-up changes.  
-The next iteration is scoped to one concrete, verifiable observability improvement in `state/kernel.py`.
+This seed run executed one planning task: define the custom harness improvement backlog.
+A new iteration folder was created at `state/feature_iterations/iter_001/`.
+All seven required markdown artifacts were authored.
+The plan explicitly covers feature work, test strategy, and evaluation mapping.
+Planned feature touchpoints include `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
+Planned evaluation touchpoints include `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+No runtime code was changed in this iteration.
+Validation confirmed artifact completeness and alignment with seed-iteration requirements.
+A single concrete next task was queued for trace summary scaffolding in `state/kernel.py`.
