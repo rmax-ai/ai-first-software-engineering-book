@@ -89,35 +89,35 @@ Replace `<chapter>` with the chapter identifier listed below.
 - Total commits created for this re-run loop: 24.
 
 
-## Re-run 2026-02-22T18:15:08Z
+## Re-run 2026-02-22T18:17:34Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
-| 01-paradigm-shift | 1 | failed(1) | none | `this commit` |
-| 01-paradigm-shift | 2 | failed(1) | none | `this commit` |
-| 01-paradigm-shift | 3 | failed(1) | none | `this commit` |
-| 02-harness-engineering | 1 | failed(1) | none | `this commit` |
-| 02-harness-engineering | 2 | failed(1) | none | `this commit` |
-| 02-harness-engineering | 3 | failed(1) | none | `this commit` |
-| 03-autonomous-kernels | 1 | failed(1) | none | `this commit` |
-| 03-autonomous-kernels | 2 | failed(1) | none | `this commit` |
-| 03-autonomous-kernels | 3 | failed(1) | none | `this commit` |
-| 04-memory-systems | 1 | failed(1) | none | `this commit` |
-| 04-memory-systems | 2 | failed(1) | none | `this commit` |
-| 04-memory-systems | 3 | failed(1) | none | `this commit` |
-| 05-evaluation-and-traces | 1 | failed(1) | none | `this commit` |
-| 05-evaluation-and-traces | 2 | failed(1) | none | `this commit` |
-| 05-evaluation-and-traces | 3 | failed(1) | none | `this commit` |
-| 06-agent-governance | 1 | failed(1) | none | `this commit` |
-| 06-agent-governance | 2 | failed(1) | none | `this commit` |
-| 06-agent-governance | 3 | failed(1) | none | `this commit` |
-| 07-production-ai-infrastructure | 1 | failed(1) | none | `this commit` |
-| 07-production-ai-infrastructure | 2 | failed(1) | none | `this commit` |
-| 07-production-ai-infrastructure | 3 | failed(1) | none | `this commit` |
-| 99-future-directions | 1 | failed(1) | none | `this commit` |
-| 99-future-directions | 2 | failed(1) | none | `this commit` |
-| 99-future-directions | 3 | failed(1) | none | `this commit` |
+| 01-paradigm-shift | 1 | failed(1) | none | `9441818` |
+| 01-paradigm-shift | 2 | failed(1) | none | `bf40278` |
+| 01-paradigm-shift | 3 | failed(1) | none | `e9aafa6` |
+| 02-harness-engineering | 1 | failed(1) | none | `acd0086` |
+| 02-harness-engineering | 2 | failed(1) | none | `123fb2d` |
+| 02-harness-engineering | 3 | failed(1) | none | `fff94f1` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `0c33447` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `4b2871c` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `6a1faf0` |
+| 04-memory-systems | 1 | failed(1) | none | `a69e4b8` |
+| 04-memory-systems | 2 | failed(1) | none | `b70f1c2` |
+| 04-memory-systems | 3 | failed(1) | none | `74f42ae` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `829577d` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `e330dae` |
+| 05-evaluation-and-traces | 3 | failed(1) | none | `ec85e99` |
+| 06-agent-governance | 1 | failed(1) | none | `c03da62` |
+| 06-agent-governance | 2 | failed(1) | none | `cf6fa24` |
+| 06-agent-governance | 3 | failed(1) | none | `f355e03` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `d2707bc` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `ef7c65e` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `aaa85bd` |
+| 99-future-directions | 1 | failed(1) | none | `b872260` |
+| 99-future-directions | 2 | failed(1) | none | `fcfd0c2` |
+| 99-future-directions | 3 | failed(1) | none | `add2625` |
 
-### Re-run Summary (2026-02-22T18:15:08Z)
+### Re-run Summary (2026-02-22T18:17:34Z)
 - Completed 24/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Failed passes: 24.
