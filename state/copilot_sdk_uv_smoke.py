@@ -99,10 +99,22 @@ class KernelFixtureLedgerPayload(BaseModel):
     chapters: dict[str, KernelFixtureLedgerChapterPayload]
 
 
+class JSONMappingPayload(BaseModel):
+    data: dict[str, Any]
+
+
 @dataclass(frozen=True)
 class KernelFixtureLedgerTransit:
     raw: dict[str, Any]
     payload: KernelFixtureLedgerPayload
+
+
+@dataclass(frozen=True)
+class JSONMappingTransit:
+    payload: JSONMappingPayload
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.data
 
 
 @dataclass(frozen=True)
@@ -261,10 +273,14 @@ def _load_kernel_fixture_ledger(path: Path) -> KernelFixtureLedgerTransit:
     except json.JSONDecodeError as exc:
         raise RuntimeError(f"Invalid ledger JSON for fixture: {exc}") from exc
     try:
-        payload = KernelFixtureLedgerPayload.model_validate(raw)
+        json_mapping = JSONMappingTransit(payload=JSONMappingPayload.model_validate({"data": raw}))
+    except ValidationError as exc:
+        raise RuntimeError(f"Invalid ledger JSON mapping payload for fixture at {path}: {exc}") from exc
+    try:
+        payload = KernelFixtureLedgerPayload.model_validate(json_mapping.to_mapping())
     except ValidationError as exc:
         raise RuntimeError(f"Invalid ledger payload for fixture: {exc}") from exc
-    return KernelFixtureLedgerTransit(raw=raw, payload=payload)
+    return KernelFixtureLedgerTransit(raw=json_mapping.to_mapping(), payload=payload)
 
 
 def _build_trace_summary_fixture(
