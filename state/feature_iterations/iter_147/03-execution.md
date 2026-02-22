@@ -1,0 +1,23 @@
+# Execution
+
+## Commands/tools run
+- Reviewed guidance: `state/feature_iterations/iter_146/06-next-iteration.md`
+- Inspected target code: `state/copilot_sdk_smoke_test.py`
+- Updated smoke runner and `TRACE_SUMMARY_MODE_SPECS` entry in `state/copilot_sdk_smoke_test.py`
+- Ran validation mode:
+  - `uv run python state/copilot_sdk_smoke_test.py --mode usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard`
+
+## Files changed
+- `state/copilot_sdk_smoke_test.py`
+- `state/feature_iterations/iter_147/01-task.md`
+- `state/feature_iterations/iter_147/02-plan.md`
+- `state/feature_iterations/iter_147/03-execution.md`
+- `state/feature_iterations/iter_147/04-validation.md`
+- `state/feature_iterations/iter_147/05-risks-and-decisions.md`
+- `state/feature_iterations/iter_147/06-next-iteration.md`
+- `state/feature_iterations/iter_147/07-summary.md`
+
+## Short rationale per change
+- Added a targeted exact-once guard to prevent accidental duplicate mode registration drift.
+- Added one mode registration so the new assertion is runnable and pinned in the smoke matrix.
+- Documented execution/validation evidence for deterministic handoff.
