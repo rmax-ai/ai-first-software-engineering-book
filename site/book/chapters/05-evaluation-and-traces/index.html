@@ -988,8 +988,8 @@
 
 <h1 id="chapter-05-evaluation-and-traces">Chapter 05 — Evaluation and Traces</h1>
 <h2 id="thesis">Thesis</h2>
-<p>Evaluation and traceability are the mechanisms that make AI-first engineering reproducible. Traces allow attribution; evaluations enforce correctness gates.</p>
-<p>Hypothesis: without trace-first design, teams cannot reliably distinguish model errors from tool errors, harness errors, or missing tests.</p>
+<p>Evaluation and traceability are the mechanisms that make AI-first engineering reproducible. Traces provide the evidence needed to attribute outcomes to the correct layer (model, tool, harness, or missing tests); evaluations turn that evidence into gates that prevent incorrect changes from being accepted.</p>
+<p>Hypothesis: without trace-first design, teams cannot reliably distinguish model errors (wrong edit suggestion) from tool errors (command failed), harness errors (applied the wrong diff or wrong working directory), or missing tests (a real regression that was not checked).</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
 <li>Reproducibility is a prerequisite for iterative improvement.</li>
@@ -999,22 +999,120 @@
 <h2 id="system-breakdown">System Breakdown</h2>
 <ul>
 <li><strong>Trace schema</strong> (minimum viable):</li>
-<li>task id, plan, tool calls, outputs, diffs, evaluation results, budgets, stop reason.</li>
+<li>task id</li>
+<li>plan (the intended steps and stop conditions)</li>
+<li>tool calls (tool name, arguments, start/end timestamps, exit status)</li>
+<li>tool outputs (stdout/stderr excerpts or pointers to stored artifacts)</li>
+<li>diffs (patches applied, file paths touched)</li>
+<li>evaluation results (which checks ran, pass/fail, key failure signatures)</li>
+<li>budgets (time, iteration count, token/cost limits where applicable)</li>
+<li>stop reason (completed, blocked by gate, permission denied, budget exceeded)</li>
+<li>redaction policy (what is removed or hashed: secrets, tokens, PII, proprietary paths)</li>
+<li>environment fingerprint (repo URL if applicable, commit SHA, branch, tool versions, OS/arch)</li>
+<li>retry/iteration counters (attempt number per step, total loop count)</li>
+<li>When used for incident review, the trace must support queries like:<ul>
+<li>“show all tasks that modified <code>pyproject.toml</code> and failed secret scanning”</li>
+<li>“list failures where <code>tests</code> failed but a patch was still applied”</li>
+<li>“group stop reasons by action class over the last N runs”</li>
+</ul>
+</li>
 <li><strong>Evaluation types</strong>:</li>
 <li>correctness: unit/integration/contract tests.</li>
 <li>safety: permission checks, protected paths, secret scanning.</li>
 <li>quality: lint, type checks, formatting, doc checks.</li>
 <li>performance: benchmarks, latency/cost budgets.</li>
 <li><strong>Gating model</strong>: which evaluations are required for which action classes.</li>
+<li>Minimal gating matrix (example, stated as rules):<ul>
+<li>read-only (grep/view/list):</li>
+<li>safety: required permission check for the path(s) being accessed</li>
+<li>quality: skipped; record <code>skipped_reason: "read_only_action"</code></li>
+<li>correctness: skipped; record <code>skipped_reason: "read_only_action"</code></li>
+<li>performance: skipped; record <code>skipped_reason: "read_only_action"</code></li>
+<li>patch edit (apply diff to code/docs):</li>
+<li>safety: required protected-path check for all touched files; if any are protected, stop with <code>stop_reason: "permission_denied"</code></li>
+<li>quality: required if repo has lint/typecheck config; otherwise record <code>skipped_reason: "no_config"</code></li>
+<li>correctness: required targeted tests covering touched modules; if no mapping exists, select a test command deterministically:<ul>
+<li>if the plan declares <code>test_command</code>, run it</li>
+<li>else if the repo declares a default test command, run it (e.g., in <code>Makefile</code>, <code>package.json</code>, or a CI config) and record the source as <code>selection_reason</code></li>
+<li>else run one fixed fallback based on detected stack and record <code>selection_reason</code>:</li>
+<li>Python: <code>pytest -q</code></li>
+<li>Node: <code>npm test</code></li>
+<li>Go: <code>go test ./...</code></li>
+<li>else record <code>skipped_reason: "no_test_runner_detected"</code> and stop with <code>stop_reason: "blocked_by_correctness_gate"</code></li>
+</ul>
+</li>
+<li>performance: required only if the diff touches paths under <code>deploy/</code> or <code>prod/</code>, or if a <code>latency_budget_ms</code>/<code>cost_budget_usd</code> is present in the plan; otherwise record <code>skipped_reason: "not_applicable"</code></li>
+<li>dependency install (lockfile changes, package adds):</li>
+<li>safety: required secret scan of the diff and updated lockfile(s); required protected-path check</li>
+<li>quality: required if repo has lint/typecheck config; otherwise record <code>skipped_reason: "no_config"</code></li>
+<li>correctness: required test subset that imports the changed dependency; if unknown, select a test command using the same deterministic rule as patch edit and record <code>selection_reason</code></li>
+<li>performance: required only if the change affects runtime images or deploy manifests (e.g., <code>Dockerfile</code>, <code>deploy/**</code>); otherwise record <code>skipped_reason: "not_applicable"</code></li>
+<li>deploy/release (publish, migrate, prod config):</li>
+<li>safety: required explicit permission grant + secret scan; stop on any forbidden hit</li>
+<li>quality: required lint/typecheck if configured; otherwise record <code>skipped_reason: "no_config"</code></li>
+<li>correctness: required full suite or contract tests defined for release; record suite name and command</li>
+<li>performance: required if a budget is declared in the plan; stop if budget exceeded and record measured values</li>
+</ul>
+</li>
 </ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
-<p>Tracing a refactor.
-- Record: each patch + test run + failure signature.
-- Use: compare traces across runs to identify where the harness improved outcomes.</p>
+<p>Tracing a refactor.</p>
+<ul>
+<li>Record: each patch + test run + failure signature, but also the environment fingerprint and the exact tool invocations so a reviewer can replay the same sequence.</li>
+</ul>
+<p>Pseudo-trace excerpt (illustrative):</p>
+<ul>
+<li>task_id: <code>refactor-auth-2026-02-22-001</code></li>
+<li>environment:</li>
+<li>repo_sha: <code>a1b2c3d</code></li>
+<li>tool_versions: <code>{ "pytest": "8.1.1", "python": "3.12.1" }</code></li>
+<li>plan: “rename <code>AuthClient</code> → <code>CopilotClient</code>; update imports; run targeted tests; stop if tests fail.”</li>
+<li>tool_calls:
+  1) <code>{ "tool": "apply_patch", "files": ["src/auth/client.py"], "exit_status": 0 }</code>
+  2) <code>{ "tool": "bash", "cmd": "pytest -q tests/test_auth_client.py::test_retry", "exit_status": 1, "failure_signature": "ImportError: cannot import name 'AuthClient'" }</code></li>
+<li>diffs:</li>
+<li><code>src/auth/client.py</code>: renamed symbol</li>
+<li><code>tests/test_auth_client.py</code>: unchanged</li>
+<li>evaluation_results:</li>
+<li>correctness: <code>pytest -q ...</code> → FAIL (ImportError)</li>
+<li>stop_reason: “blocked by correctness gate”</li>
+</ul>
+<p>Query step using structured fields (one possible workflow):
+- Query: <code>repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"</code>
+- Result (summary):
+  - matching_tasks: 3
+  - last_success_task_id: <code>refactor-auth-2026-02-20-007</code>
+  - last_success_repo_sha: <code>a1b2c3d</code>
+  - common_missing_patch_pattern: diffs do not include any files under <code>src/auth/__init__.py</code> or <code>src/auth/*</code> besides <code>client.py</code></p>
+<p>Decision rule using the query result:
+- If <code>last_success_repo_sha</code> matches the current <code>repo_sha</code> and <code>common_missing_patch_pattern</code> shows only <code>client.py</code> was changed, then expand patch scope to import sites (e.g., update <code>src/auth/__init__.py</code> exports and any <code>from src.auth import AuthClient</code> usage) and rerun the same correctness command (<code>pytest -q tests/test_auth_client.py::test_retry</code>).
+- If <code>last_success_repo_sha</code> differs, first rebase/reset to the pinned <code>repo_sha</code> before applying the expanded patch; then rerun the same correctness command.</p>
+<p>Attribution using the trace:
+- Not a model vs tool ambiguity: the patch tool succeeded and the test runner executed; the failure signature is a stable ImportError.
+- Not a harness misapplication: matching_tasks share the same repo_sha and the diffs confirm the same single-file touch pattern.
+- Likely root cause: refactor incompleteness (imports/usages not updated outside <code>client.py</code>); the next action is to expand the diff scope and re-run the same correctness gate.</p>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
-<p>Drift detection for an agent loop.
-- Maintain: a stable eval suite and a small set of “golden” tasks.
-- Detect: changes in iteration counts, regression rate, and stop reasons over time.</p>
+<p>Drift detection for an agent loop.</p>
+<ul>
+<li>Maintain: a stable eval suite and a small set of “golden” tasks.</li>
+<li>A “golden task” should include:<ul>
+<li>fixed input prompt and any fixed attachments</li>
+<li>fixed repo state (commit SHA) or a pinned fixture repository</li>
+<li>expected outcome constraints (e.g., “touch only <code>src/foo.py</code>”, “no network”, “no new dependencies”)</li>
+<li>expected evaluations (which checks must pass)</li>
+<li>budgets (max iterations, max wall time, max tool calls)</li>
+</ul>
+</li>
+<li>Detect: changes in iteration counts, regression rate, and stop reasons over time.</li>
+<li>Define a baseline as a pinned reference run-set, such as “the last green run-set on release tag <code>vX.Y</code>” for the same golden task and the same repo_sha (or the same pinned fixture).</li>
+<li>Example drift signals with thresholds (current window vs baseline window):<ul>
+<li>iteration drift: median loop iterations in the most recent 50 runs increases by ≥ 30% compared to the baseline’s 50-run median</li>
+<li>regression rate: correctness-gate failure rate in the most recent 50 runs increases by ≥ 5 percentage points compared to the baseline’s 50-run rate</li>
+<li>stop-reason shift: in the most recent 50 runs, “budget exceeded” becomes the most frequent stop_reason while the baseline window had “completed” as the most frequent stop_reason</li>
+</ul>
+</li>
+</ul>
+<p>The point is not to predict every future failure. The point is to detect that something changed (model, tool, harness, or repo) and to have enough trace evidence to localize the change.</p>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
 <li>More evaluation increases confidence but costs time and compute.</li>
@@ -1024,8 +1122,14 @@
 <h2 id="failure-modes">Failure Modes</h2>
 <ul>
 <li><strong>Eval gaming</strong>: optimizing for metrics while harming real-world quality.</li>
+<li>Detect: compare “passes gates” with downstream signals in traces (reverts, follow-up bugfix tasks, repeated failures on adjacent golden tasks); watch for large diffs with minimal test coverage.</li>
+<li>Respond: add adversarial or regression tests, strengthen gate definitions (e.g., require touched-module tests), and record coverage/selection rationale in the trace.</li>
 <li><strong>Blind spots</strong>: evaluations do not cover critical behaviors.</li>
+<li>Detect: incidents where traces show “all gates passed” but production-like behavior fails; repeated similar failures without corresponding eval signatures.</li>
+<li>Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.</li>
 <li><strong>Un-actionable traces</strong>: logs exist but lack structure, making search and attribution hard.</li>
+<li>Detect: inability to answer basic questions (“what changed?”, “what ran?”, “why did it stop?”) without reading raw logs; missing environment fingerprint or missing diff records.</li>
+<li>Respond: enforce a minimal trace schema, store normalized fields for queries, and treat “missing trace fields” as an evaluation failure for non-trivial action classes.</li>
 </ul>
 <h2 id="research-directions">Research Directions</h2>
 <ul>
