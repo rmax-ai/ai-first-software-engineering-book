@@ -132,6 +132,20 @@ class VersionMapPayload(BaseModel):
 
 
 @dataclass(frozen=True)
+class VersionMapTransit:
+    raw: dict[str, Any]
+    payload: VersionMapPayload
+
+    def with_commit(self, chapter_id: str, commit_hash: str) -> dict[str, Any]:
+        next_map = dict(self.raw)
+        next_chapters = dict(self.payload.chapters)
+        next_chapters[chapter_id] = commit_hash
+        next_map["chapters"] = next_chapters
+        next_map["generated_at"] = _utc_now_iso()
+        return next_map
+
+
+@dataclass(frozen=True)
 class PlannerInputTransit:
     chapter_id: str
     chapter_content: str
@@ -276,13 +290,13 @@ def _load_metrics(path: Path) -> tuple[dict[str, Any], MetricsPayload]:
     return raw, payload
 
 
-def _load_version_map(path: Path) -> tuple[dict[str, Any], VersionMapPayload]:
+def _load_version_map(path: Path) -> VersionMapTransit:
     raw = _load_json(path)
     try:
         payload = VersionMapPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid version_map payload: {path}: {exc}") from exc
-    return raw, payload
+    return VersionMapTransit(raw=raw, payload=payload)
 
 
 def _run_git(args: list[str]) -> str:
@@ -1377,11 +1391,8 @@ def run_kernel(
                         _run_git(["add", chapter_path, "state/ledger.json", "state/metrics.json"])
                         _run_git(["commit", "-m", f"refine: {chapter_id} (iter {iteration})"])
                         commit_hash = _run_git(["rev-parse", "HEAD"]).strip()
-                        version_map, _ = _load_version_map(VERSION_MAP_PATH)
-                        version_map.setdefault("chapters", {})
-                        version_map["chapters"][chapter_id] = commit_hash
-                        version_map["generated_at"] = _utc_now_iso()
-                        _save_json(VERSION_MAP_PATH, version_map)
+                        version_map_transit = _load_version_map(VERSION_MAP_PATH)
+                        _save_json(VERSION_MAP_PATH, version_map_transit.with_commit(chapter_id, commit_hash))
 
                     return 0
 
