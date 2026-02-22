@@ -5,7 +5,7 @@
 - `apply_patch` update in `state/migration_iterations/iter_081/01-task.md`
 - `git --no-pager diff -- state/migration_iterations/iter_081/01-task.md`
 - `git add state/migration_iterations/iter_081/01-task.md && git commit ...`
-- `git --no-pager show HEAD^:state/migration_iterations/iter_081/01-task.md | rg -nF '\`python state/copilot_sdk_smoke_test.py --mode fallback-error\`'`
+- `git --no-pager show HEAD^:state/migration_iterations/iter_081/01-task.md | rg -nF '\`uv run python state/copilot_sdk_smoke_test.py --mode fallback-error\`'`
 - `rg -nF '\`uv run python state/copilot_sdk_smoke_test.py --mode fallback-error\`' state/migration_iterations/iter_081/01-task.md`
 
 ## Files changed
