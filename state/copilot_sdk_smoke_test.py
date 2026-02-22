@@ -896,6 +896,25 @@ def run_mode_choices_coverage_guard_mode() -> int:
     return 0
 
 
+def run_usage_examples_coverage_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    usage_lines = _usage_doc_lines(all_mode_specs)
+    expected_lines = [
+        f"  uv run python state/copilot_sdk_smoke_test.py --mode {name}"
+        for name, _handler, _description in all_mode_specs
+        if name != "stub"
+    ]
+    actual_lines = [line for line in usage_lines if line.startswith("  uv run python state/copilot_sdk_smoke_test.py --mode ")]
+    assert actual_lines == expected_lines, (
+        "expected usage examples to include every non-stub mode exactly once in order"
+    )
+
+    print(
+        "PASS: usage-examples-coverage-guard mode validates generated usage examples for non-stub modes"
+    )
+    return 0
+
+
 TraceSummaryModeHandler = Callable[[], int]
 TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] = (
     ("trace-summary", run_trace_summary_mode, "deterministic required-key assertion"),
@@ -946,6 +965,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "mode-choices-coverage-guard",
         run_mode_choices_coverage_guard_mode,
         "deterministic argparse mode-choices coverage assertion",
+    ),
+    (
+        "usage-examples-coverage-guard",
+        run_usage_examples_coverage_guard_mode,
+        "deterministic generated usage-example coverage assertion",
     ),
 )
 
