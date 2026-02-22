@@ -1,28 +1,27 @@
 # Plan
 
-1. Review harness guidance in `DEVELOPMENT.md` and align backlog items with `state/` architecture constraints.
-2. Define feature work for `state/kernel.py`:
-   - richer per-step trace summaries,
-   - deterministic execution-budget diagnostics,
-   - explicit failure classification for eval-gate exits.
-3. Define role-IO scaffolding work in `state/role_io_templates.py`:
-   - clearer role handoff contracts,
-   - stricter prompt-shape validation helpers.
-4. Define verification harness work in `state/copilot_sdk_uv_smoke.py`:
-   - add targeted smoke modes for new diagnostics and trace outputs.
-5. Define eval wiring work in `evals/*.yaml`:
-   - map new behavior to measurable gates,
-   - align expected output signals with `state/metrics.json` fields.
-6. Capture sequencing for follow-up iterations:
-   - implement kernel observability first,
-   - then role-IO constraints,
-   - then smoke coverage and eval-gate updates.
+1. **Inventory harness surfaces**
+   - Re-read `DEVELOPMENT.md` and current `state/` helpers to keep planned changes consistent with UV-first execution and deterministic guardrails.
+2. **Define feature backlog slices**
+   - `state/kernel.py`: add richer trace summary fields and stricter deterministic execution checks.
+   - `state/role_io_templates.py`: tighten role I/O templates for clearer prompt/response contracts and observable handoff markers.
+   - `state/copilot_sdk_uv_smoke.py`: extend smoke scenarios to cover new trace outputs and failure-path observability.
+3. **Define tests for each slice**
+   - Add/extend deterministic smoke modes in `state/copilot_sdk_smoke_test.py` for trace shape and role-IO constraints.
+   - Keep command contracts on `uv run python state/copilot_sdk_smoke_test.py --mode <mode>`.
+4. **Define evaluation integration**
+   - Update relevant rules in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and/or `evals/drift-detection.yaml` so regressions in harness signals are detected.
+   - Ensure expected outputs remain reflected in `state/metrics.json` update pathways.
+5. **Execution order for future iterations**
+   - Start with kernel trace contract changes.
+   - Then align smoke tests.
+   - Finally wire eval gates and validate end-to-end with UV commands.
 
-## Expected files in later iterations
+## Files expected to change in later iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
+- `state/copilot_sdk_smoke_test.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- `state/metrics.json`
