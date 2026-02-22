@@ -1,0 +1,6 @@
+{"event": "iteration_started", "payload": {"chapter_id": "03-autonomous-kernels", "iteration": 5, "max_diff_ratio": 0.35, "max_drift_score": 0.3}, "timestamp": "2026-02-22T15:59:48Z"}
+{"event": "phase_trace", "payload": {"budget_signal": {"llm_completion_tokens": 0, "llm_prompt_tokens": 0}, "duration_ms": 2, "phase": "role_output_ready", "status": "ok"}, "timestamp": "2026-02-22T15:59:48Z"}
+{"event": "iteration_evaluated", "payload": {"critic_decision": "refine", "deterministic_pass": false, "diff_ratio": 0.0, "drift_score": 0.005217650566487776, "iteration": 5, "pass_now": false}, "timestamp": "2026-02-22T15:59:48Z"}
+{"event": "phase_trace", "payload": {"budget_signal": {"deterministic_pass": false, "diff_ratio": 0.0, "drift_score": 0.005217650566487776}, "duration_ms": 14, "phase": "evaluation", "status": "refine"}, "timestamp": "2026-02-22T15:59:48Z"}
+{"event": "state_persisted", "payload": {"consecutive_passes": 0, "iteration": 5, "lifecycle": "draft", "status": "active_refinement"}, "timestamp": "2026-02-22T15:59:48Z"}
+{"event": "phase_trace", "payload": {"budget_signal": {"consecutive_passes": 0, "require_two_consecutive_passes": true}, "duration_ms": 3, "phase": "state_persistence", "status": "ok"}, "timestamp": "2026-02-22T15:59:48Z"}

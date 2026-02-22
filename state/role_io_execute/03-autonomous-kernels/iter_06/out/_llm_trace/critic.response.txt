@@ -1,0 +1,1 @@
+{"clarity_score": 0.0, "decision": "refine", "drift_score": 1.0, "example_density": 0.0, "failure_modes_present": false, "structure_score": 0.0, "tradeoff_presence": false, "violations": ["MOCK: not a real evaluation"]}

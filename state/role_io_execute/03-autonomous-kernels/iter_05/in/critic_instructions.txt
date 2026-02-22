@@ -1,0 +1,1 @@
+Critic must evaluate out/writer.md and write JSON report to out/critic.json
