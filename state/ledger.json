@@ -426,7 +426,7 @@
         "frozen_candidate": false,
         "last_modified_iteration": 1
       },
-      "status": "locked"
+      "status": "active_refinement"
     },
     "04-memory-systems": {
       "current_iteration": 1,

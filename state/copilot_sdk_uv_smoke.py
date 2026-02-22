@@ -17,7 +17,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
@@ -151,7 +151,14 @@ class SDKEventObjectPayload(BaseModel):
 
 
 class SmokeCLIArgsPayload(BaseModel):
-    mode: str
+    mode: Literal[
+        "ping",
+        "prompt",
+        "trace-summary",
+        "trace-summary-malformed-phase",
+        "trace-summary-malformed-phase-payload",
+        "trace-summary-missing-phase",
+    ]
     model: str
     prompt: str
     timeout: float
