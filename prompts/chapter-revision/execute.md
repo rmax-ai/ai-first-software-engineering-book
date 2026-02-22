@@ -141,3 +141,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 07-production-ai-infrastructure | 2 | failed(1) | none | `e0e09f3` |
 | 07-production-ai-infrastructure | 3 | failed(1) | none | `f76457e` |
 | 99-future-directions | 1 | failed(1) | none | `288afe9` |
+| 99-future-directions | 2 | failed(1) | none | `2896716` |
