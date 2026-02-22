@@ -1248,15 +1248,19 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_mode() -> int:
     return 0
 
 
+def _trace_summary_fixture_cleanup_parity_target_modes() -> tuple[str, str]:
+    return (
+        "trace-summary-fixture-root-cleanup-parity",
+        "trace-summary-fixture-cleanup-parity",
+    )
+
+
 def run_trace_summary_fixture_cleanup_parity_usage_examples_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
     usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
     mode_counts = Counter(usage_mode_names)
-    target_modes = (
-        "trace-summary-fixture-root-cleanup-parity",
-        "trace-summary-fixture-cleanup-parity",
-    )
+    target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
     unexpected_counts = {name: mode_counts.get(name, 0) for name in target_modes if mode_counts.get(name, 0) != 1}
     assert not unexpected_counts, (
         "expected parity cleanup modes to appear exactly once in generated usage examples; "
@@ -1271,10 +1275,7 @@ def run_trace_summary_fixture_cleanup_parity_usage_examples_guard_mode() -> int:
 
 def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
-    target_modes = (
-        "trace-summary-fixture-root-cleanup-parity",
-        "trace-summary-fixture-cleanup-parity",
-    )
+    target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
 
     parser = _build_parser(all_mode_specs)
     mode_action = next(
@@ -1311,10 +1312,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_order_g
 
 def run_trace_summary_fixture_cleanup_parity_mode_choices_uniqueness_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
-    target_modes = (
-        "trace-summary-fixture-root-cleanup-parity",
-        "trace-summary-fixture-cleanup-parity",
-    )
+    target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
     parser = _build_parser(all_mode_specs)
     mode_action = next(
         (
@@ -1341,10 +1339,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_uniqueness_guard_mode(
 
 def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_adjacency_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
-    target_modes = (
-        "trace-summary-fixture-root-cleanup-parity",
-        "trace-summary-fixture-cleanup-parity",
-    )
+    target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
     parser = _build_parser(all_mode_specs)
     mode_action = next(
         (
@@ -1384,10 +1379,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_adjacen
 
 def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_uniqueness_adjacency_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
-    target_modes = (
-        "trace-summary-fixture-root-cleanup-parity",
-        "trace-summary-fixture-cleanup-parity",
-    )
+    target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
     parser = _build_parser(all_mode_specs)
     mode_action = next(
         (
