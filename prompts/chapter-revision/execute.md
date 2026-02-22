@@ -92,3 +92,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 02-harness-engineering | 2 | failed(1) | none | `chore: pass 2 for chapter 02-harness-engineering` |
 | 02-harness-engineering | 3 | failed(1) | none | `chore: pass 3 for chapter 02-harness-engineering` |
 | 03-autonomous-kernels | 1 | failed(1) | none | `chore: pass 1 for chapter 03-autonomous-kernels` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `chore: pass 2 for chapter 03-autonomous-kernels` |
