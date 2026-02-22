@@ -54,11 +54,29 @@ class LedgerChapterPayload(BaseModel):
     stability: ChapterStabilityPayload = Field(default_factory=ChapterStabilityPayload)
 
 
+class DraftToRefinedTransitionPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    required_consecutive_passes: int | None = 2
+
+
+class LifecycleTransitionsPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    draft_to_refined: DraftToRefinedTransitionPayload = Field(default_factory=DraftToRefinedTransitionPayload)
+
+
+class ChapterLifecycleRulesPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    transitions: LifecycleTransitionsPayload = Field(default_factory=LifecycleTransitionsPayload)
+
+
 class LedgerPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     version: int | None = None
-    chapter_lifecycle_rules: dict[str, Any] = Field(default_factory=dict)
+    chapter_lifecycle_rules: ChapterLifecycleRulesPayload = Field(default_factory=ChapterLifecycleRulesPayload)
     chapter_selection_strategy: dict[str, Any] = Field(default_factory=dict)
     repo_iteration_log: list[dict[str, Any]] = Field(default_factory=list)
     chapters: dict[str, LedgerChapterPayload] = Field(default_factory=dict)
@@ -71,6 +89,16 @@ class LedgerTransit:
 
     def as_ledger_dict(self) -> dict[str, Any]:
         return self.raw
+
+
+@dataclass(frozen=True)
+class PromotionRulesTransit:
+    required_consecutive_passes: int
+
+    @classmethod
+    def from_payload(cls, payload: ChapterLifecycleRulesPayload) -> "PromotionRulesTransit":
+        required = payload.transitions.draft_to_refined.required_consecutive_passes
+        return cls(required_consecutive_passes=int(required if required is not None else 2))
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -330,21 +358,25 @@ def select_next_chapter_id(ledger: dict[str, Any]) -> str:
     return candidates[0].chapter_id
 
 
-def compute_lifecycle_promotions(ledger: dict[str, Any]) -> dict[str, str]:
+def compute_lifecycle_promotions(
+    ledger: dict[str, Any],
+    rules_transit: PromotionRulesTransit | None = None,
+) -> dict[str, str]:
     """Compute draft->refined promotions from consecutive passes.
 
     Returns a mapping of chapter_id -> new_lifecycle for chapters that should change.
     """
 
-    rules = ledger.get("chapter_lifecycle_rules", {})
-    transitions = rules.get("transitions", {}) if isinstance(rules, dict) else {}
-    draft_to_refined = transitions.get("draft_to_refined", {}) if isinstance(transitions, dict) else {}
-    required_passes = draft_to_refined.get("required_consecutive_passes", 2)
-
-    try:
-        required_passes_int = int(required_passes)
-    except (TypeError, ValueError):
-        required_passes_int = 2
+    required_passes_int = rules_transit.required_consecutive_passes if rules_transit is not None else 2
+    if rules_transit is None:
+        rules = ledger.get("chapter_lifecycle_rules", {})
+        transitions = rules.get("transitions", {}) if isinstance(rules, dict) else {}
+        draft_to_refined = transitions.get("draft_to_refined", {}) if isinstance(transitions, dict) else {}
+        required_passes = draft_to_refined.get("required_consecutive_passes", 2)
+        try:
+            required_passes_int = int(required_passes)
+        except (TypeError, ValueError):
+            required_passes_int = 2
 
     chapters = _get_chapters(ledger)
     promotions: dict[str, str] = {}
@@ -394,7 +426,8 @@ def _cmd_select(args: argparse.Namespace) -> int:
 
 
 def _cmd_promotions(args: argparse.Namespace) -> int:
-    ledger = _load_ledger(args.ledger).as_ledger_dict()
+    ledger_transit = _load_ledger(args.ledger)
+    ledger = ledger_transit.as_ledger_dict()
     errors = validate_ledger(ledger)
     if errors:
         sys.stderr.write("Ledger validation failed; refusing to compute promotions.\n")
@@ -402,7 +435,8 @@ def _cmd_promotions(args: argparse.Namespace) -> int:
             sys.stderr.write(f"- {err}\n")
         return 1
 
-    promotions = compute_lifecycle_promotions(ledger)
+    rules_transit = PromotionRulesTransit.from_payload(ledger_transit.payload.chapter_lifecycle_rules)
+    promotions = compute_lifecycle_promotions(ledger, rules_transit=rules_transit)
     sys.stdout.write(_dump_json(promotions) + "\n")
     return 0
 
