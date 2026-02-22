@@ -3,13 +3,19 @@
 ## Thesis
 Production AI-first systems are distributed systems: they require orchestration, isolation, observability, caching, cost control, and reproducible environments.
 
-Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. The tool/runtime plane is the execution and control surface around the model. It includes sandboxed execution environments and tool adapters (test runner, browser, repo API). It also includes orchestration policies (queueing, concurrency, retries, idempotency), observability across steps, and artifacts for replay and audit. Restated: if you can reliably run tools, record what happened, and reproduce runs, you can improve measurable outcomes even when model behavior varies. Examples include lower tool-failure rate, higher replay success rate, fewer flaky retries, and lower cost per merged change.
+Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. The tool/runtime plane is the execution and control surface around the model. It includes sandboxed execution environments and tool adapters (test runner, browser, repo API). It also includes orchestration policies: queueing, concurrency limits, retries, and idempotency. It includes observability across steps and artifacts for replay and audit. Restated: if you can reliably run tools and record what happened, you can reproduce runs. With reproducible runs, you can improve outcomes even when model behavior varies. Examples include lower tool-failure rate, higher replay success rate, fewer flaky retries, and lower cost per merged change.
 
 ## Why This Matters
 - Without isolation, tool execution becomes a security and reliability risk.
 - Without observability, failures cannot be attributed or fixed systematically.
 - Without cost controls, autonomy can become economically unstable.
 - Operational signals: tool-failure rate, replay success rate, mean tool latency, retry rate, and spend per successful task.
+- Example targets and alerts (illustrative, not mandates):
+  - Tool-failure rate: alert if >2% over 1 hour for a repo, or if a single tool exceeds a fixed error budget per day.
+  - Replay success rate: alert if <95% on a weekly replay audit sample for “green” runs.
+  - Mean tool latency: alert if p95 step duration doubles week-over-week for a stable workload.
+  - Retry rate: alert if retries exceed 1.2× baseline for two consecutive days, indicating rising flakiness.
+  - Spend per successful task: alert if median cost-to-merge exceeds a set cap, or if “wasted spend” rises above a fixed share of daily budget.
 
 ## System Breakdown
 - **Execution**: sandboxes/containers, dependency pinning, deterministic runners. Contract: identical inputs produce the same tool environment (image hash + lockfile), with a hard wall-clock timeout per step.
@@ -32,6 +38,7 @@ Sandboxed tool execution for code changes.
 - Evaluation gate:
   - Promote only if required checks pass (e.g., all tests green, no new lints, diff applies cleanly).
   - Require reproducibility: either a replay succeeds at least once, or the environment hash matches a known-good cache entry.
+  - On failure, generate a human-facing summary: run id link, failed step, top error class, and a short “what to try next” hint (e.g., rerun without cache or inspect a specific log).
 
 ## Concrete Example 2
 Cost-aware autonomy for a batch of maintenance tasks.
@@ -42,6 +49,7 @@ Cost-aware autonomy for a batch of maintenance tasks.
   - (b) similar errors repeat (e.g., the same stack trace twice), or
   - (c) predicted cost-to-complete exceeds the remaining budget.
   - Escalate when the change touches production config, security-sensitive files, or exceeds a diff size threshold (e.g., >200 lines changed as an example value).
+  - If a per-task or batch budget is exceeded, stop further tool calls, write a short spend-and-status summary (last step, last error, run id), and escalate for human review.
 - Measure: cost per successful task, time-to-merge, regression rate (e.g., post-merge rollback or test failures within 24h), and “wasted spend” (tokens spent on tasks that are abandoned or escalated).
 
 ## Trade-offs
