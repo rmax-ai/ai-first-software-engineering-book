@@ -75,19 +75,27 @@ Bug-fix kernel for a CLI tool.
 Mini-runbook (a single bounded kernel run):
 
 1. Localize failure (evidence-first)
+
    - Action: run the smallest check that reproduces the failure.
+
      - Command: `pytest -k rejects_empty_input`
+
    - Record:
+
      - failing assertion excerpt (placeholder): `E assert 0 == 2`
      - environment notes: OS, Python version, CLI args
+
    - Stop/iterate rule:
+
      - If the failure does not reproduce, stop and return “cannot reproduce” trace (do not edit).
 
 2. Patch minimal surface (hypothesis-driven)
+
    - Hypothesis: empty string is being treated as a valid token stream in `src/parser.py`.
    - Action: make a minimal edit that rejects empty input at the boundary (not across unrelated call sites).
    - Budget check:
      - ensure diff size stays within 40 lines and touches only `src/parser.py` (or a single adjacent file if necessary).
+
    - Record:
      - files touched: `src/parser.py`
      - diff stats: `+6 -1` (placeholder)
