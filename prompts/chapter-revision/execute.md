@@ -172,3 +172,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 06-agent-governance | 2 | failed(1) | none | `this commit` |
 | 06-agent-governance | 3 | failed(1) | none | `this commit` |
 | 07-production-ai-infrastructure | 1 | failed(1) | none | `this commit` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `this commit` |
