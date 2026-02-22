@@ -17,6 +17,6 @@ nav:
   - Glossary: book/glossary.md
   - Patterns Overview: book/patterns/
 theme:
-  name: material
+  #name: material
 plugins:
   - search
