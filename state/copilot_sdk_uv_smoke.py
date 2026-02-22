@@ -111,7 +111,10 @@ async def run_prompt_mode(model: str, prompt: str, timeout_s: float) -> int:
 
 
 def _build_trace_summary_fixture(
-    chapter_id: str, fixture_root: Path, malformed_phase_trace: bool = False
+    chapter_id: str,
+    fixture_root: Path,
+    malformed_phase_trace: bool = False,
+    non_object_phase_payload: bool = False,
 ) -> tuple[Path, Path]:
     fixture_repo_root = fixture_root / "repo"
     metrics_path = fixture_repo_root / "state" / "metrics.json"
@@ -145,6 +148,8 @@ def _build_trace_summary_fixture(
     ]
     if malformed_phase_trace:
         phase_entries[1]["payload"].pop("budget_signal", None)
+    if non_object_phase_payload:
+        phase_entries[1]["payload"] = "not-an-object"
     trace_path.write_text("\n".join(json.dumps(entry) for entry in phase_entries) + "\n", encoding="utf-8")
     return metrics_path, fixture_repo_root
 
@@ -156,6 +161,7 @@ async def run_trace_summary_mode(
     metrics_path: Path,
     fixture_root: Path,
     expect_phase_trace_failure: bool = False,
+    inject_non_object_phase_payload: bool = False,
 ) -> int:
     repo_root_for_trace = REPO_ROOT
     metrics_path_for_trace = metrics_path
@@ -164,6 +170,7 @@ async def run_trace_summary_mode(
             chapter_id=chapter_id,
             fixture_root=fixture_root,
             malformed_phase_trace=expect_phase_trace_failure,
+            non_object_phase_payload=inject_non_object_phase_payload,
         )
 
     if run_kernel:
@@ -272,6 +279,16 @@ async def main_async(args: argparse.Namespace) -> int:
             fixture_root=Path(args.trace_summary_fixture_root),
             expect_phase_trace_failure=True,
         )
+    if args.mode == "trace-summary-malformed-phase-payload":
+        return await run_trace_summary_mode(
+            chapter_id=args.chapter_id,
+            max_iterations=args.kernel_max_iterations,
+            run_kernel=args.run_kernel_for_trace_summary,
+            metrics_path=Path(args.metrics_path),
+            fixture_root=Path(args.trace_summary_fixture_root),
+            expect_phase_trace_failure=True,
+            inject_non_object_phase_payload=True,
+        )
     return await run_trace_summary_mode(
         chapter_id=args.chapter_id,
         max_iterations=args.kernel_max_iterations,
@@ -283,7 +300,17 @@ async def main_async(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
-    parser.add_argument("--mode", choices=["ping", "prompt", "trace-summary", "trace-summary-malformed-phase"], default="ping")
+    parser.add_argument(
+        "--mode",
+        choices=[
+            "ping",
+            "prompt",
+            "trace-summary",
+            "trace-summary-malformed-phase",
+            "trace-summary-malformed-phase-payload",
+        ],
+        default="ping",
+    )
     parser.add_argument("--model", default="gpt-5")
     parser.add_argument("--prompt", default="Reply with exactly: ok")
     parser.add_argument("--timeout", type=float, default=45.0)

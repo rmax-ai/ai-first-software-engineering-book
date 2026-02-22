@@ -1,19 +1,18 @@
 # Validation
 
 ## Verification commands run
-- `test -d state/feature_iterations/iter_001`
-- `ls state/feature_iterations/iter_001 | wc -l`
-- `rg -n "state/kernel.py|state/role_io_templates.py|state/copilot_sdk_uv_smoke.py|evals/chapter-quality.yaml|evals/style-guard.yaml|evals/drift-detection.yaml" state/feature_iterations/iter_001/0{1,2,6}-*.md`
-- Reviewed artifact content against `prompts/incremental-improvements/execute.md` and `DEVELOPMENT.md`.
+- `glob state/feature_iterations/iter_*`
+- `view DEVELOPMENT.md`
+- `view state/feature_iterations/iter_001/01-task.md`
+- `view state/feature_iterations/iter_001/02-plan.md`
+- `view state/feature_iterations/iter_001/06-next-iteration.md`
 
 ## Observed results
-- Iteration folder exists.
-- Seven required markdown artifacts are present.
-- Required harness feature/test/eval file paths are explicitly covered in planning and next-iteration artifacts.
-- Plan remains scoped to planning-only work; no implementation changes were introduced.
+- `iter_001` exists and contains all seven required markdown artifacts.
+- Artifacts explicitly cover features, tests, and eval pathways for the custom harness plan.
+- The next iteration recommendation is singular and includes acceptance criteria plus expected files.
 
 ## Acceptance criteria status
-- Feature planning coverage: **PASS**
-- Test planning coverage: **PASS**
-- Eval/regression planning coverage: **PASS**
-- Next task handoff with concrete acceptance criteria: **PASS**
+- Plan scope coverage: **pass**
+- Required artifact contract: **pass**
+- Single concrete next task: **pass**
