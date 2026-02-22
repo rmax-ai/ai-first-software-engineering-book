@@ -1,9 +1,10 @@
 # Task: Plan custom state harness improvements
 
 ## Why this task now
-The feature-improvement track has no prior iterations, so a concrete, reviewable plan is needed before implementation work starts.
+- The feature iteration runner requires a seed iteration that defines a concrete backlog for harness improvements.
+- A written plan reduces implementation drift across `state/` and keeps future iterations scoped to measurable outcomes.
 
 ## Acceptance criteria
-- Document a prioritized harness backlog that covers features, tests, and evaluations.
-- Name concrete files likely to change in follow-up iterations.
-- Keep scope limited to planning (no harness behavior changes in this iteration).
+- Produce a concise plan covering targeted **features**, **tests**, and **eval/regression checks**.
+- Explicitly map upcoming work to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Leave exactly one actionable next task for iteration 002.
