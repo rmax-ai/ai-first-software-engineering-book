@@ -1,29 +1,21 @@
-# Plan
+# Iteration plan
 
-## Step-by-step
-
-1. Baseline the current harness architecture and constraints from `DEVELOPMENT.md`.
-2. Define the next feature backlog for deterministic harness behavior:
-   - richer per-loop trace summaries and guard logging in `state/kernel.py`
-   - clearer role I/O scaffolds and invariants in `state/role_io_templates.py`
-   - deterministic smoke coverage extensions in `state/copilot_sdk_uv_smoke.py`
-3. Define test strategy for each feature:
-   - deterministic smoke modes run with `uv run python state/copilot_sdk_uv_smoke.py --mode ...`
-   - focused Python tests for new pure helpers and parser/validator boundaries
-   - command-level verification for kernel execution flow
-4. Define evaluation gates and regression signals tied to:
-   - `evals/chapter-quality.yaml`
-   - `evals/style-guard.yaml`
-   - `evals/drift-detection.yaml`
-   - state metric/ledger signals (for example `state/metrics.json` shape invariants).
-5. Record one smallest recommended follow-up implementation task with bounded acceptance criteria.
+1. Inspect harness development guidance in `DEVELOPMENT.md` and align the backlog to UV-based execution and deterministic guardrails.
+2. Define **feature track** for `state/kernel.py` and `state/role_io_templates.py`:
+   - Add richer trace markers for loop phases and budget decisions in `state/kernel.py`.
+   - Tighten role I/O templates in `state/role_io_templates.py` so role outputs are easier to validate deterministically.
+3. Define **test track** for `state/copilot_sdk_uv_smoke.py` and adjacent harness checks:
+   - Add focused smoke modes that exercise the new trace and role-template controls.
+   - Keep deterministic mode coverage explicit and table-driven where possible.
+4. Define **evaluation track** for `evals/*.yaml`:
+   - Map new trace and template expectations to specific eval gates.
+   - Require measurable signals (ledger/metrics deltas or explicit eval assertions) to detect regressions.
+5. Break execution into smallest slices: first trace visibility, then role-template constraints, then smoke/eval wiring.
 
 ## Expected files to change in future iterations
-
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- relevant harness tests under `state/` and/or `book/`

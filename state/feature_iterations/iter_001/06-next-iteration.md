@@ -1,21 +1,17 @@
-# Next Iteration Recommendation
+# Recommended next iteration
 
-## Recommended task
-
-Implement deterministic trace-summary telemetry scaffolding in `state/kernel.py` with a focused smoke assertion path in `state/copilot_sdk_uv_smoke.py`.
+## Next task
+Add deterministic trace-phase markers in `state/kernel.py` and validate them via smoke coverage.
 
 ## Why this is next
-
-It is the smallest high-impact implementation step from this plan: it improves observability while preserving current architecture and creates a concrete bridge between harness runtime behavior and deterministic verification.
+Trace visibility is the lowest-risk, highest-observability slice and creates clear signals for later template and eval tightening.
 
 ## Acceptance criteria
-
-1. `state/kernel.py` emits a stable, structured trace-summary payload for the latest loop execution without changing public CLI usage.
-2. `state/copilot_sdk_uv_smoke.py` adds one deterministic mode validating required trace-summary keys and shape.
-3. Targeted verification is executed with `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` and results are documented.
-4. No unrelated file refactors.
+- `state/kernel.py` emits explicit trace entries for plan/change/evaluate loop phases.
+- `state/copilot_sdk_uv_smoke.py` includes at least one deterministic mode asserting the new trace markers.
+- Validation is recorded with `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` output.
 
 ## Expected files to touch
-
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
+- `state/feature_iterations/iter_002/0{1..7}-*.md`
