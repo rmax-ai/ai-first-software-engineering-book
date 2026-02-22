@@ -520,10 +520,12 @@
 <h1 id="chapter-03-autonomous-kernels">Chapter 03 — Autonomous Kernels</h1>
 <h2 id="thesis">Thesis</h2>
 <p>An autonomous kernel is a minimal, well-specified control loop that executes bounded work: plan, apply tool actions, verify, and stop. Its constraints (budgets, permissions, evaluation gates) define a safety envelope that makes outcomes inspectable and repeatable.</p>
-<p>Definitions:
-- <strong>Autonomous kernel</strong>: a control loop with explicit limits and explicit exit criteria; it is not “general autonomy,” long-horizon project management, or open-ended exploration.
-- <strong>Budget</strong>: a hard cap on resources (iterations, elapsed time, tool calls, diff size) that prevents runaway behavior and forces escalation when progress stalls.
-- <strong>Evaluation gate</strong>: a required check whose result must be recorded and must be satisfied (or explicitly waived with justification) before the kernel can declare success.</p>
+<p>Definitions:</p>
+<ul>
+<li><strong>Autonomous kernel</strong>: a control loop with explicit limits and explicit exit criteria; it is not “general autonomy,” long-horizon project management, or open-ended exploration.</li>
+<li><strong>Budget</strong>: a hard cap on resources (iterations, elapsed time, tool calls, diff size) that prevents runaway behavior and forces escalation when progress stalls.</li>
+<li><strong>Evaluation gate</strong>: a required check whose result must be recorded and must be satisfied (or explicitly waived with justification) before the kernel can declare success.</li>
+</ul>
 <p>Hypothesis: small, well-governed autonomous kernels (tight loops with explicit budgets and evaluation gates) outperform broad autonomy in stability and debuggability.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
