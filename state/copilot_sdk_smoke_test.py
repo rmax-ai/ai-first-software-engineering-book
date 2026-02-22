@@ -2010,6 +2010,31 @@ def run_usage_examples_duplicate_count_wrapper_helper_arg_order_guard_mode() -> 
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_mode_order_guard_mode() -> int:
+    trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
+    positional_only_guard_mode = "usage-examples-duplicate-count-wrapper-helper-positional-only-guard"
+    arg_order_guard_mode = "usage-examples-duplicate-count-wrapper-helper-arg-order-guard"
+    assert positional_only_guard_mode in trace_summary_mode_names, (
+        f"expected TRACE_SUMMARY_MODE_SPECS to include {positional_only_guard_mode}"
+    )
+    assert arg_order_guard_mode in trace_summary_mode_names, (
+        f"expected TRACE_SUMMARY_MODE_SPECS to include {arg_order_guard_mode}"
+    )
+
+    positional_only_guard_index = trace_summary_mode_names.index(positional_only_guard_mode)
+    arg_order_guard_index = trace_summary_mode_names.index(arg_order_guard_mode)
+    assert arg_order_guard_index - positional_only_guard_index == 1, (
+        "expected usage-examples-duplicate-count-wrapper-helper-positional-only-guard to appear immediately "
+        "before usage-examples-duplicate-count-wrapper-helper-arg-order-guard in TRACE_SUMMARY_MODE_SPECS"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-mode-order-guard mode validates duplicate-count "
+        "wrapper helper hardening modes preserve positional-only then arg-order adjacency"
+    )
+    return 0
+
+
 def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
@@ -2358,6 +2383,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-helper-arg-order-guard",
         run_usage_examples_duplicate_count_wrapper_helper_arg_order_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper helper canonical argument-order assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-mode-order-guard",
+        run_usage_examples_duplicate_count_wrapper_helper_mode_order_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper hardening mode-order adjacency assertion",
     ),
     (
         "usage-examples-order-guard",
