@@ -988,13 +988,23 @@
 
 <h1 id="chapter-04-memory-systems">Chapter 04 — Memory Systems</h1>
 <h2 id="thesis">Thesis</h2>
-<p>Memory is a system component, not a transcript. It must be structured, queryable, and governed (with provenance) to improve long-horizon work.</p>
+<p>Memory is an engineered data store for work artifacts, not a raw log of prior messages. It must be <strong>structured</strong>, <strong>queryable</strong>, and <strong>governed</strong> (with provenance) to improve long-horizon work.</p>
+<ul>
+<li><strong>Structured</strong>: stored as records with explicit fields (not free-form chat logs), so constraints, sources, and updates are representable.</li>
+<li><strong>Queryable</strong>: retrievable by filters (task, file, timeframe, decision id), with ranking that prefers fresh, high-provenance entries.</li>
+<li><strong>Governed</strong>: subject to retention/redaction/correction rules, so stale or wrong entries can be superseded and sensitive traces can be minimized.</li>
+</ul>
+<p>Definition of done for “good memory”:
+- <strong>Structure</strong>: every entry has an id, timestamp, type, and source.
+- <strong>Query</strong>: a future agent can retrieve the right entry with a bounded filter (“show decisions for X” / “show traces for regression Y”).
+- <strong>Governance</strong>: entries can be corrected (superseded) and expire or be redacted under policy.</p>
 <p>Hypothesis: uncurated memory increases confidence without increasing correctness, by amplifying earlier mistakes.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
 <li>Long projects exceed context windows; without memory, work becomes repetitive and inconsistent.</li>
-<li>Without provenance, persistent memory becomes a source of silent drift.</li>
+<li>Without provenance, persistent memory becomes a source of silent drift: older summaries can out-rank newer evidence.</li>
 <li>Production environments need data minimization and retention policies for stored traces and summaries.</li>
+<li>Those policies must connect to provenance (what the data came from) and correction (how wrong entries are handled).</li>
 </ul>
 <h2 id="system-breakdown">System Breakdown</h2>
 <ul>
@@ -1002,36 +1012,78 @@
 <li>Episodic: traces of actions/tool I/O/diffs.</li>
 <li>Semantic: stable project facts and conventions.</li>
 <li>Decisions: recorded trade-offs and constraints.</li>
-<li>State: current plan, progress, open issues.</li>
+<li>State: current plan, progress, open issues (kept memory-specific: pointers to the latest plan/progress, not a second project management system).</li>
 <li><strong>Write policy</strong>: what gets stored, when, by whom, and with what validation.</li>
 <li><strong>Read policy</strong>: retrieval filters, ranking, freshness, and provenance checks.</li>
 <li><strong>Governance</strong>: retention, access control, redaction, and correction mechanisms.</li>
 </ul>
+<p>Minimum memory record schema (applies to all classes):
+- <code>id</code>: stable identifier (e.g., <code>dec-2026-02-22-authz-approach</code>, <code>trace-&lt;task&gt;-&lt;iter&gt;</code>).
+- <code>timestamp</code>: when recorded (and optionally <code>valid_through</code> for expiry/refresh).
+- <code>type</code>: episodic | semantic | decision | state.
+- <code>source</code>: where it came from (tool output, diff, doc link, human note) and a pointer (path/URL/commit hash).
+- <code>confidence</code>: coarse signal (e.g., low/medium/high) tied to source quality (tests passing, verified by review, etc.).
+- <code>supersedes</code>: optional list of prior ids this record replaces (supports correction and avoids “memory poisoning” via repetition).</p>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
-<p>Decision memory for an architecture choice.
-- Store: decision record with options, chosen approach, constraints, and rationale.
-- Enforce: future changes must reference the decision or explicitly supersede it.</p>
+<p>Decision memory for an architecture choice.</p>
+<p>Write event (what triggers storage):
+- After selecting an approach in a design discussion or PR, store a decision record as part of the change (or alongside it) before implementation diverges.</p>
+<p>Stored record (template; identifiers are illustrative):
+- <code>id</code>: <code>dec-2026-02-22-memory-store-backend</code>
+- <code>timestamp</code>: <code>2026-02-22T19:33Z</code>
+- <code>type</code>: decision
+- <code>statement</code>: “Store project memory as append-only records with explicit superseding, not as an editable wiki page.”
+- <code>options_considered</code>:
+  - “Editable wiki page”
+  - “Append-only records + supersedes field”
+  - “No persistence; rely on context only”
+- <code>chosen</code>: “Append-only records + supersedes field”
+- <code>constraints</code>: “Must support redaction; must record provenance pointers; must allow correction.”
+- <code>rationale</code>: “Editable pages hide drift; append-only preserves history and enables explicit correction.”
+- <code>source</code>: “docs/decisions/dec-2026-02-22-memory-store-backend.md + commit 0123abcd”
+- <code>confidence</code>: “medium (reviewed; not yet load-tested)”
+- <code>supersedes</code>: <code>[]</code></p>
+<p>Enforcement rule (how future work must behave):
+- Any change that contradicts the decision must either (a) reference this <code>id</code> and explain why it still holds, or (b) create a new decision record with <code>supersedes: ["dec-2026-02-22-memory-store-backend"]</code>. This prevents silent divergence where repeated but incorrect summaries turn into “facts” (see <strong>Memory poisoning</strong> in ## Failure Modes).</p>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
-<p>Trace-indexed memory for debugging.
-- Store: tool outputs and diffs keyed by task/iteration.
-- Use: when a regression occurs, retrieve prior similar traces and compare failure signatures.</p>
+<p>Trace-indexed memory for debugging.</p>
+<p>Trace-indexed memory stores enough episodic detail to support “find similar failure, verify with evidence” workflows.</p>
+<p>Capture → index → retrieve → verify:
+1. <strong>Capture</strong>: on each iteration, store tool outputs and diffs:
+   - test command + failing stack trace snippet
+   - files changed + diff hash
+   - environment notes that affect reproducibility (OS, dependency lockfile hash)
+2. <strong>Index</strong>: attach keys:
+   - <code>task_id</code>, <code>iteration</code>, <code>files_touched</code>, <code>error_signature</code> (e.g., exception type + top frame), <code>timestamp</code>, <code>source</code> pointers.
+3. <strong>Retrieve</strong>: when a regression occurs, query with bounded filters in plain language:
+   - “Show traces where <code>error_signature</code> matches ‘KeyError: CONFIG’ and <code>files_touched</code> includes <code>settings.py</code> from the last 30 days.”
+   - Rank by freshness, then by confidence (e.g., traces linked to a commit that later passed CI).
+4. <strong>Verify (provenance check)</strong>: before acting on a retrieved trace, confirm provenance and freshness per <strong>Read policy</strong>:
+   - Does the trace point to an exact tool output and commit hash?
+   - Is it superseded by a newer trace for the same signature?
+   - Do current tests reproduce the signature, or has the failure mode changed?</p>
+<p>Expected outcome (measurable):
+- For recurring <code>error_signature</code>s, reduce median iterations-to-fix from 6 to 3.
+- Keep the post-fix regression rate at or below 2% in the next 20 CI runs affecting the same files.</p>
+<p>This flow turns memory into a debugging aid rather than a replay of stale context: retrieval is constrained, and action is gated by a provenance check.</p>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
 <li>More memory improves continuity but increases risk of stale or incorrect retrieval.</li>
 <li>Strong provenance improves trust but adds overhead to writing and updating memory.</li>
 <li>Aggressive retention helps debugging but increases privacy and storage costs.</li>
+<li>Governance often trades <strong>cost of being wrong</strong> (acting on stale memory, causing regressions) against <strong>cost of being slow</strong> (extra steps to write, verify, and supersede records).</li>
 </ul>
 <h2 id="failure-modes">Failure Modes</h2>
 <ul>
-<li><strong>Stale retrieval dominance</strong>: old assumptions override new evidence.</li>
-<li><strong>Summarization loss</strong>: key constraints disappear in compression.</li>
-<li><strong>Memory poisoning</strong>: incorrect conclusions become “facts” through repetition.</li>
+<li><strong>Stale retrieval dominance</strong>: old assumptions override new evidence. Detection/mitigation: include freshness signals in <strong>Read policy</strong> (time windows, “prefer not-superseded”), and require verification against current tests before applying a past fix.</li>
+<li><strong>Summarization loss</strong>: key constraints disappear in compression. Detection/mitigation: enforce <strong>Write policy</strong> that decision/semantic records keep explicit constraint fields, and link summaries back to their <code>source</code> pointers so missing details are recoverable.</li>
+<li><strong>Memory poisoning</strong>: incorrect conclusions become “facts” through repetition. Detection/mitigation: require corrections via <strong>Governance</strong> using <code>supersedes</code> (no silent edits), and down-rank low-provenance entries in <strong>Read policy</strong> so repetition does not outweigh evidence.</li>
 </ul>
 <h2 id="research-directions">Research Directions</h2>
 <ul>
 <li>Memory scoring with automated freshness and provenance signals.</li>
 <li>Mechanisms for correcting memory (retractions, superseding records).</li>
-<li>Evaluations for memory usefulness (measuring reduced iterations without increased regressions).</li>
+<li>Evaluations for memory usefulness (measuring reduced iterations without increased regressions), e.g., for trace-indexed debugging: reduce median “iterations-to-fix” for recurring <code>error_signature</code>s while holding the post-fix regression rate constant (or lower) across subsequent CI runs.</li>
 </ul>
 
 
