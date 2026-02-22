@@ -859,6 +859,43 @@ def run_mode_help_coverage_guard_mode() -> int:
     return 0
 
 
+def _build_parser(mode_specs: Sequence[tuple[str, Callable[[], int], str]]) -> argparse.ArgumentParser:
+    mode_names = [name for name, _handler, _description in mode_specs]
+    mode_help = _build_mode_help(mode_specs)
+    parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
+    parser.add_argument(
+        "--mode",
+        choices=mode_names,
+        default="stub",
+        help=mode_help,
+    )
+    return parser
+
+
+def run_mode_choices_coverage_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    expected_mode_names = [name for name, _handler, _description in all_mode_specs]
+    parser = _build_parser(all_mode_specs)
+    mode_action = next(
+        (
+            action
+            for action in parser._actions
+            if "--mode" in getattr(action, "option_strings", [])
+        ),
+        None,
+    )
+    assert mode_action is not None, "expected argparse --mode action to exist"
+    parser_mode_choices = list(mode_action.choices or [])
+    assert parser_mode_choices == expected_mode_names, (
+        "expected argparse --mode choices to match registered mode names exactly once in order"
+    )
+
+    print(
+        "PASS: mode-choices-coverage-guard mode validates argparse --mode choices for all modes"
+    )
+    return 0
+
+
 TraceSummaryModeHandler = Callable[[], int]
 TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] = (
     ("trace-summary", run_trace_summary_mode, "deterministic required-key assertion"),
@@ -904,6 +941,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "mode-help-coverage-guard",
         run_mode_help_coverage_guard_mode,
         "deterministic argparse mode-help coverage assertion",
+    ),
+    (
+        "mode-choices-coverage-guard",
+        run_mode_choices_coverage_guard_mode,
+        "deterministic argparse mode-choices coverage assertion",
     ),
 )
 
@@ -993,16 +1035,8 @@ __doc__ = _build_module_docstring()
 
 def main() -> int:
     all_mode_specs = _all_mode_specs()
-    mode_names = [name for name, _handler, _description in all_mode_specs]
-    mode_help = _build_mode_help(all_mode_specs)
     mode_handlers = {name: handler for name, handler, _description in all_mode_specs}
-    parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
-    parser.add_argument(
-        "--mode",
-        choices=mode_names,
-        default="stub",
-        help=mode_help,
-    )
+    parser = _build_parser(all_mode_specs)
     args = parser.parse_args()
     return mode_handlers[args.mode]()
 
