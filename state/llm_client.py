@@ -587,24 +587,20 @@ class LLMClient:
         if events is None:
             events = getattr(result, "events", None)
         if isinstance(events, list):
-            event_dicts = [event for event in events if isinstance(event, dict)]
-            if len(event_dicts) == len(events):
-                try:
-                    parsed_events = SDKEventsTransit.from_raw(event_dicts).event_payloads
-                except ValidationError as exc:
-                    raise LLMClientError(f"Invalid Copilot SDK events payload: {exc}") from exc
-                events = [event.model_dump(exclude_none=True) for event in parsed_events]
             prompt_tokens = 0
             completion_tokens = 0
-            for event in events:
-                event_name = self._sdk_event_type_name(
-                    event.get("type") if isinstance(event, dict) else getattr(event, "type", "")
-                )
+            event_mappings = [self._sdk_event_to_mapping(event) for event in events]
+            try:
+                parsed_events = SDKEventsTransit.from_raw(event_mappings).event_payloads
+            except ValidationError as exc:
+                raise LLMClientError(f"Invalid Copilot SDK events payload: {exc}") from exc
+            for event in parsed_events:
+                event_name = self._sdk_event_type_name(event.type)
                 if event_name not in {"assistant.usage", "assistant_usage"}:
                     continue
-                usage = self._usage_from_any(event.get("usage") if isinstance(event, dict) else None)
+                usage = self._usage_from_any(event.usage.model_dump(exclude_none=True) if event.usage else None)
                 if usage is None:
-                    usage = self._usage_from_any(event.get("data") if isinstance(event, dict) else getattr(event, "data", None))
+                    usage = self._usage_from_any(event.data.model_dump(exclude_none=True) if event.data else None)
                 if usage is None:
                     continue
                 prompt_tokens += usage.prompt_tokens
