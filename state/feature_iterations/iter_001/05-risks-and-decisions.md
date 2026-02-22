@@ -1,12 +1,12 @@
-# Risks and Decisions
+# Risks and decisions
 
-## Risks discovered
-- Planning quality depends on future iterations preserving deterministic behavior and eval compatibility.
-- Expanding observability in `state/kernel.py` can add output churn if metrics contracts are not updated in lockstep.
+## Risks
+- The backlog is concise by design, so implementation iterations must avoid scope creep when converting plan bullets into code changes.
+- Eval coupling can regress if new harness signals are added without updating matching `evals/*.yaml` expectations.
 
-## Decisions made
-- Keep this iteration planning-only to minimize risk and establish an auditable backlog.
-- Prioritize kernel observability before role-IO/eval expansion so downstream tests target stable signals.
+## Decisions and trade-offs
+- Chose a planning-only seed iteration to satisfy prompt requirements and minimize risk.
+- Deferred all runtime modifications to future iterations so evidence can be gathered with targeted tests per feature.
 
-## Deferred intentionally
-- Any implementation changes to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+## Intentionally deferred
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.

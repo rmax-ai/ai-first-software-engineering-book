@@ -1,14 +1,16 @@
 # Validation
 
 ## Verification commands run
-- `rg --files state/feature_iterations/iter_001`
+- `glob state/feature_iterations/iter_*`
+- `git --no-pager status --short state/feature_iterations/iter_001`
 - `git --no-pager diff -- state/feature_iterations/iter_001`
 
 ## Observed results
-- All seven required artifact files are present under `state/feature_iterations/iter_001/`.
-- Diff only contains the new iteration documentation artifacts; no harness code behavior changed.
+- A new folder `state/feature_iterations/iter_001/` exists.
+- Required seven markdown artifacts are present and scoped to one planning task.
+- Diff is limited to iteration documentation; no harness runtime code was changed.
 
 ## Acceptance criteria check
-- Backlog planning for features/tests/evals: **pass**
-- Concrete future file touchpoints listed: **pass**
-- Planning-only scope preserved: **pass**
+- **Plan covers features/tests/evals:** Pass
+- **Explicit future file mapping (`state/*`, `evals/*`):** Pass
+- **Exactly one recommended next task:** Pass

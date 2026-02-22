@@ -1,18 +1,17 @@
-# Next Iteration Recommendation
-
-## Next task
-Implement deterministic trace-summary diagnostics in `state/kernel.py` and expose the signals required for smoke/eval checks.
+# Recommended next task (exactly one)
+Implement deterministic trace-summary observability in `state/kernel.py` and prove it through smoke coverage.
 
 ## Why this is next
-Trace diagnostics are foundational for validating later role-IO and eval-contract updates; they provide the observability baseline needed by follow-up tests.
+- It is the highest-value first feature from the seed plan and enables clearer regression detection for subsequent harness changes.
 
 ## Acceptance criteria
-- Add structured trace-summary output for each kernel loop stage.
-- Record deterministic metrics fields consumed by eval gates.
-- Add/adjust targeted smoke coverage in `state/copilot_sdk_uv_smoke.py` for new trace signals.
-- Update validation notes with executed `uv run python ...` commands and observed pass/fail evidence.
+- Add a focused kernel output path that emits a deterministic trace summary entry for each chapter run.
+- Extend `state/copilot_sdk_uv_smoke.py` with at least one deterministic mode that validates summary shape/content.
+- Update relevant eval contract(s) in `evals/*.yaml` so regressions fail predictably.
+- Record verification evidence using `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>`.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/metrics.json`
+- `evals/chapter-quality.yaml` (or another directly relevant eval file)
+- `state/feature_iterations/iter_002/*`
