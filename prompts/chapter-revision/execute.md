@@ -448,6 +448,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Re-run 2026-02-22T17:05:27Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
+| 05-evaluation-and-traces | 1 | failed(1) | none |  |
 | 04-memory-systems | 3 | failed(1) | none |  |
 | 04-memory-systems | 2 | failed(1) | none |  |
 | 04-memory-systems | 1 | failed(1) | none |  |
