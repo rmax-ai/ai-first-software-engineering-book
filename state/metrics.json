@@ -220,6 +220,96 @@
           }
         }
       ]
+    },
+    "02-harness-engineering": {
+      "history": [
+        {
+          "critic": {
+            "clarity_score": 0.86,
+            "decision": "refine",
+            "drift_score": 0.16,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "Contains a non-chapter artifact block at the end (<reminder>...<sql_tables>...), which is outside the chapter\u2019s heading structure.",
+              "Uses the metaphor \u201cgreen bar\u201d in ## Trade-offs without an explicit justification sentence, conflicting with evals/style-guard.yaml metaphor_policy.",
+              "At least one sentence in ## Thesis exceeds the 28-word max (e.g., the sentence defining \u201cpredictable\u201d lists three clauses and parentheticals)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3010328139754485,
+            "passed": false,
+            "similarity_max": 0.7491466063788199
+          },
+          "iteration": 2,
+          "timestamp": "2026-02-22T15:38:24Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 1.0,
+            "drift_score": 0.3010328139754485
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "refine",
+            "drift_score": 0.2,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter artifact block remains after the final heading content: the <reminder>\u2026<sql_tables>\u2026</reminder> block is outside the chapter heading structure.",
+              "At least one sentence exceeds evals/style-guard.yaml sentence_length.max_words=28: the Hypothesis sentence in ## Thesis is longer than 28 words.",
+              "At least one sentence exceeds evals/style-guard.yaml sentence_length.max_words=28: the sentence beginning \u201cThe \u201cminimal contract surface\u201d is the set of interfaces\u2026\u201d is longer than 28 words."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.30102916960715126,
+            "passed": false,
+            "similarity_max": 0.7497239716855113
+          },
+          "iteration": 3,
+          "timestamp": "2026-02-22T15:39:12Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.029850746268656716,
+            "drift_score": 0.30102916960715126
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.89,
+            "decision": "refine",
+            "drift_score": 0.19,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.9,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter artifact block remains after the final heading content: the <reminder>\u2026<sql_tables>\u2026</sql_tables></reminder> block is outside the chapter heading structure.",
+              "At least one sentence exceeds evals/style-guard.yaml sentence_length.max_words=28: the first Hypothesis sentence in ## Thesis is longer than 28 words."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.30103722143195827,
+            "passed": false,
+            "similarity_max": 0.7471690818679603
+          },
+          "iteration": 4,
+          "timestamp": "2026-02-22T15:39:54Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.029850746268656716,
+            "drift_score": 0.30103722143195827
+          }
+        }
+      ]
     }
   },
   "generated_at": "2026-02-18T23:05:36Z",
