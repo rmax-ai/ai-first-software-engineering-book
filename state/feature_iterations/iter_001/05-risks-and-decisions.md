@@ -1,12 +1,14 @@
-# Risks and decisions
+# Risks and Decisions
 
 ## Risks discovered
-- Planning-only output can drift from actual implementation constraints if follow-on iterations skip validation against current kernel behavior.
-- Expanding observability may increase log volume; guardrails should enforce deterministic, bounded output.
+- Kernel observability changes can increase log noise and make deterministic diffs harder if not schema-constrained.
+- Expanding smoke coverage can create brittle checks unless assertions target stable signals.
+- Eval contract tightening may surface latent drift in unrelated chapters.
 
 ## Decisions and trade-offs
-- Chose to defer code edits and focus on an implementation-ready backlog, per seed-iteration instructions.
-- Kept scope constrained to harness internals and eval contracts to avoid unrelated refactors.
+- Chose a planning-only iteration to satisfy seed prompt constraints before implementation.
+- Prioritized deterministic trace/accounting visibility first because it improves debuggability for all later harness changes.
+- Deferred implementation details to keep this iteration minimal and reviewable.
 
 ## Intentionally deferred
-- Any direct modifications to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Direct code edits in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.

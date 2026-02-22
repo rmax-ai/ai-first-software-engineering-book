@@ -1,10 +1,9 @@
-# Iteration 001 summary
+# Iteration Summary
 
-This seed iteration established the first `state/feature_iterations` record.
-The selected task was to plan harness improvements rather than edit runtime code.
-The plan explicitly covered features, tests, and evaluation gates.
-Feature scope was constrained to `state/kernel.py` and `state/role_io_templates.py`.
-Validation scope was mapped to `state/copilot_sdk_uv_smoke.py` and `evals/*.yaml`.
-Risks and trade-offs were documented with implementation intentionally deferred.
-A single next task was provided for iteration 002 with concrete acceptance criteria.
-All outputs were written as concise markdown artifacts for handoff.
+This seed iteration executed the planning-only contract from `prompts/incremental-improvements/execute.md`.
+A new iteration folder (`state/feature_iterations/iter_001/`) was created with all seven required artifacts.
+The selected task defined a concrete harness-improvement story and acceptance criteria.
+The plan outlines future work across `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+Validation documented prompt/development-guideline review and artifact completeness checks.
+Risks and trade-offs were captured to keep follow-up implementation iterations constrained and deterministic.
+A single next task was recommended: implement deterministic trace checkpoint summaries plus smoke verification.
