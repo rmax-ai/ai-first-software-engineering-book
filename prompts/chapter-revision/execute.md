@@ -445,6 +445,7 @@ Replace `<chapter>` with the chapter identifier listed below.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Total commits created for this re-run loop: 24.
 
-## Re-run $RUN_TS
+## Re-run 2026-02-22T17:05:27Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
+| 01-paradigm-shift | 1 | failed(1) | none |  |
