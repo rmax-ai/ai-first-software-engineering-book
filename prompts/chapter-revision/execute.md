@@ -83,19 +83,14 @@ Replace `<chapter>` with the chapter identifier listed below.
 - All kernel runs exited with code `1` after hitting max-iteration hold; chapters were re-opened via governance `unlock`/`unhold` before each pass as needed.
 - Total commits created for this loop: 24 (`chore: pass N for chapter ...`).
 
-## Re-run Summary (2026-02-22T18:08:33Z)
-- Completed 24/24 chapter passes with one commit per pass.
-- All kernel runs exited with code `1` after reaching max-iteration hold; chapters were re-opened via governance unlock/unhold before each pass.
-- Total commits created for this re-run loop: 24.
-
-
 ## Re-run 2026-02-22T18:25:03Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
 | 01-paradigm-shift | 1 | failed(1) | none | `d89a5dd]` |
+| 01-paradigm-shift | 2 | failed(1) | none | `01849bb]` |
 ### Re-run Summary (2026-02-22T18:25:03Z)
-- Completed 1/24 chapter passes so far.
+- Completed 2/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 1.
-- Total commits created for this re-run loop: 1.
+- Failed passes: 2.
+- Total commits created for this re-run loop: 2.
 
