@@ -1,12 +1,13 @@
 # Risks and decisions
 
 ## Risks discovered
-- Planning quality depends on later iterations preserving small, testable slices.
-- Harness behavior changes in `state/kernel.py` may affect deterministic outputs and eval stability.
+- Planning quality risk: without concrete sequencing, later iterations could drift into broad, multi-surface edits.
+- Coverage risk: new harness observability can diverge from eval expectations unless eval YAML updates are paired with code changes.
 
 ## Decisions made
-- Keep iter_001 documentation-only to satisfy seed prompt constraints.
-- Prioritize first implementation work on observability hooks before broader refactors.
+- Kept this iteration strictly planning-only to satisfy the seed prompt contract.
+- Chose a smallest-next-task approach for follow-up iterations, with one concrete behavior per iteration.
 
 ## Deferred intentionally
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, smoke tests, or eval YAMLs.
+- No implementation in `state/kernel.py`, `state/role_io_templates.py`, or smoke/eval files in this iteration.
+

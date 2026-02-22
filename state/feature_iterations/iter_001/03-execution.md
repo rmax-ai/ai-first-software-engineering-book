@@ -1,11 +1,10 @@
 # Execution
 
 ## Commands/tools run
-- Read `prompts/incremental-improvements/execute.md`.
-- Read `DEVELOPMENT.md`.
-- Confirmed no prior `state/feature_iterations/iter_*` folders exist.
-- Created `state/feature_iterations/iter_001/`.
-- Wrote required iteration artifacts `01` through `07`.
+- Read prompt contract: `prompts/incremental-improvements/execute.md`
+- Read harness guidance: `DEVELOPMENT.md`
+- Confirmed no prior feature iterations (initialized `iter_001`)
+- Created iteration artifacts under `state/feature_iterations/iter_001/`
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -16,5 +15,7 @@
 - `state/feature_iterations/iter_001/06-next-iteration.md`
 - `state/feature_iterations/iter_001/07-summary.md`
 
-## Rationale
-Created the seed planning iteration required by the prompt, scoped to one task and preserving a minimal, documentation-only diff.
+## Rationale per change
+- Established the required seven-file iteration contract.
+- Captured a planning-only backlog for harness features/tests/evals as mandated by the seed iteration.
+

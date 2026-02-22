@@ -1,14 +1,16 @@
 # Validation
 
 ## Verification commands run
+- `git --no-pager status --short`
 - `ls state/feature_iterations/iter_001`
-- `for f in state/feature_iterations/iter_001/{01-task,02-plan,03-execution,04-validation,05-risks-and-decisions,06-next-iteration,07-summary}.md; do test -f "$f"; done`
 
 ## Observed results
-- Iteration folder contains all seven required markdown artifacts.
-- Presence checks passed for each required file.
+- New iteration folder exists and contains all seven required markdown artifacts.
+- Changes are limited to iteration documentation for a planning-only task.
 
-## Acceptance criteria status
-- Features/tests/evals planning coverage: **PASS**
-- Explicit file paths and actionable next task: **PASS**
-- Planning-only scope (no harness code edits): **PASS**
+## Acceptance criteria check
+- **Features coverage:** Pass (documented in `01-task.md` and `02-plan.md`)
+- **Tests coverage:** Pass (targeted smoke/unit strategy documented in `02-plan.md`)
+- **Evaluations coverage:** Pass (mapped to `evals/*.yaml` and `state/metrics.json` in `02-plan.md`)
+- **Planning-only scope:** Pass (no production code files modified)
+
