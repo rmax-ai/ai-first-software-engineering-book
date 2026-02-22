@@ -1269,6 +1269,46 @@ def run_trace_summary_fixture_cleanup_parity_usage_examples_guard_mode() -> int:
     return 0
 
 
+def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_order_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    target_modes = (
+        "trace-summary-fixture-root-cleanup-parity",
+        "trace-summary-fixture-cleanup-parity",
+    )
+
+    parser = _build_parser(all_mode_specs)
+    mode_action = next(
+        (
+            action
+            for action in parser._actions
+            if "--mode" in getattr(action, "option_strings", [])
+        ),
+        None,
+    )
+    assert mode_action is not None, "expected argparse --mode action to exist"
+    parser_mode_choices = list(mode_action.choices or [])
+    parser_target_modes = [name for name in parser_mode_choices if name in target_modes]
+
+    usage_lines = _usage_doc_lines(all_mode_specs)
+    usage_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
+    usage_target_modes = [name for name in usage_mode_names if name in target_modes]
+
+    assert len(parser_target_modes) == len(target_modes), (
+        "expected argparse --mode choices to include both parity cleanup modes"
+    )
+    assert len(usage_target_modes) == len(target_modes), (
+        "expected generated usage examples to include both parity cleanup modes"
+    )
+    assert parser_target_modes == usage_target_modes, (
+        "expected argparse --mode parity cleanup mode ordering to match generated usage examples"
+    )
+
+    print(
+        "PASS: trace-summary-fixture-cleanup-parity-mode-choices-usage-examples-order-guard mode validates parity mode ordering parity between parser choices and usage examples"
+    )
+    return 0
+
+
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard"
@@ -2050,6 +2090,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-fixture-cleanup-parity-usage-examples-guard",
         run_trace_summary_fixture_cleanup_parity_usage_examples_guard_mode,
         "deterministic generated usage-example uniqueness assertion for parity cleanup modes",
+    ),
+    (
+        "trace-summary-fixture-cleanup-parity-mode-choices-usage-examples-order-guard",
+        run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_order_guard_mode,
+        "deterministic parity cleanup mode ordering assertion between argparse choices and usage examples",
     ),
     (
         "docstring-mode-coverage-guard",
