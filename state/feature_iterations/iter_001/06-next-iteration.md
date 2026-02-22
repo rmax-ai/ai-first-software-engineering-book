@@ -1,18 +1,19 @@
-# Next iteration recommendation
+# Next Iteration Recommendation
 
-## Recommended next task
-Implement deterministic loop self-evaluation logging in `state/kernel.py` and wire it into iteration artifacts produced by the harness.
+## Task
+Add deterministic trace-summary logging hooks in `state/kernel.py` and validate with smoke coverage.
 
-## Why this is next
-It is the smallest high-impact implementation slice from this plan and directly supports auditability requirements already defined in `AGENTS.md` and the harness execution rules.
+## Why next
+- It is the smallest implementation step that improves observability while preserving current orchestration behavior.
+- It directly enables measurable validation through existing smoke and eval flows.
 
 ## Acceptance criteria
-- Add structured self-evaluation fields (goal/evidence/risk/decision) captured per loop.
-- Ensure exhausted-loop stop paths emit a clear, bounded next action.
-- Add/extend targeted checks (smoke/unit) to verify the new structured output shape.
-- Document the executed verification command(s) and observed output in the new iteration's `04-validation.md`.
+- `state/kernel.py` emits a stable trace-summary payload (shape-defined keys, deterministic ordering).
+- `state/copilot_sdk_uv_smoke.py` includes one targeted mode asserting the trace-summary payload shape.
+- Validation run: `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` passes.
+- Iteration artifacts document results and any impacted eval contracts under `evals/`.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- Optional focused test helpers under `state/`
+- `state/feature_iterations/iter_002/*`

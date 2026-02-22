@@ -1,16 +1,15 @@
 # Validation
 
 ## Verification commands run
-- `glob state/feature_iterations/iter_*` (confirmed no prior feature iteration folders, so `iter_001` is correct)
-- Reviewed `DEVELOPMENT.md` for harness constraints and verification expectations
-- Manual artifact contract check against `prompts/incremental-improvements/execute.md`
+- `python -c "from pathlib import Path; base=Path('state/feature_iterations/iter_001'); req=['01-task.md','02-plan.md','03-execution.md','04-validation.md','05-risks-and-decisions.md','06-next-iteration.md','07-summary.md']; missing=[p for p in req if not (base/p).is_file()]; assert not missing, missing; print('ok', len(req))"`
 
 ## Observed results
-- Iteration index selection is valid (`iter_001` created as first feature iteration).
-- All seven required markdown artifacts are present under `state/feature_iterations/iter_001/`.
-- Plan content explicitly covers required areas: features, tests, and evals with concrete file paths.
+- Command output: `ok 7`
+- Manual cross-check confirmed the plan references required files: `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Plan intent aligns with constraints in `DEVELOPMENT.md` (UV execution, deterministic harness focus, eval-driven verification).
 
-## Acceptance criteria result
-- ✅ Planning-only iteration completed.
-- ✅ Required files and guidance coverage included.
-- ✅ Output is concise and actionable with explicit paths.
+## Acceptance criteria status
+- Feature planning coverage: **pass**
+- Tests planning coverage: **pass**
+- Evaluations planning coverage: **pass**
+- Planning-only scope preserved: **pass**

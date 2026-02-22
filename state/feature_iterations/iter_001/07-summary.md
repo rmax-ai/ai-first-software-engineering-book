@@ -1,9 +1,8 @@
-# Iteration summary
-
-This seed feature iteration created the first feature-iteration folder (`iter_001`) and completed the full seven-artifact contract.
-The work intentionally stayed in planning mode, as required by the prompt, and did not modify harness runtime code.
-The generated plan defines concrete future work across `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-It also establishes verification expectations tied to deterministic smoke checks and explicit evidence capture.
-Key risks were documented around core-loop regressions and eval contract drift.
-A single next task was provided: implement structured per-loop self-evaluation logging with targeted validation.
-This leaves a clean, actionable handoff for the next iteration.
+# Summary
+- Created the first feature-iteration folder at `state/feature_iterations/iter_001/`.
+- Completed all seven required markdown artifacts for the seed iteration contract.
+- Scoped this iteration to planning only, as required by the execute prompt.
+- Documented a concrete backlog touching `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Captured validation evidence showing all required files are present and review-ready.
+- Recorded risks and explicit deferrals to keep this iteration minimal.
+- Recommended one next implementation task with acceptance criteria and expected files.

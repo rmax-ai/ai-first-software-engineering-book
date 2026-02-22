@@ -1,12 +1,13 @@
-# Risks and decisions
+# Risks and Decisions
 
-## Risks discovered
-- The planned harness changes touch core orchestration (`state/kernel.py`), so regressions in loop termination or evidence formatting are possible if implemented too broadly.
-- Eval YAML changes can create false negatives if expected signals are not tightly aligned with harness outputs.
+## Risks
+- Plan scope may still be broad if next iteration attempts multiple harness features at once.
+- Eval coupling risk: changes in `state/kernel.py` can affect multiple YAML gates simultaneously.
 
-## Decisions made and trade-offs
-- Chose a planning-only seed iteration to reduce implementation risk and establish explicit acceptance criteria before changing runtime behavior.
-- Chose narrow, file-specific future slices instead of a multi-file implementation burst to keep diffs reviewable and verifiable.
+## Decisions and trade-offs
+- Chose a planning-only iteration to match the seed prompt exactly.
+- Deferred implementation details to keep this iteration minimal and reviewable.
 
-## Intentionally deferred
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+## Deferred intentionally
+- No edits to harness/runtime files in `state/` beyond iteration artifacts.
+- No eval YAML or smoke-script code changes in this iteration.
