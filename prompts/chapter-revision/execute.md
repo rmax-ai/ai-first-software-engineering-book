@@ -125,3 +125,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 02-harness-engineering | 1 | failed(1) | none | `e148319` |
 | 02-harness-engineering | 2 | failed(1) | none | `52e4106` |
 | 02-harness-engineering | 3 | failed(1) | none | `350ba35` |
+| 03-autonomous-kernels | 1 | failed(1) | none | pending |
