@@ -1115,6 +1115,19 @@ def _build_parser(mode_specs: Sequence[tuple[str, Callable[[], int], str]]) -> a
     return parser
 
 
+def _mode_action_for_parser(parser: argparse.ArgumentParser) -> argparse.Action:
+    mode_action = next(
+        (
+            action
+            for action in parser._actions
+            if "--mode" in getattr(action, "option_strings", [])
+        ),
+        None,
+    )
+    assert mode_action is not None, "expected argparse --mode action to exist"
+    return mode_action
+
+
 def run_mode_choices_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     expected_mode_names = [name for name, _handler, _description in all_mode_specs]
@@ -1278,15 +1291,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_order_g
     target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
 
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     parser_target_modes = [name for name in parser_mode_choices if name in target_modes]
 
@@ -1314,15 +1319,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_uniqueness_guard_mode(
     all_mode_specs = _all_mode_specs()
     target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     mode_counts = Counter(parser_mode_choices)
     unexpected_counts = {name: mode_counts.get(name, 0) for name in target_modes if mode_counts.get(name, 0) != 1}
@@ -1341,15 +1338,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_adjacen
     all_mode_specs = _all_mode_specs()
     target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     assert all(name in parser_mode_choices for name in target_modes), (
         "expected argparse --mode choices to include both parity cleanup modes"
@@ -1381,15 +1370,7 @@ def run_trace_summary_fixture_cleanup_parity_mode_choices_usage_examples_uniquen
     all_mode_specs = _all_mode_specs()
     target_modes = _trace_summary_fixture_cleanup_parity_target_modes()
     parser = _build_parser(all_mode_specs)
-    mode_action = next(
-        (
-            action
-            for action in parser._actions
-            if "--mode" in getattr(action, "option_strings", [])
-        ),
-        None,
-    )
-    assert mode_action is not None, "expected argparse --mode action to exist"
+    mode_action = _mode_action_for_parser(parser)
     parser_mode_choices = list(mode_action.choices or [])
     parser_mode_counts = Counter(parser_mode_choices)
     parser_unexpected_counts = {name: parser_mode_counts.get(name, 0) for name in target_modes if parser_mode_counts.get(name, 0) != 1}
