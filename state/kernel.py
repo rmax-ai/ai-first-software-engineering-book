@@ -1209,8 +1209,29 @@ def _require_exact_keys(obj: dict[str, Any], keys: set[str], ctx: str) -> None:
         raise KernelError(f"{ctx}: extra keys not allowed: {sorted(extra)}")
 
 
+def _normalize_string_list(value: Any) -> list[str]:
+    if value is None:
+        return []
+    items = value if isinstance(value, list) else [value]
+    out: list[str] = []
+    for item in items:
+        if not isinstance(item, str):
+            continue
+        s = item.strip()
+        if s:
+            out.append(s)
+    return out
+
+
 def _load_planner_plan(path: Path) -> PlannerPlanTransit:
-    raw = _load_json(path).to_mapping()
+    raw = dict(_load_json(path).to_mapping())
+    raw["focus_areas"] = _normalize_string_list(raw.get("focus_areas"))
+    raw["structural_changes"] = _normalize_string_list(raw.get("structural_changes"))
+    raw["risk_flags"] = _normalize_string_list(raw.get("risk_flags"))
+    if not raw["focus_areas"]:
+        raw["focus_areas"] = ["clarify scope in ## Thesis"]
+    if isinstance(raw.get("target_word_delta"), str):
+        raw["target_word_delta"] = raw["target_word_delta"].strip()
     try:
         payload = PlannerPlanPayload.model_validate(raw)
     except ValidationError as exc:

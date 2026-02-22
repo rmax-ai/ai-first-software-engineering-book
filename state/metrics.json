@@ -71835,6 +71835,89 @@
             "diff_ratio": 0.6727272727272727,
             "drift_score": 0.3
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.86,
+            "decision": "refine",
+            "drift_score": 0.2,
+            "example_density": 0.8,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": [
+              "At least one sentence in ## Thesis exceeds the 28-word maximum (the sentence starting with 'It also includes orchestration policies...').",
+              "The input includes a non-chapter block ('<reminder> ... </reminder>') appended after ## Research Directions; this violates the chapter-only markdown expectation for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.6823957199752758
+          },
+          "iteration": 373,
+          "timestamp": "2026-02-22T19:58:01Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "refine",
+            "drift_score": 0.08,
+            "example_density": 0.82,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "Non-chapter content is appended after the chapter: the '<reminder> ... </reminder>' block appears after ## Research Directions, violating the chapter-only markdown expectation for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.05911330049261086,
+            "passed": false,
+            "similarity_max": 0.6744337292249731
+          },
+          "iteration": 374,
+          "timestamp": "2026-02-22T19:59:18Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.15151515151515152,
+            "drift_score": 0.05911330049261086
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "refine",
+            "drift_score": 0.08,
+            "example_density": 0.82,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "Non-chapter content is appended after the chapter: the '<reminder> ... </reminder>' block appears after ## Research Directions, violating the chapter-only markdown expectation for book/chapters/*.md.",
+              "At least one sentence exceeds the 28-word maximum: in ## Concrete Example 1 under 'Evaluation gate', the sentence starting 'On failure, generate a human-facing summary:' is 31 words."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.05911330049261086,
+            "passed": false,
+            "similarity_max": 0.6744337292249731
+          },
+          "iteration": 375,
+          "timestamp": "2026-02-22T19:59:57Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.05911330049261086
+          }
         }
       ]
     },
