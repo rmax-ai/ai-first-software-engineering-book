@@ -225,6 +225,10 @@ class KernelTracePhaseTransit:
 
 @dataclass(frozen=True)
 class KernelTraceTransit:
+    source_path: Path
+    raw_text: str
+    trace_text: KernelTraceTextTransit
+    json_lines: JSONLinesTransit
     payload: KernelTracePayload
 
     def phase_entries(self) -> list[KernelTraceEntryPayload]:
@@ -552,7 +556,13 @@ def _load_kernel_trace(path: Path) -> KernelTraceTransit:
         payload = KernelTracePayload.model_validate({"entries": json_lines.to_mappings()})
     except ValidationError as exc:
         raise RuntimeError(f"Invalid kernel trace payload at {path}: {exc}") from exc
-    return KernelTraceTransit(payload=payload)
+    return KernelTraceTransit(
+        source_path=path,
+        raw_text=trace_text_transit.payload.text,
+        trace_text=trace_text_transit,
+        json_lines=json_lines,
+        payload=payload,
+    )
 
 
 async def run_trace_summary_mode(
