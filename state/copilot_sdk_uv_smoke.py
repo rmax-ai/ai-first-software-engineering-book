@@ -233,6 +233,18 @@ class MetricsHistoryTransit:
 
 
 @dataclass(frozen=True)
+class TraceSummaryTransit:
+    payload: TraceSummaryPayload
+
+    @classmethod
+    def from_payload(cls, payload: TraceSummaryPayload) -> "TraceSummaryTransit":
+        return cls(payload=payload)
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.model_dump()
+
+
+@dataclass(frozen=True)
 class PhaseTraceTransit:
     phase: str
     status: str
@@ -696,7 +708,7 @@ async def run_trace_summary_mode(
 
         latest_entry = chapter_metrics.history[-1]
         latest = MetricsHistoryTransit(iteration=latest_entry.iteration, trace_summary=latest_entry.trace_summary)
-        trace_summary = latest.trace_summary.model_dump()
+        trace_summary = TraceSummaryTransit.from_payload(latest.trace_summary).to_mapping()
 
         required_keys = {"decision", "drift_score", "diff_ratio", "deterministic_pass"}
         missing = sorted(required_keys - set(trace_summary))
