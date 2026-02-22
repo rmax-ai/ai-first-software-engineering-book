@@ -106,6 +106,12 @@ class LedgerPayload(BaseModel):
     chapters: dict[str, LedgerChapterPayload]
 
 
+class DeterministicEvalConfigPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    version: int | None = None
+
+
 @dataclass(frozen=True)
 class PlannerInputTransit:
     chapter_id: str
@@ -165,6 +171,13 @@ class CriticReportPayload(BaseModel):
     decision: Literal["approve", "refine"]
 
 
+@dataclass(frozen=True)
+class DeterministicEvalTransit:
+    chapter_quality: DeterministicEvalConfigPayload
+    style_guard: DeterministicEvalConfigPayload
+    drift_detection: DeterministicEvalConfigPayload
+
+
 def _utc_now_iso() -> str:
     return _dt.datetime.now(tz=_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -199,6 +212,14 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise KernelError(f"Expected YAML mapping at {path}")
     return data
+
+
+def _load_eval_config(path: Path) -> DeterministicEvalConfigPayload:
+    raw = _load_yaml(path)
+    try:
+        return DeterministicEvalConfigPayload.model_validate(raw)
+    except ValidationError as exc:
+        raise KernelError(f"Invalid eval config payload: {path}: {exc}") from exc
 
 
 def _run_git(args: list[str]) -> str:
@@ -841,9 +862,14 @@ def run_deterministic_evals(
     baseline_text: str | None,
     other_chapters: dict[str, str],
 ) -> DeterministicEval:
-    q_cfg = _load_yaml(EVAL_CHAPTER_QUALITY_PATH)
-    s_cfg = _load_yaml(EVAL_STYLE_GUARD_PATH)
-    d_cfg = _load_yaml(EVAL_DRIFT_DETECTION_PATH)
+    transit = DeterministicEvalTransit(
+        chapter_quality=_load_eval_config(EVAL_CHAPTER_QUALITY_PATH),
+        style_guard=_load_eval_config(EVAL_STYLE_GUARD_PATH),
+        drift_detection=_load_eval_config(EVAL_DRIFT_DETECTION_PATH),
+    )
+    q_cfg = transit.chapter_quality.model_dump()
+    s_cfg = transit.style_guard.model_dump()
+    d_cfg = transit.drift_detection.model_dump()
 
     chapter_quality = _eval_chapter_quality(chapter_text, q_cfg)
     style_guard = _eval_style_guard(chapter_text, s_cfg)
