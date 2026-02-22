@@ -171,7 +171,7 @@
         "frozen_candidate": false,
         "last_modified_iteration": 6
       },
-      "status": "hold"
+      "status": "active_refinement"
     },
     "02-harness-engineering": {
       "current_iteration": 1,
