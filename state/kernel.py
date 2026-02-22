@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Any, Iterable, Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
+from pydantic import BaseModel, ConfigDict, Field, RootModel, ValidationError, field_validator
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -196,6 +196,10 @@ class LLMNormalizedJSONTextPayload(BaseModel):
         if not value.strip():
             raise ValueError("normalized LLM JSON response text must not be empty")
         return value
+
+
+class LLMJSONObjectMappingPayload(RootModel[dict[str, Any]]):
+    pass
 
 
 class YAMLTextPayload(BaseModel):
@@ -496,6 +500,15 @@ class LLMNormalizedJSONTextTransit:
 
     def to_text(self) -> str:
         return self.payload.text
+
+
+@dataclass(frozen=True)
+class LLMJSONObjectMappingTransit:
+    object_text: LLMJSONObjectTextTransit
+    payload: LLMJSONObjectMappingPayload
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.root
 
 
 @dataclass(frozen=True)
@@ -827,9 +840,10 @@ def _extract_json_object(text: str) -> JSONMappingTransit:
         raise KernelError(f"Invalid LLM response JSON object text payload: {exc}") from exc
     object_text = LLMJSONObjectTextTransit(response_text=text_transit, payload=object_text_payload)
     try:
-        obj = json.loads(object_text.to_text())
-    except json.JSONDecodeError as exc:
-        raise KernelError(f"LLM response contained invalid JSON: {exc}") from exc
+        object_mapping_payload = LLMJSONObjectMappingPayload.model_validate_json(object_text.to_text())
+    except ValidationError as exc:
+        raise KernelError(f"LLM response contained invalid JSON object mapping: {exc}") from exc
+    object_mapping = LLMJSONObjectMappingTransit(object_text=object_text, payload=object_mapping_payload)
 
     try:
         json_text = JSONTextTransit(
@@ -839,7 +853,7 @@ def _extract_json_object(text: str) -> JSONMappingTransit:
     except ValidationError as exc:
         raise KernelError(f"Invalid LLM response JSON text payload: {exc}") from exc
     try:
-        payload = JSONMappingPayload.model_validate({"data": obj})
+        payload = JSONMappingPayload.model_validate({"data": object_mapping.to_mapping()})
     except ValidationError as exc:
         raise KernelError(f"LLM response JSON must be an object mapping: {exc}") from exc
     return JSONMappingTransit(
