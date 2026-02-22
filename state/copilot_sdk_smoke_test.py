@@ -1054,6 +1054,16 @@ def run_trace_summary_non_kernel_fixture_root_cleanup_mode() -> int:
     return 0
 
 
+def run_trace_summary_fixture_root_cleanup_parity_mode() -> int:
+    run_trace_summary_kernel_fixture_root_cleanup_mode()
+    run_trace_summary_non_kernel_fixture_root_cleanup_mode()
+    print(
+        "PASS: trace-summary-fixture-root-cleanup-parity mode validates both kernel and non-kernel "
+        "fixture root cleanup guards in one run"
+    )
+    return 0
+
+
 def run_docstring_mode_coverage_guard_mode() -> int:
     module_doc = __doc__
     assert isinstance(module_doc, str) and module_doc, "expected generated module docstring"
@@ -1994,6 +2004,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-non-kernel-fixture-root-cleanup",
         run_trace_summary_non_kernel_fixture_root_cleanup_mode,
         "fixture-backed non-kernel trace-summary root cleanup assertion",
+    ),
+    (
+        "trace-summary-fixture-root-cleanup-parity",
+        run_trace_summary_fixture_root_cleanup_parity_mode,
+        "fixture-backed parity assertion for kernel and non-kernel trace-summary root cleanup",
     ),
     (
         "docstring-mode-coverage-guard",
