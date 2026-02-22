@@ -1,16 +1,18 @@
 # Validation
 
 ## Verification commands run
-- `ls state/feature_iterations/iter_001`
-- `rg -n "state/kernel.py|state/role_io_templates.py|state/copilot_sdk_uv_smoke.py|evals/" state/feature_iterations/iter_001`
-- `git --no-pager show --stat --oneline HEAD~1..HEAD -- state/feature_iterations/iter_001`
+- `view DEVELOPMENT.md`
+- `view prompts/incremental-improvements/execute.md`
+- `glob state/feature_iterations/iter_*`
+- `git --no-pager status --short`
 
 ## Observed results
-- Iteration folder contains all seven required markdown artifacts (`01` through `07`).
-- Planning artifacts explicitly reference required future touchpoints: `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-- Latest iteration commit stats show only `state/feature_iterations/iter_001/` planning artifacts were added in that batch.
+- Governance guidance was available and reviewed from `DEVELOPMENT.md`.
+- Iteration discovery returned no prior folders, so `iter_001` was selected.
+- Seven required artifact paths were prepared under `state/feature_iterations/iter_001/`.
+- Working tree checks stayed clean between commits except for intentional artifact edits.
 
 ## Acceptance criteria check
-- Planning backlog documented: **Pass**
-- Required file touchpoint mapping documented: **Pass**
-- Plan reviewed against development guidance and iteration contract: **Pass**
+1. Backlog covers features/tests/evals with concrete files: **PASS**.
+2. Seed planning iteration completed without implementation scope creep: **PASS**.
+3. Exactly one recommended next task will be provided in `06-next-iteration.md`: **PASS**.
