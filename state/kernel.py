@@ -1456,7 +1456,8 @@ def run_kernel(
                 if not planner_out.exists():
                     _llm_generate_planner(itdir, llm)
 
-                planner_json_text = _read_text(planner_out) if planner_out.exists() else ""
+                planner_json_transit = _load_json(planner_out) if planner_out.exists() else None
+                planner_json_text = planner_json_transit.raw_text if planner_json_transit is not None else ""
 
                 if not writer_out.exists():
                     _llm_generate_writer(
