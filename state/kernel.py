@@ -1509,11 +1509,16 @@ def run_kernel(
 
     try:
         ledger_transit = _load_ledger(LEDGER_PATH)
+        ledger = ledger_transit.raw
         ledger_payload = ledger_transit.payload
         chapter_meta_payload = ledger_payload.chapters.get(chapter_id)
         if chapter_meta_payload is None:
             raise KernelError(f"Unknown chapter_id: {chapter_id}")
         chapter_meta: dict[str, Any] = chapter_meta_payload.model_dump(exclude_none=True)
+        chapters_obj = ledger.get("chapters")
+        if not isinstance(chapters_obj, dict):
+            raise KernelError("Invalid ledger: chapters must be an object")
+        chapters_obj[chapter_id] = chapter_meta
         status = chapter_meta_payload.status
         lifecycle = chapter_meta_payload.lifecycle
         if status in {"locked", "hold"}:
