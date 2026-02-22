@@ -536,7 +536,7 @@ def _extract_json_object(text: str) -> JSONMappingTransit:
         payload = JSONMappingPayload.model_validate({"data": obj})
     except ValidationError as exc:
         raise KernelError(f"LLM response JSON must be an object mapping: {exc}") from exc
-    return JSONMappingTransit(payload=payload)
+    return JSONMappingTransit(source_path=Path("<llm-response>"), raw_text=t, payload=payload)
 
 
 def _extract_markdown(text: str) -> WriterOutputTransit:
