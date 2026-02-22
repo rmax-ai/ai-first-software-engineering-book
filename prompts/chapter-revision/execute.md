@@ -142,3 +142,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 07-production-ai-infrastructure | 2 | ok | none | `n/a` |
 | 07-production-ai-infrastructure | 3 | ok | none | `n/a` |
 | 99-future-directions | 1 | ok | none | `n/a` |
+| 99-future-directions | 2 | ok | none | `n/a` |
