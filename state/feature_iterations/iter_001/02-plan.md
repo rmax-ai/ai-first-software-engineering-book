@@ -1,17 +1,18 @@
 # Plan
-1. Confirm iteration context from `DEVELOPMENT.md` and the execute prompt contract.
-2. Define a feature backlog for deterministic harness behavior across:
-   - `state/kernel.py` (execution controls, traceability, guard rails)
-   - `state/role_io_templates.py` (clearer role I/O scaffolds)
-   - `state/copilot_sdk_uv_smoke.py` (smoke coverage for new controls)
-3. Map each planned feature to concrete tests and validation commands.
-4. Map each planned feature to evaluation signals in `evals/*.yaml` and `state/metrics.json`.
-5. Record risks, decisions, and one smallest recommended next implementation task.
+1. Inventory current harness touchpoints from `DEVELOPMENT.md` and repository structure to anchor scope.
+2. Define feature backlog items for:
+   - `state/kernel.py` traceability and deterministic controls.
+   - `state/role_io_templates.py` scaffold clarity and contract checks.
+   - `state/copilot_sdk_uv_smoke.py` deterministic smoke assertions.
+3. Map each feature to targeted tests, including exact `uv run python ...` commands.
+4. Map each feature to eval regression signals in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+5. Capture a single next implementation task with concrete acceptance criteria and file list.
 
-## Expected files to change in later iterations
-- `state/kernel.py`
-- `state/role_io_templates.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `evals/chapter-quality.yaml`
-- `evals/style-guard.yaml`
-- `evals/drift-detection.yaml`
+## Files expected to change in this iteration
+- `state/feature_iterations/iter_001/01-task.md`
+- `state/feature_iterations/iter_001/02-plan.md`
+- `state/feature_iterations/iter_001/03-execution.md`
+- `state/feature_iterations/iter_001/04-validation.md`
+- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
+- `state/feature_iterations/iter_001/06-next-iteration.md`
+- `state/feature_iterations/iter_001/07-summary.md`
