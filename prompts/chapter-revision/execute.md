@@ -102,3 +102,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 03-autonomous-kernels | 2 | failed(1) | none |  |
 | 03-autonomous-kernels | 3 | failed(1) | none |  |
 | 04-memory-systems | 1 | failed(1) | none |  |
+| 04-memory-systems | 2 | failed(1) | none |  |
