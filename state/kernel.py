@@ -236,6 +236,14 @@ class OtherChapterTextTransit:
 
 
 @dataclass(frozen=True)
+class RoadmapTextTransit:
+    payload: ChapterTextPayload
+
+    def to_text(self) -> str:
+        return self.payload.text
+
+
+@dataclass(frozen=True)
 class OtherChaptersTransit:
     entries: tuple[OtherChapterTextTransit, ...]
 
@@ -370,6 +378,14 @@ def _read_prompt(path: Path) -> str:
     txt = _read_text(path)
     # Prompts are authored as markdown files; keep as-is.
     return txt.strip() + "\n"
+
+
+def _load_roadmap_text(path: Path) -> RoadmapTextTransit:
+    try:
+        payload = ChapterTextPayload.model_validate({"text": _read_text(path)})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid roadmap text payload: {path}: {exc}") from exc
+    return RoadmapTextTransit(payload=payload)
 
 
 def _strip_wrapping_code_fence(text: str) -> str:
@@ -1074,8 +1090,8 @@ def _prepare_iteration_inputs(
     (itdir / "in").mkdir(parents=True, exist_ok=True)
     (itdir / "out").mkdir(parents=True, exist_ok=True)
 
-    roadmap_text = _read_text(ROADMAP_PATH)
-    hypothesis = _extract_roadmap_hypothesis(roadmap_text, chapter_id)
+    roadmap_text = _load_roadmap_text(ROADMAP_PATH)
+    hypothesis = _extract_roadmap_hypothesis(roadmap_text.to_text(), chapter_id)
     planner_input = PlannerInputTransit(
         chapter_id=chapter_id,
         chapter_content=chapter_text,
