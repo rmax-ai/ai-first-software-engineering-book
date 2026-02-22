@@ -29,6 +29,7 @@ LLMClientError = llm_client.LLMClientError
 Provider = llm_client.Provider
 
 TRACE_SUMMARY_REQUIRED_KEYS = {"decision", "drift_score", "diff_ratio", "deterministic_pass"}
+TRACE_SUMMARY_NON_KERNEL_FIXTURE_REPO = ROOT / "state" / ".smoke_fixtures" / "trace_summary" / "repo"
 TRACE_SUMMARY_KERNEL_FIXTURE_REPO = ROOT / "state" / ".smoke_fixtures" / "trace_summary" / "kernel_repo"
 
 
@@ -875,6 +876,42 @@ def _run_trace_summary_kernel_mode(
     return combined_output
 
 
+def _run_trace_summary_non_kernel_mode(
+    mode_name: str,
+    expected_failure: str | None = None,
+    expect_fixture_cleanup: bool = False,
+) -> str:
+    proc = subprocess.run(
+        [
+            "uv",
+            "run",
+            "python",
+            "state/copilot_sdk_uv_smoke.py",
+            "--mode",
+            mode_name,
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if expect_fixture_cleanup:
+        assert not TRACE_SUMMARY_NON_KERNEL_FIXTURE_REPO.exists(), (
+            f"expected fixture repo cleanup after mode {mode_name}: {TRACE_SUMMARY_NON_KERNEL_FIXTURE_REPO}"
+        )
+
+    combined_output = "\n".join(part for part in (proc.stdout.strip(), proc.stderr.strip()) if part).strip()
+    assert proc.returncode == 0, f"expected exit code 0 for mode {mode_name}, got {proc.returncode}\n{combined_output}"
+    if expected_failure is None:
+        assert "PASS: trace_summary present with required keys" in combined_output, (
+            f"expected success output for mode {mode_name}, got: {combined_output}"
+        )
+    else:
+        assert expected_failure in combined_output, (
+            f"expected phase_trace validation failure output for mode {mode_name}, got: {combined_output}"
+        )
+    return combined_output
+
+
 def run_trace_summary_kernel_mode() -> int:
     _run_trace_summary_kernel_mode("trace-summary")
     print("PASS: trace-summary-kernel mode validates fixture-backed kernel trace-summary success")
@@ -926,6 +963,27 @@ def run_trace_summary_kernel_fixture_cleanup_mode() -> int:
         expect_fixture_cleanup=True,
     )
     print("PASS: trace-summary-kernel-fixture-cleanup mode validates fixture cleanup after kernel-backed trace-summary runs")
+    return 0
+
+
+def run_trace_summary_non_kernel_fixture_cleanup_mode() -> int:
+    _run_trace_summary_non_kernel_mode("trace-summary", expect_fixture_cleanup=True)
+    _run_trace_summary_non_kernel_mode(
+        "trace-summary-malformed-phase",
+        expected_failure="phase_trace missing keys: ['budget_signal']",
+        expect_fixture_cleanup=True,
+    )
+    _run_trace_summary_non_kernel_mode(
+        "trace-summary-malformed-phase-payload",
+        expected_failure="phase_trace payload is not an object",
+        expect_fixture_cleanup=True,
+    )
+    _run_trace_summary_non_kernel_mode(
+        "trace-summary-missing-phase",
+        expected_failure="missing required phase traces: ['evaluation']",
+        expect_fixture_cleanup=True,
+    )
+    print("PASS: trace-summary-non-kernel-fixture-cleanup mode validates fixture cleanup after non-kernel trace-summary runs")
     return 0
 
 
@@ -1854,6 +1912,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-kernel-fixture-cleanup",
         run_trace_summary_kernel_fixture_cleanup_mode,
         "fixture-backed kernel trace-summary cleanup assertion",
+    ),
+    (
+        "trace-summary-non-kernel-fixture-cleanup",
+        run_trace_summary_non_kernel_fixture_cleanup_mode,
+        "fixture-backed non-kernel trace-summary cleanup assertion",
     ),
     (
         "docstring-mode-coverage-guard",

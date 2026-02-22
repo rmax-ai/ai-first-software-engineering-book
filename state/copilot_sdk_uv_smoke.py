@@ -243,7 +243,6 @@ async def run_trace_summary_mode(
             chapter_id=chapter_id,
             fixture_root=fixture_root,
         )
-        fixture_cleanup_target = repo_root_for_trace
     else:
         metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_fixture(
             chapter_id=chapter_id,
@@ -252,6 +251,7 @@ async def run_trace_summary_mode(
             non_object_phase_payload=inject_non_object_phase_payload,
             omit_evaluation_phase_trace=inject_missing_required_phase_trace,
         )
+    fixture_cleanup_target = repo_root_for_trace
 
     try:
         if run_kernel:
