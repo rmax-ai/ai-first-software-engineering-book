@@ -1,16 +1,14 @@
 # Validation
 
 ## Verification commands run
-- `glob state/feature_iterations/iter_*`
-- `git --no-pager status --short`
 - `ls state/feature_iterations/iter_001`
+- `rg "^# " state/feature_iterations/iter_001/*.md`
 
-## Observed outputs/results
-- Iteration discovery returned no previous folders, so `iter_001` was the correct next index.
-- Working tree showed only the intended `iter_001` iteration artifact modifications for this task.
-- `iter_001` contains all seven required markdown files (`01` through `07`).
+## Observed results
+- All seven required markdown artifacts exist in `state/feature_iterations/iter_001/`.
+- Each artifact has a top-level heading and task-specific content.
 
 ## Acceptance criteria check
-- Features/tests/evals planning coverage: **PASS**.
-- File-target scoping for future implementation: **PASS**.
-- Exactly one recommended next task documented: **PASS**.
+- ✅ Plan covers feature, test, and eval surfaces for future harness work.
+- ✅ File targets for future implementation are explicit (`state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, `evals/*.yaml`).
+- ✅ Exactly one next task is defined in `06-next-iteration.md`.

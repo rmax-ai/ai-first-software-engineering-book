@@ -1,12 +1,15 @@
 # Risks and decisions
 
 ## Risks discovered
-- The planning-only iteration cannot prove runtime behavior changes until follow-up implementation and UV-based smoke execution happen.
-- Future edits in `state/kernel.py` could accidentally broaden scope without strict acceptance criteria.
+- Planning artifacts can drift from actual harness state if follow-up iterations defer implementation too long.
+- Observability additions in `state/kernel.py` may increase output volume if not bounded.
+- Eval wiring can become brittle if YAML contracts and smoke outputs are changed independently.
 
-## Decisions and trade-offs
-- Chose a planning-first iteration to satisfy prompt seed requirements and minimize premature code churn.
-- Prioritized deterministic harness controls, observability, and eval alignment to reduce regression risk before feature implementation.
+## Decisions made
+- Prioritized a planning-only iteration to reduce implementation churn and force explicit acceptance criteria first.
+- Chose deterministic, file-specific backlog items over broad refactor themes.
+- Anchored future verification to existing uv smoke and eval contracts to detect regressions early.
 
-## Intentionally deferred
-- Direct code edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml` are deferred to the next iteration task.
+## Deferred intentionally
+- No runtime behavior changes in `state/` were implemented in this iteration.
+- No eval YAML modifications were made before a concrete implementation task is selected.

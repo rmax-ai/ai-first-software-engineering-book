@@ -1,23 +1,19 @@
 # Next iteration recommendation
 
-## Task
-Implement deterministic trace and budget observability scaffolding in `state/kernel.py` with matching smoke validation hooks.
+## Recommended task
+Add deterministic trace summary counters to `state/kernel.py` and expose them in smoke validation.
 
 ## Why this is next
-It is the highest-leverage first implementation step from the new plan because it establishes measurable runtime signals that later role-I/O and eval updates can consume.
+- It is the smallest implementation step that improves observability without changing public harness interfaces.
+- It creates measurable output that can be asserted in smoke and eval checks.
 
 ## Acceptance criteria
-- Add minimal, explicit trace fields for iteration budget usage and decision checkpoints in `state/kernel.py`.
-- Extend `state/copilot_sdk_uv_smoke.py` to assert the new trace fields are emitted in at least one deterministic scenario.
-- Record targeted verification commands/results in the new iteration artifacts, including `uv run python state/copilot_sdk_uv_smoke.py`.
+- Add a focused helper in `state/kernel.py` that emits stable trace counters for key loop outcomes.
+- Update `state/copilot_sdk_uv_smoke.py` with one new targeted assertion mode that verifies the new trace counters.
+- Run `uv run python state/copilot_sdk_uv_smoke.py` and record pass/fail evidence in iteration validation artifacts.
+- Ensure no changes are required to user-facing CLI interfaces.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/01-task.md`
-- `state/feature_iterations/iter_002/02-plan.md`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
-- `state/feature_iterations/iter_002/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_002/06-next-iteration.md`
-- `state/feature_iterations/iter_002/07-summary.md`
+- `state/feature_iterations/iter_002/0{1..7}-*.md` (new iteration artifacts)

@@ -1,10 +1,15 @@
 # Execution
 
-## Commands/tools run
-- Read `prompts/incremental-improvements/execute.md`.
-- Read `AGENTS.md` and `DEVELOPMENT.md`.
-- Discovered existing iterations with `glob state/feature_iterations/iter_*` (none found).
-- Created `state/feature_iterations/iter_001/` and wrote required artifacts.
+## Commands and tools run
+- Read guidance:
+  - `prompts/incremental-improvements/execute.md`
+  - `DEVELOPMENT.md`
+  - `.github/instructions/copilot-sdk-python.instructions.md`
+- Iteration discovery:
+  - searched `state/feature_iterations/iter_*` (none found)
+- Filesystem changes:
+  - created `state/feature_iterations/iter_001/`
+  - created the seven iteration artifacts in this folder
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -15,11 +20,6 @@
 - `state/feature_iterations/iter_001/06-next-iteration.md`
 - `state/feature_iterations/iter_001/07-summary.md`
 
-## Rationale per change
-- `01-task.md`: framed the single iteration story and acceptance criteria.
-- `02-plan.md`: provided step-by-step backlog structure for features/tests/evals.
-- `03-execution.md`: recorded work trace for auditability.
-- `04-validation.md`: documented verifiable review checks and outcomes.
-- `05-risks-and-decisions.md`: captured key trade-offs and deferrals.
-- `06-next-iteration.md`: selected one concrete follow-up task.
-- `07-summary.md`: provided concise executive handoff.
+## Rationale
+- Kept scope to one planning task only, as required.
+- Established a concrete backlog so follow-up iterations can implement smallest changes with clear verification gates.
