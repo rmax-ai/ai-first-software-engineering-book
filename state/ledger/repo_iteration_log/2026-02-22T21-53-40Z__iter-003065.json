@@ -1,0 +1,113 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.02; drift_score=0.31"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": false,
+      "required_missing": [
+        "## Thesis",
+        "## Why This Matters",
+        "## System Breakdown",
+        "## Concrete Example 1",
+        "## Concrete Example 2",
+        "## Trade-offs",
+        "## Failure Modes",
+        "## Research Directions"
+      ],
+      "scores": {
+        "examples_count": 0.0,
+        "failure_modes": 0.0,
+        "system_breakdown": 0.0,
+        "thesis_clarity": 0.0,
+        "tradeoffs": 0.0
+      },
+      "timestamp": "2026-02-22T21:53:39Z",
+      "total": 0.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.8260869565217391,
+          "harness": 0.0,
+          "model": 1.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": false,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.0045045045045045045
+      },
+      "timestamp": "2026-02-22T21:53:39Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.07509627727856226,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "How to choose (practical heuristics): - If mistakes are costly, bias toward **precision over recall**: retrieve fewer items, require source confirmation, and prefer explicit pointers (file paths, trac",
+          "words": 58
+        },
+        {
+          "sentence": "```mermaid flowchart LR A[\"Layer 1: Run-local scratch\\n(write: overwrite OK)\\n(scope: one run)\"] -->|summaries, hypotheses| M[\"Model context\"] B[\"Layer 2: Session task state\\n(write: update each step;",
+          "words": 111
+        },
+        {
+          "sentence": "Example durable-memory record schema (conceptual): ```json { \"type\": \"decision\", \"title\": \"Prefer golden tests for CLI help output\", \"status\": \"accepted\", \"sources\": [\"docs/cli.md\", \"trace:2026-02-18T",
+          "words": 61
+        },
+        {
+          "sentence": "End-to-end walkthrough (one bugfix, four layers): 1) **Retrieval index (Layer 4) proposes candidates** The agent runs \u201cretrieve top 5 related incidents\u201d using the failing test name and a short error s",
+          "words": 42
+        },
+        {
+          "sentence": "2) **Run-local scratch (Layer 1) captures hypotheses, not conclusions** The agent writes volatile notes such as: - \u201cHypothesis A: null handling in parse.ts\u201d - \u201cHypothesis B: fixture missing `id` field",
+          "words": 50
+        },
+        {
+          "sentence": "3) **Session task state (Layer 2) makes progress and verification explicit** The agent maintains a task record (checklist-style) like: - Repro step captured: `npm test -t \"parse handles null user\"` \u2705 ",
+          "words": 62
+        },
+        {
+          "sentence": "4) **Project durable facts (Layer 3) is written only after verification** After tests pass, the agent writes a durable note (ADR/runbook/\u201croot cause\u201d entry) that includes: - the root cause (\u201cparser as",
+          "words": 66
+        }
+      ],
+      "timestamp": "2026-02-22T21:53:39Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/patterns/memory-architectures.md",
+      "state/ledger/iteration_log/2026-02-22T21-53-39Z__chapter-memory-architectures__iter-000003.json",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 3 for memory-architectures"
+  },
+  "iteration": 3065,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 25073,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 790364
+  },
+  "scope": {
+    "chapters_modified": [
+      "memory-architectures"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T21:53:40Z"
+}

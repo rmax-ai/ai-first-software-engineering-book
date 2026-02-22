@@ -1,0 +1,13 @@
+{
+  "critic_score": 0.87,
+  "diff_size": 1.0,
+  "drift_score": 0.3,
+  "iteration": 371,
+  "planner_focus": [
+    "Tighten the claim in ## Thesis by defining what counts as an interface (tool schema, trace format, eval spec) and what \u201cverification\u201d means in practice",
+    "Increase specificity in ## System Breakdown by naming concrete artifacts (e.g., JSON schema for tool calls, trace event taxonomy, replay protocol) rather than categories alone",
+    "Make ## Concrete Example 1 and ## Concrete Example 2 operational: inputs, minimal procedure, expected outputs, and what would falsify the conclusion",
+    "Connect ## Trade-offs to decision criteria (when to standardize vs experiment; when to require proofs vs tests; governance thresholds)",
+    "Strengthen ## Research Directions by turning each bullet into a crisp research question plus a measurable success signal"
+  ]
+}

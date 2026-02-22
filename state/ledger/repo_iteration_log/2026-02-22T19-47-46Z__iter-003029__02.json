@@ -1,0 +1,103 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.89; drift_score=0.30"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-22T19:47:46Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.6521739130434783
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.0
+      },
+      "timestamp": "2026-02-22T19:47:46Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.08052230685527748,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "The tool/runtime plane includes (1) sandboxed execution environments, (2) tool adapters/services (test runner, browser, repo API), (3) orchestration policies (queueing, concurrency, retries, idempoten",
+          "words": 39
+        },
+        {
+          "sentence": "- Tool calls: run a fixed sequence (format/lint \u2192 unit tests \u2192 build) with step timeouts (e.g., 5m/unit, 15m/build) and bounded retries for flaky steps (e.g., 2 retries with exponential backoff).",
+          "words": 33
+        },
+        {
+          "sentence": "- Artifact bundle (stored per run id): the patch, tool call transcripts (commands, versions, exit codes), logs, test reports (JUnit/JSON), build outputs, and a replay manifest that can re-run the same",
+          "words": 37
+        },
+        {
+          "sentence": "- Evaluation gate: promote only if required checks pass (e.g., all tests green, no new lints, diff applies cleanly) and the run is reproducible (replay succeeds at least once or the environment hash m",
+          "words": 39
+        },
+        {
+          "sentence": "- Decision policy: define \u201clow-signal\u201d as (a) no progress after N tool steps (e.g., 6) or (b) repeated similar errors (same stack trace twice) or (c) predicted cost-to-complete exceeds remaining budge",
+          "words": 55
+        },
+        {
+          "sentence": "- Measure: cost per successful task, time-to-merge, regression rate (e.g., post-merge rollback or test failures within 24h), and \u201cwasted spend\u201d (tokens spent on tasks that are abandoned or escalated).",
+          "words": 32
+        },
+        {
+          "sentence": "Default: cache only deterministic steps (dependency installs keyed by lockfile, build outputs keyed by inputs) and periodically force no-cache replays; revisit if you observe drift or flaky tests that",
+          "words": 32
+        }
+      ],
+      "timestamp": "2026-02-22T19:47:46Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/07-production-ai-infrastructure.md",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 371 for 07-production-ai-infrastructure"
+  },
+  "iteration": 3029,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 5797,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 114977
+  },
+  "scope": {
+    "chapters_modified": [
+      "07-production-ai-infrastructure"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T19:47:46Z"
+}

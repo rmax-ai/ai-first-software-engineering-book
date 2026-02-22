@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8366666666666666,
+  "diff_size": 0.06557377049180328,
+  "drift_score": 0.3,
+  "iteration": 2,
+  "planner_focus": [
+    "Satisfy thesis_clarity by adding a one-sentence thesis within an allowlisted section body (prefer ## Determinism or ## Harness) that states why operational definitions matter for building/verifying agentic systems",
+    "Satisfy system_breakdown by making ## Harness and/or ## Kernel include an explicit decomposition list of system parts (prompt/tools/policy/memory/evals/tracing) without adding new headings",
+    "Add explicit, checkable trade-offs in 2\u20133 allowlisted sections (e.g., ## Verification, ## Trace, ## Evidence) using \u201cTrade-off:\u201d phrasing"
+  ]
+}

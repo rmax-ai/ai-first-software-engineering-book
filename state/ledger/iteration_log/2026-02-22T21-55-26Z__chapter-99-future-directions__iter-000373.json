@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.9033333333333333,
+  "diff_size": 0.12598425196850394,
+  "drift_score": 0.057915057915057896,
+  "iteration": 373,
+  "planner_focus": [
+    "Tighten the claim in ## Thesis so it matches the chapter hypothesis without reintroducing metaphor-trigger words (e.g., avoid \u201cbottleneck/frontier\u201d)",
+    "Reduce minor redundancy in ## Thesis (repeated \u201cmeans\u201d/\u201cincludes\u201d framing) while keeping definitions precise and testable",
+    "Improve scanability in ## Trade-offs by making checklist items fully parallel and keeping each sentence under the style-guard limit"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.9166666666666666,
+  "diff_size": 0.032432432432432434,
+  "drift_score": 0.2547019104907123,
+  "iteration": 377,
+  "planner_focus": [
+    "Fix sentence-length violations in ## Thesis by splitting the two long definition sentences into 2\u20133 shorter sentences each while preserving meaning",
+    "Fix sentence-length violation in ## System Breakdown by splitting the first sentence and keeping the diagram introduction intact",
+    "Keep edits strictly localized to ## Thesis and ## System Breakdown to avoid drift and unnecessary rewrites",
+    "Re-scan for any new >28-word sentences created by prior edits in the same sections (especially colon clauses and multi-item lists)"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8933333333333334,
+  "diff_size": 0.06363636363636363,
+  "drift_score": 0.3,
+  "iteration": 372,
+  "planner_focus": [
+    "Make ## Concrete Example 2 measurable and checkable by naming a specific failing gate and at least one numeric threshold for detection.",
+    "Add an explicit containment SLO in ## Concrete Example 2 (time-to-rollback target) and tie it to the audit evidence captured.",
+    "Make the trace/attribution requirement in ## System Breakdown (Audit) enforceable by specifying an exact required field name and format for the run id linkage."
+  ]
+}

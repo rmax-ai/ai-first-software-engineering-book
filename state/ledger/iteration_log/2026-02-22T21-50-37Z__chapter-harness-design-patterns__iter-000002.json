@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8233333333333333,
+  "diff_size": 0.2222222222222222,
+  "drift_score": 0.30868630046326934,
+  "iteration": 2,
+  "planner_focus": [
+    "Reduce sentence length in ## Context by splitting definitions into shorter sentences while keeping the same meaning",
+    "Remove anthropomorphic phrasing in ## Solution and ## Forces (e.g., replace \u201cThe harness enters\u2026\u201d with run/process phrasing)",
+    "Tighten long sub-bullets in ## Forces by breaking them into two bullets or shorter clauses without losing the mitigation vs. over-optimizing contrast"
+  ],
+  "timestamp": "2026-02-22T21:50:37Z"
+}

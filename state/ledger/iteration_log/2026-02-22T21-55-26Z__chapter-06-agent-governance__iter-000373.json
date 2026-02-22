@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.9066666666666666,
+  "diff_size": 0.02654867256637168,
+  "drift_score": 0.3034530386740331,
+  "iteration": 373,
+  "planner_focus": [
+    "Clarify enforcement semantics in ## System Breakdown (Audit) by stating case-sensitivity and exact validation rule for `Agent-Run-Id`.",
+    "Remove ambiguity in ## Concrete Example 2 detection by stating whether `smoke-prod` fails when either threshold triggers or only when both do."
+  ]
+}

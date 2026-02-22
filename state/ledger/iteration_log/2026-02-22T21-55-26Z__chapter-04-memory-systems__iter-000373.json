@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.9266666666666666,
+  "diff_size": 0.018867924528301886,
+  "drift_score": 0.3139821029082774,
+  "iteration": 373,
+  "planner_focus": [
+    "Remove or explicitly justify the \u201ctranscript\u201d metaphor in ## Thesis to satisfy style-guard metaphor_policy",
+    "Keep the thesis opening concrete and literal while preserving the existing argument about structure/query/governance"
+  ]
+}

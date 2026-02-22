@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.86,
+  "diff_size": 0.015267175572519083,
+  "drift_score": 0.26932935965083704,
+  "iteration": 415,
+  "planner_focus": [
+    "Remove the last remaining checkable violation by labeling the tool-specific commands in ## Concrete Example 2 as explicit illustrative placeholders.",
+    "Keep changes confined to ## Concrete Example 2 to avoid introducing new sentence-length or tone issues elsewhere."
+  ]
+}

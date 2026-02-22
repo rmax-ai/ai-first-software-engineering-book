@@ -1,0 +1,88 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.06; drift_score=0.30"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": false,
+      "required_missing": [
+        "## Thesis",
+        "## Why This Matters",
+        "## System Breakdown",
+        "## Concrete Example 1",
+        "## Concrete Example 2",
+        "## Trade-offs",
+        "## Failure Modes",
+        "## Research Directions"
+      ],
+      "scores": {
+        "examples_count": 0.0,
+        "failure_modes": 0.0,
+        "system_breakdown": 0.0,
+        "thesis_clarity": 0.0,
+        "tradeoffs": 0.0
+      },
+      "timestamp": "2026-02-22T21:33:07Z",
+      "total": 0.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.1428571428571429,
+          "harness": 0.5495495495495495,
+          "model": 0.23684210526315785
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": false,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.0011389521640091116
+      },
+      "timestamp": "2026-02-22T21:33:07Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.045351473922902494,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "```mermaid sequenceDiagram participant U as User participant M as Model participant H as Harness participant T as Tools/CI U->>H: request H->>M: plan (constraints, budgets) M->>H: proposed edits H->>T",
+          "words": 72
+        }
+      ],
+      "timestamp": "2026-02-22T21:33:07Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/preface.md",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 5 for preface"
+  },
+  "iteration": 3056,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 17479,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 679014
+  },
+  "scope": {
+    "chapters_modified": [
+      "preface"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T21:33:07Z"
+}

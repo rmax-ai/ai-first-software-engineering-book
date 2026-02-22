@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.86,
+  "diff_size": 0.04580152671755725,
+  "drift_score": 0.26936619488757485,
+  "iteration": 414,
+  "planner_focus": [
+    "Fix style-guard sentence length violations in ## System Breakdown by splitting the two flagged sentences into shorter ones without changing meaning.",
+    "Make ## Concrete Example 2 match ## Concrete Example 1 by adding at least one concrete command example under \"Commands run (in order)\".",
+    "Keep the diagram integration consistent by tightening the pre-diagram introduction and post-diagram takeaway while preserving the evidence-flow emphasis."
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.46; drift_score=0.00"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": false,
+      "required_missing": [
+        "## Thesis",
+        "## Why This Matters",
+        "## System Breakdown",
+        "## Concrete Example 1",
+        "## Concrete Example 2",
+        "## Trade-offs",
+        "## Failure Modes",
+        "## Research Directions"
+      ],
+      "scores": {
+        "examples_count": 0.0,
+        "failure_modes": 0.0,
+        "system_breakdown": 0.0,
+        "thesis_clarity": 0.0,
+        "tradeoffs": 0.0
+      },
+      "timestamp": "2026-02-22T21:57:49Z",
+      "total": 0.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.00322234156820623
+      },
+      "timestamp": "2026-02-22T21:57:49Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.047058823529411764,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "# Self-Verification Loop ## Context Model outputs often look plausible but can be wrong in subtle ways: incorrect assumptions about repo structure, stale APIs, missing edge cases, or incomplete update",
+          "words": 31
+        },
+        {
+          "sentence": "In practice, the problem is that \u201cdone\u201d is often treated as a narrative endpoint (\u201cI implemented X\u201d) instead of an evidence-backed claim (\u201cthe acceptance checks ran, passed, and the outputs were captu",
+          "words": 33
+        },
+        {
+          "sentence": "A simple diagram helps here because the failure modes are usually procedural (skipping a step, not capturing outputs, iterating forever), and a flow makes the stop conditions and escalation paths expl",
+          "words": 31
+        },
+        {
+          "sentence": "```mermaid flowchart TB A[Define acceptance checks<br/>(tests, lint, build, schema validation, golden diffs<br/>or bounded human checklist)] --> B[Run checks] B --> C[Capture evidence<br/>(commands, e",
+          "words": 79
+        },
+        {
+          "sentence": "The diagram makes the contract explicit: if checks fail and the failure isn\u2019t actionable (or repair has hit its iteration cap), the correct outcome is a *blocked* report, not a premature \u201cfixed.\u201d ## I",
+          "words": 51
+        },
+        {
+          "sentence": "Suggested verification record shape: ```yaml verification: - check: \"unit tests\" command: \"npm test\" status: pass evidence: \"stdout excerpt or attached log\" - check: \"lint\" command: \"npm run lint\" sta",
+          "words": 52
+        },
+        {
+          "sentence": "$ npm test PASS cli.test.ts (12 tests) $ npm run lint 0 problems ``` ## Failure modes - **Rubber-stamp verification**: the system asserts checks passed without running them or without capturing output",
+          "words": 30
+        },
+        {
+          "sentence": "- When checks cannot run but the work must proceed: use an explicit, bounded human-review checklist and capture the rationale and evidence (diff links, screenshots, manual repro steps) in the same \u201cve",
+          "words": 33
+        }
+      ],
+      "timestamp": "2026-02-22T21:57:49Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/patterns/self-verification-loop.md",
+      "state/ledger/iteration_log/2026-02-22T21-57-49Z__chapter-self-verification-loop__iter-000001.json",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 1 for self-verification-loop"
+  },
+  "iteration": 3069,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 6181,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 118277
+  },
+  "scope": {
+    "chapters_modified": [
+      "self-verification-loop"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T21:57:49Z"
+}

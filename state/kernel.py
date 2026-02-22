@@ -655,13 +655,6 @@ def _next_repo_iteration(ledger: dict[str, Any]) -> int:
     except (TypeError, ValueError):
         pass
 
-    inline = ledger.get("repo_iteration_log")
-    if isinstance(inline, list):
-        try:
-            candidates.append(max((int(entry.get("iteration", 0) or 0) for entry in inline if isinstance(entry, dict)), default=0))
-        except Exception:
-            pass
-
     tail = ledger.get("repo_iteration_log_tail")
     if isinstance(tail, list):
         try:
@@ -1997,8 +1990,6 @@ def run_kernel(
             chapter_meta.setdefault("stability", {})
             chapter_meta["stability"]["consecutive_passes"] = consecutive_passes
             chapter_meta["stability"]["last_modified_iteration"] = iteration
-
-            chapter_meta.setdefault("iteration_log", [])
             chapter_entry = {
                 "iteration": iteration,
                 "timestamp": _utc_now_iso(),
@@ -2068,7 +2059,6 @@ def run_kernel(
                 },
             }
             repo_log_path = append_repo_iteration_entry(repo_entry)
-            ledger.setdefault("repo_iteration_log", [])
             ledger.setdefault("repo_iteration_log_files", [])
             if isinstance(ledger["repo_iteration_log_files"], list):
                 ledger["repo_iteration_log_files"].append(repo_log_path)

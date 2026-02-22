@@ -596,7 +596,7 @@ def _build_trace_summary_kernel_fixture(chapter_id: str, fixture_root: Path) -> 
     chapter_file.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(REPO_ROOT / chapter_path, chapter_file)
 
-    fixture_ledger = {"chapters": {chapter_id: chapter_meta}, "repo_iteration_log": []}
+    fixture_ledger = {"chapters": {chapter_id: chapter_meta}}
     (fixture_repo_root / "state" / "ledger.json").write_text(json.dumps(fixture_ledger, indent=2) + "\n", encoding="utf-8")
     (fixture_repo_root / "state" / "metrics.json").write_text(json.dumps({"chapters": {}}, indent=2) + "\n", encoding="utf-8")
     source_version_map = REPO_ROOT / "state" / "version_map.json"

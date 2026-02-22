@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.9266666666666666,
+  "diff_size": 0.42660550458715596,
+  "drift_score": 0.34278034418187164,
+  "iteration": 376,
+  "planner_focus": [
+    "Enforce chapter-only output by removing any trailing non-chapter blocks (specifically the <reminder>\u2026</reminder> block) from the final chapter markdown",
+    "Bring ## System Breakdown under the style-guard sentence-length limit by splitting the remaining long bullets into shorter, single-condition bullets",
+    "Simplify the correctness-selection steps in ## System Breakdown by converting numbered items into short sub-bullets with explicit trace fields per branch",
+    "Shorten deploy/release gating bullets in ## System Breakdown by separating safety/quality/correctness/performance into one-line requirements plus one-line trace notes"
+  ]
+}

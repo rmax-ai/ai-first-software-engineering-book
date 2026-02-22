@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.8933333333333332,
+  "diff_size": 0.11450381679389313,
+  "drift_score": 0.34644990046449897,
+  "iteration": 373,
+  "planner_focus": [
+    "Make ## System Breakdown correctness gate executable by defining how test commands are selected when no mapping exists",
+    "Add an explicit decision rule in ## Concrete Example 1 that consumes the query result and prescribes the next concrete action"
+  ]
+}

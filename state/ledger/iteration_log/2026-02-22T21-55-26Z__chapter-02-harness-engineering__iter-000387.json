@@ -1,0 +1,13 @@
+{
+  "critic_score": 0.8366666666666666,
+  "diff_size": 0.6567164179104478,
+  "drift_score": 0.3044529262086514,
+  "iteration": 387,
+  "planner_focus": [
+    "Reduce sentence-length violations in ## Thesis and ## System Breakdown by splitting long sentences and converting dense lines into lists",
+    "Improve example density by adding one additional concrete mini-example that connects tool contracts to measurable outcomes (diff locality, revert rate)",
+    "Make evaluation gates more operational in ## Concrete Example 2 by specifying a minimal default gate set and a fallback gate decision rule",
+    "Add one intentional mermaid diagram to clarify the planes and the attempt \u2192 gate \u2192 log \u2192 decide loop, with a short intro and takeaway summary",
+    "Tighten alignment between the hypothesis in ## Thesis and the metrics in ## Research Directions (explicitly tie each metric to the hypothesis claim)"
+  ]
+}

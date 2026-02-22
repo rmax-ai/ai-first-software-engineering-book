@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.9233333333333333,
+  "diff_size": 0.45774647887323944,
+  "drift_score": 0.267807943608716,
+  "iteration": 374,
+  "planner_focus": [
+    "Tighten the opening under ## Thesis by splitting the first two long sentences into shorter, single-claim sentences",
+    "Make the stack/test-runner selection deterministic under ## System Breakdown by defining an explicit detection algorithm and a fixed precedence order for multi-language repos",
+    "Reduce sentence-length violations in ## System Breakdown and ## Concrete Example 1 by converting dense inline lists into structured sub-bullets (or a compact table-like layout)",
+    "Add one intentional mermaid diagram under ## System Breakdown to clarify the gate decision flow and what gets recorded in the trace"
+  ]
+}

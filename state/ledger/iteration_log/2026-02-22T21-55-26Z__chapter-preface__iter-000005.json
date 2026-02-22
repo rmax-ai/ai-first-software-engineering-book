@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.8466666666666667,
+  "diff_size": 0.056,
+  "drift_score": 0.3016609719058466,
+  "iteration": 5,
+  "planner_focus": [
+    "Eliminate any potential >28-word sentence boundary around the second mini-example opener in ## Key distinction: model vs harness",
+    "Replace the directional time-to-detect claim with an explicit, checkable acceptance metric in ## Key distinction: model vs harness"
+  ]
+}

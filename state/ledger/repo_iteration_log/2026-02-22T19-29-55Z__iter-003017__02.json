@@ -1,0 +1,135 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.77; drift_score=0.01"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-22T19:29:55Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.006622516556291391
+      },
+      "timestamp": "2026-02-22T19:29:55Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.05193578847969783,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "Mermaid mapping of stages to controls and outputs: ```mermaid flowchart LR I[Intent] --> P[Plan] --> A[Act] --> V[Verify] --> R[Record trace] --> S{Stop / iterate} B[(Budgets\\niterations/time/tool cal",
+          "words": 33
+        },
+        {
+          "sentence": "produced .-> R V -->|pass| S V -->|fail| P S -->|iterate| P S -->|stop| End[Exit with summary] ``` How to read this diagram: - Solid arrows show the execution order; dotted arrows show constraints tha",
+          "words": 38
+        },
+        {
+          "sentence": "This is the smallest set of fields that enables replay, audit, and debugging without relying on memory or \u201cit seemed fine.\u201d | Loop stage | Budget signal | Permission signal | Verification signal | Per",
+          "words": 102
+        },
+        {
+          "sentence": "- Input: - failing test case: `tests/test_parse.py::test_rejects_empty_input` - reproduction step: `python -m mycli parse \"\"` returns exit code `0` but should return non-zero - budgets: max 3 iteratio",
+          "words": 54
+        },
+        {
+          "sentence": "- Record: - command + exit code: `pytest -k rejects_empty_input` (exit code `1`) - failing excerpt (example): - `> assert parse(\"\") != 0` - `E AssertionError: assert 0 != 0` - test summary line (examp",
+          "words": 49
+        },
+        {
+          "sentence": "- Gate 1 (target): `pytest -k rejects_empty_input` - Expected summary (example): `1 passed, 42 deselected in 0.28s` - Gate 2 (related): `pytest -k parse` - Expected summary (example): `12 passed, 0 fa",
+          "words": 44
+        },
+        {
+          "sentence": "- Record (minimum): - budgets consumed: `iterations=1/3`, `tool_calls=3/10`, `diff_lines=7/40` - commands executed + exit codes - final test summary lines: - `12 passed, 0 failed, 31 deselected in 1.0",
+          "words": 43
+        },
+        {
+          "sentence": "- Input: - target version: `libX 4.2.0 \u2192 4.3.0` - constraints: Python `>=3.10`, cannot change public API, CI must stay green - upgrade guide: notes a breaking rename `OldClient` \u2192 `Client` - budgets: ",
+          "words": 62
+        },
+        {
+          "sentence": "- Record: - old/new constraint strings (example): `libX>=4.2,<4.3` \u2192 `libX>=4.3,<4.4` - diff stats for manifest only (example): `pyproject.toml | 1 +- ` - Stop/iterate rule: - If the dependency resolv",
+          "words": 53
+        },
+        {
+          "sentence": "- Command: `python -m compileall src` - Record: - exit code - compile summary lines (example): - `Listing 'src'...` - `Compiling 'src/app.py'...` - `compileall: success` - Interpretation: - If Gate A ",
+          "words": 40
+        },
+        {
+          "sentence": "- Example line: `*** File \"src/integrations/libx.py\", line 12` - Example line: `ImportError: cannot import name 'OldClient' from 'libx'` - Patch: apply the minimal mechanical fix (e.g., rename `OldCli",
+          "words": 36
+        },
+        {
+          "sentence": "- Example: `pytest tests/test_libx_integration.py -q` - Example summary: `1 failed, 18 passed in 4.92s` - Patch: address the behavioral change with a targeted adjustment and record the reason (e.g., \u201c",
+          "words": 42
+        },
+        {
+          "sentence": "- Command: `pytest` - Record: - exit code - test summary line (example): `219 passed, 0 failed in 38.41s` - Verification risk handling: - A narrowed verification set is acceptable only as an explicit ",
+          "words": 47
+        },
+        {
+          "sentence": "- Required outputs on stop: - change summary: files touched + primary reason - verification summary: Gate A command + result and Gate B command + result, including summary lines - rollback plan: \u201creve",
+          "words": 53
+        },
+        {
+          "sentence": "Detection signals (tie these to budgets and evaluation gates, not intuition): - Local minima: - same verification failure across iterations with edits confined to the same small area - diff size stead",
+          "words": 155
+        }
+      ],
+      "timestamp": "2026-02-22T19:29:55Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/03-autonomous-kernels.md",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 376 for 03-autonomous-kernels"
+  },
+  "iteration": 3017,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 0,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 0
+  },
+  "scope": {
+    "chapters_modified": [
+      "03-autonomous-kernels"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T19:29:55Z"
+}

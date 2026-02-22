@@ -1,0 +1,13 @@
+{
+  "critic_score": 0.8233333333333333,
+  "diff_size": 0.32116788321167883,
+  "drift_score": 0.006435716387172698,
+  "iteration": 2,
+  "planner_focus": [
+    "Add an explicit system breakdown inside ## Solution (work phase vs verification phase vs gate vs blocked report) so the loop has named components, not just steps",
+    "Make trade-offs explicit within ## Implementation sketch: when to downshift verification (fast vs slow checks) without skipping the stop gate",
+    "Increase example count to >=2 by adding a second concrete example in ## Implementation sketch with measurable outcomes and captured evidence",
+    "Reduce sentence length in ## Solution by splitting the diagram lead-in into shorter sentences to meet style-guard limits"
+  ],
+  "timestamp": "2026-02-22T21:58:49Z"
+}

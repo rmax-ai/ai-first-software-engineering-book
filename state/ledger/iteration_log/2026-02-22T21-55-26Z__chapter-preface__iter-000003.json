@@ -1,0 +1,13 @@
+{
+  "critic_score": 0.7300000000000001,
+  "diff_size": 0.828125,
+  "drift_score": 0.2876744111623144,
+  "iteration": 3,
+  "planner_focus": [
+    "Add explicit thesis and reader promise under ## Thesis",
+    "Introduce a minimal harness-centric system breakdown with components and interactions under ## System Breakdown",
+    "Add two concrete, evidence-based examples with measurable outcomes under ## Concrete Example 1 and ## Concrete Example 2",
+    "Add explicit downsides and costs under ## Trade-offs",
+    "Reduce sentence length to comply with max_words=28 across the mini-example and harness-invariants paragraphs"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8300000000000001,
+  "diff_size": 0.7439024390243902,
+  "drift_score": 0.2701974930295942,
+  "iteration": 413,
+  "planner_focus": [
+    "Tighten the argument in ## Thesis into shorter sentences and a clearer hypothesis statement (reduce the long-sentence violations).",
+    "Make the model-vs-harness separation operational by explicitly showing how evidence flows through the loop (not just listing signals).",
+    "Increase concreteness in ## Concrete Example 1 and ## Concrete Example 2 with a minimal trace/eval record template that readers can copy.",
+    "Align stop rules and budgets across both examples so escalation criteria are comparable and easy to apply."
+  ]
+}

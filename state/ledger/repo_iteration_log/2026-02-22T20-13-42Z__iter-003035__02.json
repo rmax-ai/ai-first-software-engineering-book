@@ -1,0 +1,107 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.74; drift_score=0.27"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-22T20:13:42Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.20430107526881724,
+          "model": 0.2588235294117647
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.03315343099460293
+      },
+      "timestamp": "2026-02-22T20:13:42Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.05995388162951576,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "```mermaid flowchart TB P[Plan\\n(spec + intent)] --> A[Act\\n(generate patch)] A --> T[Tools/Runtime\\n(apply diff, run commands)] T --> V[Verify\\n(evaluation gates)] V --> D{All checks pass?} D -- yes ",
+          "words": 55
+        },
+        {
+          "sentence": "Takeaway: if you cannot produce a trace and an attribution decision for a failure, you cannot tell whether you need a better prompt/spec, better tools/runtime, a code fix, or an eval fix.",
+          "words": 34
+        },
+        {
+          "sentence": "- **Attribution checklist** (what evidence makes a failure \u201cbelong\u201d to a layer): - **Spec/prompt**: requirement is ambiguous or contradictory; different reasonable interpretations change expected outp",
+          "words": 32
+        },
+        {
+          "sentence": "- **Eval/CI**: mismatch between what is asserted and what is intended; tests are incorrect, overly strict, or missing a required case; fixing the test changes outcomes without changing product behavio",
+          "words": 30
+        },
+        {
+          "sentence": "- Minimal trace record (copyable): - Inputs: - Spec note path: `docs/specs/parse-date.md` (example) - Failing test: `tests/test_parse_date.py::test_rejects_empty` - Commands run (in order): `pytest -q",
+          "words": 81
+        },
+        {
+          "sentence": "- If the loop reaches a fixed budget (e.g., N iterations or T minutes) without progress, stop and escalate to a human with the trace record and the smallest reproducible failing case.",
+          "words": 32
+        },
+        {
+          "sentence": "- Minimal trace report (copyable): - Inputs: - Contract/version: `openapi.yaml` (example) + \u201ccompatible within v1.x\u201d - Backward-compat constraints: \u201cno required fields added; no behavior change on exi",
+          "words": 103
+        },
+        {
+          "sentence": "- If the loop reaches a fixed budget (e.g., N iterations or T minutes) without progress, stop and escalate to a human with the trace report and the smallest reproducible failing case.",
+          "words": 32
+        }
+      ],
+      "timestamp": "2026-02-22T20:13:42Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/01-paradigm-shift.md",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 413 for 01-paradigm-shift"
+  },
+  "iteration": 3035,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 8511,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 128233
+  },
+  "scope": {
+    "chapters_modified": [
+      "01-paradigm-shift"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T20:13:42Z"
+}

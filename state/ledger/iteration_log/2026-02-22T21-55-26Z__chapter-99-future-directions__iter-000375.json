@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.9,
+  "diff_size": 0.0,
+  "drift_score": 0.0,
+  "iteration": 375,
+  "planner_focus": [
+    "Tighten sentence length in ## Thesis and convert the long semicolon list into two shorter sentences plus a compact bullet list",
+    "Fix style-guard violations by rewriting the overlong bullets in ## Concrete Example 2 into nested bullets with shorter line-level clauses",
+    "Make the chapter\u2019s core claim more scannable by adding one explicit \u201cSo what changes for teams?\u201d micro-summary at the end of ## Why This Matters"
+  ]
+}

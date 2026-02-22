@@ -1,0 +1,127 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.66; drift_score=0.30"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-22T20:20:15Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.3918918918918919,
+          "harness": 0.25773195876288657,
+          "model": 0.5483870967741935
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": false,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.0030534351145038168
+      },
+      "timestamp": "2026-02-22T20:20:15Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.0563737938039614,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "```mermaid flowchart TB TB[Task brief + repo state] --> C[Control plane\\npolicies \u2022 budgets \u2022 stop conditions] C -->|typed tool calls| T[Tool plane\\npatches \u2022 commands \u2022 structured errors] T -->|check",
+          "words": 63
+        },
+        {
+          "sentence": "A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track: | Plane | Responsibilities | Key artifacts (inputs/outputs) | One measura",
+          "words": 53
+        },
+        {
+          "sentence": "Outputs: patches, command outputs, structured errors | Patch locality (changed files/lines per task) | | Evaluation plane | Decide if work is acceptable based on checks | Inputs: build/test/lint resul",
+          "words": 29
+        },
+        {
+          "sentence": "Outputs: trace, ledger, artifacts for replay | Reproducibility rate (can rerun and get same pass/fail) | The \u201cminimal contract surface\u201d is the set of interfaces that must be stable for predictability.",
+          "words": 30
+        },
+        {
+          "sentence": "| Category | Field / rule | Purpose | Example failure mode | | --- | --- | --- | --- | | Required fields | `path` | Identify the target file | Wrong path \u2192 cannot apply patch | | Required fields | `ol",
+          "words": 193
+        },
+        {
+          "sentence": "Mini-example (connecting the contract to measurable outcomes): - Task: \u201cUpdate `timeout_ms` default from 5000 to 8000.\u201d - Without a strict contract: the agent might run a broad search/replace and touc",
+          "words": 37
+        },
+        {
+          "sentence": "- Your tracked metrics should shift: **diff locality** stays low (1 file, a few lines), and **revert rate** should drop because the change is less likely to introduce incidental regressions.",
+          "words": 29
+        },
+        {
+          "sentence": "Evaluation: measure whether the tool contract is improving outcomes with two task-level metrics: - **Revert rate**: fraction of tasks where the patch is reverted in the next N commits/PR updates.",
+          "words": 31
+        },
+        {
+          "sentence": "Fallback gate policy when tests are missing: - If unit tests are absent or non-runnable, the harness should not silently accept \u201clooks good.\u201d - Use a precise decision rule: - Use `full_gate` when the ",
+          "words": 45
+        },
+        {
+          "sentence": "- Switch to `fallback_gate` only when the test command is missing, cannot be executed (e.g., toolchain unavailable), or consistently fails before running tests in a way the agent cannot remediate with",
+          "words": 32
+        },
+        {
+          "sentence": "- A minimal `fallback_gate` is narrower and stricter: - typecheck/lint/build must pass (whatever subset is available), and - a targeted command or script (documented in the repo) must run successfully",
+          "words": 42
+        },
+        {
+          "sentence": "- How you notice: many files touched per task, drift into unrelated directories, and regressions discovered after \u201ccompletion.\u201d - Harness fix: enforce patch locality budgets, add path allowlists/denyl",
+          "words": 35
+        },
+        {
+          "sentence": "- Harness fix: make gates non-optional for PR-ready output (policy), require artifacts (logs, diff id, check results) attached to the task, and surface \u201cstop reason\u201d when evidence is missing.",
+          "words": 30
+        }
+      ],
+      "timestamp": "2026-02-22T20:20:15Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/02-harness-engineering.md",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 387 for 02-harness-engineering"
+  },
+  "iteration": 3041,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 10599,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 140972
+  },
+  "scope": {
+    "chapters_modified": [
+      "02-harness-engineering"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T20:20:16Z"
+}

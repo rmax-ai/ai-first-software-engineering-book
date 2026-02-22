@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.9,
+  "diff_size": 0.17886178861788618,
+  "drift_score": 0.057915057915057896,
+  "iteration": 372,
+  "planner_focus": [
+    "Remove or explicitly justify metaphor usage in ## Thesis to satisfy style-guard (replace \u201cfrontier\u201d phrasing or add a direct justification sentence immediately after)",
+    "Split long sentences and semicolon-heavy bullets in ## Concrete Example 1 and ## Trade-offs to stay under the 28-word sentence limit",
+    "Reduce adjective density by trimming modifiers in ## Thesis and checklist bullets while keeping technical specificity intact"
+  ]
+}

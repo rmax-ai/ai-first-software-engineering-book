@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8533333333333334,
+  "diff_size": 0.029850746268656716,
+  "drift_score": 0.30102916960715126,
+  "iteration": 3,
+  "planner_focus": [
+    "Tighten sentence length and readability in ## Thesis by splitting the long definition of \u201cpredictable\u201d into 2\u20133 sentences",
+    "Remove out-of-chapter artifacts appended after the chapter (non-heading blocks) to preserve chapter-only content integrity",
+    "Align metaphor policy in ## Trade-offs by replacing \u201cgreen bar\u201d with a literal, test-oriented phrasing (or add a one-sentence justification if the metaphor is retained)"
+  ]
+}

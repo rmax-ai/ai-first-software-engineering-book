@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8733333333333334,
+  "diff_size": 0.11666666666666667,
+  "drift_score": 0.3077309236947791,
+  "iteration": 388,
+  "planner_focus": [
+    "Fix style-guard sentence length violations in ## Concrete Example 2 by splitting long bullet sentences into shorter, single-idea lines",
+    "Increase example density in ## Concrete Example 2 by adding a short worked mini-example that includes at least one explicit measurable outcome (e.g., iterations to first passing gate, gate pass rate, or a budget-triggered stop)",
+    "Keep the gate policy operational in ## Concrete Example 2 by making the full_gate vs fallback_gate decision rule checkable (conditions that can be evaluated from repo/environment state)"
+  ]
+}

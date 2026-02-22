@@ -1,0 +1,116 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.03; drift_score=0.30"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": false,
+      "required_missing": [
+        "## Thesis",
+        "## Why This Matters",
+        "## System Breakdown",
+        "## Concrete Example 1",
+        "## Concrete Example 2",
+        "## Trade-offs",
+        "## Failure Modes",
+        "## Research Directions"
+      ],
+      "scores": {
+        "examples_count": 0.0,
+        "failure_modes": 0.0,
+        "system_breakdown": 0.0,
+        "thesis_clarity": 0.0,
+        "tradeoffs": 0.0
+      },
+      "timestamp": "2026-02-22T21:42:52Z",
+      "total": 0.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.4347826086956522,
+          "harness": 0.48611111111111116,
+          "model": 0.1333333333333333
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.0
+      },
+      "timestamp": "2026-02-22T21:42:52Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.07086614173228346,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "Example: \u201cWhen the user resets a password, the old password no longer works, the new one works, and an audit event is recorded.\u201d This can map to (1) a unit/integration test for login behavior, (2) a s",
+          "words": 57
+        },
+        {
+          "sentence": "## Agent loop A control loop that repeatedly: (1) observes state, (2) chooses a next action (often a tool call), (3) executes, (4) updates state, (5) decides whether to stop.",
+          "words": 29
+        },
+        {
+          "sentence": "In agentic systems, determinism is engineered: you constrain degrees of freedom (tool allowlists, typed interfaces, fixed prompts), reduce nondeterministic dependencies, and require verification so th",
+          "words": 31
+        },
+        {
+          "sentence": "Concrete detection example: run the same eval suite on version A and version B and compare (a) pass/fail outcomes and (b) a small set of golden traces (tool calls + outputs).",
+          "words": 31
+        },
+        {
+          "sentence": "Evidence matters because it can be re-checked; it fails when it is incomplete (missing inputs), not versioned, or not attributable to the run you claim (e.g., copied logs from a different environment)",
+          "words": 34
+        },
+        {
+          "sentence": "Example: a scripted scenario that runs the agent on a fixed repo snapshot, asserts the tool allowlist is respected, and checks that the produced patch applies cleanly and passes `pytest` in CI.",
+          "words": 32
+        },
+        {
+          "sentence": "Side effects matter because they must be governed (permissions, approvals), made retry-safe (often via idempotency), and traced; they fail operationally when they are hidden (no logging) or irreversib",
+          "words": 32
+        },
+        {
+          "sentence": "Minimum to reconstruct a run usually means: the exact inputs (prompt/context identifiers), the ordered tool invocations with arguments and outputs, and the final produced artifact(s), so claims can be",
+          "words": 37
+        }
+      ],
+      "timestamp": "2026-02-22T21:42:52Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/glossary.md",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 3 for glossary"
+  },
+  "iteration": 3059,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 23941,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 742560
+  },
+  "scope": {
+    "chapters_modified": [
+      "glossary"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T21:42:52Z"
+}

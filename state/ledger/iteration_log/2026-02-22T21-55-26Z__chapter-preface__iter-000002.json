@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.7133333333333333,
+  "diff_size": 0.5609756097560976,
+  "drift_score": 0.3026323706377858,
+  "iteration": 2,
+  "planner_focus": [
+    "Strengthen the thesis in # Preface with a single explicit definition of \u201cAI-first software engineering\u201d and the promised reader outcome",
+    "Clarify boundaries in ## Scope by adding 2\u20133 concrete \u201cin scope / out of scope\u201d examples (e.g., PR review agent vs model fine-tuning)",
+    "Make the model/harness distinction operational in ## Key distinction: model vs harness with a short checklist of what the harness enforces",
+    "Increase skimmability in ## How to read by mapping common reader goals to specific chapters/patterns (without introducing new concepts)"
+  ]
+}

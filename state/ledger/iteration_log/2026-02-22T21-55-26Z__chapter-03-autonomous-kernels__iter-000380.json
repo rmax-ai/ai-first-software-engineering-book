@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8433333333333334,
+  "diff_size": 0.012307692307692308,
+  "drift_score": 0.012642681693396907,
+  "iteration": 380,
+  "planner_focus": [
+    "Fix style-guard hard fail in ## System Breakdown by rewriting the diagram-introduction sentence into 2\u20133 shorter sentences (each under 28 words, none over 40)",
+    "Ensure ## Research Directions is the literal end of the chapter output (remove any trailing non-chapter blocks such as <reminder>...</reminder>)",
+    "Re-check ## System Breakdown for any remaining run-on sentences created by inline parentheticals or multi-clause lines, and split them into single-claim sentences"
+  ]
+}
