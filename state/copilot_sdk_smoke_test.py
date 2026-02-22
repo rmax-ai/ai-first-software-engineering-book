@@ -831,6 +831,16 @@ def run_trace_summary_missing_entry_guard_mode() -> int:
     return 0
 
 
+def run_docstring_mode_coverage_guard_mode() -> int:
+    module_doc = __doc__
+    assert isinstance(module_doc, str) and module_doc, "expected generated module docstring"
+    missing_modes = [name for name, _handler, _description in _all_mode_specs() if f"- {name}:" not in module_doc]
+    assert not missing_modes, f"expected module docstring entries for all modes, missing: {missing_modes}"
+
+    print("PASS: docstring-mode-coverage-guard mode validates module doc coverage for all modes")
+    return 0
+
+
 TraceSummaryModeHandler = Callable[[], int]
 TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] = (
     ("trace-summary", run_trace_summary_mode, "deterministic required-key assertion"),
@@ -866,6 +876,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-missing-entry-guard",
         run_trace_summary_missing_entry_guard_mode,
         "deterministic missing trace_summary entry detection",
+    ),
+    (
+        "docstring-mode-coverage-guard",
+        run_docstring_mode_coverage_guard_mode,
+        "deterministic module-doc mode coverage assertion",
     ),
 )
 
