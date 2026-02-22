@@ -1,14 +1,18 @@
 # Validation
 
 ## Verification commands run
-- `rg --files state/feature_iterations/iter_001`
-- `python - <<'PY' ...` (checked all seven required artifact filenames exist)
+- `view prompts/incremental-improvements/execute.md`
+- `view DEVELOPMENT.md`
+- `glob state/feature_iterations/iter_*`
+- `rg -n "^#" state/feature_iterations/iter_001/*.md`
 
 ## Observed results
-- Iteration folder contains exactly the expected markdown artifacts (`01` through `07`).
-- Artifact content includes explicit coverage for features, tests, eval mapping, and a concrete next task.
+- Prompt requirements and seed-iteration constraints were captured.
+- Development guidance was reviewed to align plan scope with harness architecture and eval contracts.
+- Iteration folder `iter_001` exists and contains all seven required markdown artifacts.
+- Each artifact includes required sections and explicit file references.
 
-## Acceptance criteria status
-- **AC1 (plan includes features/tests/evals): PASS**
-- **AC2 (step-by-step with required target files): PASS**
-- **AC3 (all seven artifacts written): PASS**
+## Acceptance criteria check
+- Plan covers **features/tests/evaluations**: **PASS**
+- Scope references required harness/eval files: **PASS**
+- Exactly one concrete next iteration task documented: **PASS**
