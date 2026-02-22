@@ -142,7 +142,8 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 07-production-ai-infrastructure | 3 | failed(1) | none | `8c0d5b9` |
 | 99-future-directions | 1 | failed(1) | none | `4863810` |
 | 99-future-directions | 2 | failed(1) | none | `df25a52` |
-| 99-future-directions | 3 | failed(1) | none | `731ed63` |### Re-run Summary (2026-02-22T18:27:16Z)
+| 99-future-directions | 3 | failed(1) | none | `731ed63` |
+### Re-run Summary (2026-02-22T18:27:16Z)
 - Completed 24/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Failed passes: 24.
