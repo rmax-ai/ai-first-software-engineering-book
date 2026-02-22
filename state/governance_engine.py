@@ -294,9 +294,11 @@ def _validate_top_level(ledger: dict[str, Any]) -> None:
 
 
 def _validate_repo_iteration_log(ledger: dict[str, Any]) -> None:
-    repo_log = ledger.get("repo_iteration_log")
+    repo_log = ledger.get("repo_iteration_log", [])
+    if repo_log is None:
+        repo_log = []
     if not isinstance(repo_log, list):
-        raise GovernanceError("ledger.repo_iteration_log must be an array")
+        raise GovernanceError("ledger.repo_iteration_log must be an array when present")
 
     repo_log_file_paths = ledger.get("repo_iteration_log_files", [])
     if not isinstance(repo_log_file_paths, list):
@@ -366,7 +368,6 @@ def _validate_chapters(ledger: dict[str, Any]) -> None:
                 "drift_history",
                 "research",
                 "human_validation",
-                "iteration_log",
             ],
             f"chapters.{chapter_id}",
         )

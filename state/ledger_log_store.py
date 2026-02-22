@@ -134,19 +134,21 @@ def compact_ledger_logs(ledger: dict[str, Any], tail_size: int = 50) -> dict[str
 
     repo_paths = [str(p) for p in ledger.get("repo_iteration_log_files", []) if isinstance(p, str)]
     repo_inline = ledger.get("repo_iteration_log")
+    repo_inline_list: list[dict[str, Any]] = []
     if isinstance(repo_inline, list):
         for entry in repo_inline:
             if not isinstance(entry, dict):
                 continue
+            repo_inline_list.append(entry)
             rel_path = append_repo_iteration_entry(entry)
             repo_paths.append(rel_path)
             stats["repo_entries_migrated"] += 1
             stats["repo_files_written"] += 1
 
-    repo_tail = [entry for entry in (repo_inline or []) if isinstance(entry, dict)][-tail_size:]
+    repo_tail = repo_inline_list[-tail_size:]
     ledger["repo_iteration_log_files"] = _dedupe_paths(repo_paths)
     ledger["repo_iteration_log_tail"] = repo_tail
-    ledger["repo_iteration_log"] = []
+    ledger.pop("repo_iteration_log", None)
 
     try:
         max_repo_iter = max((int(entry.get("iteration", 0) or 0) for entry in repo_tail), default=0)
@@ -162,17 +164,19 @@ def compact_ledger_logs(ledger: dict[str, Any], tail_size: int = 50) -> dict[str
                 continue
             chapter_paths = [str(p) for p in chapter.get("iteration_log_files", []) if isinstance(p, str)]
             chapter_inline = chapter.get("iteration_log")
+            chapter_inline_list: list[dict[str, Any]] = []
             if isinstance(chapter_inline, list):
                 for entry in chapter_inline:
                     if not isinstance(entry, dict):
                         continue
+                    chapter_inline_list.append(entry)
                     rel_path = append_chapter_iteration_entry(chapter_id, entry)
                     chapter_paths.append(rel_path)
                     stats["chapter_entries_migrated"] += 1
                     stats["chapter_files_written"] += 1
-            chapter_tail = [entry for entry in (chapter_inline or []) if isinstance(entry, dict)][-tail_size:]
+            chapter_tail = chapter_inline_list[-tail_size:]
             chapter["iteration_log_files"] = _dedupe_paths(chapter_paths)
             chapter["iteration_log_tail"] = chapter_tail
-            chapter["iteration_log"] = []
+            chapter.pop("iteration_log", None)
 
     return stats
