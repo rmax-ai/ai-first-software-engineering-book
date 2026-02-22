@@ -1,13 +1,16 @@
 # Validation
 
-## Verification commands run
-- `ls state/feature_iterations/iter_001`
-- `rg -n "features|tests|evaluations|Expected files to touch" state/feature_iterations/iter_001/*.md`
+## Verification steps
+- Confirmed all seven required artifact files exist under `state/feature_iterations/iter_001/`.
+- Cross-checked plan scope against `DEVELOPMENT.md` guidance (UV usage, harness files, eval contract alignment).
+- Reviewed `06-next-iteration.md` to ensure exactly one follow-up task with concrete acceptance criteria.
 
 ## Observed results
-- Iteration folder contains all seven required markdown artifacts.
-- Planning artifacts explicitly cover feature, test, and evaluation surfaces and identify expected future file touch points.
+- Artifact set is complete and follows the required naming/ordering contract.
+- Plan content covers features, tests, and evals with explicit file paths.
+- No unsupported implementation claims or unrun test claims were made.
 
-## Acceptance criteria check
-- Planning-only scope preserved: **PASS**.
-- Concise backlog with explicit files and future verification intent: **PASS**.
+## Acceptance criteria status
+- Plan includes required feature/test/eval coverage: **PASS**
+- Future touchpoints are explicit: **PASS**
+- Exactly one next task is recommended: **PASS**

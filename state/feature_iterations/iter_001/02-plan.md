@@ -1,22 +1,11 @@
-# Plan
+# Iteration plan
 
-1. Define kernel feature backlog in `state/kernel.py`:
-   - add structured phase-trace emission points,
-   - add deterministic loop budget observability counters,
-   - expose a strict failure reason map for stop conditions.
-2. Define role scaffold improvements in `state/role_io_templates.py`:
-   - tighten role I/O contract sections,
-   - normalize required headings for deterministic downstream validation.
-3. Define smoke coverage expansion in `state/copilot_sdk_uv_smoke.py`:
-   - add table-driven modes for new trace/contract guard paths,
-   - add explicit negative-path fixtures for malformed trace payloads.
-4. Define eval wiring updates in `evals/*.yaml`:
-   - map new observability/failure signals to chapter-quality and drift gates,
-   - ensure eval expectations reference deterministic trace artifacts.
-5. Sequence later iterations:
-   - iteration A: kernel observability primitives,
-   - iteration B: role scaffold contract alignment,
-   - iteration C: smoke/eval regression gates and final verification.
+1. Audit current harness flow in `state/kernel.py` to identify observability and determinism extension points (phase traces, budget/eval checkpoints, failure signaling).
+2. Define role-I/O scaffold refinements in `state/role_io_templates.py` so future prompt contracts are explicit, testable, and easier to validate.
+3. Expand smoke coverage strategy in `state/copilot_sdk_uv_smoke.py` with table-driven modes for new harness behaviors and regression guards.
+4. Map eval contract updates in `evals/*.yaml` so harness changes are caught by deterministic gates (quality, style, and drift).
+5. Sequence implementation work into smallest safe increments: tracing contract first, then smoke coverage, then eval hardening.
+6. Record validation commands and expected evidence format for future iterations (`uv run python state/copilot_sdk_uv_smoke.py`, targeted kernel runs, eval checks).
 
 ## Files expected to change in future iterations
 - `state/kernel.py`
@@ -25,3 +14,4 @@
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
+- Optional targeted tests under `state/` for new pure helpers

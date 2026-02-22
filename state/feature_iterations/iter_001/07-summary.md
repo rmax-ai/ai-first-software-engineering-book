@@ -1,9 +1,10 @@
 # Iteration summary
 
-This seed iteration completed one planning task: defining the custom state harness improvement backlog.
-It created `state/feature_iterations/iter_001/` and all seven required markdown artifacts.
-The plan explicitly covers future feature work in kernel observability and role I/O scaffolding.
-It also defines targeted smoke test expansion and eval-gate updates for regression detection.
-No harness implementation code was changed; scope remained planning-only by design.
-Validation confirmed artifact completeness and required topic coverage.
-The next iteration is narrowly scoped to implementing kernel phase-trace observability primitives.
+This seed feature iteration established the initial backlog structure for harness improvements.
+The iteration selected a single task: planning custom harness improvements rather than implementing code.
+The plan explicitly covers feature work, tests, and evaluation guardrails for the `state/` runtime.
+It identifies `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml` as primary future touchpoints.
+Validation focused on artifact completeness and contract alignment with `DEVELOPMENT.md`.
+Risks and trade-offs were documented, especially around trace schema detail and eval strictness.
+One concrete follow-up task was provided to preserve incremental execution discipline.
+The repository now has a complete `iter_001` handoff package for the next implementation iteration.
