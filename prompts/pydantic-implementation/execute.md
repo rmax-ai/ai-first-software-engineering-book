@@ -144,3 +144,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/copilot_sdk_smoke_test.py` now validates live-mode environment ingestion through `LiveModeEnvPayload` and forwards provider/model/base-url values via `LiveModeEnvTransit` before `LLMClient` initialization.
 - `state/copilot_sdk_smoke_test.py` now validates per-chapter metrics history entries through `TraceSummaryChapterMetricsPayload` and forwards latest entries via `TraceSummaryChapterMetricsTransit` before trace-summary extraction.
 - `state/role_io_templates.py` now validates CLI argument ingestion through `TemplateCLIArgsPayload` and forwards parsed values via `TemplateCLIArgsTransit` before ledger iteration resolution and template writes.
+- `state/copilot_sdk_uv_smoke.py` now validates CLI argument ingestion through `SmokeCLIArgsPayload` and forwards parsed values via `SmokeCLIArgsTransit` before mode dispatch and trace-summary runner setup.

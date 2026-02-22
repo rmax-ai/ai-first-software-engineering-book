@@ -150,6 +150,18 @@ class SDKEventObjectPayload(BaseModel):
     data: dict[str, Any]
 
 
+class SmokeCLIArgsPayload(BaseModel):
+    mode: str
+    model: str
+    prompt: str
+    timeout: float
+    chapter_id: str
+    kernel_max_iterations: int
+    run_kernel_for_trace_summary: bool
+    metrics_path: str
+    trace_summary_fixture_root: str
+
+
 @dataclass(frozen=True)
 class KernelFixtureLedgerTransit:
     json_mapping: JSONMappingTransit
@@ -342,6 +354,15 @@ class SDKEventObjectTransit:
 
     def mapping(self) -> dict[str, Any]:
         return self.payload.data
+
+
+@dataclass(frozen=True)
+class SmokeCLIArgsTransit:
+    payload: SmokeCLIArgsPayload
+
+    @classmethod
+    def from_namespace(cls, namespace: argparse.Namespace) -> "SmokeCLIArgsTransit":
+        return cls(payload=SmokeCLIArgsPayload.model_validate(vars(namespace)))
 
 
 def _event_type_name(event_type: Any) -> str:
@@ -804,26 +825,27 @@ async def run_trace_summary_mode(
             shutil.rmtree(fixture_cleanup_target)
 
 
-async def main_async(args: argparse.Namespace) -> int:
-    if args.mode == "ping":
+async def main_async(args: SmokeCLIArgsTransit) -> int:
+    cli_args = args.payload
+    if cli_args.mode == "ping":
         return await run_ping_mode()
-    if args.mode == "prompt":
-        return await run_prompt_mode(model=args.model, prompt=args.prompt, timeout_s=args.timeout)
-    mode_spec = TRACE_SUMMARY_MODE_SPECS.get(args.mode)
+    if cli_args.mode == "prompt":
+        return await run_prompt_mode(model=cli_args.model, prompt=cli_args.prompt, timeout_s=cli_args.timeout)
+    mode_spec = TRACE_SUMMARY_MODE_SPECS.get(cli_args.mode)
     if mode_spec is None:
         return await run_trace_summary_mode(
-            chapter_id=args.chapter_id,
-            max_iterations=args.kernel_max_iterations,
-            run_kernel=args.run_kernel_for_trace_summary,
-            metrics_path=Path(args.metrics_path),
-            fixture_root=Path(args.trace_summary_fixture_root),
+            chapter_id=cli_args.chapter_id,
+            max_iterations=cli_args.kernel_max_iterations,
+            run_kernel=cli_args.run_kernel_for_trace_summary,
+            metrics_path=Path(cli_args.metrics_path),
+            fixture_root=Path(cli_args.trace_summary_fixture_root),
         )
     return await run_trace_summary_mode(
-        chapter_id=args.chapter_id,
-        max_iterations=args.kernel_max_iterations,
-        run_kernel=args.run_kernel_for_trace_summary,
-        metrics_path=Path(args.metrics_path),
-        fixture_root=Path(args.trace_summary_fixture_root),
+        chapter_id=cli_args.chapter_id,
+        max_iterations=cli_args.kernel_max_iterations,
+        run_kernel=cli_args.run_kernel_for_trace_summary,
+        metrics_path=Path(cli_args.metrics_path),
+        fixture_root=Path(cli_args.trace_summary_fixture_root),
         **mode_spec,
     )
 
@@ -848,7 +870,12 @@ def main() -> int:
     parser.add_argument("--metrics-path", default=str(METRICS_PATH))
     parser.add_argument("--trace-summary-fixture-root", default=str(TRACE_SUMMARY_FIXTURE_ROOT))
     args = parser.parse_args()
-    return asyncio.run(main_async(args))
+    try:
+        args_transit = SmokeCLIArgsTransit.from_namespace(args)
+    except ValidationError as exc:
+        print(f"FAIL: invalid CLI args payload: {exc}")
+        return 1
+    return asyncio.run(main_async(args_transit))
 
 
 if __name__ == "__main__":
