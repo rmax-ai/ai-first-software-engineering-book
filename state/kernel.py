@@ -1335,15 +1335,11 @@ def run_kernel(
 
     try:
         ledger_transit = _load_ledger(LEDGER_PATH)
-        ledger = ledger_transit.raw
         ledger_payload = ledger_transit.payload
-        chapters = ledger.get("chapters")
-        if not isinstance(chapters, dict):
-            raise KernelError("Invalid ledger structure: chapters must be a mapping")
         chapter_meta_payload = ledger_payload.chapters.get(chapter_id)
         if chapter_meta_payload is None:
             raise KernelError(f"Unknown chapter_id: {chapter_id}")
-        chapter_meta: dict[str, Any] = chapters[chapter_id]
+        chapter_meta: dict[str, Any] = chapter_meta_payload.model_dump(exclude_none=True)
         status = chapter_meta_payload.status
         lifecycle = chapter_meta_payload.lifecycle
         if status in {"locked", "hold"}:
