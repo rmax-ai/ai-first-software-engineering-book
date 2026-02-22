@@ -1,10 +1,10 @@
 # Iteration summary
 
-- Created seed iteration folder `state/feature_iterations/iter_001/` with the full seven-artifact contract.
-- Selected and completed a planning-only task: custom harness improvement planning.
-- Documented why planning is first and defined measurable acceptance criteria.
-- Produced a concrete phased plan spanning features, tests, and eval/regression checks.
-- Anchored future implementation scope to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-- Captured validation approach and confirmed no unsupported test-pass claims.
-- Logged risks, decisions, and deliberate deferrals to keep this iteration minimal.
-- Defined one precise next task focused on deterministic trace-summary observability.
+This seed iteration created `state/feature_iterations/iter_001/` and completed the seven required artifacts.
+The task intentionally focused on planning the custom harness improvements instead of implementation.
+The plan covers feature work for deterministic kernel observability and role-IO scaffolding.
+The plan defines targeted verification commands, including smoke and kernel execution paths.
+The plan maps regression detection to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+Risks and trade-offs were documented with explicit deferrals.
+A single concrete next task was selected to keep iteration 002 small and testable.
+The repository is now prepared for incremental implementation with clear acceptance criteria.

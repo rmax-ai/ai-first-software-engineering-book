@@ -1,10 +1,16 @@
 # Execution log
 
 ## Commands/tools run
-- Read prompt contract: `prompts/incremental-improvements/execute.md`
-- Read governance guidance: `DEVELOPMENT.md`
-- Enumerated candidate harness/eval files (`state/*.py`, `evals/*.yaml`)
-- Created iteration artifacts under `state/feature_iterations/iter_001/`
+- Read instructions and context:
+  - `view prompts/incremental-improvements/execute.md`
+  - `view DEVELOPMENT.md`
+  - `view .github/instructions/copilot-sdk-python.instructions.md`
+  - `view AGENTS.md`
+- Iteration discovery:
+  - `glob state/feature_iterations/iter_*`
+  - `view state/`
+- Repository status:
+  - `git --no-pager status --short`
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -16,4 +22,4 @@
 - `state/feature_iterations/iter_001/07-summary.md`
 
 ## Rationale
-- Seed iteration is planning-only per prompt; no production harness code changes were made.
+Seed the feature-iteration contract with a planning-only backlog that explicitly covers features, tests, and evals for the custom harness.

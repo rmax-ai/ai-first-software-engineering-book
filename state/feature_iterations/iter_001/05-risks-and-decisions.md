@@ -1,12 +1,12 @@
 # Risks and decisions
 
 ## Risks
-- Plan quality depends on later iterations preserving minimal-diff discipline while adding observability.
-- Eval updates may drift if new kernel signals are added without synchronized YAML contract updates.
+- Planned kernel observability changes could increase log noise if not constrained to deterministic summaries.
+- Smoke/eval expansions may fail if metric names drift from `state/metrics.json` conventions.
 
 ## Decisions and trade-offs
-- Chose planning-only execution to match seed-iteration requirements, deferring implementation risk.
-- Scoped next work to a single trace-summary observability slice to keep validation bounded.
+- Chose planning-only scope to honor seed-iteration requirement and avoid premature implementation churn.
+- Kept backlog concrete (files, commands, acceptance criteria) so next iteration can execute one small task safely.
 
-## Deferred
-- Direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and eval YAMLs.
+## Deferred items
+- No implementation changes to Python modules in this iteration; deferred to next iteration task.

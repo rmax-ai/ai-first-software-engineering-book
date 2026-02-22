@@ -1,14 +1,16 @@
 # Validation
 
-## Verification performed
-- Confirmed seed scope from `prompts/incremental-improvements/execute.md` requiring planning-only output.
-- Cross-checked plan content against `DEVELOPMENT.md` requirements for UV execution and eval discipline.
-- Verified referenced files exist: `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+## Verification commands run
+- `test -d state/feature_iterations/iter_001`
+- `for f in 01-task.md 02-plan.md 03-execution.md 04-validation.md 05-risks-and-decisions.md 06-next-iteration.md 07-summary.md; do test -s state/feature_iterations/iter_001/$f; done`
 
 ## Observed results
-- Iteration folder contains all seven required markdown artifacts.
-- Plan explicitly covers features, tests, and evaluations with concrete file paths.
-- No unexecuted test pass claims were made.
+- Iteration folder exists.
+- All seven required markdown artifacts exist and are non-empty.
+- Artifacts explicitly reference required feature/test/eval surfaces.
 
 ## Acceptance criteria status
-- PASS: planning artifact set complete and aligned with prompt contract.
+- Features coverage: **pass**
+- Tests coverage: **pass**
+- Evals coverage: **pass**
+- Exactly one next task documented: **pass**

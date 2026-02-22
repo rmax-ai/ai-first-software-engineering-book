@@ -1,22 +1,20 @@
 # Iteration plan
 
-1. Baseline current harness surfaces in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
-2. Define feature backlog themes:
-   - richer trace/event observability in kernel runs,
-   - stricter deterministic execution controls and budgets,
-   - clearer role I/O scaffolds and prompt-contract visibility.
-3. Map each feature theme to executable tests:
-   - targeted unit-style checks for pure helpers in `state/kernel.py`,
-   - smoke coverage in `state/copilot_sdk_uv_smoke.py` via `uv run python state/copilot_sdk_uv_smoke.py`,
-   - focused scaffold assertions for `state/role_io_templates.py`.
-4. Map each feature theme to eval/regression gates:
-   - `evals/chapter-quality.yaml`,
-   - `evals/style-guard.yaml`,
-   - `evals/drift-detection.yaml`,
-   - expected signals recorded in `state/metrics.json`.
-5. Queue one smallest next implementation task that only adds trace-summary observability scaffolding in `state/kernel.py` plus smoke assertions.
+1. Audit harness requirements from `DEVELOPMENT.md` and current `state/` layout.
+2. Draft feature backlog items:
+   - Add richer deterministic trace summaries and loop self-evaluation logging in `state/kernel.py`.
+   - Tighten role-IO contract scaffolds and coverage hooks in `state/role_io_templates.py`.
+   - Extend smoke harness assertions in `state/copilot_sdk_uv_smoke.py` for new trace and contract signals.
+3. Draft verification backlog:
+   - `uv run python state/copilot_sdk_uv_smoke.py`
+   - Targeted kernel runs: `uv run python state/kernel.py --chapter-id <id>`
+   - Focused tests for role-IO template invariants (to be added in later iteration).
+4. Draft eval backlog integration:
+   - Map expected impacts to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+   - Define metric checks to confirm expected counters/signals in `state/metrics.json`.
+5. Package backlog into next iteration guidance with one smallest executable task.
 
-## Files expected to change in later iterations
+## Expected files to change in later iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
