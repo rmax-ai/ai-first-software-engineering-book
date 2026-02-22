@@ -1,17 +1,19 @@
-# Next iteration recommendation
+# Recommended next task
 
 ## Task
-Implement deterministic trace summary guardrails in `state/kernel.py` and cover them with targeted smoke assertions.
+Define and implement deterministic trace-summary enrichment in `state/kernel.py`.
 
 ## Why this is next
-Trace shape guarantees are the highest-leverage foundation for downstream observability and eval reliability; locking schema first reduces regression risk for later role I/O and budget-control improvements.
+- It unlocks measurable observability improvements that downstream template and smoke-test work can validate.
+- It creates the concrete data contract needed before touching eval expectations.
 
 ## Acceptance criteria
-- Add or refine `state/kernel.py` logic so trace-summary payload shape is explicitly validated before persistence.
-- Extend `state/copilot_sdk_uv_smoke.py` with deterministic mode(s) that fail on missing/malformed trace summary entries.
-- Document command evidence in the next iteration’s `04-validation.md` using `uv run python state/copilot_sdk_uv_smoke.py --mode ...`.
+1. `state/kernel.py` emits a stable trace-summary structure with explicit fields for phase timings, tool usage counts, and guardrail outcomes.
+2. Existing kernel behavior remains unchanged aside from additive trace data.
+3. A targeted verification run demonstrates the new trace-summary fields are present and well-formed.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/0*.md`
+- `state/copilot_sdk_uv_smoke.py` (only if needed for targeted verification)
+- `state/feature_iterations/iter_002/04-validation.md` (evidence capture)
+
