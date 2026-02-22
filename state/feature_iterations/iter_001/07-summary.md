@@ -1,10 +1,9 @@
-# Iteration summary
+# Iteration Summary
 
-This seed feature iteration established a planning baseline for improving the custom harness in `state/`.
-The selected task was to produce a concrete improvement plan rather than implement code changes.
-The plan covers feature priorities across kernel observability, role I/O scaffolding, and deterministic smoke coverage.
-It maps future implementation work to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-Validation focused on artifact completeness, required file-path coverage, and minimal diff scope.
-Risks and trade-offs were documented, especially around deterministic logging and eval signal alignment.
-One next task was defined: add deterministic kernel trace instrumentation scaffolding.
-This leaves a clear, bounded handoff for the next iteration to begin implementation safely.
+- Initialized `state/feature_iterations/iter_001/` as the first feature improvement iteration.
+- Executed the seed task as planning-only, per prompt contract.
+- Produced a focused backlog spanning harness features, tests, and eval surfaces.
+- Mapped future implementation targets to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Captured execution and validation evidence from prompt/governance review and iteration discovery.
+- Recorded risks and explicit deferrals to avoid accidental scope expansion.
+- Defined exactly one next task: implement deterministic kernel trace logging with smoke validation.
