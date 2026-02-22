@@ -331,7 +331,7 @@ class DeterministicEvalRulesTransit:
 @dataclass(frozen=True)
 class OtherChapterTextTransit:
     chapter_id: str
-    payload: ChapterTextPayload
+    chapter_text: "ChapterTextTransit"
 
 
 @dataclass(frozen=True)
@@ -344,6 +344,8 @@ class RoadmapTextTransit:
 
 @dataclass(frozen=True)
 class ChapterTextTransit:
+    source_path: Path
+    raw_text: str
     payload: ChapterTextPayload
 
     def to_text(self) -> str:
@@ -385,7 +387,7 @@ class OtherChaptersTransit:
     entries: tuple[OtherChapterTextTransit, ...]
 
     def as_mapping(self) -> dict[str, str]:
-        return {entry.chapter_id: entry.payload.text for entry in self.entries}
+        return {entry.chapter_id: entry.chapter_text.to_text() for entry in self.entries}
 
 
 @dataclass(frozen=True)
@@ -570,11 +572,12 @@ def _load_roadmap_text(path: Path) -> RoadmapTextTransit:
 
 
 def _load_chapter_text(path: Path) -> ChapterTextTransit:
+    chapter_text = _read_text(path)
     try:
-        payload = ChapterTextPayload.model_validate({"text": _read_text(path)})
+        payload = ChapterTextPayload.model_validate({"text": chapter_text})
     except ValidationError as exc:
         raise KernelError(f"Invalid chapter text payload: {path}: {exc}") from exc
-    return ChapterTextTransit(payload=payload)
+    return ChapterTextTransit(source_path=path, raw_text=chapter_text, payload=payload)
 
 
 def _load_writer_output(path: Path) -> WriterOutputTransit:
@@ -1281,12 +1284,10 @@ def _load_other_chapters_text(ledger: LedgerPayload, current_chapter_id: str) ->
         if not meta.path:
             continue
         try:
-            payload = ChapterTextPayload.model_validate({"text": _read_text(REPO_ROOT / meta.path)})
+            chapter_text = _load_chapter_text(REPO_ROOT / meta.path)
         except KernelError:
             continue
-        except ValidationError as exc:
-            raise KernelError(f"Invalid chapter text payload for {cid}: {exc}") from exc
-        entries.append(OtherChapterTextTransit(chapter_id=cid, payload=payload))
+        entries.append(OtherChapterTextTransit(chapter_id=cid, chapter_text=chapter_text))
     return OtherChaptersTransit(entries=tuple(entries))
 
 
