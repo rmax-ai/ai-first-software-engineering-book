@@ -332,6 +332,8 @@ class MetricsHistoryTransit:
 
 @dataclass(frozen=True)
 class YAMLMappingTransit:
+    source_path: Path
+    raw_text: str
     payload: YAMLMappingPayload
 
     def to_mapping(self) -> dict[str, Any]:
@@ -383,16 +385,17 @@ def _save_json(path: Path, data: Any) -> None:
 
 def _load_yaml(path: Path) -> YAMLMappingTransit:
     try:
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        raw_text = path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
         raise KernelError(f"Missing YAML file: {path}") from exc
+    data = yaml.safe_load(raw_text)
     if not isinstance(data, dict):
         raise KernelError(f"Expected YAML mapping at {path}")
     try:
         payload = YAMLMappingPayload.model_validate({"data": data})
     except ValidationError as exc:
         raise KernelError(f"Invalid YAML mapping payload: {path}: {exc}") from exc
-    return YAMLMappingTransit(payload=payload)
+    return YAMLMappingTransit(source_path=path, raw_text=raw_text, payload=payload)
 
 
 def _load_eval_config(path: Path) -> DeterministicEvalConfigTransit:

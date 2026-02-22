@@ -87,6 +87,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/role_io_templates.py` now validates raw JSON mapping roots through `JSONMappingPayload` and forwards parsed mappings via `JSONMappingTransit` before `LedgerPayload` parsing.
 - `state/role_io_templates.py` now also forwards ledger source-path and raw JSON text through `JSONMappingTransit` so ingestion provenance stays explicit before `LedgerPayload` parsing.
 - `state/kernel.py` now validates deterministic eval YAML mapping roots through `YAMLMappingPayload` and forwards parsed mappings via `YAMLMappingTransit` before `DeterministicEvalConfigPayload` parsing.
+- `state/kernel.py` now forwards deterministic eval YAML source-path and raw YAML text through `YAMLMappingTransit` so ingestion provenance remains explicit before `DeterministicEvalConfigPayload` parsing.
 - `state/kernel.py` now forwards each deterministic eval YAML payload through `DeterministicEvalConfigTransit` before composing `DeterministicEvalTransit` for evaluator execution.
 - `state/kernel.py` now validates raw JSON mapping roots through `JSONMappingPayload` and forwards parsed mappings via `JSONMappingTransit` before planner/role output and runtime payload parsing.
 - `state/kernel.py` now forwards JSON mapping source-path and raw JSON text through `JSONMappingTransit` so JSON ingestion provenance remains explicit before runtime payload parsing.
