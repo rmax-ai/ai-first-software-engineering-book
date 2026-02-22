@@ -66,18 +66,36 @@ class LedgerSnapshotPayload(BaseModel):
     chapters: dict[str, Any]
 
 
+class JSONMappingPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: dict[str, Any]
+
+
 @dataclass(frozen=True)
 class LedgerSnapshotTransit:
     raw_text: str
     payload: LedgerSnapshotPayload
 
 
+@dataclass(frozen=True)
+class JSONMappingTransit:
+    payload: JSONMappingPayload
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.data
+
+
 def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
     raw_text = path.read_text(encoding="utf-8")
     try:
-        payload = LedgerSnapshotPayload.model_validate(json.loads(raw_text))
+        json_mapping = JSONMappingTransit(payload=JSONMappingPayload.model_validate({"data": json.loads(raw_text)}))
     except json.JSONDecodeError as exc:
         raise AssertionError(f"expected {path} to contain valid JSON: {exc}") from exc
+    except ValidationError as exc:
+        raise AssertionError(f"expected {path} to contain a JSON object mapping: {exc}") from exc
+    try:
+        payload = LedgerSnapshotPayload.model_validate(json_mapping.to_mapping())
     except ValidationError as exc:
         raise AssertionError(f"expected {path} to match LedgerSnapshotPayload: {exc}") from exc
     return LedgerSnapshotTransit(raw_text=raw_text, payload=payload)
