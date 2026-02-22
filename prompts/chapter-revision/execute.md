@@ -125,3 +125,4 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 01-paradigm-shift | 3 | ok | none | `n/a` |
 | 02-harness-engineering | 1 | ok | none | `n/a` |
 | 02-harness-engineering | 2 | ok | none | `n/a` |
+| 02-harness-engineering | 3 | ok | none | `n/a` |
