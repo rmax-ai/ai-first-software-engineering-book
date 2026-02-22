@@ -29,6 +29,7 @@ LLMClientError = llm_client.LLMClientError
 Provider = llm_client.Provider
 
 TRACE_SUMMARY_REQUIRED_KEYS = {"decision", "drift_score", "diff_ratio", "deterministic_pass"}
+TRACE_SUMMARY_FIXTURE_ROOT = ROOT / "state" / ".smoke_fixtures" / "trace_summary"
 TRACE_SUMMARY_NON_KERNEL_FIXTURE_REPO = ROOT / "state" / ".smoke_fixtures" / "trace_summary" / "repo"
 TRACE_SUMMARY_KERNEL_FIXTURE_REPO = ROOT / "state" / ".smoke_fixtures" / "trace_summary" / "kernel_repo"
 
@@ -912,6 +913,16 @@ def _run_trace_summary_non_kernel_mode(
     return combined_output
 
 
+def _assert_trace_summary_fixture_root_clean(mode_name: str) -> None:
+    if not TRACE_SUMMARY_FIXTURE_ROOT.exists():
+        return
+    residual_dirs = sorted(path.name for path in TRACE_SUMMARY_FIXTURE_ROOT.iterdir() if path.is_dir())
+    assert not residual_dirs, (
+        "expected trace-summary fixture root cleanup after mode "
+        f"{mode_name}, found residual directories: {residual_dirs}"
+    )
+
+
 def run_trace_summary_kernel_mode() -> int:
     _run_trace_summary_kernel_mode("trace-summary")
     print("PASS: trace-summary-kernel mode validates fixture-backed kernel trace-summary success")
@@ -984,6 +995,34 @@ def run_trace_summary_non_kernel_fixture_cleanup_mode() -> int:
         expect_fixture_cleanup=True,
     )
     print("PASS: trace-summary-non-kernel-fixture-cleanup mode validates fixture cleanup after non-kernel trace-summary runs")
+    return 0
+
+
+def run_trace_summary_non_kernel_fixture_root_cleanup_mode() -> int:
+    _run_trace_summary_non_kernel_mode("trace-summary", expect_fixture_cleanup=True)
+    _assert_trace_summary_fixture_root_clean("trace-summary")
+    _run_trace_summary_non_kernel_mode(
+        "trace-summary-malformed-phase",
+        expected_failure="phase_trace missing keys: ['budget_signal']",
+        expect_fixture_cleanup=True,
+    )
+    _assert_trace_summary_fixture_root_clean("trace-summary-malformed-phase")
+    _run_trace_summary_non_kernel_mode(
+        "trace-summary-malformed-phase-payload",
+        expected_failure="phase_trace payload is not an object",
+        expect_fixture_cleanup=True,
+    )
+    _assert_trace_summary_fixture_root_clean("trace-summary-malformed-phase-payload")
+    _run_trace_summary_non_kernel_mode(
+        "trace-summary-missing-phase",
+        expected_failure="missing required phase traces: ['evaluation']",
+        expect_fixture_cleanup=True,
+    )
+    _assert_trace_summary_fixture_root_clean("trace-summary-missing-phase")
+    print(
+        "PASS: trace-summary-non-kernel-fixture-root-cleanup mode validates trace-summary fixture root cleanup "
+        "after non-kernel trace-summary runs"
+    )
     return 0
 
 
@@ -1917,6 +1956,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-non-kernel-fixture-cleanup",
         run_trace_summary_non_kernel_fixture_cleanup_mode,
         "fixture-backed non-kernel trace-summary cleanup assertion",
+    ),
+    (
+        "trace-summary-non-kernel-fixture-root-cleanup",
+        run_trace_summary_non_kernel_fixture_root_cleanup_mode,
+        "fixture-backed non-kernel trace-summary root cleanup assertion",
     ),
     (
         "docstring-mode-coverage-guard",
