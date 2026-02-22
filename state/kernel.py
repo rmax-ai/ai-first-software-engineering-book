@@ -22,6 +22,7 @@ import os
 import re
 import subprocess
 import sys
+import time as _time
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -206,6 +207,26 @@ def _append_kernel_trace(itdir: Path, *, event: str, payload: dict[str, Any]) ->
     entry = {"timestamp": _utc_now_iso(), "event": event, "payload": payload}
     with trace_path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, sort_keys=True) + "\n")
+
+
+def _append_phase_trace(
+    itdir: Path,
+    *,
+    phase: str,
+    status: str,
+    started_at_s: float,
+    budget_signal: dict[str, Any],
+) -> None:
+    _append_kernel_trace(
+        itdir,
+        event="phase_trace",
+        payload={
+            "phase": phase,
+            "status": status,
+            "duration_ms": int(max(0.0, (_time.perf_counter() - started_at_s) * 1000)),
+            "budget_signal": budget_signal,
+        },
+    )
 
 
 def _llm_add_usage(a: Any, b: Any) -> Any:
@@ -948,6 +969,7 @@ def run_kernel(
             planner_out = itdir / "out" / "planner.json"
             writer_out = itdir / "out" / "writer.md"
             critic_out = itdir / "out" / "critic.json"
+            role_phase_started_at = _time.perf_counter()
 
             llm_iter_usage = None
             if llm is not None:
@@ -981,6 +1003,17 @@ def run_kernel(
                 )
 
             if not planner_out.exists() or not writer_out.exists() or not critic_out.exists():
+                _append_phase_trace(
+                    itdir,
+                    phase="role_output_ready",
+                    status="failed",
+                    started_at_s=role_phase_started_at,
+                    budget_signal={
+                        "missing_outputs": int(not planner_out.exists())
+                        + int(not writer_out.exists())
+                        + int(not critic_out.exists())
+                    },
+                )
                 sys.stderr.write(
                     "Role outputs missing for this iteration. Produce these files and re-run:\n"
                     f"- {planner_out.relative_to(REPO_ROOT)}\n"
@@ -988,7 +1021,18 @@ def run_kernel(
                     f"- {critic_out.relative_to(REPO_ROOT)}\n"
                 )
                 return 2
+            _append_phase_trace(
+                itdir,
+                phase="role_output_ready",
+                status="ok",
+                started_at_s=role_phase_started_at,
+                budget_signal={
+                    "llm_prompt_tokens": int(getattr(llm_iter_usage, "prompt_tokens", 0) or 0),
+                    "llm_completion_tokens": int(getattr(llm_iter_usage, "completion_tokens", 0) or 0),
+                },
+            )
 
+            evaluation_phase_started_at = _time.perf_counter()
             plan = _load_planner_plan(planner_out)
             revised = _read_text(writer_out)
             critic = _load_critic_report(critic_out)
@@ -1028,7 +1072,19 @@ def run_kernel(
                     "pass_now": bool(pass_now),
                 },
             )
+            _append_phase_trace(
+                itdir,
+                phase="evaluation",
+                status="pass" if pass_now else "refine",
+                started_at_s=evaluation_phase_started_at,
+                budget_signal={
+                    "diff_ratio": float(diff_ratio),
+                    "drift_score": float(det.drift_score),
+                    "deterministic_pass": bool(det_pass),
+                },
+            )
 
+            persistence_phase_started_at = _time.perf_counter()
             if pass_now:
                 consecutive_passes += 1
             else:
@@ -1149,6 +1205,16 @@ def run_kernel(
                     "consecutive_passes": int(consecutive_passes),
                     "status": chapter_meta.get("status"),
                     "lifecycle": chapter_meta.get("lifecycle"),
+                },
+            )
+            _append_phase_trace(
+                itdir,
+                phase="state_persistence",
+                status="ok",
+                started_at_s=persistence_phase_started_at,
+                budget_signal={
+                    "consecutive_passes": int(consecutive_passes),
+                    "require_two_consecutive_passes": bool(require_two_consecutive_passes),
                 },
             )
 

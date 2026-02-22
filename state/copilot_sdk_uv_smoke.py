@@ -150,8 +150,42 @@ async def run_trace_summary_mode(chapter_id: str, max_iterations: int, run_kerne
         print(f"FAIL: trace_summary missing keys: {missing}")
         return 1
 
+    iteration = latest.get("iteration")
+    if not isinstance(iteration, int):
+        print("FAIL: latest metrics history entry missing integer iteration")
+        return 1
+    trace_path = REPO_ROOT / "state" / "role_io" / chapter_id / f"iter_{iteration:02d}" / "out" / "kernel_trace.jsonl"
+    if not trace_path.exists():
+        print(f"FAIL: kernel trace file missing at {trace_path}")
+        return 1
+
+    trace_entries = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    phase_entries = [entry for entry in trace_entries if entry.get("event") == "phase_trace"]
+    if not phase_entries:
+        print("FAIL: no phase_trace events in kernel trace")
+        return 1
+
+    required_phase_payload_keys = {"phase", "status", "duration_ms", "budget_signal"}
+    for entry in phase_entries:
+        payload = entry.get("payload")
+        if not isinstance(payload, dict):
+            print("FAIL: phase_trace payload is not an object")
+            return 1
+        phase_missing = sorted(required_phase_payload_keys - set(payload))
+        if phase_missing:
+            print(f"FAIL: phase_trace missing keys: {phase_missing}")
+            return 1
+
+    phase_names = {entry.get("payload", {}).get("phase") for entry in phase_entries}
+    required_phases = {"role_output_ready", "evaluation", "state_persistence"}
+    missing_phases = sorted(required_phases - phase_names)
+    if missing_phases:
+        print(f"FAIL: missing required phase traces: {missing_phases}")
+        return 1
+
     print("PASS: trace_summary present with required keys")
     print(f"trace_summary={trace_summary}")
+    print(f"phase_trace_events={len(phase_entries)}")
     return 0
 
 
