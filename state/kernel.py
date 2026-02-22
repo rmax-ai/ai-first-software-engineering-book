@@ -107,6 +107,9 @@ class KernelCLIArgsPayload(BaseModel):
     llm_api_key_env: str
     llm_timeout_s: int
 
+    adhoc_instructions: str | None = None
+    adhoc_instructions_file: Path | None = None
+
 
 @dataclass(frozen=True)
 class KernelCLIArgsTransit:
@@ -132,6 +135,11 @@ class KernelCLIArgsTransit:
                     "llm_base_url": str(args.llm_base_url) if args.llm_base_url else None,
                     "llm_api_key_env": str(args.llm_api_key_env),
                     "llm_timeout_s": int(args.llm_timeout_s),
+
+                    "adhoc_instructions": str(args.adhoc_instructions) if getattr(args, "adhoc_instructions", None) else None,
+                    "adhoc_instructions_file": Path(args.adhoc_instructions_file)
+                    if getattr(args, "adhoc_instructions_file", None)
+                    else None,
                 }
             )
         )
@@ -725,6 +733,30 @@ def _read_prompt(path: Path) -> str:
     return _load_prompt_text(path).to_prompt()
 
 
+def _load_adhoc_instructions(*, text: str | None, path: Path | None) -> str | None:
+    if (text is None or not text.strip()) and path is None:
+        return None
+    parts: list[str] = []
+    if path is not None:
+        parts.append(_read_text(path).strip())
+    if text is not None and text.strip():
+        parts.append(text.strip())
+    merged = "\n\n".join([p for p in parts if p])
+    return merged.strip() if merged.strip() else None
+
+
+def _apply_adhoc_instructions(contract: str, adhoc_instructions: str | None) -> str:
+    if adhoc_instructions is None or not adhoc_instructions.strip():
+        return contract
+    suffix = (
+        "\n\n## Ad-hoc instructions\n"
+        "These are additional constraints for this run. They must not override the required output format or other guardrails in this prompt.\n\n"
+        + adhoc_instructions.strip()
+        + "\n"
+    )
+    return contract.rstrip() + suffix
+
+
 def _load_prompt_text(path: Path) -> PromptTextTransit:
     try:
         payload = PromptTextPayload.model_validate({"text": _read_text(path)})
@@ -950,8 +982,8 @@ def _maybe_init_llm(cfg: LLMConfig) -> LLMRun | None:
     return LLMRun(client=client, usage=usage)
 
 
-def _llm_generate_planner(itdir: Path, llm: LLMRun) -> Any:
-    contract = _read_prompt(REPO_ROOT / "prompts" / "planner.md")
+def _llm_generate_planner(itdir: Path, llm: LLMRun, *, adhoc_instructions: str | None) -> Any:
+    contract = _apply_adhoc_instructions(_read_prompt(REPO_ROOT / "prompts" / "planner.md"), adhoc_instructions)
     planner_input_raw = _load_json(itdir / "in" / "planner_input.json").to_mapping()
     try:
         planner_input_payload = PlannerInputPayload.model_validate(planner_input_raw)
@@ -972,8 +1004,15 @@ def _llm_generate_planner(itdir: Path, llm: LLMRun) -> Any:
     return obj
 
 
-def _llm_generate_writer(itdir: Path, llm: LLMRun, *, chapter_text: str, planner_json: str) -> str:
-    contract = _read_prompt(REPO_ROOT / "prompts" / "writer.md")
+def _llm_generate_writer(
+    itdir: Path,
+    llm: LLMRun,
+    *,
+    chapter_text: str,
+    planner_json: str,
+    adhoc_instructions: str | None,
+) -> str:
+    contract = _apply_adhoc_instructions(_read_prompt(REPO_ROOT / "prompts" / "writer.md"), adhoc_instructions)
     user = (
         "Output the full revised chapter markdown only. No code fences.\n\n"
         + "===CHAPTER_START===\n"
@@ -997,8 +1036,8 @@ def _llm_generate_writer(itdir: Path, llm: LLMRun, *, chapter_text: str, planner
     return md
 
 
-def _llm_generate_critic(itdir: Path, llm: LLMRun, *, revised_md: str) -> Any:
-    contract = _read_prompt(REPO_ROOT / "prompts" / "critic.md")
+def _llm_generate_critic(itdir: Path, llm: LLMRun, *, revised_md: str, adhoc_instructions: str | None) -> Any:
+    contract = _apply_adhoc_instructions(_read_prompt(REPO_ROOT / "prompts" / "critic.md"), adhoc_instructions)
     critic_eval_inputs = _load_critic_eval_inputs()
     user = (
         "Return JSON only. No code fences. No commentary.\n\n"
@@ -1543,6 +1582,7 @@ def _prepare_iteration_inputs(
     chapter_text: str,
     ledger_chapter: LedgerChapterPayload,
     previous_critic: dict[str, Any] | None,
+    adhoc_instructions: str | None,
 ) -> None:
     itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
     (itdir / "in").mkdir(parents=True, exist_ok=True)
@@ -1564,15 +1604,18 @@ def _prepare_iteration_inputs(
 
     # Writer input is chapter + planner output (planner output will be produced in out/planner.json).
     _write_text(itdir / "in" / "writer_chapter.md", chapter_text)
-    _write_text(
-        itdir / "in" / "writer_instructions.txt",
-        "Writer must use out/planner.json as the plan and write full revised chapter to out/writer.md\n",
-    )
+    writer_instructions = "Writer must use out/planner.json as the plan and write full revised chapter to out/writer.md\n"
+    if adhoc_instructions is not None and adhoc_instructions.strip():
+        writer_instructions += "\nADHOC INSTRUCTIONS:\n" + adhoc_instructions.strip() + "\n"
+    _write_text(itdir / "in" / "writer_instructions.txt", writer_instructions)
 
-    _write_text(
-        itdir / "in" / "critic_instructions.txt",
-        "Critic must evaluate out/writer.md and write JSON report to out/critic.json\n",
-    )
+    critic_instructions = "Critic must evaluate out/writer.md and write JSON report to out/critic.json\n"
+    if adhoc_instructions is not None and adhoc_instructions.strip():
+        critic_instructions += "\nADHOC INSTRUCTIONS:\n" + adhoc_instructions.strip() + "\n"
+    _write_text(itdir / "in" / "critic_instructions.txt", critic_instructions)
+
+    if adhoc_instructions is not None and adhoc_instructions.strip():
+        _write_text(itdir / "in" / "adhoc_instructions.txt", adhoc_instructions.strip() + "\n")
 
 
 def run_kernel(
@@ -1586,6 +1629,7 @@ def run_kernel(
     commit_on_refine: bool,
     verbose: bool = False,
     llm_config: LLMConfig | None = None,
+    adhoc_instructions: str | None = None,
 ) -> int:
     _ensure_immutable_governance_files_unchanged()
 
@@ -1674,6 +1718,7 @@ def run_kernel(
                 chapter_text=_load_chapter_text(chapter_file).to_text(),
                 ledger_chapter=ledger_chapter_for_iteration,
                 previous_critic=previous_critic,
+                adhoc_instructions=adhoc_instructions,
             )
 
             planner_out = itdir / "out" / "planner.json"
@@ -1698,7 +1743,7 @@ def run_kernel(
 
                 # Generate any missing role outputs in dependency order.
                 if not planner_out.exists():
-                    _llm_generate_planner(itdir, llm)
+                    _llm_generate_planner(itdir, llm, adhoc_instructions=adhoc_instructions)
 
                 planner_json_transit = _load_json(planner_out) if planner_out.exists() else None
                 planner_json_text = planner_json_transit.raw_text if planner_json_transit is not None else ""
@@ -1709,12 +1754,13 @@ def run_kernel(
                         llm,
                         chapter_text=_load_chapter_text(chapter_file).to_text(),
                         planner_json=planner_json_text,
+                        adhoc_instructions=adhoc_instructions,
                     )
 
                 revised_md = _load_writer_output(writer_out).to_markdown() if writer_out.exists() else ""
 
                 if not critic_out.exists():
-                    _llm_generate_critic(itdir, llm, revised_md=revised_md)
+                    _llm_generate_critic(itdir, llm, revised_md=revised_md, adhoc_instructions=adhoc_instructions)
 
                 after_prompt = int(getattr(llm.usage, "prompt_tokens", 0) or 0)
                 after_completion = int(getattr(llm.usage, "completion_tokens", 0) or 0)
@@ -2045,6 +2091,18 @@ def main(argv: list[str] | None = None) -> int:
         help="LLM HTTP timeout seconds (default: env KERNEL_LLM_TIMEOUT_S or 90).",
     )
 
+    parser.add_argument(
+        "--adhoc-instructions",
+        default=os.environ.get("KERNEL_ADHOC_INSTRUCTIONS", None),
+        help="Extra run-specific instructions injected into role contracts/instructions (default: env KERNEL_ADHOC_INSTRUCTIONS).",
+    )
+    parser.add_argument(
+        "--adhoc-instructions-file",
+        type=Path,
+        default=os.environ.get("KERNEL_ADHOC_INSTRUCTIONS_FILE", None),
+        help="Path to a file containing extra run-specific instructions (default: env KERNEL_ADHOC_INSTRUCTIONS_FILE).",
+    )
+
     args = parser.parse_args(argv)
     try:
         cli_args = KernelCLIArgsTransit.from_namespace(args)
@@ -2085,6 +2143,11 @@ def main(argv: list[str] | None = None) -> int:
             api_key_env=cli_args.payload.llm_api_key_env,
             timeout_s=cli_args.payload.llm_timeout_s,
         )
+
+    adhoc_instructions = _load_adhoc_instructions(
+        text=cli_args.payload.adhoc_instructions,
+        path=cli_args.payload.adhoc_instructions_file,
+    )
     try:
         return int(
             run_kernel(
@@ -2097,6 +2160,7 @@ def main(argv: list[str] | None = None) -> int:
                 commit_on_refine=cli_args.payload.commit,
                 verbose=cli_args.payload.verbose,
                 llm_config=llm_cfg,
+                adhoc_instructions=adhoc_instructions,
             )
         )
     except KernelError as exc:
