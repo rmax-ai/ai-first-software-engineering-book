@@ -199,6 +199,7 @@ class StyleGuardEvalConfigPayload(BaseModel):
 @dataclass(frozen=True)
 class DeterministicEvalConfigTransit:
     source_path: Path
+    yaml_mapping: "YAMLMappingTransit"
     payload: DeterministicEvalConfigPayload
 
 
@@ -481,12 +482,13 @@ def _load_yaml(path: Path) -> YAMLMappingTransit:
 
 
 def _load_eval_config(path: Path) -> DeterministicEvalConfigTransit:
-    raw = _load_yaml(path).to_mapping()
+    yaml_mapping = _load_yaml(path)
+    raw = yaml_mapping.to_mapping()
     try:
         payload = DeterministicEvalConfigPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid eval config payload: {path}: {exc}") from exc
-    return DeterministicEvalConfigTransit(source_path=path, payload=payload)
+    return DeterministicEvalConfigTransit(source_path=path, yaml_mapping=yaml_mapping, payload=payload)
 
 
 def _load_metrics(path: Path) -> MetricsTransit:
