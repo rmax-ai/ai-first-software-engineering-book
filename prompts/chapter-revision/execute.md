@@ -119,31 +119,30 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Re-run 2026-02-22T18:27:16Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
-| 01-paradigm-shift | 1 | failed(1) | none | `4e09ecf` |
-| 01-paradigm-shift | 2 | failed(1) | none | `0d8a9c0` |
-| 01-paradigm-shift | 3 | failed(1) | none | `5b48c40` |
-| 02-harness-engineering | 1 | failed(1) | none | `93e5538` |
-| 02-harness-engineering | 2 | failed(1) | none | `7df78ef` |
-| 02-harness-engineering | 3 | failed(1) | none | `91c7d51` |
-| 03-autonomous-kernels | 1 | failed(1) | none | `c43a66e` |
-| 03-autonomous-kernels | 2 | failed(1) | none | `54a0039` |
-| 03-autonomous-kernels | 3 | failed(1) | none | `e248b79` |
-| 04-memory-systems | 1 | failed(1) | none | `55986ca` |
-| 04-memory-systems | 2 | failed(1) | none | `b99ea6d` |
-| 04-memory-systems | 3 | failed(1) | none | `e2beae7` |
-| 05-evaluation-and-traces | 1 | failed(1) | none | `da00b2e` |
-| 05-evaluation-and-traces | 2 | failed(1) | none | `180b572` |
-| 05-evaluation-and-traces | 3 | failed(1) | none | `475c219` |
-| 06-agent-governance | 1 | failed(1) | none | `7108efd` |
-| 06-agent-governance | 2 | failed(1) | none | `8accd95` |
-| 06-agent-governance | 3 | failed(1) | none | `78c8a5e` |
-| 07-production-ai-infrastructure | 1 | failed(1) | none | `c4e1991` |
-| 07-production-ai-infrastructure | 2 | failed(1) | none | `e0e09f3` |
-| 07-production-ai-infrastructure | 3 | failed(1) | none | `f76457e` |
-| 99-future-directions | 1 | failed(1) | none | `288afe9` |
-| 99-future-directions | 2 | failed(1) | none | `2896716` |
-| 99-future-directions | 3 | failed(1) | none | `7182dd7` |
-### Re-run Summary (2026-02-22T18:27:16Z)
+| 01-paradigm-shift | 1 | failed(1) | none | `d3e965a` |
+| 01-paradigm-shift | 2 | failed(1) | none | `ff2254c` |
+| 01-paradigm-shift | 3 | failed(1) | none | `3993913` |
+| 02-harness-engineering | 1 | failed(1) | none | `59db948` |
+| 02-harness-engineering | 2 | failed(1) | none | `f008970` |
+| 02-harness-engineering | 3 | failed(1) | none | `89b1654` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `79451b8` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `552d736` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `92e2ce9` |
+| 04-memory-systems | 1 | failed(1) | none | `71421b7` |
+| 04-memory-systems | 2 | failed(1) | none | `6c504c4` |
+| 04-memory-systems | 3 | failed(1) | none | `ab6240b` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `d4790e3` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `0b6dc72` |
+| 05-evaluation-and-traces | 3 | failed(1) | none | `46f1d93` |
+| 06-agent-governance | 1 | failed(1) | none | `c4a9ccd` |
+| 06-agent-governance | 2 | failed(1) | none | `0937ed5` |
+| 06-agent-governance | 3 | failed(1) | none | `32f73c7` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `9795ffe` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `d922ad5` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `8c0d5b9` |
+| 99-future-directions | 1 | failed(1) | none | `4863810` |
+| 99-future-directions | 2 | failed(1) | none | `df25a52` |
+| 99-future-directions | 3 | failed(1) | none | `731ed63` |### Re-run Summary (2026-02-22T18:27:16Z)
 - Completed 24/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Failed passes: 24.
