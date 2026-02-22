@@ -1,21 +1,22 @@
-# Plan
+# Iteration plan
 
-1. Reconfirm harness constraints from `DEVELOPMENT.md` and the seed requirements in `prompts/incremental-improvements/execute.md`.
-2. Define feature backlog items for deterministic harness behavior and observability:
-   - richer phase/trace summaries in `state/kernel.py`
-   - clearer structured role scaffolds in `state/role_io_templates.py`
-   - stricter smoke-mode coverage and malformed-payload guards in `state/copilot_sdk_uv_smoke.py`
-3. Define validation tests for each feature area:
-   - targeted UV smoke commands (`uv run python state/copilot_sdk_uv_smoke.py --mode ...`)
-   - focused kernel execution checks (`uv run python state/kernel.py --chapter-id <id>`)
-4. Define evaluation wiring updates in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` to detect regressions caused by harness changes.
-5. Record risks, trade-offs, and one concrete next implementation task to execute in the next iteration.
+1. Inventory current harness surfaces from `DEVELOPMENT.md` and existing `state/` + `evals/` contracts.
+2. Define feature improvements for deterministic execution visibility and controllability:
+   - structured phase-trace output and richer failure metadata in `state/kernel.py`.
+   - clearer role-scaffold metadata and validation hooks in `state/role_io_templates.py`.
+   - expanded smoke coverage modes in `state/copilot_sdk_uv_smoke.py` for trace and shutdown behaviors.
+3. Define verification work:
+   - targeted harness smoke runs with `uv run python state/copilot_sdk_uv_smoke.py`.
+   - kernel-focused deterministic checks around trace payload shape and budget gates.
+4. Define regression evaluation wiring:
+   - map expected signals to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+   - ensure future implementation updates document impacts to `state/metrics.json`.
+5. Publish this iteration’s artifacts and recommend one smallest next implementation task.
 
-## Files expected to change (this iteration)
-- `state/feature_iterations/iter_001/01-task.md`
-- `state/feature_iterations/iter_001/02-plan.md`
-- `state/feature_iterations/iter_001/03-execution.md`
-- `state/feature_iterations/iter_001/04-validation.md`
-- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_001/06-next-iteration.md`
-- `state/feature_iterations/iter_001/07-summary.md`
+## Expected files to change in future iterations
+- `state/kernel.py`
+- `state/role_io_templates.py`
+- `state/copilot_sdk_uv_smoke.py`
+- `evals/chapter-quality.yaml`
+- `evals/style-guard.yaml`
+- `evals/drift-detection.yaml`

@@ -1,9 +1,9 @@
 # Iteration summary
 
-This iteration executed the seed backlog task by creating a planning-focused feature iteration folder at `state/feature_iterations/iter_001/`.
-The task, plan, execution log, validation notes, risk decisions, and next-iteration recommendation were all written as markdown artifacts.
-The plan explicitly covers future harness feature work in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
-It also defines how upcoming tests and eval wiring (`evals/chapter-quality.yaml`, `evals/style-guard.yaml`, `evals/drift-detection.yaml`) should detect regressions.
-Validation criteria for this iteration were met by confirming artifact completeness and required path coverage.
-No production harness code was changed in this seed iteration by design.
-The next recommended step is a targeted deterministic smoke-mode implementation with tests.
+This iteration established the initial `state/feature_iterations/iter_001` backlog entry.
+It followed the seed requirement to deliver a planning-only task for custom harness improvements.
+The plan captures targeted feature work for kernel trace visibility and role scaffold clarity.
+It also defines verification expectations through smoke coverage and deterministic checks.
+Evaluation impact was mapped to existing eval contracts, including drift detection.
+No harness runtime code was changed in this iteration by design.
+A single, concrete next task now specifies schema validation implementation work.
