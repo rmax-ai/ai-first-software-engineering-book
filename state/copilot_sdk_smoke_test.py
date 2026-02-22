@@ -1038,7 +1038,7 @@ def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_mode()
 
 def run_usage_examples_duplicate_count_mode_coverage_guard_coverage_guard_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
-    target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard"
+    target_mode_name = "usage-examples-duplicate-count-mode-coverage-guard-coverage-guard-coverage-guard"
     parser = _build_parser(all_mode_specs)
     mode_action = next(
         (
