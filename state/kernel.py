@@ -31,6 +31,8 @@ from typing import Any, Iterable, Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, RootModel, ValidationError, field_validator
 
+from ledger_log_store import append_chapter_iteration_entry, append_repo_iteration_entry
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEDGER_PATH = REPO_ROOT / "state" / "ledger.json"
@@ -638,6 +640,36 @@ def _load_ledger(path: Path) -> LedgerTransit:
 
 def _save_json(path: Path, data: Any) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _append_tail(entries: list[dict[str, Any]], entry: dict[str, Any], limit: int = 50) -> list[dict[str, Any]]:
+    merged = list(entries)
+    merged.append(entry)
+    return merged[-limit:]
+
+
+def _next_repo_iteration(ledger: dict[str, Any]) -> int:
+    candidates: list[int] = []
+    try:
+        candidates.append(int(ledger.get("repo_iteration_counter", 0) or 0))
+    except (TypeError, ValueError):
+        pass
+
+    inline = ledger.get("repo_iteration_log")
+    if isinstance(inline, list):
+        try:
+            candidates.append(max((int(entry.get("iteration", 0) or 0) for entry in inline if isinstance(entry, dict)), default=0))
+        except Exception:
+            pass
+
+    tail = ledger.get("repo_iteration_log_tail")
+    if isinstance(tail, list):
+        try:
+            candidates.append(max((int(entry.get("iteration", 0) or 0) for entry in tail if isinstance(entry, dict)), default=0))
+        except Exception:
+            pass
+
+    return max(candidates or [0]) + 1
 
 
 def _load_yaml(path: Path) -> YAMLMappingTransit:
@@ -1967,14 +1999,22 @@ def run_kernel(
             chapter_meta["stability"]["last_modified_iteration"] = iteration
 
             chapter_meta.setdefault("iteration_log", [])
-            chapter_meta["iteration_log"].append(
-                {
-                    "iteration": iteration,
-                    "planner_focus": list(plan.focus_areas),
-                    "critic_score": _critic_score(critic),
-                    "drift_score": float(det.drift_score),
-                    "diff_size": float(diff_ratio),
-                }
+            chapter_entry = {
+                "iteration": iteration,
+                "timestamp": _utc_now_iso(),
+                "planner_focus": list(plan.focus_areas),
+                "critic_score": _critic_score(critic),
+                "drift_score": float(det.drift_score),
+                "diff_size": float(diff_ratio),
+            }
+            chapter_log_path = append_chapter_iteration_entry(chapter_id, chapter_entry)
+            chapter_meta.setdefault("iteration_log_files", [])
+            if isinstance(chapter_meta["iteration_log_files"], list):
+                chapter_meta["iteration_log_files"].append(chapter_log_path)
+            chapter_meta["iteration_log_tail"] = _append_tail(
+                [entry for entry in chapter_meta.get("iteration_log_tail", []) if isinstance(entry, dict)],
+                chapter_entry,
+                limit=50,
             )
 
             # Update metrics.json (minimal, per schema)
@@ -1992,46 +2032,52 @@ def run_kernel(
             ch_metrics["history"].append(metrics_history.to_metrics_entry())
             _save_json(METRICS_PATH, metrics)
 
-            # Update repo_iteration_log (minimal entry)
+            # Update repo_iteration_log as file-backed shards.
+            repo_iter = _next_repo_iteration(ledger)
+            repo_entry = {
+                "iteration": repo_iter,
+                "timestamp": _utc_now_iso(),
+                "agent_task": "kernel_refine",
+                "inputs": {
+                    "changed_files": [chapter_path, chapter_log_path, "state/ledger.json", "state/metrics.json"],
+                    "notes": f"Kernel refinement iteration {iteration} for {chapter_id}",
+                },
+                "scope": {
+                    "chapters_modified": [chapter_id],
+                    "patterns_modified": [],
+                    "governance_modified": False,
+                },
+                "resource_usage": {
+                    "prompt_tokens": int(getattr(llm_iter_usage, "prompt_tokens", 0) or 0) if llm_iter_usage is not None else 0,
+                    "completion_tokens": int(getattr(llm_iter_usage, "completion_tokens", 0) or 0) if llm_iter_usage is not None else 0,
+                    "eval_runtime_ms": 0,
+                },
+                "evals": {
+                    "chapter_quality": det.chapter_quality,
+                    "style_guard": det.style_guard,
+                    "drift_detection": det.drift_detection,
+                },
+                "outcome": {
+                    "status": "passed" if pass_now else "refine",
+                    "decision": "approve" if pass_now else "refine",
+                    "rationale": "Deterministic eval + critic decision gating.",
+                },
+                "artifacts": {
+                    "commit_hash": None,
+                    "diff_summary": f"diff_ratio={diff_ratio:.2f}; drift_score={det.drift_score:.2f}",
+                },
+            }
+            repo_log_path = append_repo_iteration_entry(repo_entry)
             ledger.setdefault("repo_iteration_log", [])
-            repo_log = ledger["repo_iteration_log"]
-            if isinstance(repo_log, list):
-                repo_iter = (max((int(e.get("iteration", 0) or 0) for e in repo_log if isinstance(e, dict)), default=0) + 1)
-                repo_log.append(
-                    {
-                        "iteration": repo_iter,
-                        "timestamp": _utc_now_iso(),
-                        "agent_task": "kernel_refine",
-                        "inputs": {
-                            "changed_files": [chapter_path, "state/ledger.json", "state/metrics.json"],
-                            "notes": f"Kernel refinement iteration {iteration} for {chapter_id}",
-                        },
-                        "scope": {
-                            "chapters_modified": [chapter_id],
-                            "patterns_modified": [],
-                            "governance_modified": False,
-                        },
-                        "resource_usage": {
-                            "prompt_tokens": int(getattr(llm_iter_usage, "prompt_tokens", 0) or 0) if llm_iter_usage is not None else 0,
-                            "completion_tokens": int(getattr(llm_iter_usage, "completion_tokens", 0) or 0) if llm_iter_usage is not None else 0,
-                            "eval_runtime_ms": 0,
-                        },
-                        "evals": {
-                            "chapter_quality": det.chapter_quality,
-                            "style_guard": det.style_guard,
-                            "drift_detection": det.drift_detection,
-                        },
-                        "outcome": {
-                            "status": "passed" if pass_now else "refine",
-                            "decision": "approve" if pass_now else "refine",
-                            "rationale": "Deterministic eval + critic decision gating.",
-                        },
-                        "artifacts": {
-                            "commit_hash": None,
-                            "diff_summary": f"diff_ratio={diff_ratio:.2f}; drift_score={det.drift_score:.2f}",
-                        },
-                    }
-                )
+            ledger.setdefault("repo_iteration_log_files", [])
+            if isinstance(ledger["repo_iteration_log_files"], list):
+                ledger["repo_iteration_log_files"].append(repo_log_path)
+            ledger["repo_iteration_log_tail"] = _append_tail(
+                [entry for entry in ledger.get("repo_iteration_log_tail", []) if isinstance(entry, dict)],
+                repo_entry,
+                limit=100,
+            )
+            ledger["repo_iteration_counter"] = repo_iter
 
             _save_json(LEDGER_PATH, ledger)
             _vprint(verbose, f"iter {iteration}: persisted state (consecutive_passes={consecutive_passes})")

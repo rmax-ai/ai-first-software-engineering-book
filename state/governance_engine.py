@@ -21,6 +21,8 @@ from typing import Any, Iterable, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
+from ledger_log_store import compact_ledger_logs, load_entries_from_relative_paths
+
 
 LEDGER_DEFAULT_PATH = Path(__file__).resolve().parent / "ledger.json"
 IMMUTABLE_GOVERNANCE_FILES = {"AGENTS.md", "CONSTITUTION.md"}
@@ -81,7 +83,7 @@ class ChapterSelectionStrategyPayload(BaseModel):
 class GovernanceCLIArgsPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    cmd: Literal["validate", "select", "promotions", "unhold", "unlock"]
+    cmd: Literal["validate", "select", "promotions", "unhold", "unlock", "compact-logs"]
     ledger: Path
     chapter_id: list[str] = Field(default_factory=list)
     status: str = "active_refinement"
@@ -101,6 +103,7 @@ class LedgerPayload(BaseModel):
     chapter_lifecycle_rules: ChapterLifecycleRulesPayload = Field(default_factory=ChapterLifecycleRulesPayload)
     chapter_selection_strategy: ChapterSelectionStrategyPayload = Field(default_factory=ChapterSelectionStrategyPayload)
     repo_iteration_log: list[dict[str, Any]] = Field(default_factory=list)
+    repo_iteration_log_files: list[str] = Field(default_factory=list)
     chapters: dict[str, LedgerChapterPayload] = Field(default_factory=dict)
 
 
@@ -295,7 +298,19 @@ def _validate_repo_iteration_log(ledger: dict[str, Any]) -> None:
     if not isinstance(repo_log, list):
         raise GovernanceError("ledger.repo_iteration_log must be an array")
 
-    for entry in repo_log:
+    repo_log_file_paths = ledger.get("repo_iteration_log_files", [])
+    if not isinstance(repo_log_file_paths, list):
+        raise GovernanceError("ledger.repo_iteration_log_files must be an array")
+    if any(not isinstance(path, str) or not path.strip() for path in repo_log_file_paths):
+        raise GovernanceError("ledger.repo_iteration_log_files entries must be non-empty strings")
+
+    file_entries, file_errors = load_entries_from_relative_paths([str(path) for path in repo_log_file_paths])
+    if file_errors:
+        raise GovernanceError(file_errors[0])
+
+    effective_repo_log = list(repo_log) + file_entries
+
+    for entry in effective_repo_log:
         if not isinstance(entry, dict):
             raise GovernanceError("repo_iteration_log entries must be objects")
 
@@ -648,6 +663,21 @@ def _cmd_unlock(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_compact_logs(args: argparse.Namespace) -> int:
+    ledger = _load_ledger(args.ledger).as_ledger_dict()
+    errors = validate_ledger(ledger)
+    if errors:
+        sys.stderr.write("Ledger validation failed; refusing to compact logs.\n")
+        for err in errors:
+            sys.stderr.write(f"- {err}\n")
+        return 1
+
+    stats = compact_ledger_logs(ledger, tail_size=50)
+    _save_json(args.ledger, ledger)
+    sys.stdout.write(_dump_json(stats) + "\n")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="governance_engine", description="Operational governance utilities for state/ledger.json")
     parser.add_argument("--ledger", type=Path, default=LEDGER_DEFAULT_PATH, help="Path to ledger.json")
@@ -681,6 +711,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_unlock.set_defaults(func=_cmd_unlock)
 
+    p_compact = sub.add_parser("compact-logs", help="Migrate inline iteration logs into sharded files")
+    p_compact.set_defaults(func=_cmd_compact_logs)
+
     args = parser.parse_args(argv)
     try:
         cli_args = GovernanceCLIArgsTransit.from_namespace(args)
@@ -692,6 +725,7 @@ def main(argv: list[str] | None = None) -> int:
         "promotions": _cmd_promotions,
         "unhold": _cmd_unhold,
         "unlock": _cmd_unlock,
+        "compact-logs": _cmd_compact_logs,
     }
     return int(handler_map[cli_args.payload.cmd](cli_args.to_namespace()))
 
