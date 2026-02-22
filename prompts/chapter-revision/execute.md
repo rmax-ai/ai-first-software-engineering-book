@@ -92,30 +92,30 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Re-run 2026-02-22T18:12:26Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
-| 01-paradigm-shift | 1 | failed(1) | none |  |
-| 01-paradigm-shift | 2 | failed(1) | none |  |
-| 01-paradigm-shift | 3 | failed(1) | none |  |
-| 02-harness-engineering | 1 | failed(1) | none |  |
-| 02-harness-engineering | 2 | failed(1) | none |  |
-| 02-harness-engineering | 3 | failed(1) | none |  |
-| 03-autonomous-kernels | 1 | failed(1) | none |  |
-| 03-autonomous-kernels | 2 | failed(1) | none |  |
-| 03-autonomous-kernels | 3 | failed(1) | none |  |
-| 04-memory-systems | 1 | failed(1) | none |  |
-| 04-memory-systems | 2 | failed(1) | none |  |
-| 04-memory-systems | 3 | failed(1) | none |  |
-| 05-evaluation-and-traces | 1 | failed(1) | none |  |
-| 05-evaluation-and-traces | 2 | failed(1) | none |  |
-| 05-evaluation-and-traces | 3 | failed(1) | none |  |
-| 06-agent-governance | 1 | failed(1) | none |  |
-| 06-agent-governance | 2 | failed(1) | none |  |
-| 06-agent-governance | 3 | failed(1) | none |  |
-| 07-production-ai-infrastructure | 1 | failed(1) | none |  |
-| 07-production-ai-infrastructure | 2 | failed(1) | none |  |
-| 07-production-ai-infrastructure | 3 | failed(1) | none |  |
-| 99-future-directions | 1 | failed(1) | none |  |
-| 99-future-directions | 2 | failed(1) | none |  |
-| 99-future-directions | 3 | failed(1) | none |  |
+| 01-paradigm-shift | 1 | failed(1) | none | `this commit` |
+| 01-paradigm-shift | 2 | failed(1) | none | `this commit` |
+| 01-paradigm-shift | 3 | failed(1) | none | `this commit` |
+| 02-harness-engineering | 1 | failed(1) | none | `this commit` |
+| 02-harness-engineering | 2 | failed(1) | none | `this commit` |
+| 02-harness-engineering | 3 | failed(1) | none | `this commit` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `this commit` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `this commit` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `this commit` |
+| 04-memory-systems | 1 | failed(1) | none | `this commit` |
+| 04-memory-systems | 2 | failed(1) | none | `this commit` |
+| 04-memory-systems | 3 | failed(1) | none | `this commit` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `this commit` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `this commit` |
+| 05-evaluation-and-traces | 3 | failed(1) | none | `this commit` |
+| 06-agent-governance | 1 | failed(1) | none | `this commit` |
+| 06-agent-governance | 2 | failed(1) | none | `this commit` |
+| 06-agent-governance | 3 | failed(1) | none | `this commit` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `this commit` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `this commit` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `this commit` |
+| 99-future-directions | 1 | failed(1) | none | `this commit` |
+| 99-future-directions | 2 | failed(1) | none | `this commit` |
+| 99-future-directions | 3 | failed(1) | none | `this commit` |
 
 ### Re-run Summary (2026-02-22T18:12:26Z)
 - Completed 24/24 chapter passes with one commit per pass.
