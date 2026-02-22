@@ -60,7 +60,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/role_io_templates.py` now also forwards validated ledger payloads between template preparation steps via `LedgerTransit`.
 - `state/role_io_templates.py` now validates chapter markdown file ingestion via `ChapterTextPayload` and forwards validated chapter text via `ChapterTextTransit` before template context assembly.
 - `state/governance_engine.py` now validates `state/ledger.json` through `LedgerPayload` and passes parsed ledger data between CLI handlers via `LedgerTransit`.
-- `state/governance_engine.py` now validates raw `state/ledger.json` root mappings via `LedgerJSONPayload` before `LedgerPayload` parsing and `LedgerTransit` forwarding.
+- `state/governance_engine.py` now validates raw `state/ledger.json` root mappings via `LedgerJSONPayload` and forwards parsed mappings through `LedgerJSONTransit` before `LedgerPayload` parsing and `LedgerTransit` forwarding.
 - `state/governance_engine.py` now parses lifecycle transition thresholds via `ChapterLifecycleRulesPayload` and forwards promotion thresholds via `PromotionRulesTransit` before lifecycle promotion computation.
 - `state/governance_engine.py` now parses chapter selection strategy ordering via `ChapterSelectionStrategyPayload` and forwards lifecycle selection order via `SelectionStrategyTransit` before deterministic chapter selection.
 - `state/copilot_sdk_uv_smoke.py` now validates trace-summary metrics and `kernel_trace.jsonl` phase payloads with Pydantic models and forwards validated values through `MetricsHistoryTransit` and `PhaseTraceTransit`.

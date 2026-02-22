@@ -95,6 +95,14 @@ class LedgerJSONPayload(BaseModel):
 
 
 @dataclass(frozen=True)
+class LedgerJSONTransit:
+    payload: LedgerJSONPayload
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.data
+
+
+@dataclass(frozen=True)
 class LedgerTransit:
     raw: dict[str, Any]
     payload: LedgerPayload
@@ -123,7 +131,7 @@ class SelectionStrategyTransit:
         return cls(lifecycle_priority=lifecycle_priority)
 
 
-def _load_json(path: Path) -> dict[str, Any]:
+def _load_json(path: Path) -> LedgerJSONTransit:
     try:
         parsed = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
@@ -134,7 +142,7 @@ def _load_json(path: Path) -> dict[str, Any]:
         payload = LedgerJSONPayload.model_validate({"data": parsed})
     except ValidationError as exc:
         raise GovernanceError(f"Invalid ledger JSON payload root at {path}: {exc}") from exc
-    return payload.data
+    return LedgerJSONTransit(payload=payload)
 
 
 def _dump_json(data: Any) -> str:
@@ -142,7 +150,7 @@ def _dump_json(data: Any) -> str:
 
 
 def _load_ledger(path: Path) -> LedgerTransit:
-    raw = _load_json(path)
+    raw = _load_json(path).to_mapping()
     try:
         payload = LedgerPayload.model_validate(raw)
     except ValidationError as exc:
