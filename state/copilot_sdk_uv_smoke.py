@@ -110,7 +110,9 @@ async def run_prompt_mode(model: str, prompt: str, timeout_s: float) -> int:
     return 0
 
 
-def _build_trace_summary_fixture(chapter_id: str, fixture_root: Path) -> tuple[Path, Path]:
+def _build_trace_summary_fixture(
+    chapter_id: str, fixture_root: Path, malformed_phase_trace: bool = False
+) -> tuple[Path, Path]:
     fixture_repo_root = fixture_root / "repo"
     metrics_path = fixture_repo_root / "state" / "metrics.json"
     trace_path = fixture_repo_root / "state" / "role_io" / chapter_id / "iter_01" / "out" / "kernel_trace.jsonl"
@@ -141,6 +143,8 @@ def _build_trace_summary_fixture(chapter_id: str, fixture_root: Path) -> tuple[P
         {"event": "phase_trace", "payload": {"phase": "evaluation", "status": "ok", "duration_ms": 1, "budget_signal": "within"}},
         {"event": "phase_trace", "payload": {"phase": "state_persistence", "status": "ok", "duration_ms": 1, "budget_signal": "within"}},
     ]
+    if malformed_phase_trace:
+        phase_entries[1]["payload"].pop("budget_signal", None)
     trace_path.write_text("\n".join(json.dumps(entry) for entry in phase_entries) + "\n", encoding="utf-8")
     return metrics_path, fixture_repo_root
 
@@ -151,11 +155,16 @@ async def run_trace_summary_mode(
     run_kernel: bool,
     metrics_path: Path,
     fixture_root: Path,
+    expect_phase_trace_failure: bool = False,
 ) -> int:
     repo_root_for_trace = REPO_ROOT
     metrics_path_for_trace = metrics_path
     if not run_kernel:
-        metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_fixture(chapter_id=chapter_id, fixture_root=fixture_root)
+        metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_fixture(
+            chapter_id=chapter_id,
+            fixture_root=fixture_root,
+            malformed_phase_trace=expect_phase_trace_failure,
+        )
 
     if run_kernel:
         kernel_cmd = [
@@ -209,25 +218,38 @@ async def run_trace_summary_mode(
     trace_entries = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
     phase_entries = [entry for entry in trace_entries if entry.get("event") == "phase_trace"]
     if not phase_entries:
-        print("FAIL: no phase_trace events in kernel trace")
-        return 1
+        observed_phase_trace_failure = "no phase_trace events in kernel trace"
+    else:
+        observed_phase_trace_failure = ""
 
     required_phase_payload_keys = {"phase", "status", "duration_ms", "budget_signal"}
-    for entry in phase_entries:
-        payload = entry.get("payload")
-        if not isinstance(payload, dict):
-            print("FAIL: phase_trace payload is not an object")
-            return 1
-        phase_missing = sorted(required_phase_payload_keys - set(payload))
-        if phase_missing:
-            print(f"FAIL: phase_trace missing keys: {phase_missing}")
-            return 1
+    if not observed_phase_trace_failure:
+        for entry in phase_entries:
+            payload = entry.get("payload")
+            if not isinstance(payload, dict):
+                observed_phase_trace_failure = "phase_trace payload is not an object"
+                break
+            phase_missing = sorted(required_phase_payload_keys - set(payload))
+            if phase_missing:
+                observed_phase_trace_failure = f"phase_trace missing keys: {phase_missing}"
+                break
 
-    phase_names = {entry.get("payload", {}).get("phase") for entry in phase_entries}
-    required_phases = {"role_output_ready", "evaluation", "state_persistence"}
-    missing_phases = sorted(required_phases - phase_names)
-    if missing_phases:
-        print(f"FAIL: missing required phase traces: {missing_phases}")
+    if not observed_phase_trace_failure:
+        phase_names = {entry.get("payload", {}).get("phase") for entry in phase_entries}
+        required_phases = {"role_output_ready", "evaluation", "state_persistence"}
+        missing_phases = sorted(required_phases - phase_names)
+        if missing_phases:
+            observed_phase_trace_failure = f"missing required phase traces: {missing_phases}"
+
+    if expect_phase_trace_failure:
+        if observed_phase_trace_failure:
+            print(f"PASS: expected phase_trace validation failure observed: {observed_phase_trace_failure}")
+            return 0
+        print("FAIL: expected malformed phase_trace validation failure, but validation passed")
+        return 1
+
+    if observed_phase_trace_failure:
+        print(f"FAIL: {observed_phase_trace_failure}")
         return 1
 
     print("PASS: trace_summary present with required keys")
@@ -241,6 +263,15 @@ async def main_async(args: argparse.Namespace) -> int:
         return await run_ping_mode()
     if args.mode == "prompt":
         return await run_prompt_mode(model=args.model, prompt=args.prompt, timeout_s=args.timeout)
+    if args.mode == "trace-summary-malformed-phase":
+        return await run_trace_summary_mode(
+            chapter_id=args.chapter_id,
+            max_iterations=args.kernel_max_iterations,
+            run_kernel=args.run_kernel_for_trace_summary,
+            metrics_path=Path(args.metrics_path),
+            fixture_root=Path(args.trace_summary_fixture_root),
+            expect_phase_trace_failure=True,
+        )
     return await run_trace_summary_mode(
         chapter_id=args.chapter_id,
         max_iterations=args.kernel_max_iterations,
@@ -252,7 +283,7 @@ async def main_async(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
-    parser.add_argument("--mode", choices=["ping", "prompt", "trace-summary"], default="ping")
+    parser.add_argument("--mode", choices=["ping", "prompt", "trace-summary", "trace-summary-malformed-phase"], default="ping")
     parser.add_argument("--model", default="gpt-5")
     parser.add_argument("--prompt", default="Reply with exactly: ok")
     parser.add_argument("--timeout", type=float, default=45.0)
