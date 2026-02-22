@@ -87,3 +87,8 @@ Replace `<chapter>` with the chapter identifier listed below.
 - Completed 24/24 chapter passes with one commit per pass.
 - All kernel runs exited with code `1` after reaching max-iteration hold; chapters were re-opened via governance unlock/unhold before each pass.
 - Total commits created for this re-run loop: 24.
+
+
+## Re-run 2026-02-22T18:12:26Z
+| Chapter | Pass | Result | Subagents | Commit |
+|--------:|-----:|--------|-----------|--------|
