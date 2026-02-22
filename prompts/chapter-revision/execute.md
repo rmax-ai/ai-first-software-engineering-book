@@ -93,9 +93,10 @@ Replace `<chapter>` with the chapter identifier listed below.
 | 02-harness-engineering | 2 | failed(1) | none | `9c65b24]` |
 | 02-harness-engineering | 3 | failed(1) | none | `cb3dcfb]` |
 | 03-autonomous-kernels | 1 | failed(1) | none | `004623a]` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `c9af4a8]` |
 ### Re-run Summary (2026-02-22T18:25:03Z)
-- Completed 7/24 chapter passes so far.
+- Completed 8/24 chapter passes so far.
 - Kernel runs were executed with governance unlock/unhold before each pass.
-- Failed passes: 7.
-- Total commits created for this re-run loop: 7.
+- Failed passes: 8.
+- Total commits created for this re-run loop: 8.
 
