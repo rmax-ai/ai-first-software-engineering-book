@@ -29,6 +29,7 @@ LLMClientError = llm_client.LLMClientError
 Provider = llm_client.Provider
 
 TRACE_SUMMARY_REQUIRED_KEYS = {"decision", "drift_score", "diff_ratio", "deterministic_pass"}
+TRACE_SUMMARY_KERNEL_FIXTURE_REPO = ROOT / "state" / ".smoke_fixtures" / "trace_summary" / "kernel_repo"
 
 
 def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:
@@ -833,7 +834,11 @@ def run_trace_summary_missing_entry_guard_mode() -> int:
     return 0
 
 
-def _run_trace_summary_kernel_mode(mode_name: str, expected_failure: str | None = None) -> str:
+def _run_trace_summary_kernel_mode(
+    mode_name: str,
+    expected_failure: str | None = None,
+    expect_fixture_cleanup: bool = False,
+) -> str:
     ledger_path = ROOT / "state" / "ledger.json"
     before_ledger = ledger_path.read_text(encoding="utf-8")
     proc = subprocess.run(
@@ -852,6 +857,10 @@ def _run_trace_summary_kernel_mode(mode_name: str, expected_failure: str | None 
     )
     after_ledger = ledger_path.read_text(encoding="utf-8")
     assert after_ledger == before_ledger, "expected state/ledger.json to remain unchanged after kernel trace-summary smoke"
+    if expect_fixture_cleanup:
+        assert not TRACE_SUMMARY_KERNEL_FIXTURE_REPO.exists(), (
+            f"expected fixture kernel repo cleanup after mode {mode_name}: {TRACE_SUMMARY_KERNEL_FIXTURE_REPO}"
+        )
 
     combined_output = "\n".join(part for part in (proc.stdout.strip(), proc.stderr.strip()) if part).strip()
     assert proc.returncode == 0, f"expected exit code 0 for mode {mode_name}, got {proc.returncode}\n{combined_output}"
@@ -896,6 +905,27 @@ def run_trace_summary_kernel_missing_phase_mode() -> int:
         expected_failure="missing required phase traces: ['evaluation']",
     )
     print("PASS: trace-summary-kernel-missing-phase mode validates missing required phase-trace failures")
+    return 0
+
+
+def run_trace_summary_kernel_fixture_cleanup_mode() -> int:
+    _run_trace_summary_kernel_mode("trace-summary", expect_fixture_cleanup=True)
+    _run_trace_summary_kernel_mode(
+        "trace-summary-malformed-phase",
+        expected_failure="phase_trace missing keys: ['budget_signal']",
+        expect_fixture_cleanup=True,
+    )
+    _run_trace_summary_kernel_mode(
+        "trace-summary-malformed-phase-payload",
+        expected_failure="phase_trace payload is not an object",
+        expect_fixture_cleanup=True,
+    )
+    _run_trace_summary_kernel_mode(
+        "trace-summary-missing-phase",
+        expected_failure="missing required phase traces: ['evaluation']",
+        expect_fixture_cleanup=True,
+    )
+    print("PASS: trace-summary-kernel-fixture-cleanup mode validates fixture cleanup after kernel-backed trace-summary runs")
     return 0
 
 
@@ -1819,6 +1849,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "trace-summary-kernel-missing-phase",
         run_trace_summary_kernel_missing_phase_mode,
         "fixture-backed missing required phase-trace assertion",
+    ),
+    (
+        "trace-summary-kernel-fixture-cleanup",
+        run_trace_summary_kernel_fixture_cleanup_mode,
+        "fixture-backed kernel trace-summary cleanup assertion",
     ),
     (
         "docstring-mode-coverage-guard",

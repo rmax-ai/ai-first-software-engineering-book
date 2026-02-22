@@ -237,11 +237,13 @@ async def run_trace_summary_mode(
 ) -> int:
     repo_root_for_trace = REPO_ROOT
     metrics_path_for_trace = metrics_path
+    fixture_cleanup_target: Path | None = None
     if run_kernel:
         metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_kernel_fixture(
             chapter_id=chapter_id,
             fixture_root=fixture_root,
         )
+        fixture_cleanup_target = repo_root_for_trace
     else:
         metrics_path_for_trace, repo_root_for_trace = _build_trace_summary_fixture(
             chapter_id=chapter_id,
@@ -251,106 +253,110 @@ async def run_trace_summary_mode(
             omit_evaluation_phase_trace=inject_missing_required_phase_trace,
         )
 
-    if run_kernel:
-        fixture_kernel_path = repo_root_for_trace / "state" / "kernel.py"
-        kernel_cmd = [
-            sys.executable,
-            str(fixture_kernel_path),
-            "--chapter-id",
-            chapter_id,
-            "--llm",
-            "--llm-provider",
-            "mock",
-            "--max-iterations",
-            str(max_iterations),
-        ]
-        proc = subprocess.run(kernel_cmd, cwd=repo_root_for_trace, capture_output=True, text=True)
-        if proc.returncode not in {0, 1}:
-            print("FAIL: kernel run failed for trace-summary smoke")
-            if proc.stdout:
-                print(proc.stdout.strip())
-            if proc.stderr:
-                print(proc.stderr.strip())
+    try:
+        if run_kernel:
+            fixture_kernel_path = repo_root_for_trace / "state" / "kernel.py"
+            kernel_cmd = [
+                sys.executable,
+                str(fixture_kernel_path),
+                "--chapter-id",
+                chapter_id,
+                "--llm",
+                "--llm-provider",
+                "mock",
+                "--max-iterations",
+                str(max_iterations),
+            ]
+            proc = subprocess.run(kernel_cmd, cwd=repo_root_for_trace, capture_output=True, text=True)
+            if proc.returncode not in {0, 1}:
+                print("FAIL: kernel run failed for trace-summary smoke")
+                if proc.stdout:
+                    print(proc.stdout.strip())
+                if proc.stderr:
+                    print(proc.stderr.strip())
+                return 1
+
+        metrics = json.loads(metrics_path_for_trace.read_text(encoding="utf-8"))
+        chapter_metrics = metrics.get("chapters", {}).get(chapter_id, {})
+        history = chapter_metrics.get("history", [])
+        if not history:
+            print(f"FAIL: no metrics history for chapter {chapter_id}")
             return 1
 
-    metrics = json.loads(metrics_path_for_trace.read_text(encoding="utf-8"))
-    chapter_metrics = metrics.get("chapters", {}).get(chapter_id, {})
-    history = chapter_metrics.get("history", [])
-    if not history:
-        print(f"FAIL: no metrics history for chapter {chapter_id}")
-        return 1
+        latest = history[-1]
+        trace_summary = latest.get("trace_summary")
+        if not isinstance(trace_summary, dict):
+            print("FAIL: latest metrics history entry missing trace_summary")
+            return 1
 
-    latest = history[-1]
-    trace_summary = latest.get("trace_summary")
-    if not isinstance(trace_summary, dict):
-        print("FAIL: latest metrics history entry missing trace_summary")
-        return 1
+        required_keys = {"decision", "drift_score", "diff_ratio", "deterministic_pass"}
+        missing = sorted(required_keys - set(trace_summary))
+        if missing:
+            print(f"FAIL: trace_summary missing keys: {missing}")
+            return 1
 
-    required_keys = {"decision", "drift_score", "diff_ratio", "deterministic_pass"}
-    missing = sorted(required_keys - set(trace_summary))
-    if missing:
-        print(f"FAIL: trace_summary missing keys: {missing}")
-        return 1
+        iteration = latest.get("iteration")
+        if not isinstance(iteration, int):
+            print("FAIL: latest metrics history entry missing integer iteration")
+            return 1
+        trace_path = repo_root_for_trace / "state" / "role_io" / chapter_id / f"iter_{iteration:02d}" / "out" / "kernel_trace.jsonl"
+        if not trace_path.exists():
+            print(f"FAIL: kernel trace file missing at {trace_path}")
+            return 1
 
-    iteration = latest.get("iteration")
-    if not isinstance(iteration, int):
-        print("FAIL: latest metrics history entry missing integer iteration")
-        return 1
-    trace_path = repo_root_for_trace / "state" / "role_io" / chapter_id / f"iter_{iteration:02d}" / "out" / "kernel_trace.jsonl"
-    if not trace_path.exists():
-        print(f"FAIL: kernel trace file missing at {trace_path}")
-        return 1
+        trace_entries = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        phase_entries = [entry for entry in trace_entries if entry.get("event") == "phase_trace"]
+        if run_kernel and phase_entries:
+            if inject_malformed_phase_trace:
+                payload = phase_entries[0].get("payload")
+                if isinstance(payload, dict):
+                    payload.pop("budget_signal", None)
+            if inject_non_object_phase_payload:
+                phase_entries[0]["payload"] = "not-an-object"
+            if inject_missing_required_phase_trace:
+                phase_entries = [entry for entry in phase_entries if entry.get("payload", {}).get("phase") != "evaluation"]
+        if not phase_entries:
+            observed_phase_trace_failure = "no phase_trace events in kernel trace"
+        else:
+            observed_phase_trace_failure = ""
 
-    trace_entries = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    phase_entries = [entry for entry in trace_entries if entry.get("event") == "phase_trace"]
-    if run_kernel and phase_entries:
-        if inject_malformed_phase_trace:
-            payload = phase_entries[0].get("payload")
-            if isinstance(payload, dict):
-                payload.pop("budget_signal", None)
-        if inject_non_object_phase_payload:
-            phase_entries[0]["payload"] = "not-an-object"
-        if inject_missing_required_phase_trace:
-            phase_entries = [entry for entry in phase_entries if entry.get("payload", {}).get("phase") != "evaluation"]
-    if not phase_entries:
-        observed_phase_trace_failure = "no phase_trace events in kernel trace"
-    else:
-        observed_phase_trace_failure = ""
+        required_phase_payload_keys = {"phase", "status", "duration_ms", "budget_signal"}
+        if not observed_phase_trace_failure:
+            for entry in phase_entries:
+                payload = entry.get("payload")
+                if not isinstance(payload, dict):
+                    observed_phase_trace_failure = "phase_trace payload is not an object"
+                    break
+                phase_missing = sorted(required_phase_payload_keys - set(payload))
+                if phase_missing:
+                    observed_phase_trace_failure = f"phase_trace missing keys: {phase_missing}"
+                    break
 
-    required_phase_payload_keys = {"phase", "status", "duration_ms", "budget_signal"}
-    if not observed_phase_trace_failure:
-        for entry in phase_entries:
-            payload = entry.get("payload")
-            if not isinstance(payload, dict):
-                observed_phase_trace_failure = "phase_trace payload is not an object"
-                break
-            phase_missing = sorted(required_phase_payload_keys - set(payload))
-            if phase_missing:
-                observed_phase_trace_failure = f"phase_trace missing keys: {phase_missing}"
-                break
+        if not observed_phase_trace_failure:
+            phase_names = {entry.get("payload", {}).get("phase") for entry in phase_entries}
+            required_phases = {"role_output_ready", "evaluation", "state_persistence"}
+            missing_phases = sorted(required_phases - phase_names)
+            if missing_phases:
+                observed_phase_trace_failure = f"missing required phase traces: {missing_phases}"
 
-    if not observed_phase_trace_failure:
-        phase_names = {entry.get("payload", {}).get("phase") for entry in phase_entries}
-        required_phases = {"role_output_ready", "evaluation", "state_persistence"}
-        missing_phases = sorted(required_phases - phase_names)
-        if missing_phases:
-            observed_phase_trace_failure = f"missing required phase traces: {missing_phases}"
+        if expect_phase_trace_failure:
+            if observed_phase_trace_failure:
+                print(f"PASS: expected phase_trace validation failure observed: {observed_phase_trace_failure}")
+                return 0
+            print("FAIL: expected malformed phase_trace validation failure, but validation passed")
+            return 1
 
-    if expect_phase_trace_failure:
         if observed_phase_trace_failure:
-            print(f"PASS: expected phase_trace validation failure observed: {observed_phase_trace_failure}")
-            return 0
-        print("FAIL: expected malformed phase_trace validation failure, but validation passed")
-        return 1
+            print(f"FAIL: {observed_phase_trace_failure}")
+            return 1
 
-    if observed_phase_trace_failure:
-        print(f"FAIL: {observed_phase_trace_failure}")
-        return 1
-
-    print("PASS: trace_summary present with required keys")
-    print(f"trace_summary={trace_summary}")
-    print(f"phase_trace_events={len(phase_entries)}")
-    return 0
+        print("PASS: trace_summary present with required keys")
+        print(f"trace_summary={trace_summary}")
+        print(f"phase_trace_events={len(phase_entries)}")
+        return 0
+    finally:
+        if fixture_cleanup_target is not None and fixture_cleanup_target.exists():
+            shutil.rmtree(fixture_cleanup_target)
 
 
 async def main_async(args: argparse.Namespace) -> int:
