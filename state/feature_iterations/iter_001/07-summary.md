@@ -1,9 +1,10 @@
-# Iteration summary
+# Iteration 001 summary
 
-This iteration completed the seed planning task defined by the execution prompt.
-I created `state/feature_iterations/iter_001/` with all seven required artifacts.
-The task/plan documents define a concise improvement backlog for the custom harness.
-Coverage explicitly includes feature needs, targeted test strategy, and eval alignment.
-No runtime code paths were modified; this was documentation-only by design.
-Validation confirmed the artifact contract and required file-path references.
-The next iteration is scoped to deterministic phase-trace summary enrichment with smoke verification.
+This seed iteration established the first `state/feature_iterations` record.
+The selected task was to plan harness improvements rather than edit runtime code.
+The plan explicitly covered features, tests, and evaluation gates.
+Feature scope was constrained to `state/kernel.py` and `state/role_io_templates.py`.
+Validation scope was mapped to `state/copilot_sdk_uv_smoke.py` and `evals/*.yaml`.
+Risks and trade-offs were documented with implementation intentionally deferred.
+A single next task was provided for iteration 002 with concrete acceptance criteria.
+All outputs were written as concise markdown artifacts for handoff.
