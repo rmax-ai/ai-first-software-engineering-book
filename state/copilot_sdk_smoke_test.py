@@ -907,10 +907,14 @@ def _generated_non_stub_usage_mode_names(usage_lines: Sequence[str]) -> list[str
     ]
 
 
+def _expected_non_stub_mode_names(mode_specs: Sequence[tuple[str, Callable[[], int], str]]) -> list[str]:
+    return [name for name, _handler, _description in mode_specs if name != "stub"]
+
+
 def run_usage_examples_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
-    expected_mode_names = [name for name, _handler, _description in all_mode_specs if name != "stub"]
+    expected_mode_names = _expected_non_stub_mode_names(all_mode_specs)
     actual_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
     assert actual_mode_names == expected_mode_names, (
         "expected usage examples to include every non-stub mode exactly once in order"
@@ -937,7 +941,7 @@ def run_usage_examples_duplicates_guard_mode() -> int:
 def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
-    expected_mode_order = [name for name, _handler, _description in all_mode_specs if name != "stub"]
+    expected_mode_order = _expected_non_stub_mode_names(all_mode_specs)
     actual_mode_order = _generated_non_stub_usage_mode_names(usage_lines)
     assert actual_mode_order == expected_mode_order, (
         "expected generated usage examples to preserve non-stub mode registration order"
@@ -952,7 +956,7 @@ def run_usage_examples_order_guard_mode() -> int:
 def run_usage_examples_mode_set_coverage_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
-    expected_mode_names = [name for name, _handler, _description in all_mode_specs if name != "stub"]
+    expected_mode_names = _expected_non_stub_mode_names(all_mode_specs)
     actual_mode_names = _generated_non_stub_usage_mode_names(usage_lines)
     assert len(actual_mode_names) == len(expected_mode_names), (
         "expected generated usage examples to include each non-stub mode exactly once by count"
