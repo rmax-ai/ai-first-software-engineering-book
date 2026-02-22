@@ -1,10 +1,11 @@
 # Execution log
 
-## Commands and tools run
+## Commands/tools run
 - `view prompts/incremental-improvements/execute.md`
 - `view DEVELOPMENT.md`
 - `glob state/feature_iterations/iter_*`
-- `apply_patch` to create iteration artifacts
+- `mkdir -p state/feature_iterations/iter_001`
+- file writes for `01-task.md` through `07-summary.md`
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -16,5 +17,4 @@
 - `state/feature_iterations/iter_001/07-summary.md`
 
 ## Rationale
-- This iteration intentionally performed planning-only work as required by the seed prompt.
-- The artifacts establish a concrete, testable backlog for subsequent implementation iterations.
+This seed iteration intentionally focuses on planning only, creating a structured backlog and verification map before touching harness code.

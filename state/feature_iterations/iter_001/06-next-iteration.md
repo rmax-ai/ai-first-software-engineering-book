@@ -1,25 +1,18 @@
-# Recommended next iteration task
+# Next iteration recommendation
 
 ## Task
-Implement deterministic trace-summary enrichment in `state/kernel.py` and add smoke coverage in `state/copilot_sdk_uv_smoke.py`.
+Implement deterministic trace-summary schema guards in `state/kernel.py` and add matching smoke coverage in `state/copilot_sdk_smoke_test.py`.
 
 ## Why this is next
-- Trace observability provides immediate debugging value and enables clearer validation evidence for all later harness improvements.
-- It is a focused slice touching the kernel and smoke test surface without requiring broad prompt-template migration first.
+Trace-summary guardrails are foundational for reliable observability and will reduce risk before broader harness control changes are introduced.
 
 ## Acceptance criteria
-1. `state/kernel.py` emits a stable, machine-readable trace summary block for each run (including chapter id, step outcomes, and eval gate results).
-2. `state/copilot_sdk_uv_smoke.py` includes at least one deterministic mode asserting the new trace summary shape.
-3. `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` passes.
-4. Iteration artifacts record command output and pass/fail status.
+- Add or tighten helper validation in `state/kernel.py` that enforces trace summary container and latest-entry shape invariants.
+- Extend deterministic smoke matrix in `state/copilot_sdk_smoke_test.py` with at least one focused mode exercising the new guard path.
+- Run targeted verification demonstrating the new mode passes and existing deterministic smoke modes still pass.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/01-task.md`
-- `state/feature_iterations/iter_002/02-plan.md`
+- `state/copilot_sdk_smoke_test.py`
 - `state/feature_iterations/iter_002/03-execution.md`
 - `state/feature_iterations/iter_002/04-validation.md`
-- `state/feature_iterations/iter_002/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_002/06-next-iteration.md`
-- `state/feature_iterations/iter_002/07-summary.md`

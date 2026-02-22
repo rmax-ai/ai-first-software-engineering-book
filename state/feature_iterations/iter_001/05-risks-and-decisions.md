@@ -1,15 +1,12 @@
 # Risks and decisions
 
-## Risks
-1. `state/kernel.py` changes can easily introduce nondeterministic behavior unless guard checks remain table-driven and reproducible.
-2. Role template tightening in `state/role_io_templates.py` may break existing prompt assumptions if migration coverage is incomplete.
-3. Expanding smoke modes without stable assertions can create brittle tests.
+## Risks discovered
+- The planned improvements span kernel orchestration and eval contracts, so sequencing mistakes could introduce noisy regressions.
+- Existing harness behavior is only partially documented in iteration artifacts, increasing discovery cost for future implementers.
 
 ## Decisions and trade-offs
-- Decided to keep this iteration planning-only to de-risk implementation sequencing.
-- Deferred code edits until feature slices can be validated with targeted smoke and eval checks.
-- Chose eval-first mapping so each future change is tied to explicit regression signals.
+- Chose planning-only scope to keep this seed iteration minimal and aligned with prompt requirements.
+- Deferred code edits so future iterations can validate one behavioral surface at a time with targeted smoke evidence.
 
-## Intentionally deferred
-- No Python implementation changes in this iteration.
-- No eval YAML edits in this iteration; only mapping and planning were documented.
+## Deferred items
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
