@@ -63,6 +63,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/role_io_templates.py` now also forwards validated ledger payloads between template preparation steps via `LedgerTransit`.
 - `state/role_io_templates.py` now validates chapter markdown file ingestion via `ChapterTextPayload` and forwards validated chapter text via `ChapterTextTransit` before template context assembly.
 - `state/role_io_templates.py` now carries chapter markdown source-path and raw text through `ChapterTextTransit` so template assembly keeps chapter-text ingestion provenance explicit.
+- `state/role_io_templates.py` now stores `ChapterTextTransit` directly inside `TemplateContext`, preserving chapter-text provenance through context handoff before writer template output.
 - `state/governance_engine.py` now validates `state/ledger.json` through `LedgerPayload` and passes parsed ledger data between CLI handlers via `LedgerTransit`.
 - `state/governance_engine.py` now validates raw `state/ledger.json` root mappings via `LedgerJSONPayload` and forwards parsed mappings through `LedgerJSONTransit` before `LedgerPayload` parsing and `LedgerTransit` forwarding.
 - `state/governance_engine.py` now validates raw `state/ledger.json` text via `JSONTextPayload` and forwards source-path text through `JSONTextTransit` before JSON mapping parsing.

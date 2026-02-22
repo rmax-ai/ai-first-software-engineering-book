@@ -55,7 +55,11 @@ class TemplateContext:
     chapter_id: str
     iteration: int
     chapter_path: str
-    chapter_text: str
+    chapter_text_transit: "ChapterTextTransit"
+
+    @property
+    def chapter_text(self) -> str:
+        return self.chapter_text_transit.to_text()
 
 
 @dataclass(frozen=True)
@@ -159,7 +163,7 @@ def _build_template_context(ledger: LedgerTransit, chapter_id: str, iteration: i
         chapter_id=chapter_id,
         iteration=iteration,
         chapter_path=chapter.path,
-        chapter_text=chapter_text_transit.to_text(),
+        chapter_text_transit=chapter_text_transit,
     )
 
 
