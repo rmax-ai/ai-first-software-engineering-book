@@ -1,18 +1,21 @@
-# Next iteration recommendation
+# Next Iteration Recommendation
 
-## Task
-Implement deterministic trace-summary schema guards in `state/kernel.py` and add matching smoke coverage in `state/copilot_sdk_smoke_test.py`.
+## Recommended task
+Implement deterministic trace-summary normalization and validation in the harness execution path.
 
 ## Why this is next
-Trace-summary guardrails are foundational for reliable observability and will reduce risk before broader harness control changes are introduced.
+- It delivers immediate observability value in `state/kernel.py`.
+- It is a small, testable vertical slice touching planned surfaces without broad refactors.
+- It enables concrete smoke/eval assertions for later backlog items.
 
 ## Acceptance criteria
-- Add or tighten helper validation in `state/kernel.py` that enforces trace summary container and latest-entry shape invariants.
-- Extend deterministic smoke matrix in `state/copilot_sdk_smoke_test.py` with at least one focused mode exercising the new guard path.
-- Run targeted verification demonstrating the new mode passes and existing deterministic smoke modes still pass.
+1. `state/kernel.py` exposes/uses a helper that normalizes phase trace summary entries and rejects malformed shapes.
+2. `state/copilot_sdk_uv_smoke.py` includes one deterministic mode that fails on malformed trace-summary payload and passes on valid payload.
+3. One eval contract under `evals/` is updated or added to assert the expected trace-summary signal shape.
+4. Validation evidence is recorded in `state/feature_iterations/iter_002/04-validation.md` with executed commands and outputs.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_smoke_test.py`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `state/copilot_sdk_uv_smoke.py`
+- `evals/*.yaml` (single focused contract file)
+- `state/feature_iterations/iter_002/01-task.md` through `07-summary.md`

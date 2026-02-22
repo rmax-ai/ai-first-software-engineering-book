@@ -1,16 +1,26 @@
-# Iteration plan
+# Plan
 
-1. Review `DEVELOPMENT.md` and this runner contract to align with UV workflow and harness governance.
-2. Define feature backlog items for deterministic controls, trace observability, and role I/O scaffold clarity.
-3. Define targeted verification for each backlog item using smoke paths like `uv run python state/copilot_sdk_uv_smoke.py` plus focused kernel tests.
-4. Map eval impact to existing guardrails under `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-5. Write seven required artifacts in `state/feature_iterations/iter_001/` and recommend exactly one next task.
+1. Audit harness seams referenced by `DEVELOPMENT.md` and define the smallest backlog item that improves determinism and observability first.
+2. Specify `state/kernel.py` changes:
+   - Introduce a normalized phase-trace summary helper with strict shape validation.
+   - Emit clearer failure metadata for budget/validator failures without changing public CLI flags.
+3. Specify `state/role_io_templates.py` changes:
+   - Add explicit template contract notes for role input/output placeholders.
+   - Add one deterministic guard for missing required sections.
+4. Specify `state/copilot_sdk_uv_smoke.py` changes:
+   - Add one table-driven smoke mode validating the new trace summary behavior.
+   - Keep smoke matrix deterministic and aligned with existing naming conventions.
+5. Specify eval updates (`evals/*.yaml`):
+   - Add/adjust one focused check that verifies expected trace signal fields.
+   - Ensure no overlap with existing style/drift guards.
+6. Define verification sequence for execution iteration:
+   - `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>`
+   - targeted kernel invocation against a small chapter fixture
+   - existing eval gate command(s) used by repository workflow.
 
-## Files expected to change this iteration
-- `state/feature_iterations/iter_001/01-task.md`
-- `state/feature_iterations/iter_001/02-plan.md`
-- `state/feature_iterations/iter_001/03-execution.md`
-- `state/feature_iterations/iter_001/04-validation.md`
-- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_001/06-next-iteration.md`
-- `state/feature_iterations/iter_001/07-summary.md`
+## Expected files to change in future execution iteration
+- `state/kernel.py`
+- `state/role_io_templates.py`
+- `state/copilot_sdk_uv_smoke.py`
+- `evals/*.yaml` (one targeted file expected)
+- `state/feature_iterations/iter_002/*.md`

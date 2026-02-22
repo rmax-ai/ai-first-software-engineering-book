@@ -1,12 +1,13 @@
-# Risks and decisions
+# Risks and Decisions
 
 ## Risks discovered
-- The planned improvements span kernel orchestration and eval contracts, so sequencing mistakes could introduce noisy regressions.
-- Existing harness behavior is only partially documented in iteration artifacts, increasing discovery cost for future implementers.
+- The next implementation iteration may touch multiple harness surfaces (`kernel`, smoke, evals), creating cross-file coupling risk.
+- Existing deterministic smoke mode naming is dense; adding new modes without pattern reuse can reduce maintainability.
 
-## Decisions and trade-offs
-- Chose planning-only scope to keep this seed iteration minimal and aligned with prompt requirements.
-- Deferred code edits so future iterations can validate one behavioral surface at a time with targeted smoke evidence.
+## Decisions made
+- Kept this iteration planning-only to satisfy the seed contract and avoid premature code churn.
+- Chose a single next task focused on one end-to-end behavior slice (trace summary validation) to minimize integration risk.
 
-## Deferred items
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+## Deferred intentionally
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+- Broader refactors of harness architecture until the first concrete behavior slice is implemented and validated.

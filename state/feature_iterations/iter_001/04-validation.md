@@ -1,18 +1,16 @@
 # Validation
 
-## Verification commands run
-- `glob state/feature_iterations/iter_*`
-- `view DEVELOPMENT.md`
-- `view state/feature_iterations/iter_001/01-task.md`
-- `view state/feature_iterations/iter_001/02-plan.md`
-- `view state/feature_iterations/iter_001/06-next-iteration.md`
+## Verification performed
+1. Confirmed seed-iteration inputs were read:
+   - `prompts/incremental-improvements/execute.md`
+   - `DEVELOPMENT.md`
+2. Confirmed iteration discovery result:
+   - `state/feature_iterations/iter_*` returned no existing folders, so `iter_001` was selected.
+3. Confirmed required artifact contract:
+   - All seven markdown files were created under `state/feature_iterations/iter_001/`.
 
-## Observed results
-- `iter_001` exists and contains all seven required markdown artifacts.
-- Artifacts explicitly cover features, tests, and eval pathways for the custom harness plan.
-- The next iteration recommendation is singular and includes acceptance criteria plus expected files.
-
-## Acceptance criteria status
-- Plan scope coverage: **pass**
-- Required artifact contract: **pass**
-- Single concrete next task: **pass**
+## Results against acceptance criteria
+- **AC1 (features coverage):** Pass — plan names kernel observability/determinism and role I/O contract improvements.
+- **AC2 (tests coverage):** Pass — plan includes targeted smoke and kernel verification commands for follow-up iteration.
+- **AC3 (eval coverage):** Pass — plan maps expected work to `evals/*.yaml` updates and guard alignment.
+- **AC4 (artifact completeness):** Pass — all seven required markdown artifacts are present.
