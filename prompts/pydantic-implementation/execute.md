@@ -76,3 +76,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/llm_client.py` now validates Copilot SDK `send()` response dictionaries through `SDKChatResponsePayload` and forwards them via `SDKChatResponseTransit` before usage/content normalization.
 - `state/copilot_sdk_smoke_test.py` now translates `LedgerSnapshotPayload` validation failures into explicit assertion errors during ledger fixture ingestion while forwarding validated snapshots via `LedgerSnapshotTransit`.
 - `state/role_io_templates.py` now validates raw JSON mapping roots through `JSONMappingPayload` and forwards parsed mappings via `JSONMappingTransit` before `LedgerPayload` parsing.
+- `state/kernel.py` now validates deterministic eval YAML mapping roots through `YAMLMappingPayload` and forwards parsed mappings via `YAMLMappingTransit` before `DeterministicEvalConfigPayload` parsing.

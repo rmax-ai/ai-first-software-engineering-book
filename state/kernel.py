@@ -124,6 +124,12 @@ class DeterministicEvalConfigPayload(BaseModel):
     version: int | None = None
 
 
+class YAMLMappingPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: dict[str, Any]
+
+
 class MetricsChapterPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -277,6 +283,14 @@ class MetricsHistoryTransit:
         }
 
 
+@dataclass(frozen=True)
+class YAMLMappingTransit:
+    payload: YAMLMappingPayload
+
+    def to_mapping(self) -> dict[str, Any]:
+        return self.payload.data
+
+
 def _utc_now_iso() -> str:
     return _dt.datetime.now(tz=_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -303,18 +317,22 @@ def _save_json(path: Path, data: Any) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def _load_yaml(path: Path) -> dict[str, Any]:
+def _load_yaml(path: Path) -> YAMLMappingTransit:
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise KernelError(f"Missing YAML file: {path}") from exc
     if not isinstance(data, dict):
         raise KernelError(f"Expected YAML mapping at {path}")
-    return data
+    try:
+        payload = YAMLMappingPayload.model_validate({"data": data})
+    except ValidationError as exc:
+        raise KernelError(f"Invalid YAML mapping payload: {path}: {exc}") from exc
+    return YAMLMappingTransit(payload=payload)
 
 
 def _load_eval_config(path: Path) -> DeterministicEvalConfigPayload:
-    raw = _load_yaml(path)
+    raw = _load_yaml(path).to_mapping()
     try:
         return DeterministicEvalConfigPayload.model_validate(raw)
     except ValidationError as exc:
