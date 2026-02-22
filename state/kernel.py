@@ -138,6 +138,51 @@ class DeterministicEvalConfigPayload(BaseModel):
     version: int | None = None
 
 
+class ChapterQualityThresholdsPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    refine_min_total: float = 0.65
+
+
+class ChapterQualityEvalConfigPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    thresholds: ChapterQualityThresholdsPayload = Field(default_factory=ChapterQualityThresholdsPayload)
+
+
+class StyleGuardSentenceLengthPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    max_words: int = 28
+    hard_fail_over: int = 40
+
+
+class StyleGuardAdjectiveDensityPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    max_ratio: float = 0.12
+
+
+class StyleGuardLimitsPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    sentence_length: StyleGuardSentenceLengthPayload = Field(default_factory=StyleGuardSentenceLengthPayload)
+    adjective_density: StyleGuardAdjectiveDensityPayload = Field(default_factory=StyleGuardAdjectiveDensityPayload)
+
+
+class StyleGuardForbiddenBucketPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    examples: list[str] = Field(default_factory=list)
+
+
+class StyleGuardEvalConfigPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    limits: StyleGuardLimitsPayload = Field(default_factory=StyleGuardLimitsPayload)
+    forbidden: dict[str, StyleGuardForbiddenBucketPayload] = Field(default_factory=dict)
+
+
 @dataclass(frozen=True)
 class DeterministicEvalConfigTransit:
     source_path: Path
@@ -259,6 +304,12 @@ class DeterministicEvalTransit:
     chapter_quality: DeterministicEvalConfigTransit
     style_guard: DeterministicEvalConfigTransit
     drift_detection: DeterministicEvalConfigTransit
+
+
+@dataclass(frozen=True)
+class DeterministicEvalRulesTransit:
+    chapter_quality: ChapterQualityEvalConfigPayload
+    style_guard: StyleGuardEvalConfigPayload
 
 
 @dataclass(frozen=True)
@@ -931,7 +982,7 @@ class DeterministicEval:
     similarity_max: float
 
 
-def _eval_chapter_quality(text: str, cfg: dict[str, Any]) -> dict[str, Any]:
+def _eval_chapter_quality(text: str, cfg: ChapterQualityEvalConfigPayload) -> dict[str, Any]:
     required_sections = [
         "## Thesis",
         "## Why This Matters",
@@ -975,8 +1026,7 @@ def _eval_chapter_quality(text: str, cfg: dict[str, Any]) -> dict[str, Any]:
             forbidden_hits.append(f"vague_claims:{kw}")
 
     total = sum(scores.values()) / max(1, len(scores))
-    thresholds = cfg.get("thresholds", {}) if isinstance(cfg.get("thresholds"), dict) else {}
-    refine_min = float(thresholds.get("refine_min_total", 0.65))
+    refine_min = float(cfg.thresholds.refine_min_total)
 
     passed = (not required_missing) and (not forbidden_hits) and (total >= refine_min)
 
@@ -990,13 +1040,10 @@ def _eval_chapter_quality(text: str, cfg: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _eval_style_guard(text: str, cfg: dict[str, Any]) -> dict[str, Any]:
-    limits = cfg.get("limits", {}) if isinstance(cfg.get("limits"), dict) else {}
-    sent_cfg = limits.get("sentence_length", {}) if isinstance(limits.get("sentence_length"), dict) else {}
-    max_words = int(sent_cfg.get("max_words", 28))
-    hard_fail_over = int(sent_cfg.get("hard_fail_over", 40))
-    adj_cfg = limits.get("adjective_density", {}) if isinstance(limits.get("adjective_density"), dict) else {}
-    max_adj_ratio = float(adj_cfg.get("max_ratio", 0.12))
+def _eval_style_guard(text: str, cfg: StyleGuardEvalConfigPayload) -> dict[str, Any]:
+    max_words = int(cfg.limits.sentence_length.max_words)
+    hard_fail_over = int(cfg.limits.sentence_length.hard_fail_over)
+    max_adj_ratio = float(cfg.limits.adjective_density.max_ratio)
 
     sentences = _sentence_split(text)
     violations: list[dict[str, Any]] = []
@@ -1007,16 +1054,10 @@ def _eval_style_guard(text: str, cfg: dict[str, Any]) -> dict[str, Any]:
 
     adjective_density = _approx_adjective_density(text)
 
-    forbidden = cfg.get("forbidden", {}) if isinstance(cfg.get("forbidden"), dict) else {}
     forbidden_hits: list[str] = []
-    for bucket, info in forbidden.items():
-        if not isinstance(info, dict):
-            continue
-        examples = info.get("examples")
-        if not isinstance(examples, list):
-            continue
-        for ex in examples:
-            if isinstance(ex, str) and ex.lower() in text.lower():
+    for bucket, info in cfg.forbidden.items():
+        for ex in info.examples:
+            if ex.lower() in text.lower():
                 forbidden_hits.append(f"{bucket}:{ex}")
 
     # Pass/fail: hard-fail if any sentence exceeds hard_fail_over or forbidden hits.
@@ -1130,12 +1171,17 @@ def run_deterministic_evals(
         style_guard=_load_eval_config(EVAL_STYLE_GUARD_PATH),
         drift_detection=_load_eval_config(EVAL_DRIFT_DETECTION_PATH),
     )
-    q_cfg = transit.chapter_quality.payload.model_dump()
-    s_cfg = transit.style_guard.payload.model_dump()
+    try:
+        rules_transit = DeterministicEvalRulesTransit(
+            chapter_quality=ChapterQualityEvalConfigPayload.model_validate(transit.chapter_quality.payload.model_dump()),
+            style_guard=StyleGuardEvalConfigPayload.model_validate(transit.style_guard.payload.model_dump()),
+        )
+    except ValidationError as exc:
+        raise KernelError(f"Invalid deterministic eval rules payload: {exc}") from exc
     d_cfg = transit.drift_detection.payload.model_dump()
 
-    chapter_quality = _eval_chapter_quality(chapter_text, q_cfg)
-    style_guard = _eval_style_guard(chapter_text, s_cfg)
+    chapter_quality = _eval_chapter_quality(chapter_text, rules_transit.chapter_quality)
+    style_guard = _eval_style_guard(chapter_text, rules_transit.style_guard)
     drift_detection, drift_score, similarity_max = _eval_drift_detection(
         chapter_text,
         d_cfg,
