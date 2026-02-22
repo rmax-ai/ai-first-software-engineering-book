@@ -342,6 +342,8 @@ class OtherChapterTextTransit:
 
 @dataclass(frozen=True)
 class RoadmapTextTransit:
+    source_path: Path
+    raw_text: str
     payload: ChapterTextPayload
 
     def to_text(self) -> str:
@@ -588,11 +590,12 @@ def _load_prompt_text(path: Path) -> PromptTextTransit:
 
 
 def _load_roadmap_text(path: Path) -> RoadmapTextTransit:
+    roadmap_text = _read_text(path)
     try:
-        payload = ChapterTextPayload.model_validate({"text": _read_text(path)})
+        payload = ChapterTextPayload.model_validate({"text": roadmap_text})
     except ValidationError as exc:
         raise KernelError(f"Invalid roadmap text payload: {path}: {exc}") from exc
-    return RoadmapTextTransit(payload=payload)
+    return RoadmapTextTransit(source_path=path, raw_text=roadmap_text, payload=payload)
 
 
 def _load_chapter_text(path: Path) -> ChapterTextTransit:
