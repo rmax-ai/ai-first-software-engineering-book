@@ -1,18 +1,19 @@
-# Next iteration recommendation
+# Recommended next iteration task
 
 ## Task
-Implement deterministic trace-summary schema guards in `state/kernel.py` and add matching smoke coverage in `state/copilot_sdk_smoke_test.py`.
+Add deterministic phase-trace schema guards in the harness and smoke matrix.
 
 ## Why this is next
-Trace-summary guardrails are foundational for reliable observability and will reduce risk before broader harness control changes are introduced.
+Trace schema stabilization in `state/kernel.py` and `state/copilot_sdk_uv_smoke.py` provides the safest foundation for subsequent role-template and eval contract changes.
 
 ## Acceptance criteria
-- Add or tighten helper validation in `state/kernel.py` that enforces trace summary container and latest-entry shape invariants.
-- Extend deterministic smoke matrix in `state/copilot_sdk_smoke_test.py` with at least one focused mode exercising the new guard path.
-- Run targeted verification demonstrating the new mode passes and existing deterministic smoke modes still pass.
+- `state/kernel.py` emits explicit phase-trace fields for phase name, tool usage summary, and validation status.
+- `state/copilot_sdk_uv_smoke.py` includes at least one deterministic mode that fails when the new trace fields are missing or malformed.
+- Validation evidence includes `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` output and one targeted kernel run.
+- Documentation in the new iteration artifacts maps changed trace fields to eval guard expectations.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_smoke_test.py`
+- `state/copilot_sdk_uv_smoke.py`
 - `state/feature_iterations/iter_002/03-execution.md`
 - `state/feature_iterations/iter_002/04-validation.md`
