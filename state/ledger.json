@@ -1072,7 +1072,7 @@
       "status": "hold"
     },
     "04-memory-systems": {
-      "current_iteration": 16,
+      "current_iteration": 19,
       "drift_history": [],
       "human_validation": {
         "approved": false,
@@ -1214,6 +1214,33 @@
           "planner_focus": [
             "## Thesis: tighten scope"
           ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 17,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 18,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
+        },
+        {
+          "critic_score": 0.0,
+          "diff_size": 0.0,
+          "drift_score": 0.0,
+          "iteration": 19,
+          "planner_focus": [
+            "## Thesis: tighten scope"
+          ]
         }
       ],
       "last_eval": {
@@ -1241,7 +1268,7 @@
               "thesis_clarity": 1.0,
               "tradeoffs": 1.0
             },
-            "timestamp": "2026-02-22T16:10:08Z",
+            "timestamp": "2026-02-22T16:10:09Z",
             "total": 1.0
           },
           "drift_detection": {
@@ -1259,7 +1286,7 @@
               "duplicate_sentence_ratio": 0.0,
               "near_duplicate_ngram_ratio": 0.0
             },
-            "timestamp": "2026-02-22T16:10:08Z"
+            "timestamp": "2026-02-22T16:10:09Z"
           },
           "drift_score": 0.0,
           "passed": true,
@@ -1269,7 +1296,7 @@
             "forbidden_hits": [],
             "pass": true,
             "sentence_length_violations": [],
-            "timestamp": "2026-02-22T16:10:08Z"
+            "timestamp": "2026-02-22T16:10:09Z"
           }
         }
       },
@@ -1288,11 +1315,11 @@
         "hypothesis": "",
         "validation_status": "untested"
       },
-      "revision_count": 16,
+      "revision_count": 19,
       "stability": {
         "consecutive_passes": 0,
         "frozen_candidate": false,
-        "last_modified_iteration": 16
+        "last_modified_iteration": 19
       },
       "status": "hold"
     },
@@ -13618,6 +13645,228 @@
         "patterns_modified": []
       },
       "timestamp": "2026-02-22T16:10:08Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:10:09Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-22T16:10:09Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.09154929577464789,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [],
+          "timestamp": "2026-02-22T16:10:09Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/04-memory-systems.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 17 for 04-memory-systems"
+      },
+      "iteration": 124,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "04-memory-systems"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:10:09Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:10:09Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-22T16:10:09Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.09154929577464789,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [],
+          "timestamp": "2026-02-22T16:10:09Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/04-memory-systems.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 18 for 04-memory-systems"
+      },
+      "iteration": 125,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "04-memory-systems"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:10:09Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.00"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-22T16:10:09Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.0
+          },
+          "timestamp": "2026-02-22T16:10:09Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.09154929577464789,
+          "forbidden_hits": [],
+          "pass": true,
+          "sentence_length_violations": [],
+          "timestamp": "2026-02-22T16:10:09Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/04-memory-systems.md",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 19 for 04-memory-systems"
+      },
+      "iteration": 126,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "04-memory-systems"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-22T16:10:09Z"
     }
   ],
   "version": 2
