@@ -2089,6 +2089,31 @@ def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_guard_mod
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_guard_mode() -> int:
+    trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
+    uniqueness_adjacency_guard_mode = "usage-examples-duplicate-count-wrapper-helper-uniqueness-adjacency-guard"
+    uniqueness_order_guard_mode = "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-guard"
+    assert uniqueness_adjacency_guard_mode in trace_summary_mode_names, (
+        f"expected TRACE_SUMMARY_MODE_SPECS to include {uniqueness_adjacency_guard_mode}"
+    )
+    assert uniqueness_order_guard_mode in trace_summary_mode_names, (
+        f"expected TRACE_SUMMARY_MODE_SPECS to include {uniqueness_order_guard_mode}"
+    )
+
+    uniqueness_adjacency_guard_index = trace_summary_mode_names.index(uniqueness_adjacency_guard_mode)
+    uniqueness_order_guard_index = trace_summary_mode_names.index(uniqueness_order_guard_mode)
+    assert uniqueness_order_guard_index - uniqueness_adjacency_guard_index == 1, (
+        "expected usage-examples-duplicate-count-wrapper-helper-uniqueness-adjacency-guard to appear immediately "
+        "before usage-examples-duplicate-count-wrapper-helper-uniqueness-order-guard in TRACE_SUMMARY_MODE_SPECS"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-guard mode validates "
+        "duplicate-count wrapper helper hardening uniqueness-order adjacency registration order"
+    )
+    return 0
+
+
 def run_usage_examples_order_guard_mode() -> int:
     all_mode_specs = _all_mode_specs()
     usage_lines = _usage_doc_lines(all_mode_specs)
@@ -2452,6 +2477,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-guard",
         run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper helper hardening mode registration-order assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-guard",
+        run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_guard_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper uniqueness-order adjacency assertion",
     ),
     (
         "usage-examples-order-guard",
