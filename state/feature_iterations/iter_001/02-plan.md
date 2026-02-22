@@ -1,17 +1,17 @@
-# Plan
+# Iteration plan
 
-1. Inventory harness constraints from `DEVELOPMENT.md` and align plan scope to deterministic, minimal-diff iteration work.
-2. Define feature backlog for `state/kernel.py` focused on deterministic execution controls and richer trace/decision observability.
-3. Define role I/O scaffolding improvements for `state/role_io_templates.py` that tighten prompt/response structure and reduce ambiguity.
-4. Define smoke-test expansion in `state/copilot_sdk_uv_smoke.py` for failure-mode and lifecycle regressions tied to new controls.
-5. Map regression gates to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` so later changes have explicit evaluation targets.
-6. Record risks/decisions and provide one smallest next implementation task with acceptance criteria.
+1. Review `DEVELOPMENT.md` and extract constraints for UV usage, deterministic behavior, and evaluation gates.
+2. Define feature backlog slices for harness observability, deterministic controls, and role-IO clarity, mapped to `state/kernel.py` and `state/role_io_templates.py`.
+3. Define test backlog slices for deterministic and live harness checks in `state/copilot_sdk_uv_smoke.py` plus targeted harness tests under `state/`.
+4. Define eval alignment work for `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` with expected regression signals and metric checks in `state/metrics.json`.
+5. Capture execution evidence, validation outcomes, and risks in iteration artifacts.
+6. Set one next task that starts implementation from the highest-value backlog item.
 
-## Expected files to change this iteration
-- `state/feature_iterations/iter_001/01-task.md`
-- `state/feature_iterations/iter_001/02-plan.md`
-- `state/feature_iterations/iter_001/03-execution.md`
-- `state/feature_iterations/iter_001/04-validation.md`
-- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_001/06-next-iteration.md`
-- `state/feature_iterations/iter_001/07-summary.md`
+## Files expected to change in later iterations
+- `state/kernel.py`
+- `state/role_io_templates.py`
+- `state/copilot_sdk_uv_smoke.py`
+- `evals/chapter-quality.yaml`
+- `evals/style-guard.yaml`
+- `evals/drift-detection.yaml`
+- Additional targeted tests under `state/` as needed

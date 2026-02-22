@@ -1,19 +1,17 @@
-# Next Iteration Recommendation
+# Recommended next iteration
 
 ## Next task
-Add structured kernel trace events for deterministic decision points in `state/kernel.py`.
+Implement deterministic trace-summary instrumentation in `state/kernel.py` and align role IO scaffolding in `state/role_io_templates.py` to expose the new trace fields.
 
 ## Why this is next
-Trace visibility is the narrowest high-value feature from the plan and enables faster debugging plus clearer validation evidence for later control and eval work.
+It converts the highest-priority planning item into measurable behavior and establishes the observability baseline needed before expanding smoke and eval coverage.
 
 ## Acceptance criteria
-- Add a minimal structured trace emitter in `state/kernel.py` for key loop decisions (task selection, validation outcome, completion/abort).
-- Ensure trace records are deterministic in shape and written through existing harness logging paths.
-- Add/extend targeted smoke coverage in `state/copilot_sdk_uv_smoke.py` (or nearby harness test surface) to assert trace event presence and schema.
-- Document any eval hook updates needed in `evals/drift-detection.yaml` or related eval contracts.
+- `state/kernel.py` emits deterministic trace-summary fields for each harness run without changing existing public CLI behavior.
+- `state/role_io_templates.py` includes matching schema/template updates required by the new trace-summary output.
+- Targeted verification confirms stable output shape across at least one deterministic harness run command.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `evals/drift-detection.yaml`
-- `state/feature_iterations/iter_002/*`
+- `state/role_io_templates.py`
+- `state/copilot_sdk_uv_smoke.py` (if smoke assertions require updates)

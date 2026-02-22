@@ -1,12 +1,13 @@
-# Risks and Decisions
+# Risks and decisions
 
 ## Risks discovered
-- Plan quality risk: backlog could be too broad for incremental execution.
-- Regression risk: future kernel changes may alter deterministic behavior if eval mappings are not enforced.
+- Planning-only output may drift from current code if implementation is delayed.
+- Eval contract updates can introduce false positives if metric expectations are not synchronized.
 
-## Decisions and trade-offs
-- Chose a planning-only seed iteration to satisfy prompt requirements before touching runtime code.
-- Kept backlog concise and file-targeted to support minimal future diffs.
+## Decisions made
+- Chose a planning-first seed iteration exactly as required by `prompts/incremental-improvements/execute.md`.
+- Kept scope to one smallest unfinished task: produce a harness-improvement backlog and handoff artifacts.
 
-## Intentionally deferred
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+## Deferred intentionally
+- No harness code changes in `state/` during this iteration.
+- No eval YAML modifications until implementation iterations begin.
