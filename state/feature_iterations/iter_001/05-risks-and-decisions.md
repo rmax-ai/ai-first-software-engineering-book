@@ -1,15 +1,14 @@
 # Risks and decisions
 
-## Risks discovered
-- Planning-only iterations can drift if next-task acceptance criteria are vague.
-- Trace logging additions in `state/kernel.py` could increase noise unless output schemas are kept deterministic.
-- Expanding smoke coverage may increase runtime unless modes remain targeted.
+## Risks
+- Planned feature slices may expose hidden coupling between kernel orchestration and trace/metrics emitters.
+- Eval YAML updates can accidentally broaden or tighten gates if not validated with representative runs.
 
 ## Decisions and trade-offs
-- Chose a planning-first iteration per prompt seed requirement; no harness code changes were made.
-- Prioritized explicit file-level mapping so future iterations can execute with minimal ambiguity.
-- Deferred implementation details (exact trace schema fields, smoke mode naming) to the next task to keep this iteration minimal.
+- Chose a planning-only first iteration to reduce implementation risk and establish explicit acceptance boundaries.
+- Deferred code changes so the next iteration can execute one smallest implementation task with focused verification.
 
-## Intentionally deferred
-- Any edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
-- Any test/eval runtime execution beyond validating the planning artifact contract.
+## Deferred items
+- Implementation of kernel observability improvements.
+- Role I/O template refinements.
+- Smoke and eval contract adjustments tied to new behavior.

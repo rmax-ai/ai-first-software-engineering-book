@@ -1,16 +1,18 @@
 # Validation
 
 ## Verification commands run
-- `ls -1 state/feature_iterations/iter_001`
-- `rg -n "features|tests|evaluations|next task" state/feature_iterations/iter_001/*.md`
-- Manual cross-check against `prompts/incremental-improvements/execute.md` and `DEVELOPMENT.md` requirements.
+- `glob state/feature_iterations/iter_*` (confirmed `iter_001` creation path logic)
+- `git --no-pager status --short` (verified only iteration artifacts changed)
+- Content review against:
+  - `prompts/incremental-improvements/execute.md`
+  - `DEVELOPMENT.md`
 
 ## Observed results
-- Iteration folder contains all seven required artifacts (`01-task.md` through `07-summary.md`).
-- The plan explicitly covers feature backlog, test strategy, and evaluation mapping with concrete file paths.
-- `06-next-iteration.md` contains exactly one recommended next task with acceptance criteria and expected touched files.
+- All seven required files were created under `state/feature_iterations/iter_001/`.
+- Artifacts explicitly cover feature, test, and evaluation planning surfaces.
+- Scope remained planning-only with no harness runtime code edits.
 
-## Acceptance criteria status
-- Seed plan written and scoped to harness improvements: **PASS**
-- Features/tests/evals coverage explicitly documented: **PASS**
-- Seven-artifact contract complete with actionable next task: **PASS**
+## Acceptance criteria check
+- Backlog plan coverage (features/tests/evals): **pass**
+- Concrete next task with acceptance criteria and file targets: **pass**
+- Planning-only scope preserved: **pass**

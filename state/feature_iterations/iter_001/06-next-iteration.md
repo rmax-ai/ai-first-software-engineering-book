@@ -1,18 +1,19 @@
 # Recommended next task
 
 ## Task
-Implement deterministic trace-summary enrichment in `state/kernel.py` and verify it with one new targeted smoke mode in `state/copilot_sdk_uv_smoke.py`.
+Implement deterministic trace-summary schema validation in `state/kernel.py`.
 
 ## Why this is next
-The plan identifies trace observability as the highest-leverage harness enhancement, and it can be validated with a narrowly scoped smoke addition before broader template/eval updates.
+- It provides the highest leverage observability improvement while staying narrow and testable.
+- It creates concrete outputs that later role-template and eval-gate changes can build on.
 
 ## Acceptance criteria
-- Add trace-summary fields in `state/kernel.py` that remain deterministic across repeated runs.
-- Add one smoke mode in `state/copilot_sdk_uv_smoke.py` that fails when the new trace-summary shape is missing or malformed.
-- Record the verification command and outcome using `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` in the new iteration validation artifact.
+- Add a focused helper in `state/kernel.py` that validates the trace summary payload shape before persistence.
+- Emit actionable errors when required trace fields are missing or malformed; do not silently coerce invalid structures.
+- Add/extend deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py` proving both valid and invalid trace-summary paths.
+- Verification run includes at least one targeted smoke command and records expected pass/fail evidence.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `state/metrics.json` (only if trace validation adds a new stable signal)
