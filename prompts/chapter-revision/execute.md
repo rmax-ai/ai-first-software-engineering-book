@@ -411,3 +411,8 @@ Replace `<chapter>` with the chapter identifier listed below.
 - Completed 24/24 chapter passes with one commit per pass.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Total commits created for this re-run loop: 24.
+
+## Re-run 2026-02-22T16:42:47Z
+| Chapter | Pass | Result | Subagents | Commit |
+|--------:|-----:|--------|-----------|--------|
+| 01-paradigm-shift | 1 | failed(1) | none | `chore: pass 1 for chapter 01-paradigm-shift` |\n
