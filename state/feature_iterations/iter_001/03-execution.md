@@ -1,10 +1,10 @@
 # Execution
 
 ## Commands/tools run
-- Read `prompts/incremental-improvements/execute.md`.
-- Read `DEVELOPMENT.md`.
-- Checked `state/feature_iterations/` to determine the next iteration (`iter_001`).
-- Created iteration artifacts under `state/feature_iterations/iter_001/`.
+- Read prompt contract: `prompts/incremental-improvements/execute.md`
+- Read harness guidance: `DEVELOPMENT.md`
+- Checked prior iterations: `glob state/feature_iterations/iter_*` (none found)
+- Created this iteration artifact set under `state/feature_iterations/iter_001/`
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -16,4 +16,5 @@
 - `state/feature_iterations/iter_001/07-summary.md`
 
 ## Rationale
-- This seed iteration intentionally produces a planning backlog only, per prompt requirements.
+- This is the seed iteration requested by the prompt and is intentionally planning-only.
+- The artifacts provide actionable feature/test/eval guidance for the next implementation iteration.
