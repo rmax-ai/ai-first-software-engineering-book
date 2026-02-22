@@ -62,6 +62,16 @@ class KernelError(RuntimeError):
     pass
 
 
+def _vprint(verbose: bool, message: str) -> None:
+    if not verbose:
+        return
+    sys.stderr.write(message.rstrip() + "\n")
+    try:
+        sys.stderr.flush()
+    except Exception:
+        pass
+
+
 @dataclass(frozen=True)
 class LLMConfig:
     enabled: bool
@@ -1490,6 +1500,7 @@ def run_kernel(
     max_drift_score: float,
     require_two_consecutive_passes: bool,
     commit_on_refine: bool,
+    verbose: bool = False,
     llm_config: LLMConfig | None = None,
 ) -> int:
     _ensure_immutable_governance_files_unchanged()
@@ -1521,6 +1532,10 @@ def run_kernel(
         chapters_obj[chapter_id] = chapter_meta
         status = chapter_meta_payload.status
         lifecycle = chapter_meta_payload.lifecycle
+        _vprint(
+            verbose,
+            f"kernel: chapter_id={chapter_id} status={status!r} lifecycle={lifecycle!r} max_iterations={max_iterations} max_diff_ratio={max_diff_ratio:.2f} max_drift_score={max_drift_score:.2f}",
+        )
         if status in {"locked", "hold"}:
             if status == "hold":
                 hint = f" Try: uv run python state/governance_engine.py unhold --chapter-id {chapter_id}"
@@ -1535,6 +1550,7 @@ def run_kernel(
             raise KernelError("Chapter is missing a valid path")
         chapter_file = REPO_ROOT / chapter_path
         baseline_text = _load_chapter_text(chapter_file).to_text()
+        _vprint(verbose, f"kernel: chapter_path={chapter_path}")
 
         previous_critic: dict[str, Any] | None = None
         # If ledger has last_eval and it is critic-like, pass through.
@@ -1550,6 +1566,7 @@ def run_kernel(
         for i in range(1, max_iterations + 1):
             iteration = current_iteration + i
             itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
+            _vprint(verbose, f"iter {iteration}: start (io={itdir.relative_to(REPO_ROOT)})")
             _append_kernel_trace(
                 itdir,
                 event="iteration_started",
@@ -1582,6 +1599,16 @@ def run_kernel(
             if llm is not None:
                 before_prompt = int(getattr(llm.usage, "prompt_tokens", 0) or 0)
                 before_completion = int(getattr(llm.usage, "completion_tokens", 0) or 0)
+
+                if verbose and (not planner_out.exists() or not writer_out.exists() or not critic_out.exists()):
+                    missing = []
+                    if not planner_out.exists():
+                        missing.append("planner")
+                    if not writer_out.exists():
+                        missing.append("writer")
+                    if not critic_out.exists():
+                        missing.append("critic")
+                    _vprint(verbose, f"iter {iteration}: llm generating missing outputs: {', '.join(missing)}")
 
                 # Generate any missing role outputs in dependency order.
                 if not planner_out.exists():
@@ -1653,6 +1680,7 @@ def run_kernel(
 
             current_chapter_text = _load_chapter_text(chapter_file).to_text()
             diff_ratio = _diff_size_ratio(current_chapter_text, revised)
+            _vprint(verbose, f"iter {iteration}: diff_ratio={diff_ratio:.2f} (limit {max_diff_ratio:.2f})")
             if diff_ratio > max_diff_ratio:
                 raise KernelError(f"Writer diff size too large ({diff_ratio:.2f} > {max_diff_ratio:.2f}).")
 
@@ -1671,6 +1699,10 @@ def run_kernel(
                 det_pass = det.passed
 
             pass_now = (critic.decision == "approve") and det_pass
+            _vprint(
+                verbose,
+                f"iter {iteration}: critic_decision={critic.decision!r} det_pass={bool(det_pass)} drift_score={float(det.drift_score):.2f} pass_now={bool(pass_now)}",
+            )
             _append_kernel_trace(
                 itdir,
                 event="iteration_evaluated",
@@ -1798,6 +1830,7 @@ def run_kernel(
                 )
 
             _save_json(LEDGER_PATH, ledger)
+            _vprint(verbose, f"iter {iteration}: persisted state (consecutive_passes={consecutive_passes})")
             _append_kernel_trace(
                 itdir,
                 event="state_persisted",
@@ -1842,6 +1875,7 @@ def run_kernel(
             previous_critic = dataclasses.asdict(critic)
 
         # Max iterations reached
+        _vprint(verbose, "kernel: max iterations reached; setting status='hold'")
         chapter_meta["status"] = "hold"
         _save_json(LEDGER_PATH, ledger)
         return 1
@@ -1886,6 +1920,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Promote to refined after a single clean pass.",
     )
     parser.add_argument("--commit", action="store_true", help="Commit on promote-to-refined")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Print iteration progress and gate metrics")
 
     parser.add_argument(
         "--llm",
@@ -1950,6 +1985,7 @@ def main(argv: list[str] | None = None) -> int:
                 max_drift_score=float(args.max_drift_score),
                 require_two_consecutive_passes=require_two_consecutive_passes,
                 commit_on_refine=bool(args.commit),
+                verbose=bool(args.verbose),
                 llm_config=llm_cfg,
             )
         )
