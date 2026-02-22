@@ -1,12 +1,12 @@
 # Risks and Decisions
 
 ## Risks discovered
-- Expanding kernel trace observability may increase output volume and require careful signal-to-noise controls.
-- Tightening role-IO constraints could expose latent prompt/template inconsistencies.
+- The next iteration may over-scope if feature, smoke, and eval updates are attempted together instead of one thin slice.
+- Existing smoke/eval contracts may require tighter wording to avoid nondeterministic assertions.
 
-## Decisions made and trade-offs
-- Chose planning-only scope to satisfy seed-iteration directive and avoid premature implementation churn.
-- Scoped next work to one measurable implementation slice to preserve minimal, reviewable diffs.
+## Decisions and trade-offs
+- Kept this iteration planning-only to match the explicit seed requirement.
+- Scoped the next task to one deterministic observability improvement plus targeted smoke/eval alignment.
 
 ## Deferred intentionally
-- Direct code/eval edits are deferred to the next iteration after plan acceptance.
+- Any edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml` are deferred to future execution iterations.

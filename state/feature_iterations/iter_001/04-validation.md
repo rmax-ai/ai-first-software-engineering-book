@@ -1,16 +1,13 @@
 # Validation
 
 ## Verification commands run
-- `glob state/feature_iterations/iter_*`
 - `ls state/feature_iterations/iter_001`
-- `rg "^#" state/feature_iterations/iter_001/*.md`
+- `rg "^# " state/feature_iterations/iter_001/*.md`
 
 ## Observed results
-- Iteration discovery confirmed no prior folders, so `iter_001` is correct.
-- All seven required markdown artifacts are present in `state/feature_iterations/iter_001/`.
-- Each artifact includes required headings and actionable content aligned with prompt contract.
+- Confirmed presence of all required files: `01-task.md` to `07-summary.md`.
+- Confirmed each artifact has a top-level heading and concise task-specific content.
 
-## Acceptance criteria check
-- ✅ Plan covers features, tests, and evaluations.
-- ✅ Explicit downstream files listed (`state/*` and `evals/*.yaml`).
-- ✅ Exactly one next task with concrete criteria recorded.
+## Acceptance criteria status
+- **Pass**: Planning artifacts cover features/tests/evals and provide one concrete next iteration task.
+- **Pass**: All seven required markdown artifacts are present in `iter_001`.

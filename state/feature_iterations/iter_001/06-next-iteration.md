@@ -1,18 +1,19 @@
 # Next Iteration Recommendation
 
-## Recommended next task
-Implement structured trace lifecycle logging in `state/kernel.py` and validate it via smoke coverage updates.
+## Recommended next task (exactly one)
+Implement deterministic trace-decision observability plumbing in `state/kernel.py` and validate it with a focused smoke assertion.
 
 ## Why this is next
-Trace lifecycle visibility is the foundational dependency for confidently evolving role-IO scaffolds and eval gating without regressions.
+- It is the smallest high-impact harness improvement and creates measurable signals for later role-template and eval wiring work.
 
 ## Acceptance criteria
-- Add deterministic trace lifecycle event emission (start, tool-call, validation, completion/failure) in `state/kernel.py`.
-- Add/adjust smoke mode(s) in `state/copilot_sdk_uv_smoke.py` that assert lifecycle event presence and ordering.
-- Document verification evidence from `uv run python state/copilot_sdk_uv_smoke.py` in the new iteration `04-validation.md`.
+- Add a minimal, explicit trace summary field for per-loop decision state in `state/kernel.py`.
+- Add one targeted smoke mode/assertion in `state/copilot_sdk_uv_smoke.py` validating the new field is emitted.
+- Update one relevant eval contract (`evals/drift-detection.yaml` or `evals/chapter-quality.yaml`) to document/check the new signal.
+- Run targeted verification with `uv run python state/copilot_sdk_uv_smoke.py` (or narrowed mode) and record observed result.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `evals/drift-detection.yaml` (or `evals/chapter-quality.yaml`)
+- `state/feature_iterations/iter_002/0{1..7}-*.md`

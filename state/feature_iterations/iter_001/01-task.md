@@ -1,9 +1,10 @@
 # Task: Plan custom state harness improvements
 
 ## Why this task now
-No prior `state/feature_iterations/` backlog exists, so this seed iteration must define the highest-priority harness improvement plan that future iterations can execute.
+- The execute prompt defines this seed iteration as planning-only and requires a backlog for future implementation iterations.
+- There are no prior `state/feature_iterations/iter_XXX` folders, so this is the first required iteration artifact set.
 
 ## Acceptance criteria
-- Produce a concise plan covering harness **features**, **tests**, and **evaluations**.
-- Identify concrete touchpoints in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-- Provide exactly one next iteration task with explicit acceptance criteria and expected files.
+- Produce a concise plan that covers harness **features**, **tests**, and **evaluations**.
+- Identify concrete follow-up work touching `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Complete all required iteration artifacts (`01` through `07`) with actionable content.
