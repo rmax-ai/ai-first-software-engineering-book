@@ -120,6 +120,8 @@ class KernelFixtureLedgerTransit:
 
 @dataclass(frozen=True)
 class JSONMappingTransit:
+    source_path: Path
+    raw_text: str
     payload: JSONMappingPayload
 
     def to_mapping(self) -> dict[str, Any]:
@@ -302,14 +304,18 @@ def _load_kernel_fixture_ledger(path: Path) -> KernelFixtureLedgerTransit:
 
 def _load_json_mapping(path: Path) -> JSONMappingTransit:
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw_text = path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"JSON file not found at {path}") from exc
+    try:
+        raw = json.loads(raw_text)
     except json.JSONDecodeError as exc:
         raise RuntimeError(f"Invalid JSON at {path}: {exc}") from exc
     try:
         payload = JSONMappingPayload.model_validate({"data": raw})
     except ValidationError as exc:
         raise RuntimeError(f"Invalid JSON mapping payload at {path}: {exc}") from exc
-    return JSONMappingTransit(payload=payload)
+    return JSONMappingTransit(source_path=path, raw_text=raw_text, payload=payload)
 
 
 def _build_trace_summary_fixture(
