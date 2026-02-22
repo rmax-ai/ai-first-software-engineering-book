@@ -10,6 +10,7 @@ import argparse
 import ast
 import importlib
 import inspect
+import json
 import os
 import subprocess
 import sys
@@ -57,6 +58,27 @@ class TraceSummaryTransit:
 
     def to_mapping(self) -> dict[str, Any]:
         return self.payload.model_dump(exclude_none=True)
+
+
+class LedgerSnapshotPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    chapters: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class LedgerSnapshotTransit:
+    raw_text: str
+    payload: LedgerSnapshotPayload
+
+
+def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
+    raw_text = path.read_text(encoding="utf-8")
+    try:
+        payload = LedgerSnapshotPayload.model_validate(json.loads(raw_text))
+    except json.JSONDecodeError as exc:
+        raise AssertionError(f"expected {path} to contain valid JSON: {exc}") from exc
+    return LedgerSnapshotTransit(raw_text=raw_text, payload=payload)
 
 
 def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:
@@ -867,7 +889,7 @@ def _run_trace_summary_kernel_mode(
     expect_fixture_cleanup: bool = False,
 ) -> str:
     ledger_path = ROOT / "state" / "ledger.json"
-    before_ledger = ledger_path.read_text(encoding="utf-8")
+    before_ledger = _load_ledger_snapshot(ledger_path)
     proc = subprocess.run(
         [
             "uv",
@@ -882,8 +904,10 @@ def _run_trace_summary_kernel_mode(
         capture_output=True,
         text=True,
     )
-    after_ledger = ledger_path.read_text(encoding="utf-8")
-    assert after_ledger == before_ledger, "expected state/ledger.json to remain unchanged after kernel trace-summary smoke"
+    after_ledger = _load_ledger_snapshot(ledger_path)
+    assert after_ledger.raw_text == before_ledger.raw_text, (
+        "expected state/ledger.json to remain unchanged after kernel trace-summary smoke"
+    )
     if expect_fixture_cleanup:
         assert not TRACE_SUMMARY_KERNEL_FIXTURE_REPO.exists(), (
             f"expected fixture kernel repo cleanup after mode {mode_name}: {TRACE_SUMMARY_KERNEL_FIXTURE_REPO}"
