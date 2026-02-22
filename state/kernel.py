@@ -88,6 +88,12 @@ class PlannerInputPayload(BaseModel):
     chapter_hypothesis: str
 
 
+class ChapterTextPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+
+
 class LedgerChapterPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -215,6 +221,20 @@ class DeterministicEvalTransit:
     chapter_quality: DeterministicEvalConfigPayload
     style_guard: DeterministicEvalConfigPayload
     drift_detection: DeterministicEvalConfigPayload
+
+
+@dataclass(frozen=True)
+class OtherChapterTextTransit:
+    chapter_id: str
+    payload: ChapterTextPayload
+
+
+@dataclass(frozen=True)
+class OtherChaptersTransit:
+    entries: tuple[OtherChapterTextTransit, ...]
+
+    def as_mapping(self) -> dict[str, str]:
+        return {entry.chapter_id: entry.payload.text for entry in self.entries}
 
 
 @dataclass(frozen=True)
@@ -943,7 +963,7 @@ def run_deterministic_evals(
     chapter_text: str,
     *,
     baseline_text: str | None,
-    other_chapters: dict[str, str],
+    other_chapters: OtherChaptersTransit,
 ) -> DeterministicEval:
     transit = DeterministicEvalTransit(
         chapter_quality=_load_eval_config(EVAL_CHAPTER_QUALITY_PATH),
@@ -960,7 +980,7 @@ def run_deterministic_evals(
         chapter_text,
         d_cfg,
         baseline_text=baseline_text,
-        other_chapters=other_chapters,
+        other_chapters=other_chapters.as_mapping(),
     )
 
     passed = bool(chapter_quality.get("pass") and style_guard.get("pass") and drift_detection.get("pass"))
@@ -998,18 +1018,21 @@ def _critic_score(report: CriticReport) -> float:
     return float((report.structure_score + report.clarity_score + report.example_density) / 3.0)
 
 
-def _load_other_chapters_text(ledger: LedgerPayload, current_chapter_id: str) -> dict[str, str]:
-    out: dict[str, str] = {}
+def _load_other_chapters_text(ledger: LedgerPayload, current_chapter_id: str) -> OtherChaptersTransit:
+    entries: list[OtherChapterTextTransit] = []
     for cid, meta in ledger.chapters.items():
         if cid == current_chapter_id:
             continue
         if not meta.path:
             continue
         try:
-            out[cid] = _read_text(REPO_ROOT / meta.path)
+            payload = ChapterTextPayload.model_validate({"text": _read_text(REPO_ROOT / meta.path)})
         except KernelError:
             continue
-    return out
+        except ValidationError as exc:
+            raise KernelError(f"Invalid chapter text payload for {cid}: {exc}") from exc
+        entries.append(OtherChapterTextTransit(chapter_id=cid, payload=payload))
+    return OtherChaptersTransit(entries=tuple(entries))
 
 
 def _kernel_iteration_dir(io_dir: Path, chapter_id: str, iteration: int) -> Path:
