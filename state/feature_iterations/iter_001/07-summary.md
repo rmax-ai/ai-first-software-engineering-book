@@ -1,9 +1,10 @@
 # Iteration Summary
 
-This iteration established the first feature-improvement artifact set in `state/feature_iterations/iter_001/`.
-The selected task was planning custom harness improvements, per prompt seed guidance.
-The resulting plan is implementation-ready and explicitly covers feature enhancements, test strategy, and eval alignment.
-Future work is mapped to concrete files across `state/` and `evals/`.
-A single next task was defined to keep follow-up scope small and deterministic.
-No production code was modified in this planning iteration.
-Validation confirms all seven required artifacts exist and are populated.
+This seed feature iteration created the first `state/feature_iterations/iter_001/` handoff set.
+The task focused on planning custom harness improvements rather than implementation.
+The produced backlog targets three areas: kernel observability, role I/O scaffolding clarity, and deterministic smoke coverage.
+Validation strategy is explicitly tied to UV-driven harness checks and targeted state-module tests.
+Regression detection was mapped to existing eval contracts in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
+Risks and deferrals were documented to keep scope tight and execution-ready.
+A single concrete next task was selected: implement kernel trace-summary observability improvements.
+This leaves a clean, actionable starting point for `iter_002`.

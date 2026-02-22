@@ -1,17 +1,17 @@
 # Next Iteration Recommendation
 
 ## Task
-Implement the smallest observability slice in `state/kernel.py` by adding deterministic trace-summary logging for one additional kernel decision point.
+Implement kernel trace-summary observability improvements in `state/kernel.py`.
 
 ## Why this is next
-This converts the new planning backlog into a measurable code change with low risk and immediately improves harness visibility.
+It is the smallest high-impact backlog item: improved trace summaries make subsequent harness changes easier to verify and debug while preserving current interfaces.
 
 ## Acceptance criteria
-- Add a focused kernel trace output for one decision branch without changing public CLI behavior.
-- Add/adjust targeted tests under `state/` that prove deterministic output shape.
-- Run relevant harness verification (including a focused `uv run python state/copilot_sdk_uv_smoke.py` mode if applicable) and record evidence.
+- Add deterministic, concise trace summary output for key loop phases and failure points in `state/kernel.py`.
+- Cover the new trace behavior with targeted harness tests or smoke assertions in `state/copilot_sdk_uv_smoke.py`.
+- Validate no regressions against existing eval gates (`evals/chapter-quality.yaml`, `evals/style-guard.yaml`, `evals/drift-detection.yaml`) and document evidence.
 
 ## Expected files to touch
 - `state/kernel.py`
-- Targeted test file(s) under `state/`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `state/copilot_sdk_uv_smoke.py`
+- `state/feature_iterations/iter_002/0{1..7}-*.md` (next iteration artifacts)

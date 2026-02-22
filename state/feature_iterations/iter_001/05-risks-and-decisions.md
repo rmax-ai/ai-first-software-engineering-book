@@ -1,11 +1,12 @@
 # Risks and Decisions
 
-## Risks discovered
-- The planning iteration does not execute harness code, so assumptions about implementation effort and test granularity still need confirmation during execution iterations.
+## Decisions
+- Kept this iteration strictly planning-focused to match seed constraints.
+- Prioritized kernel observability as the first implementation candidate because it offers high debugging value with localized code impact.
 
-## Decisions made
-- Chose a planning-only iteration, as required by the seed instructions.
-- Prioritized minimal, concrete backlog items over broad architectural rewrite proposals.
+## Risks
+- Backlog sequencing may need adjustment once concrete kernel internals are inspected during implementation.
+- Some eval YAML edits may be unnecessary if existing gates already cover the chosen feature; verify before changing eval files.
 
 ## Deferred items
-- Implementation details and code-level trade-offs are deferred to subsequent iteration tasks.
+- Direct edits to `state/kernel.py`, `state/role_io_templates.py`, and smoke tests are intentionally deferred to the next implementation iteration.

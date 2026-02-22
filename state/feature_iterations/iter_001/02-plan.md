@@ -1,23 +1,23 @@
 # Plan
 
-1. Review harness guidance in `DEVELOPMENT.md` and prompt constraints in `prompts/incremental-improvements/execute.md`.
-2. Define feature workstreams for:
-   - Observability and trace controls in `state/kernel.py`.
-   - Clearer role I/O scaffolds in `state/role_io_templates.py`.
-   - Deterministic smoke coverage extensions in `state/copilot_sdk_uv_smoke.py`.
-3. Define test strategy:
-   - Add/extend focused harness tests in `state/` for new kernel/role-IO behavior.
-   - Use `uv run python state/copilot_sdk_uv_smoke.py` scenarios for regression checks.
-4. Define eval integration strategy:
-   - Map planned behavior to `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`.
-   - Document expected signal changes and metrics checks (`state/metrics.json`).
-5. Capture execution ordering for future iterations: implement smallest kernel logging slice first, then role-IO template constraints, then smoke/eval tightening.
+1. Review current harness guidance (`DEVELOPMENT.md`) and seed requirements from `prompts/incremental-improvements/execute.md`.
+2. Define feature backlog items for later implementation:
+   - Add richer trace/event summaries and failure-context logging in `state/kernel.py`.
+   - Tighten role prompt input/output scaffolds in `state/role_io_templates.py` for clearer deterministic contracts.
+   - Extend smoke coverage in `state/copilot_sdk_uv_smoke.py` for deterministic execution constraints.
+3. Define proof strategy:
+   - Targeted harness checks via `uv run python state/copilot_sdk_uv_smoke.py` (mode-focused).
+   - Unit-level tests for new pure helpers in `state/` modules touched by the backlog.
+4. Define eval/regression alignment:
+   - Confirm `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` still gate intended behavior.
+   - Verify expected ledger/metrics outcomes in `state/ledger.json` and `state/metrics.json` remain explainable.
+5. Stage next iteration as implementation of the smallest high-impact feature from this backlog (kernel trace summary enhancement).
 
-## Expected files to change in future iterations
+## Expected files to change in later iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
-- Targeted harness tests under `state/`
+- Targeted tests/assets under `state/` (as required by chosen backlog item)
