@@ -104,10 +104,15 @@ Mini-runbook (a single bounded kernel run):
 3. Run verification gate (tight but credible)
 
    - Gate 1: rerun the failing test.
+
      - Command: `pytest -k rejects_empty_input`
+
    - Gate 2 (cheap regression check): run related unit tests only.
+
      - Command: `pytest -k parse`
+
    - Verification risk handling:
+   
      - If Gate 1 passes but Gate 2 fails, treat as “not fixed” (the patch likely broke a nearby invariant).
 
 4. Record trace (auditable, replayable)
