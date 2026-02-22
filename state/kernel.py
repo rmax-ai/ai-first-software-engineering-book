@@ -196,6 +196,18 @@ def _llm_write_trace(itdir: Path, *, name: str, prompt: str, response: str) -> N
     _write_text(tdir / f"{name}.response.txt", response)
 
 
+def _kernel_trace_path(itdir: Path) -> Path:
+    return itdir / "out" / "kernel_trace.jsonl"
+
+
+def _append_kernel_trace(itdir: Path, *, event: str, payload: dict[str, Any]) -> None:
+    trace_path = _kernel_trace_path(itdir)
+    trace_path.parent.mkdir(parents=True, exist_ok=True)
+    entry = {"timestamp": _utc_now_iso(), "event": event, "payload": payload}
+    with trace_path.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, sort_keys=True) + "\n")
+
+
 def _llm_add_usage(a: Any, b: Any) -> Any:
     if a is None:
         return b
@@ -913,6 +925,17 @@ def run_kernel(
 
         for i in range(1, max_iterations + 1):
             iteration = current_iteration + i
+            itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
+            _append_kernel_trace(
+                itdir,
+                event="iteration_started",
+                payload={
+                    "chapter_id": chapter_id,
+                    "iteration": iteration,
+                    "max_diff_ratio": max_diff_ratio,
+                    "max_drift_score": max_drift_score,
+                },
+            )
             _prepare_iteration_inputs(
                 io_dir=io_dir,
                 chapter_id=chapter_id,
@@ -922,7 +945,6 @@ def run_kernel(
                 previous_critic=previous_critic,
             )
 
-            itdir = _kernel_iteration_dir(io_dir, chapter_id, iteration)
             planner_out = itdir / "out" / "planner.json"
             writer_out = itdir / "out" / "writer.md"
             critic_out = itdir / "out" / "critic.json"
@@ -994,6 +1016,18 @@ def run_kernel(
                 det_pass = det.passed
 
             pass_now = (critic.decision == "approve") and det_pass
+            _append_kernel_trace(
+                itdir,
+                event="iteration_evaluated",
+                payload={
+                    "iteration": iteration,
+                    "critic_decision": critic.decision,
+                    "diff_ratio": float(diff_ratio),
+                    "drift_score": float(det.drift_score),
+                    "deterministic_pass": bool(det_pass),
+                    "pass_now": bool(pass_now),
+                },
+            )
 
             if pass_now:
                 consecutive_passes += 1
@@ -1101,12 +1135,27 @@ def run_kernel(
                 )
 
             _save_json(LEDGER_PATH, ledger)
+            _append_kernel_trace(
+                itdir,
+                event="state_persisted",
+                payload={
+                    "iteration": iteration,
+                    "consecutive_passes": int(consecutive_passes),
+                    "status": chapter_meta.get("status"),
+                    "lifecycle": chapter_meta.get("lifecycle"),
+                },
+            )
 
             # Transition logic
             if pass_now:
                 if (not require_two_consecutive_passes) or consecutive_passes >= 2:
                     chapter_meta["lifecycle"] = "refined"
                     _save_json(LEDGER_PATH, ledger)
+                    _append_kernel_trace(
+                        itdir,
+                        event="lifecycle_transition",
+                        payload={"iteration": iteration, "new_lifecycle": "refined"},
+                    )
 
                     if commit_on_refine:
                         _run_git(["add", chapter_path, "state/ledger.json", "state/metrics.json"])
