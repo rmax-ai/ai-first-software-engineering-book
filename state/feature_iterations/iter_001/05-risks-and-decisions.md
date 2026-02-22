@@ -1,12 +1,17 @@
-# Risks and decisions
+# Risks and Decisions
 
 ## Risks discovered
-- The plan depends on preserving deterministic kernel behavior while adding richer observability; uncontrolled schema changes in metrics could break downstream tooling.
-- New smoke modes may increase maintenance burden unless they stay table-driven and reuse existing mode dispatch patterns.
 
-## Decisions and trade-offs
-- Chose a planning-only iteration to satisfy seed requirements and minimize implementation risk.
-- Reused existing eval contracts (`evals/*.yaml`) as regression anchors instead of proposing new eval files in this step.
+1. Planned feature additions to `state/kernel.py` could unintentionally alter deterministic behavior if trace/event schemas drift.
+2. Expanding smoke modes in `state/copilot_sdk_uv_smoke.py` can increase maintenance cost unless table-driven patterns are preserved.
+3. Eval updates under `evals/*.yaml` may create false negatives if not aligned with stable metrics outputs.
+
+## Decisions made
+
+1. Keep this iteration planning-only to satisfy the seed requirement with no runtime behavior changes.
+2. Prioritize a single next implementation task with narrow scope and explicit acceptance criteria.
+3. Anchor future changes to existing eval contracts before adding new gates.
 
 ## Deferred intentionally
-- Direct edits to `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py` are deferred to the next iteration.
+
+- Actual code edits in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml` are deferred to the next iteration.
