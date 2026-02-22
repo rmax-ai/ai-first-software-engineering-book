@@ -98,3 +98,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` now validates writer LLM markdown responses through `WriterOutputPayload` and forwards validated content via `WriterOutputTransit` before persisting `out/writer.md`.
 - `state/copilot_sdk_smoke_test.py` now validates ledger snapshot JSON roots through `_load_json_mapping()` and forwards raw JSON text plus parsed mappings via `JSONMappingTransit` before `LedgerSnapshotTransit` assembly.
 - `state/llm_client.py` now validates Copilot SDK session event objects through `SDKSessionEventPayload` and forwards normalized event data via `SDKSessionEventTransit` before usage aggregation and assistant message extraction.
+- `state/llm_client.py` now validates Copilot SDK session event lists through `SDKSessionEventsPayload` and forwards them via `SDKSessionEventsTransit` before per-event usage aggregation/message extraction.

@@ -118,6 +118,12 @@ class SDKSessionEventPayload(BaseModel):
     usage: SDKUsagePayload | None = None
 
 
+class SDKSessionEventsPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    events: list[SDKSessionEventPayload]
+
+
 @dataclass(frozen=True)
 class ChatMessagesTransit:
     payload: ChatMessagesPayload
@@ -193,6 +199,19 @@ class SDKSessionEventTransit:
         if self.payload.data is None:
             return {}
         return self.payload.data.model_dump(exclude_none=True)
+
+
+@dataclass(frozen=True)
+class SDKSessionEventsTransit:
+    payload: SDKSessionEventsPayload
+
+    @classmethod
+    def from_raw(cls, events: list[dict[str, Any]]) -> "SDKSessionEventsTransit":
+        return cls(payload=SDKSessionEventsPayload.model_validate({"events": events}))
+
+    @property
+    def event_payloads(self) -> list[SDKSessionEventPayload]:
+        return self.payload.events
 
 
 class LLMClient:
@@ -489,12 +508,12 @@ class LLMClient:
 
     def _response_from_sdk_events(self, events: Any, message_id: str | None = None) -> LLMResponse:
         if isinstance(events, list):
-            event_transits: list[SDKSessionEventTransit] = []
-            for event in events:
-                try:
-                    event_transits.append(SDKSessionEventTransit.from_raw(self._sdk_event_to_mapping(event)))
-                except ValidationError as exc:
-                    raise LLMClientError(f"Invalid Copilot SDK session event payload: {exc}") from exc
+            event_mappings = [self._sdk_event_to_mapping(event) for event in events]
+            try:
+                events_transit = SDKSessionEventsTransit.from_raw(event_mappings)
+            except ValidationError as exc:
+                raise LLMClientError(f"Invalid Copilot SDK session events payload: {exc}") from exc
+            event_transits = [SDKSessionEventTransit(payload=payload) for payload in events_transit.event_payloads]
             prompt_tokens = 0
             completion_tokens = 0
 
