@@ -73,7 +73,7 @@ import types
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Callable, cast
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -890,7 +890,53 @@ def run_trace_summary_missing_entry_guard_mode() -> int:
     return 0
 
 
+TraceSummaryModeHandler = Callable[[], int]
+TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] = (
+    ("trace-summary", run_trace_summary_mode, "deterministic required-key assertion"),
+    ("trace-summary-missing-key", run_trace_summary_missing_key_mode, "deterministic missing-key detection"),
+    ("trace-summary-shape-guard", run_trace_summary_shape_guard_mode, "deterministic non-dict shape detection"),
+    (
+        "trace-summary-container-shape-guard",
+        run_trace_summary_container_shape_guard_mode,
+        "deterministic malformed metrics container detection",
+    ),
+    (
+        "trace-summary-history-container-shape-guard",
+        run_trace_summary_history_container_shape_guard_mode,
+        "deterministic malformed history container detection",
+    ),
+    (
+        "trace-summary-latest-history-entry-shape-guard",
+        run_trace_summary_latest_history_entry_shape_guard_mode,
+        "deterministic malformed latest history entry detection",
+    ),
+    ("trace-summary-empty-history-guard", run_trace_summary_empty_history_guard_mode, "deterministic empty history detection"),
+    (
+        "trace-summary-missing-chapter-guard",
+        run_trace_summary_missing_chapter_guard_mode,
+        "deterministic missing chapter detection",
+    ),
+    (
+        "trace-summary-chapter-metrics-shape-guard",
+        run_trace_summary_chapter_metrics_shape_guard_mode,
+        "deterministic malformed chapter-metrics detection",
+    ),
+    (
+        "trace-summary-missing-entry-guard",
+        run_trace_summary_missing_entry_guard_mode,
+        "deterministic missing trace_summary entry detection",
+    ),
+)
+
+
 def main() -> int:
+    trace_summary_mode_names = [name for name, _handler, _description in TRACE_SUMMARY_MODE_SPECS]
+    trace_summary_mode_help = ", ".join(
+        f"{name} = {description}" for name, _handler, description in TRACE_SUMMARY_MODE_SPECS
+    )
+    trace_summary_mode_handlers = {
+        name: handler for name, handler, _description in TRACE_SUMMARY_MODE_SPECS
+    }
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
     parser.add_argument(
         "--mode",
@@ -912,20 +958,22 @@ def main() -> int:
             "stop-unavailable-destroy-failure-close-idempotency",
             "stop-failure-destroy-unavailable-close-idempotency",
             "stop-failure-destroy-failure-close-idempotency",
-            "trace-summary",
-            "trace-summary-missing-key",
-            "trace-summary-shape-guard",
-            "trace-summary-container-shape-guard",
-            "trace-summary-history-container-shape-guard",
-            "trace-summary-latest-history-entry-shape-guard",
-            "trace-summary-empty-history-guard",
-            "trace-summary-missing-chapter-guard",
-            "trace-summary-chapter-metrics-shape-guard",
-            "trace-summary-missing-entry-guard",
+            *trace_summary_mode_names,
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, stop-unavailable-destroy-failure-close-idempotency = repeated close() after stop() unavailable and destroy() failure, stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, trace-summary = deterministic required-key assertion, trace-summary-missing-key = deterministic missing-key detection, trace-summary-shape-guard = deterministic non-dict shape detection, trace-summary-container-shape-guard = deterministic malformed metrics container detection, trace-summary-history-container-shape-guard = deterministic malformed history container detection, trace-summary-latest-history-entry-shape-guard = deterministic malformed latest history entry detection, trace-summary-empty-history-guard = deterministic empty history detection, trace-summary-missing-chapter-guard = deterministic missing chapter detection, trace-summary-chapter-metrics-shape-guard = deterministic malformed chapter-metrics detection, trace-summary-missing-entry-guard = deterministic missing trace_summary entry detection, live = real provider call",
+        help=(
+            "stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, "
+            "shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, "
+            "destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), "
+            "force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, "
+            "close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, "
+            "destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, "
+            "stop-unavailable-destroy-failure-close-idempotency = repeated close() after stop() unavailable and destroy() failure, "
+            "stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, "
+            "stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, "
+            f"{trace_summary_mode_help}, live = real provider call"
+        ),
     )
     args = parser.parse_args()
 
@@ -963,26 +1011,8 @@ def main() -> int:
         return run_stop_failure_destroy_unavailable_close_idempotency_mode()
     if args.mode == "stop-failure-destroy-failure-close-idempotency":
         return run_stop_failure_destroy_failure_close_idempotency_mode()
-    if args.mode == "trace-summary":
-        return run_trace_summary_mode()
-    if args.mode == "trace-summary-missing-key":
-        return run_trace_summary_missing_key_mode()
-    if args.mode == "trace-summary-shape-guard":
-        return run_trace_summary_shape_guard_mode()
-    if args.mode == "trace-summary-container-shape-guard":
-        return run_trace_summary_container_shape_guard_mode()
-    if args.mode == "trace-summary-history-container-shape-guard":
-        return run_trace_summary_history_container_shape_guard_mode()
-    if args.mode == "trace-summary-latest-history-entry-shape-guard":
-        return run_trace_summary_latest_history_entry_shape_guard_mode()
-    if args.mode == "trace-summary-empty-history-guard":
-        return run_trace_summary_empty_history_guard_mode()
-    if args.mode == "trace-summary-missing-chapter-guard":
-        return run_trace_summary_missing_chapter_guard_mode()
-    if args.mode == "trace-summary-chapter-metrics-shape-guard":
-        return run_trace_summary_chapter_metrics_shape_guard_mode()
-    if args.mode == "trace-summary-missing-entry-guard":
-        return run_trace_summary_missing_entry_guard_mode()
+    if args.mode in trace_summary_mode_handlers:
+        return trace_summary_mode_handlers[args.mode]()
     return run_live_mode()
 
 
