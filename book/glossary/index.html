@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Autonomous Authors">
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Glossary - AI-First Software Engineering</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">AI-First Software Engineering</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../preface/" class="nav-link">Preface</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Chapters</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../chapters/01-paradigm-shift/" class="dropdown-item">01. Paradigm Shift</a>
+</li>
+                                    
+<li>
+    <a href="../chapters/02-harness-engineering/" class="dropdown-item">02. Harness Engineering</a>
+</li>
+                                    
+<li>
+    <a href="../chapters/03-autonomous-kernels/" class="dropdown-item">03. Autonomous Kernels</a>
+</li>
+                                    
+<li>
+    <a href="../chapters/04-memory-systems/" class="dropdown-item">04. Memory Systems</a>
+</li>
+                                    
+<li>
+    <a href="../chapters/05-evaluation-and-traces/" class="dropdown-item">05. Evaluation and Traces</a>
+</li>
+                                    
+<li>
+    <a href="../chapters/06-agent-governance/" class="dropdown-item">06. Agent Governance</a>
+</li>
+                                    
+<li>
+    <a href="../chapters/07-production-ai-infrastructure/" class="dropdown-item">07. Production AI Infrastructure</a>
+</li>
+                                    
+<li>
+    <a href="../chapters/99-future-directions/" class="dropdown-item">99. Future Directions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Glossary</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Patterns Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../patterns/harness-design-patterns/" class="dropdown-item">Harness Design</a>
+</li>
+                                    
+<li>
+    <a href="../patterns/memory-architectures/" class="dropdown-item">Memory Architectures</a>
+</li>
+                                    
+<li>
+    <a href="../patterns/minimal-agent-loop/" class="dropdown-item">Minimal Agent Loop</a>
+</li>
+                                    
+<li>
+    <a href="../patterns/self-verification-loop/" class="dropdown-item">Self-Verification Loop</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../chapters/99-future-directions/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../patterns/harness-design-patterns/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#glossary" class="nav-link">Glossary</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#acceptance-criteria" class="nav-link">Acceptance criteria</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#agent-loop" class="nav-link">Agent loop</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#allowlist" class="nav-link">Allowlist</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#budget" class="nav-link">Budget</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#context-window" class="nav-link">Context window</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#determinism" class="nav-link">Determinism</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#drift" class="nav-link">Drift</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#evidence" class="nav-link">Evidence</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#eval" class="nav-link">Eval</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#failure-mode" class="nav-link">Failure mode</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#golden-file" class="nav-link">Golden file</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#governance" class="nav-link">Governance</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#harness" class="nav-link">Harness</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#idempotency" class="nav-link">Idempotency</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#kernel" class="nav-link">Kernel</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#memory" class="nav-link">Memory</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#non-determinism" class="nav-link">Non-determinism</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#policy" class="nav-link">Policy</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#prompt" class="nav-link">Prompt</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#retrieval" class="nav-link">Retrieval</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#rag-retrieval-augmented-generation" class="nav-link">RAG (retrieval-augmented generation)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#side-effect" class="nav-link">Side effect</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tool-interface" class="nav-link">Tool interface</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#trace" class="nav-link">Trace</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#verification" class="nav-link">Verification</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="glossary">Glossary</h1>
+<p>This glossary defines terms as used in this book. Definitions are intentionally operational: they describe what a term <em>does</em> in a system.</p>
+<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<p>Explicit, testable conditions that define “done” for a task.</p>
+<p>In practice, acceptance criteria should map to checks (tests, lint, build, schema validation, golden diffs) or to a bounded human-review checklist.</p>
+<h2 id="agent-loop">Agent loop</h2>
+<p>A control loop that repeatedly: (1) observes state, (2) chooses a next action (often a tool call), (3) executes, (4) updates state, (5) decides whether to stop.</p>
+<p>Typical loop variables include a step budget, an allowlist of tools, and a termination condition.</p>
+<h2 id="allowlist">Allowlist</h2>
+<p>A set of explicitly permitted actions or tools.</p>
+<p>Allowlists reduce accidental capability expansion: adding a new tool is a deliberate change that can be reviewed, tested, and governed.</p>
+<h2 id="budget">Budget</h2>
+<p>A hard limit enforced by the kernel (or orchestration layer) on steps, time, tokens, or cost.</p>
+<p>Budgets turn “try until it works” into a bounded process.</p>
+<h2 id="context-window">Context window</h2>
+<p>The maximum amount of text (messages + tool outputs + retrieved memory) that a model can condition on at once.</p>
+<p>Design implication: systems must choose what to include, summarize, or omit.</p>
+<h2 id="determinism">Determinism</h2>
+<p>The degree to which the system produces the same outcome given the same inputs.</p>
+<p>In agentic systems, determinism is usually approached through constraints, typed tools, and verification rather than assumed.</p>
+<h2 id="drift">Drift</h2>
+<p>Unintended change in behavior over time relative to a baseline.</p>
+<p>Drift can be caused by model updates, prompt edits, tool/API changes, data changes, environment changes, or accumulating memory. Drift is detected by comparing traces or eval results across versions.</p>
+<h2 id="evidence">Evidence</h2>
+<p>Artifacts that support a claim about system behavior.</p>
+<p>Examples: a test run output, a checksum of an applied patch, a trace segment showing tool inputs/outputs, a golden diff.</p>
+<h2 id="eval">Eval</h2>
+<p>A repeatable test that measures whether a system meets a target behavior under defined inputs and constraints.</p>
+<p>Evals can be automated (unit tests, golden files, scripted scenarios) or human-scored, but they must be versioned and runnable.</p>
+<h2 id="failure-mode">Failure mode</h2>
+<p>A specific way the system can fail, including its trigger and observable symptoms.</p>
+<p>Failure modes drive targeted mitigations (tool contracts, guardrails, tests) rather than general caution.</p>
+<h2 id="golden-file">Golden file</h2>
+<p>A stored “expected output” used for regression testing.</p>
+<p>Golden tests are useful for CLI help text, formatted outputs, and traces; they must be reviewed carefully because updating them can mask regressions.</p>
+<h2 id="governance">Governance</h2>
+<p>Rules, controls, and escalation paths that constrain and audit agent behavior.</p>
+<p>Governance commonly includes: tool allowlists, budgets, approval gates, logging requirements, data handling policies, incident response, and rollback procedures.</p>
+<h2 id="harness">Harness</h2>
+<p>The engineered environment around a model that makes behavior reliable and useful in a specific context.</p>
+<p>A harness typically includes: prompts, tool schemas, routing policies, memory strategy, eval suite, tracing/telemetry, and release discipline. Most production reliability lives in the harness rather than in the model.</p>
+<h2 id="idempotency">Idempotency</h2>
+<p>A property of an operation where repeating it produces the same final state as running it once.</p>
+<p>Idempotency matters for retries: without it, transient failures can cause duplicated side effects.</p>
+<h2 id="kernel">Kernel</h2>
+<p>The minimal execution substrate that runs the agent loop and mediates interaction with the outside world.</p>
+<p>A kernel is responsible for: step control, tool invocation, persistence boundaries, cancellation/timeouts, and trace logging. It should be small enough to audit.</p>
+<h2 id="memory">Memory</h2>
+<p>Persisted or semi-persisted state used to condition future behavior.</p>
+<p>Memory may be transient (within a run), session-scoped, or long-lived. It may be explicit (structured records) or implicit (retrieval index). Memory is a mechanism for reintroducing prior information into context; it is not automatically correct.</p>
+<h2 id="non-determinism">Non-determinism</h2>
+<p>Variation in outcomes across runs due to sampling, tool timing, nondeterministic tests, external APIs, or changing environments.</p>
+<p>Managing nondeterminism is a core engineering task in agentic systems.</p>
+<h2 id="policy">Policy</h2>
+<p>An explicit rule set that constrains behavior.</p>
+<p>Policies can be encoded in prompts, tool routers, allowlists, budgets, and approval workflows. Effective policies are testable and observable.</p>
+<h2 id="prompt">Prompt</h2>
+<p>The structured input (system/developer/user messages and other context) used to condition the model.</p>
+<p>Prompting is part of the harness; changes to prompts should be versioned and evaluated like code.</p>
+<h2 id="retrieval">Retrieval</h2>
+<p>Selecting external information (documents, traces, code snippets) to include in context for a step.</p>
+<p>Retrieval must be treated as a hint: critical claims still require confirmation against source-of-truth artifacts.</p>
+<h2 id="rag-retrieval-augmented-generation">RAG (retrieval-augmented generation)</h2>
+<p>A pattern where the system retrieves relevant documents and includes them in the prompt before generating output.</p>
+<p>In engineering systems, RAG commonly retrieves code, docs, tickets, and prior traces.</p>
+<h2 id="side-effect">Side effect</h2>
+<p>Any operation that changes state outside the model’s messages.</p>
+<p>Examples: writing files, calling APIs, creating tickets, merging PRs, or modifying databases.</p>
+<h2 id="tool-interface">Tool interface</h2>
+<p>The contract between the agent and an external capability.</p>
+<p>A tool interface specifies: inputs, outputs, errors, side effects, idempotency, latency expectations, and permission scope. Good tool interfaces make failure explicit and reduce ambiguity.</p>
+<h2 id="trace">Trace</h2>
+<p>A structured record of an agent run that is sufficient to reconstruct what happened and why.</p>
+<p>A trace typically includes: prompts/messages, tool calls and results, intermediate decisions, budgets, timing, and final outputs. Traces are used for debugging, eval attribution, and governance.</p>
+<h2 id="verification">Verification</h2>
+<p>Objective checks that the system runs (or produces as artifacts) to validate that an output meets acceptance criteria.</p>
+<p>Verification is stronger than self-review: it produces evidence.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Autonomous Authors">
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>04. Memory Systems - AI-First Software Engineering</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../../css/brands.min.css" rel="stylesheet">
+        <link href="../../../css/solid.min.css" rel="stylesheet">
+        <link href="../../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">AI-First Software Engineering</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../preface/" class="nav-link">Preface</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Chapters</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../01-paradigm-shift/" class="dropdown-item">01. Paradigm Shift</a>
+</li>
+                                    
+<li>
+    <a href="../02-harness-engineering/" class="dropdown-item">02. Harness Engineering</a>
+</li>
+                                    
+<li>
+    <a href="../03-autonomous-kernels/" class="dropdown-item">03. Autonomous Kernels</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">04. Memory Systems</a>
+</li>
+                                    
+<li>
+    <a href="../05-evaluation-and-traces/" class="dropdown-item">05. Evaluation and Traces</a>
+</li>
+                                    
+<li>
+    <a href="../06-agent-governance/" class="dropdown-item">06. Agent Governance</a>
+</li>
+                                    
+<li>
+    <a href="../07-production-ai-infrastructure/" class="dropdown-item">07. Production AI Infrastructure</a>
+</li>
+                                    
+<li>
+    <a href="../99-future-directions/" class="dropdown-item">99. Future Directions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../glossary/" class="nav-link">Glossary</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Patterns Overview</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../patterns/harness-design-patterns/" class="dropdown-item">Harness Design</a>
+</li>
+                                    
+<li>
+    <a href="../../patterns/memory-architectures/" class="dropdown-item">Memory Architectures</a>
+</li>
+                                    
+<li>
+    <a href="../../patterns/minimal-agent-loop/" class="dropdown-item">Minimal Agent Loop</a>
+</li>
+                                    
+<li>
+    <a href="../../patterns/self-verification-loop/" class="dropdown-item">Self-Verification Loop</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../03-autonomous-kernels/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../05-evaluation-and-traces/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#chapter-04-memory-systems" class="nav-link">Chapter 04 — Memory Systems</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#thesis" class="nav-link">Thesis</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#why-this-matters" class="nav-link">Why This Matters</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#system-breakdown" class="nav-link">System Breakdown</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#concrete-example-1" class="nav-link">Concrete Example 1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#concrete-example-2" class="nav-link">Concrete Example 2</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#trade-offs" class="nav-link">Trade-offs</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#failure-modes" class="nav-link">Failure Modes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#research-directions" class="nav-link">Research Directions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="chapter-04-memory-systems">Chapter 04 — Memory Systems</h1>
+<h2 id="thesis">Thesis</h2>
+<p>Memory is a system component, not a transcript. It must be structured, queryable, and governed (with provenance) to improve long-horizon work.</p>
+<p>Hypothesis: uncurated memory increases confidence without increasing correctness, by amplifying earlier mistakes.</p>
+<h2 id="why-this-matters">Why This Matters</h2>
+<ul>
+<li>Long projects exceed context windows; without memory, work becomes repetitive and inconsistent.</li>
+<li>Without provenance, persistent memory becomes a source of silent drift.</li>
+<li>Production environments need data minimization and retention policies for stored traces and summaries.</li>
+</ul>
+<h2 id="system-breakdown">System Breakdown</h2>
+<ul>
+<li><strong>Memory classes</strong>:</li>
+<li>Episodic: traces of actions/tool I/O/diffs.</li>
+<li>Semantic: stable project facts and conventions.</li>
+<li>Decisions: recorded trade-offs and constraints.</li>
+<li>State: current plan, progress, open issues.</li>
+<li><strong>Write policy</strong>: what gets stored, when, by whom, and with what validation.</li>
+<li><strong>Read policy</strong>: retrieval filters, ranking, freshness, and provenance checks.</li>
+<li><strong>Governance</strong>: retention, access control, redaction, and correction mechanisms.</li>
+</ul>
+<h2 id="concrete-example-1">Concrete Example 1</h2>
+<p>Decision memory for an architecture choice.
+- Store: decision record with options, chosen approach, constraints, and rationale.
+- Enforce: future changes must reference the decision or explicitly supersede it.</p>
+<h2 id="concrete-example-2">Concrete Example 2</h2>
+<p>Trace-indexed memory for debugging.
+- Store: tool outputs and diffs keyed by task/iteration.
+- Use: when a regression occurs, retrieve prior similar traces and compare failure signatures.</p>
+<h2 id="trade-offs">Trade-offs</h2>
+<ul>
+<li>More memory improves continuity but increases risk of stale or incorrect retrieval.</li>
+<li>Strong provenance improves trust but adds overhead to writing and updating memory.</li>
+<li>Aggressive retention helps debugging but increases privacy and storage costs.</li>
+</ul>
+<h2 id="failure-modes">Failure Modes</h2>
+<ul>
+<li><strong>Stale retrieval dominance</strong>: old assumptions override new evidence.</li>
+<li><strong>Summarization loss</strong>: key constraints disappear in compression.</li>
+<li><strong>Memory poisoning</strong>: incorrect conclusions become “facts” through repetition.</li>
+</ul>
+<h2 id="research-directions">Research Directions</h2>
+<ul>
+<li>Memory scoring with automated freshness and provenance signals.</li>
+<li>Mechanisms for correcting memory (retractions, superseding records).</li>
+<li>Evaluations for memory usefulness (measuring reduced iterations without increased regressions).</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js"></script>
+        <script src="../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
