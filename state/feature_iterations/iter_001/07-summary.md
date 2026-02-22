@@ -1,10 +1,10 @@
-# Iteration summary
+# Iteration Summary
 
-- Created `state/feature_iterations/iter_001/` as the first incremental-improvements iteration.
-- Executed a planning-only task per prompt contract.
-- Documented task intent, acceptance criteria, and immediate rationale in `01-task.md`.
-- Produced a focused implementation roadmap across harness core, role templates, smoke tests, and eval gates in `02-plan.md`.
-- Recorded executed discovery/documentation steps and file outputs in `03-execution.md`.
-- Validated conformance to prompt requirements and acceptance criteria in `04-validation.md`.
-- Captured key risks/decisions and deferred implementation scope in `05-risks-and-decisions.md`.
-- Added a single, concrete next task with measurable acceptance criteria in `06-next-iteration.md`.
+This seed iteration completed a planning-only backlog setup for custom harness improvements.  
+`iter_001` was selected as the next index after confirming no prior `state/feature_iterations/iter_XXX` folders.  
+The task artifact defines acceptance criteria centered on features, tests, and eval alignment.  
+The plan artifact maps future implementation work to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.  
+Execution and validation artifacts document discovery steps and pass/fail checks for this planning deliverable.  
+Risk notes capture potential coupling and eval brittleness concerns.  
+A single next task is recommended: implement deterministic trace-summary enrichment in kernel + smoke coverage.  
+No harness runtime code was changed in this iteration; scope was intentionally constrained to planning documentation.

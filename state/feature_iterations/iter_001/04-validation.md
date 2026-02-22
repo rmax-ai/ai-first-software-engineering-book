@@ -1,15 +1,21 @@
 # Validation
 
-## Verification performed
-- Reviewed `prompts/incremental-improvements/execute.md` and confirmed this iteration is planning-only.
-- Reviewed `DEVELOPMENT.md` and aligned planned touchpoints with harness guidance (`state/kernel.py`, role templates, smoke, evals).
-- Confirmed iteration discovery rule application: no prior `iter_XXX` found, so this run uses `iter_001`.
+## Verification commands run
+- `glob state/feature_iterations/iter_*` to confirm iteration discovery.
+- File inspection via `view` for:
+  - `prompts/incremental-improvements/execute.md`
+  - `DEVELOPMENT.md`
+  - `state/feature_iterations/iter_001/01-task.md`
+  - `state/feature_iterations/iter_001/02-plan.md`
+  - `state/feature_iterations/iter_001/06-next-iteration.md`
 
-## Results
-- All seven required artifacts were created for `state/feature_iterations/iter_001/`.
-- Acceptance criteria in `01-task.md` are met by the planning scope documented in `02-plan.md` and `06-next-iteration.md`.
+## Observed results
+- No prior `iter_XXX` folders existed; `iter_001` was correctly selected.
+- Planning artifacts define required feature/test/eval coverage and remain scoped to planning only.
+- Next-iteration guidance is concrete, singular, and includes expected files.
 
 ## Acceptance criteria status
-- Plan covers features/tests/evals: **pass**
-- Explicit file mapping for future code work: **pass**
-- Exactly one next task recommendation: **pass**
+- Planning task definition: **PASS**
+- Feature/test/eval coverage in plan: **PASS**
+- Single-task scope with no harness code edits: **PASS**
+- Next-iteration recommendation with bounded scope: **PASS**

@@ -1,14 +1,13 @@
-# Risks and decisions
+# Risks and Decisions
 
-## Risks
-- Plan quality depends on future iterations preserving deterministic behavior while adding observability in `state/kernel.py`.
-- Eval updates can become noisy if new checks are not scoped to measurable harness signals.
+## Risks discovered
+- Future harness updates may couple `state/kernel.py` behavior and smoke assertions more tightly, increasing maintenance overhead.
+- Adding eval assertions too early may create brittle gates before trace schema stabilizes.
 
-## Decisions
-- Keep this seed iteration planning-only per prompt contract; defer all runtime edits.
-- Prioritize small, test-backed follow-up tasks instead of multi-file implementation in one step.
+## Decisions and trade-offs
+- Chose planning-only execution to honor seed-iteration requirements and avoid premature implementation churn.
+- Kept planned coverage anchored to existing eval contracts instead of introducing new eval files immediately.
 
 ## Deferred intentionally
-- Implementation of kernel logging/control changes.
-- Role I/O scaffold updates.
-- Smoke/eval contract modifications and associated command runs.
+- Any concrete Python code changes in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
+- Any eval YAML modifications until first implementation iteration validates baseline behavior deltas.
