@@ -180,7 +180,7 @@ flowchart TD
     C[Invoke python state/kernel.py --llm --chapter-id]
     D[Planner → Writer → Critic loop]
     E{Code issue reported?}
-    F[Launch subagent to fix (code-reviewer, test, etc.)]
+    F["Launch subagent to fix (code-reviewer, test, etc.)"]
     G[Record commit + ledger update]
 
     A --> B --> C --> D --> E
