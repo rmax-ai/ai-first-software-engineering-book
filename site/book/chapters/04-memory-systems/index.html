@@ -528,10 +528,12 @@
 <li><strong>Redaction</strong>: remove or mask sensitive content while preserving minimal provenance where policy allows.</li>
 <li><strong>Retention</strong>: apply expiry and access rules over time (e.g., via <code>valid_through</code> or class-specific TTLs).</li>
 </ul>
-<p>Definition of done for “good memory”:
-- <strong>Structure</strong>: every entry has an id, timestamp, type, and source.
-- <strong>Query</strong>: a future agent can retrieve the right entry with a bounded filter (“show decisions for X” / “show traces for regression Y”).
-- <strong>Governance</strong>: entries can be corrected (superseded) and expire or be redacted under policy.</p>
+<p>Definition of done for “good memory”:</p>
+<ul>
+<li><strong>Structure</strong>: every entry has an id, timestamp, type, and source.</li>
+<li><strong>Query</strong>: a future agent can retrieve the right entry with a bounded filter (“show decisions for X” / “show traces for regression Y”).</li>
+<li><strong>Governance</strong>: entries can be corrected (superseded) and expire or be redacted under policy.</li>
+</ul>
 <p>Hypothesis: uncurated memory increases confidence without increasing correctness, by amplifying earlier mistakes.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
@@ -562,18 +564,24 @@ flowchart TB
   end
 </div>
 <p>The Schema subgraph is a minimum viable baseline for this chapter (intentionally incomplete); implementations can add fields as needed without changing the write/read/governance gates.</p>
-<p>Legend (one-line per gate):
-- <strong>Write</strong>: decide <em>when</em> to store and enforce minimum fields (especially <code>source</code>, <code>confidence</code>, and optional <code>valid_through</code>).
-- <strong>Index + Rank</strong>: retrieve with bounded filters, then sort with explicit rules (freshness, confidence, not-superseded).
-- <strong>Verify</strong>: before acting, check provenance and freshness; if checks fail, refine the query or re-run tests.
-- <strong>Govern</strong>: apply retention/redaction/correction; corrections create new records that update ranking via <code>supersedes</code>.
-- Schema extensions are fine, but ranking and governance still hinge on provenance, freshness/expiry, and explicit superseding.</p>
-<p>Takeaway: the record schema makes policies enforceable. Write policy populates fields with provenance. Read policy uses those fields for bounded retrieval and ranking. Governance updates them to correct and expire entries.</p>
-<p>Rule-of-thumb for write policy (“store” vs “don’t store”):
-- <strong>Store</strong>: decisions, constraints, conventions, and reproducible traces that can be pointed to (command + output snippet + commit/diff hash).
-- <strong>Don’t store</strong>: raw transcripts, personal data, or long tool logs without a bounded retrieval key and an explicit retention/redaction rule.</p>
+<p>Legend (one-line per gate):</p>
 <ul>
-<li><strong>Memory classes</strong>:</li>
+<li><strong>Write</strong>: decide <em>when</em> to store and enforce minimum fields (especially <code>source</code>, <code>confidence</code>, and optional <code>valid_through</code>).</li>
+<li><strong>Index + Rank</strong>: retrieve with bounded filters, then sort with explicit rules (freshness, confidence, not-superseded).</li>
+<li><strong>Verify</strong>: before acting, check provenance and freshness; if checks fail, refine the query or re-run tests.</li>
+<li><strong>Govern</strong>: apply retention/redaction/correction; corrections create new records that update ranking via <code>supersedes</code>.</li>
+<li>Schema extensions are fine, but ranking and governance still hinge on provenance, freshness/expiry, and explicit superseding.</li>
+</ul>
+<p>Takeaway: the record schema makes policies enforceable. Write policy populates fields with provenance. Read policy uses those fields for bounded retrieval and ranking. Governance updates them to correct and expire entries.</p>
+<p>Rule-of-thumb for write policy (“store” vs “don’t store”):</p>
+<ul>
+<li><strong>Store</strong>: decisions, constraints, conventions, and reproducible traces that can be pointed to (command + output snippet + commit/diff hash).</li>
+<li>
+<p><strong>Don’t store</strong>: raw transcripts, personal data, or long tool logs without a bounded retrieval key and an explicit retention/redaction rule.</p>
+</li>
+<li>
+<p><strong>Memory classes</strong>:</p>
+</li>
 <li>Episodic: traces of actions/tool I/O/diffs.</li>
 <li>Semantic: stable project facts and conventions.</li>
 <li>Decisions: recorded trade-offs and constraints.</li>
@@ -589,17 +597,21 @@ flowchart TB
 <li>Uses <code>supersedes</code> for explicit corrections rather than silent edits.</li>
 <li>Applies retention/redaction rules to episodic traces, while keeping minimal decision/semantic records with strong provenance.</li>
 </ul>
-<p>Minimum memory record schema (applies to all classes):
-- <code>id</code>: stable identifier (e.g., <code>dec-2026-02-22-authz-approach</code>, <code>trace-&lt;task&gt;-&lt;iter&gt;</code>).
-- <code>timestamp</code>: when recorded (and optionally <code>valid_through</code> for expiry/refresh).
-- <code>type</code>: episodic | semantic | decision | state.
-- <code>source</code>: where it came from (tool output, diff, doc link, human note) and a pointer (path/URL/commit hash).
-- <code>confidence</code>: coarse signal (e.g., low/medium/high) tied to source quality (tests passing, verified by review, etc.).
-- <code>supersedes</code>: optional list of prior ids this record replaces (supports correction and avoids “memory poisoning” via repetition).</p>
+<p>Minimum memory record schema (applies to all classes):</p>
+<ul>
+<li><code>id</code>: stable identifier (e.g., <code>dec-2026-02-22-authz-approach</code>, <code>trace-&lt;task&gt;-&lt;iter&gt;</code>).</li>
+<li><code>timestamp</code>: when recorded (and optionally <code>valid_through</code> for expiry/refresh).</li>
+<li><code>type</code>: episodic | semantic | decision | state.</li>
+<li><code>source</code>: where it came from (tool output, diff, doc link, human note) and a pointer (path/URL/commit hash).</li>
+<li><code>confidence</code>: coarse signal (e.g., low/medium/high) tied to source quality (tests passing, verified by review, etc.).</li>
+<li><code>supersedes</code>: optional list of prior ids this record replaces (supports correction and avoids “memory poisoning” via repetition).</li>
+</ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Decision memory for an architecture choice.</p>
-<p>Write event (what triggers storage):
-- After selecting an approach in a design discussion or PR, store a decision record as part of the change (or alongside it) before implementation diverges.</p>
+<p>Write event (what triggers storage):</p>
+<ul>
+<li>After selecting an approach in a design discussion or PR, store a decision record as part of the change (or alongside it) before implementation diverges.</li>
+</ul>
 <p>Stored record (template; identifiers are illustrative).</p>
 <p>Core schema fields:</p>
 <table>
@@ -667,10 +679,12 @@ flowchart TB
 </tr>
 </tbody>
 </table>
-<p>Enforcement rule (how future work must behave):
-- Any change that contradicts the decision must reference <code>dec-2026-02-22-memory-store-backend</code> and justify why it still holds, <strong>or</strong> create a new decision record.
-- The new record must include <code>supersedes: ["dec-2026-02-22-memory-store-backend"]</code>.
-- This prevents silent divergence where repeated but incorrect summaries turn into “facts” (see <strong>Memory poisoning</strong> in ## Failure Modes).</p>
+<p>Enforcement rule (how future work must behave):</p>
+<ul>
+<li>Any change that contradicts the decision must reference <code>dec-2026-02-22-memory-store-backend</code> and justify why it still holds, <strong>or</strong> create a new decision record.</li>
+<li>The new record must include <code>supersedes: ["dec-2026-02-22-memory-store-backend"]</code>.</li>
+<li>This prevents silent divergence where repeated but incorrect summaries turn into “facts” (see <strong>Memory poisoning</strong> in ## Failure Modes).</li>
+</ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Trace-indexed memory for debugging.</p>
 <p>Trace-indexed memory stores enough episodic detail to support “find similar failure, verify with evidence” workflows.</p>
@@ -704,10 +718,12 @@ flowchart TB
 <li>Is the trace superseded by a newer trace for the same signature (<code>supersedes</code>)?</li>
 <li>Do current tests reproduce the signature, or has the failure mode changed?</li>
 </ol>
-<p>Expected outcome (measurable):
-- For recurring <code>error_signature</code>s, reduce median iterations-to-fix from 6 to 3.
-- Keep the post-fix regression rate at or below 2% in the next 20 CI runs affecting the same files.
-- Calibrate <code>confidence</code> against evidence: raise it only when the linked commit passes CI for the relevant test suite, and downgrade it if later CI runs reintroduce the signature.</p>
+<p>Expected outcome (measurable):</p>
+<ul>
+<li>For recurring <code>error_signature</code>s, reduce median iterations-to-fix from 6 to 3.</li>
+<li>Keep the post-fix regression rate at or below 2% in the next 20 CI runs affecting the same files.</li>
+<li>Calibrate <code>confidence</code> against evidence: raise it only when the linked commit passes CI for the relevant test suite, and downgrade it if later CI runs reintroduce the signature.</li>
+</ul>
 <p>This flow turns memory into a debugging aid rather than a replay of stale context: retrieval is constrained, and action is gated by a provenance check.</p>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>

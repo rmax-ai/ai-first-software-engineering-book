@@ -520,11 +520,13 @@
 <h1 id="chapter-99-future-directions">Chapter 99 — Future Directions</h1>
 <h2 id="thesis">Thesis</h2>
 <p>The frontier is not larger models. It is system-level interfaces and verification.</p>
-<p>Concretely, that means investing in artifacts that scale across teams and models:
-- stronger tool contracts
-- better evaluations
-- structured memory
-- governance primitives</p>
+<p>Concretely, that means investing in artifacts that scale across teams and models:</p>
+<ul>
+<li>stronger tool contracts</li>
+<li>better evaluations</li>
+<li>structured memory</li>
+<li>governance primitives</li>
+</ul>
 <p>Here, “interfaces” means the concrete artifacts that let components interoperate. In practice, interfaces are what make runs portable. Examples include a tool-call schema that two runtimes both validate, a trace format that two analysis tools both parse, and an eval definition that two teams can both reproduce.</p>
 <p>“Verification” means methods that detect incorrect behavior reliably. In practice, verification is what makes runs auditable. It lets you show that a tool call matched a contract and that a replay stayed within a declared nondeterminism boundary. It also lets you show that a reported score came from a pinned dataset and scoring implementation.</p>
 <p>Hypothesis: as autonomy scales, the limiting factor becomes organizational and infrastructural coupling, not raw inference capability. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.</p>
@@ -551,47 +553,59 @@ flowchart TB
 <li><strong>Governance at scale</strong>: org-level policies, audit workflows, incident response.</li>
 <li><strong>Ecosystem risks</strong>: prompt/tool supply chain, dependency security, model updates.</li>
 </ul>
-<p><strong>Artifact map (concrete deliverables):</strong>
-- <strong>Interoperability</strong>
-  - Tool contract schema: JSON Schema for each tool’s inputs/outputs, error types, and retry semantics.
-  - Trace interchange spec: required event taxonomy + field requirements so runs can be exported and replayed elsewhere.
-  - Eval definition format: task spec + dataset version + scoring code hash so results are reproducible.
-- <strong>Verification</strong>
-  - Contract test suite: tool-level tests (including negative cases) and schema validation on every tool call.
-  - Replay protocol: “same inputs, same trace constraints” checks (within defined nondeterminism bounds).
-  - Property checks: invariants over traces (e.g., budgets, safety gates, monotonic progress signals).
-- <strong>Governance at scale</strong>
-  - Policy registry: versioned policies with owners, rollout rules, and audit requirements.
-  - Audit workflow: sampling rules + trace retention + review checklist for incidents and regressions.
-  - Incident runbook: severity levels, rollback procedures, and postmortem templates.
-- <strong>Ecosystem risks</strong>
-  - Supply-chain controls: signed prompt/tool bundles, dependency pinning, and provenance tracking.
-  - Model update gates: pre-deploy regression evals + canary rollout criteria.</p>
+<p><strong>Artifact map (concrete deliverables):</strong></p>
+<ul>
+<li><strong>Interoperability</strong></li>
+<li>Tool contract schema: JSON Schema for each tool’s inputs/outputs, error types, and retry semantics.</li>
+<li>Trace interchange spec: required event taxonomy + field requirements so runs can be exported and replayed elsewhere.</li>
+<li>Eval definition format: task spec + dataset version + scoring code hash so results are reproducible.</li>
+<li><strong>Verification</strong></li>
+<li>Contract test suite: tool-level tests (including negative cases) and schema validation on every tool call.</li>
+<li>Replay protocol: “same inputs, same trace constraints” checks (within defined nondeterminism bounds).</li>
+<li>Property checks: invariants over traces (e.g., budgets, safety gates, monotonic progress signals).</li>
+<li><strong>Governance at scale</strong></li>
+<li>Policy registry: versioned policies with owners, rollout rules, and audit requirements.</li>
+<li>Audit workflow: sampling rules + trace retention + review checklist for incidents and regressions.</li>
+<li>Incident runbook: severity levels, rollback procedures, and postmortem templates.</li>
+<li><strong>Ecosystem risks</strong></li>
+<li>Supply-chain controls: signed prompt/tool bundles, dependency pinning, and provenance tracking.</li>
+<li>Model update gates: pre-deploy regression evals + canary rollout criteria.</li>
+</ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Cross-model portability experiment.</p>
-<p><strong>Inputs</strong>
-- A fixed harness (same prompts, tool set, budgets, retry policy, and stopping criteria).
-- A fixed eval suite with a versioned dataset and deterministic scoring.
-- A model set (e.g., Model A, Model B, Model C) that is intentionally heterogeneous (different vendors or major versions).</p>
-<p><strong>Procedure (minimal)</strong>
-- Run N trials per task per model with identical harness inputs (same seeds where applicable; same tool sandbox state).
-- Record traces using the same trace interchange spec (see next section).
-- Compute:
-  - Task success rate (pass/fail as defined by the eval).
-  - Tool error rate (by tool + error type).
-  - Iteration profile (turn count, tool-call count, timeouts/budget hits).
-  - Failure signatures (clusters based on trace event sequences, not just final answers).</p>
-<p><strong>Expected outputs</strong>
-- A per-model result table, plus a “signature diff” report. The report shows which failure clusters are model-specific vs shared.
-- A set of “portability blockers” attributed to either:
-  - Harness/tool coupling (e.g., a tool contract ambiguity that different models interpret differently), or
-  - Model behavior (e.g., consistent violation of a particular tool precondition).</p>
-<p><strong>Interpreting disagreements</strong>
-- If multiple models fail in the same way on the same tasks, prioritize harness-level fixes (tool contract clarity, validation, better stop conditions).
-- If one model fails with a distinct trace signature while others pass under identical contracts, treat it as model-dependent and capture it as a regression test.</p>
-<p><strong>What would falsify the goal</strong>
-- If variance is dominated by harness nondeterminism (e.g., unstable tool responses or non-versioned datasets), differences cannot be attributed to models. The harness is not portable enough to support the comparison.
-- If success/failure flips under small, contract-preserving changes across models (e.g., harmless schema reordering), the tool contracts are underspecified.</p>
+<p><strong>Inputs</strong></p>
+<ul>
+<li>A fixed harness (same prompts, tool set, budgets, retry policy, and stopping criteria).</li>
+<li>A fixed eval suite with a versioned dataset and deterministic scoring.</li>
+<li>A model set (e.g., Model A, Model B, Model C) that is intentionally heterogeneous (different vendors or major versions).</li>
+</ul>
+<p><strong>Procedure (minimal)</strong></p>
+<ul>
+<li>Run N trials per task per model with identical harness inputs (same seeds where applicable; same tool sandbox state).</li>
+<li>Record traces using the same trace interchange spec (see next section).</li>
+<li>Compute:</li>
+<li>Task success rate (pass/fail as defined by the eval).</li>
+<li>Tool error rate (by tool + error type).</li>
+<li>Iteration profile (turn count, tool-call count, timeouts/budget hits).</li>
+<li>Failure signatures (clusters based on trace event sequences, not just final answers).</li>
+</ul>
+<p><strong>Expected outputs</strong></p>
+<ul>
+<li>A per-model result table, plus a “signature diff” report. The report shows which failure clusters are model-specific vs shared.</li>
+<li>A set of “portability blockers” attributed to either:</li>
+<li>Harness/tool coupling (e.g., a tool contract ambiguity that different models interpret differently), or</li>
+<li>Model behavior (e.g., consistent violation of a particular tool precondition).</li>
+</ul>
+<p><strong>Interpreting disagreements</strong></p>
+<ul>
+<li>If multiple models fail in the same way on the same tasks, prioritize harness-level fixes (tool contract clarity, validation, better stop conditions).</li>
+<li>If one model fails with a distinct trace signature while others pass under identical contracts, treat it as model-dependent and capture it as a regression test.</li>
+</ul>
+<p><strong>What would falsify the goal</strong></p>
+<ul>
+<li>If variance is dominated by harness nondeterminism (e.g., unstable tool responses or non-versioned datasets), differences cannot be attributed to models. The harness is not portable enough to support the comparison.</li>
+<li>If success/failure flips under small, contract-preserving changes across models (e.g., harmless schema reordering), the tool contracts are underspecified.</li>
+</ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Standardized trace interchange.</p>
 <p><strong>Goal</strong>
@@ -610,30 +624,38 @@ flowchart LR
 <p>Legend: “Validate tool contracts” means schema-checking arguments/results (and negative cases) at runtime before they enter the trace. “Divergence check” means comparing the replayed run to declared constraints, not forcing byte-for-byte identity when nondeterminism is allowed.</p>
 <p>The point is not to standardize everything. It is to standardize the minimum needed so two independent tools can agree on what happened, and can detect when a run is not reproducible under stated constraints.</p>
 <p><strong>Minimal trace interchange contract (required fields)</strong></p>
-<p><strong>Run metadata</strong>
-- <code>schema_version</code>: semantic version for the trace spec (e.g., <code>1.2.0</code>).
-- <code>run_id</code>: unique identifier for a single run; stable across exports.
-- <code>eval_id</code> and <code>eval_version</code>: eval definition and dataset/scoring version.
-- <code>harness_id</code> and <code>harness_version</code>: code hash or build identifier.
-- <code>model_id</code>: model name/version as reported by the provider.</p>
-<p><strong>Event schema</strong>
-- <code>events[]</code>: ordered list of events.
-  - <code>event_id</code>, <code>type</code>, <code>timestamp</code>, <code>parent_event_id</code> (when applicable)
-  - Assistant/user text: content plus redaction markers (when redacted)
-  - Tool calls: <code>tool_name</code>, validated <code>arguments</code>, <code>result</code> or structured error, <code>duration_ms</code>
-  - Policy gates: decision, rule id/version, rationale category (not freeform prose)</p>
-<p><strong>Versioning rule</strong>
-- Backward-compatible additions increment MINOR.
-- Breaking changes increment MAJOR.
-- A replay tool must refuse to “verify” unsupported MAJOR versions; it may still “view” them.</p>
-<p><strong>Replay validity check (what must match)</strong>
-- Under deterministic conditions, the tool-call sequence must match.
-  Match means tool name plus validated arguments.
-- For deterministic, versioned tools, outcomes must also match.
-- When nondeterminism exists (timeouts, stochastic tools, external APIs), record the boundary.
+<p><strong>Run metadata</strong></p>
+<ul>
+<li><code>schema_version</code>: semantic version for the trace spec (e.g., <code>1.2.0</code>).</li>
+<li><code>run_id</code>: unique identifier for a single run; stable across exports.</li>
+<li><code>eval_id</code> and <code>eval_version</code>: eval definition and dataset/scoring version.</li>
+<li><code>harness_id</code> and <code>harness_version</code>: code hash or build identifier.</li>
+<li><code>model_id</code>: model name/version as reported by the provider.</li>
+</ul>
+<p><strong>Event schema</strong></p>
+<ul>
+<li><code>events[]</code>: ordered list of events.</li>
+<li><code>event_id</code>, <code>type</code>, <code>timestamp</code>, <code>parent_event_id</code> (when applicable)</li>
+<li>Assistant/user text: content plus redaction markers (when redacted)</li>
+<li>Tool calls: <code>tool_name</code>, validated <code>arguments</code>, <code>result</code> or structured error, <code>duration_ms</code></li>
+<li>Policy gates: decision, rule id/version, rationale category (not freeform prose)</li>
+</ul>
+<p><strong>Versioning rule</strong></p>
+<ul>
+<li>Backward-compatible additions increment MINOR.</li>
+<li>Breaking changes increment MAJOR.</li>
+<li>A replay tool must refuse to “verify” unsupported MAJOR versions; it may still “view” them.</li>
+</ul>
+<p><strong>Replay validity check (what must match)</strong></p>
+<ul>
+<li>Under deterministic conditions, the tool-call sequence must match.
+  Match means tool name plus validated arguments.</li>
+<li>For deterministic, versioned tools, outcomes must also match.</li>
+<li>When nondeterminism exists (timeouts, stochastic tools, external APIs), record the boundary.
   Examples: tool snapshot id, cached response id, or allowed outcome set.
-  Replay is valid only if outcomes stay within that boundary.
-- If replay diverges in tool-call sequence under deterministic conditions, flag a portability failure.</p>
+  Replay is valid only if outcomes stay within that boundary.</li>
+<li>If replay diverges in tool-call sequence under deterministic conditions, flag a portability failure.</li>
+</ul>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
 <li>Standardization improves portability but can slow experimentation.</li>
@@ -641,20 +663,26 @@ flowchart LR
 <li>More governance improves safety but can reduce developer autonomy.</li>
 </ul>
 <p><strong>Decision checklist (operational)</strong></p>
-<p><strong>Standardize</strong>
-- Standardize when multiple teams depend on the same tools/traces.
-- Standardize when incidents require cross-team auditing.
-- Standardize when model swaps are frequent.
-- Delay standardization when the interface changes weekly and only one team uses it.
-- Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint, require semantic versioning, a contract test suite, and a changelog entry for every interface change.</p>
-<p><strong>Verify</strong>
-- Use tests/contracts when failures are frequent, expensive, or safety-critical.
-- Prefer lighter checks for experimental, low-impact components.
-- Still enforce schema validation and basic budgets.</p>
-<p><strong>Govern</strong>
-- Escalate governance when changes affect shared tool contracts, trace schemas, or eval definitions.
-- Keep governance minimal for isolated experiments that do not affect shared artifacts.
-- Set thresholds explicitly: acceptable tool error rate, maximum budget hits per run, and the severity that triggers an incident workflow.</p>
+<p><strong>Standardize</strong></p>
+<ul>
+<li>Standardize when multiple teams depend on the same tools/traces.</li>
+<li>Standardize when incidents require cross-team auditing.</li>
+<li>Standardize when model swaps are frequent.</li>
+<li>Delay standardization when the interface changes weekly and only one team uses it.</li>
+<li>Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint, require semantic versioning, a contract test suite, and a changelog entry for every interface change.</li>
+</ul>
+<p><strong>Verify</strong></p>
+<ul>
+<li>Use tests/contracts when failures are frequent, expensive, or safety-critical.</li>
+<li>Prefer lighter checks for experimental, low-impact components.</li>
+<li>Still enforce schema validation and basic budgets.</li>
+</ul>
+<p><strong>Govern</strong></p>
+<ul>
+<li>Escalate governance when changes affect shared tool contracts, trace schemas, or eval definitions.</li>
+<li>Keep governance minimal for isolated experiments that do not affect shared artifacts.</li>
+<li>Set thresholds explicitly: acceptable tool error rate, maximum budget hits per run, and the severity that triggers an incident workflow.</li>
+</ul>
 <h2 id="failure-modes">Failure Modes</h2>
 <ul>
 <li><strong>Lock-in</strong>: traces and tools become proprietary and non-portable.

@@ -520,16 +520,20 @@
 <h1 id="chapter-02-harness-engineering">Chapter 02 — Harness Engineering</h1>
 <h2 id="thesis">Thesis</h2>
 <p>Harness engineering is the discipline of turning a general-purpose model into a predictable system. It does that by defining tool contracts, constraints, loop control, and evaluation gates.</p>
-<p>In this chapter, “predictable” means three things:
-1. <strong>Repeatability</strong>: the same input context tends to produce the same classes of actions.
-2. <strong>Boundedness</strong>: the system’s allowed changes are limited by explicit constraints.
-3. <strong>Verifiability</strong>: outputs can be accepted or rejected by checks, not judgment calls.</p>
+<p>In this chapter, “predictable” means three things:</p>
+<ol>
+<li><strong>Repeatability</strong>: the same input context tends to produce the same classes of actions.</li>
+<li><strong>Boundedness</strong>: the system’s allowed changes are limited by explicit constraints.</li>
+<li><strong>Verifiability</strong>: outputs can be accepted or rejected by checks, not judgment calls.</li>
+</ol>
 <p>Hypothesis (falsifiable): for a fixed set of tasks and repositories, tightening the harness reduces regression rate and rework more than swapping between models of similar capability.</p>
 <p>This is not a model-selection argument. The claim is that, when you hold the model and task conditions constant, harness design is the primary lever that changes reliability outcomes.</p>
-<p>To test that hypothesis, hold these constant:
-- The task set (same prompts and acceptance criteria).
-- The repositories and their starting commits.
-- The agent instructions and tool availability (only harness strictness changes).</p>
+<p>To test that hypothesis, hold these constant:</p>
+<ul>
+<li>The task set (same prompts and acceptance criteria).</li>
+<li>The repositories and their starting commits.</li>
+<li>The agent instructions and tool availability (only harness strictness changes).</li>
+</ul>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
 <li>The same model can behave reliably or unreliably depending on tool schemas, budgets, and verification.</li>
@@ -564,10 +568,12 @@
   T --&gt;|events + diffs + outputs| S
   E --&gt;|gate results| S
 </div>
-<p>Read the diagram as a loop with three distinct roles:
-- <strong>Constraints</strong> enter in the control plane (policies, budgets, stop conditions).
-- <strong>Evidence</strong> is produced by the tool and evaluation planes (outputs + pass/fail).
-- <strong>Replay</strong> depends on the state plane capturing enough artifacts to reproduce decisions.</p>
+<p>Read the diagram as a loop with three distinct roles:</p>
+<ul>
+<li><strong>Constraints</strong> enter in the control plane (policies, budgets, stop conditions).</li>
+<li><strong>Evidence</strong> is produced by the tool and evaluation planes (outputs + pass/fail).</li>
+<li><strong>Replay</strong> depends on the state plane capturing enough artifacts to reproduce decisions.</li>
+</ul>
 <p>Takeaway: predictability comes from making the loop explicit. The control plane must be able to stop based on evaluation, and the state plane must capture enough evidence to reproduce the decision.</p>
 <p>A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track:</p>
 <table>
@@ -619,19 +625,23 @@
 </tbody>
 </table>
 <p>The “minimal contract surface” is the set of interfaces that must be stable for predictability. It includes tool schemas (including error codes), patch discipline, and evaluation semantics.</p>
-<p>Boundary:
-- In scope: tool schemas, patch discipline, and gate semantics (including what evidence is recorded).
-- Out of scope: standardizing runtime infrastructure details, as long as the gate semantics stay consistent.</p>
+<p>Boundary:</p>
+<ul>
+<li>In scope: tool schemas, patch discipline, and gate semantics (including what evidence is recorded).</li>
+<li>Out of scope: standardizing runtime infrastructure details, as long as the gate semantics stay consistent.</li>
+</ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Design a tool contract for “apply patch” operations.</p>
 <p>A minimal schema sketch can be made scannable by treating it like an interface spec. One goal is to make failures recoverable without expanding scope.</p>
-<p>Schema (fields + constraints to keep edits local and reviewable):
-- Required fields: <code>path</code>, <code>old_str</code>, <code>new_str</code>.
-- Optional field: <code>context</code> (only for disambiguation).
-- Constraints:
-  - No unrelated whitespace changes outside <code>old_str</code>.
-  - No implicit multi-file edits per call.
-  - Size budget (for example: max files changed; max lines changed).</p>
+<p>Schema (fields + constraints to keep edits local and reviewable):</p>
+<ul>
+<li>Required fields: <code>path</code>, <code>old_str</code>, <code>new_str</code>.</li>
+<li>Optional field: <code>context</code> (only for disambiguation).</li>
+<li>Constraints:</li>
+<li>No unrelated whitespace changes outside <code>old_str</code>.</li>
+<li>No implicit multi-file edits per call.</li>
+<li>Size budget (for example: max files changed; max lines changed).</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -723,24 +733,32 @@
 </tr>
 </tbody>
 </table>
-<p>Happy path flow:
-1. Agent proposes a patch using a unique <code>old_str</code> block with minimal scope.
-2. Harness validates: file exists, match is unique, diff stays within budgets.
-3. Tool applies the patch and returns a structured result: changed line counts, a before/after snippet, and a stable identifier for the diff.</p>
-<p>Conflict recovery (when the patch fails with <code>NO_MATCH</code> or <code>NON_UNIQUE_MATCH</code>):
-1. The harness returns the error code plus a short “fresh context” snippet around the closest match (or a list of candidate match ranges).
-2. The agent re-reads the relevant portion of the file and regenerates a smaller, more specific <code>old_str</code> (or narrows by adding <code>context</code>).
-3. If the second attempt fails, the harness forces a stop condition (“needs human review”) rather than allowing a whole-file overwrite.</p>
-<p>Mini-example (connecting the contract to measurable outcomes):
-- Task: “Update <code>timeout_ms</code> default from 5000 to 8000.”
-- Without a strict contract: the agent might run a broad search/replace and touch 6 files, including docs and unrelated constants.
-- With the contract and budgets:
-  - The edit is constrained to one file and a small <code>old_str</code> anchor.
-  - The harness rejects the attempt if it exceeds, for example, 1 file and 20 changed lines.
-  - Your tracked metrics should shift: <strong>diff locality</strong> stays low (1 file, a few lines), and <strong>revert rate</strong> should drop because the change is less likely to introduce incidental regressions.</p>
-<p>Evaluation: measure whether the tool contract is improving outcomes with two task-level metrics:
-- <strong>Revert rate</strong>: fraction of tasks where the patch is reverted in the next N commits/PR updates.
-- <strong>Diff locality</strong>: median number of files touched and lines changed per task, with an alert threshold for outliers.</p>
+<p>Happy path flow:</p>
+<ol>
+<li>Agent proposes a patch using a unique <code>old_str</code> block with minimal scope.</li>
+<li>Harness validates: file exists, match is unique, diff stays within budgets.</li>
+<li>Tool applies the patch and returns a structured result: changed line counts, a before/after snippet, and a stable identifier for the diff.</li>
+</ol>
+<p>Conflict recovery (when the patch fails with <code>NO_MATCH</code> or <code>NON_UNIQUE_MATCH</code>):</p>
+<ol>
+<li>The harness returns the error code plus a short “fresh context” snippet around the closest match (or a list of candidate match ranges).</li>
+<li>The agent re-reads the relevant portion of the file and regenerates a smaller, more specific <code>old_str</code> (or narrows by adding <code>context</code>).</li>
+<li>If the second attempt fails, the harness forces a stop condition (“needs human review”) rather than allowing a whole-file overwrite.</li>
+</ol>
+<p>Mini-example (connecting the contract to measurable outcomes):</p>
+<ul>
+<li>Task: “Update <code>timeout_ms</code> default from 5000 to 8000.”</li>
+<li>Without a strict contract: the agent might run a broad search/replace and touch 6 files, including docs and unrelated constants.</li>
+<li>With the contract and budgets:</li>
+<li>The edit is constrained to one file and a small <code>old_str</code> anchor.</li>
+<li>The harness rejects the attempt if it exceeds, for example, 1 file and 20 changed lines.</li>
+<li>Your tracked metrics should shift: <strong>diff locality</strong> stays low (1 file, a few lines), and <strong>revert rate</strong> should drop because the change is less likely to introduce incidental regressions.</li>
+</ul>
+<p>Evaluation: measure whether the tool contract is improving outcomes with two task-level metrics:</p>
+<ul>
+<li><strong>Revert rate</strong>: fraction of tasks where the patch is reverted in the next N commits/PR updates.</li>
+<li><strong>Diff locality</strong>: median number of files touched and lines changed per task, with an alert threshold for outliers.</li>
+</ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Add an evaluation gate to an agent loop.</p>
 <p>A diagram helps here because “attempt → gate → log → decide” is simple to say, but easy to implement incorrectly. Focus on the two decision points: whether the gate passed, and whether another iteration is allowed under budgets.</p>
@@ -760,27 +778,37 @@
   B -- no --&gt; S
 </div>
 <p>Takeaway: the harness should only permit another attempt when (a) budgets remain and (b) the failure is actionable. Otherwise, it should stop with evidence, not a guess.</p>
-<p>A minimal loop in prose looks like: attempt → gate → log → decide.
-1. <strong>Attempt</strong>: the agent makes the smallest change it believes will satisfy the task.
-2. <strong>Gate</strong>: the harness runs required checks (e.g., unit tests + static checks).
-3. <strong>Log</strong>: record the tool outputs, the diff identifier, and the gate result in the task ledger.
-4. <strong>Decide</strong>:
-   - If gate passes: allow “PR-ready” output.
-   - If gate fails: allow another iteration only if budgets remain and the failure is actionable.
-   - If repeated failures occur: stop with a concrete failure summary and evidence.</p>
-<p>Gate configuration checklist (minimal defaults):
-1. <strong>Define the full gate</strong>: a fixed set of commands, in order (for example: unit tests, then lint/typecheck, then build).
-2. <strong>Define time and iteration budgets</strong>: max gate time per iteration and max iterations per task.
-3. <strong>Define evidence requirements</strong>: always store exit codes, stdout/stderr (or paths to logs), and the diff identifier.
-4. <strong>Define fallback eligibility</strong>: when tests are missing or non-runnable, use a narrower fallback gate and tighten patch budgets.</p>
-<p>Pass/fail criteria should be explicit:
-- Pass = all configured checks return success (exit code 0) and no policy violations were triggered.
-- Fail = any check fails, any policy violation occurs, or budgets are exceeded.</p>
-<p>Fallback gate policy when tests are missing:
-- If unit tests are absent or non-runnable, the harness should not silently accept “looks good.”
-- Use a compact decision rule:</p>
+<p>A minimal loop in prose looks like: attempt → gate → log → decide.</p>
 <ol>
-<li>If the repo’s documented test command exists and runs in this environment, use <code>full_gate</code>.</li>
+<li><strong>Attempt</strong>: the agent makes the smallest change it believes will satisfy the task.</li>
+<li><strong>Gate</strong>: the harness runs required checks (e.g., unit tests + static checks).</li>
+<li><strong>Log</strong>: record the tool outputs, the diff identifier, and the gate result in the task ledger.</li>
+<li><strong>Decide</strong>:</li>
+<li>If gate passes: allow “PR-ready” output.</li>
+<li>If gate fails: allow another iteration only if budgets remain and the failure is actionable.</li>
+<li>If repeated failures occur: stop with a concrete failure summary and evidence.</li>
+</ol>
+<p>Gate configuration checklist (minimal defaults):</p>
+<ol>
+<li><strong>Define the full gate</strong>: a fixed set of commands, in order (for example: unit tests, then lint/typecheck, then build).</li>
+<li><strong>Define time and iteration budgets</strong>: max gate time per iteration and max iterations per task.</li>
+<li><strong>Define evidence requirements</strong>: always store exit codes, stdout/stderr (or paths to logs), and the diff identifier.</li>
+<li><strong>Define fallback eligibility</strong>: when tests are missing or non-runnable, use a narrower fallback gate and tighten patch budgets.</li>
+</ol>
+<p>Pass/fail criteria should be explicit:</p>
+<ul>
+<li>Pass = all configured checks return success (exit code 0) and no policy violations were triggered.</li>
+<li>Fail = any check fails, any policy violation occurs, or budgets are exceeded.</li>
+</ul>
+<p>Fallback gate policy when tests are missing:</p>
+<ul>
+<li>If unit tests are absent or non-runnable, the harness should not silently accept “looks good.”</li>
+<li>
+<p>Use a compact decision rule:</p>
+</li>
+<li>
+<p>If the repo’s documented test command exists and runs in this environment, use <code>full_gate</code>.</p>
+</li>
 <li>If tests cannot be invoked here (missing command, missing dependency, or failures that prevent tests from running), try to fix within budget.</li>
 <li>If you cannot make tests runnable within budget, switch to <code>fallback_gate</code> and tighten patch budgets.</li>
 <li>
@@ -792,38 +820,42 @@
 <li>typecheck/lint/build must pass (whatever subset is available), and</li>
 <li>a targeted command or script (documented in the repo) must run successfully, and</li>
 <li>the change must be limited by stricter patch budgets (smaller allowed diffs).</li>
-</ol>
-<p>Mini-example (gate policy with metrics):
-- Task: “Rename <code>UserID</code> to <code>user_id</code> in a Python module.”
-- Budgets: max 2 iterations; max 10 changed lines per iteration.
-- Repo state: a documented test command exists, but it fails immediately due to a missing system dependency.
-- Gate choice: use <code>fallback_gate</code> plus stricter patch budgets.
-- Iteration 1:
-  - Attempt: change one file and update one reference.
-  - Gate: lint/typecheck passes; targeted script fails with an import error.
-- Iteration 2:
-  - Attempt: add the missing import in the same file.
-  - Gate: lint/typecheck passes; targeted script passes.
-- Recorded metric: iterations to first passing gate = 2.</p>
+</ul>
+<p>Mini-example (gate policy with metrics):</p>
+<ul>
+<li>Task: “Rename <code>UserID</code> to <code>user_id</code> in a Python module.”</li>
+<li>Budgets: max 2 iterations; max 10 changed lines per iteration.</li>
+<li>Repo state: a documented test command exists, but it fails immediately due to a missing system dependency.</li>
+<li>Gate choice: use <code>fallback_gate</code> plus stricter patch budgets.</li>
+<li>Iteration 1:</li>
+<li>Attempt: change one file and update one reference.</li>
+<li>Gate: lint/typecheck passes; targeted script fails with an import error.</li>
+<li>Iteration 2:</li>
+<li>Attempt: add the missing import in the same file.</li>
+<li>Gate: lint/typecheck passes; targeted script passes.</li>
+<li>Recorded metric: iterations to first passing gate = 2.</li>
+</ul>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
 <li>Richer tool schemas reduce ambiguity but raise integration cost.</li>
 <li>Strict budgets prevent runaway loops but can truncate legitimate work.</li>
 <li>Strong gates improve safety but may block progress on tasks lacking tests.</li>
 </ul>
-<p>Decision checklist (recommended defaults and when to relax):
-- <strong>Tool schemas</strong>:
-  - Default: prefer typed, validated arguments plus explicit error codes for recovery.
-  - Relax when: prototyping a new tool where integration speed matters more than repeatability, but only in non-production contexts.
-- <strong>Patch budgets</strong>:
-  - Default: small, diff-only edits with per-call and per-task size limits.
-  - Relax when: performing mechanical, reviewable migrations (e.g., dependency rename) where change breadth is intentional and measurable.
-- <strong>Evaluation gates</strong>:
-  - Default: require passing tests and static checks (a minimal green CI run) before any final output.
-  - Relax when: the repo cannot run tests in the current environment; use an explicit fallback gate and tighten patch budgets rather than skipping evaluation.
-- <strong>Stop conditions</strong>:
-  - Default: stop on repeated failure modes (same check failing twice) with a structured report.
-  - Relax when: failures are due to flaky infrastructure and you can rerun deterministically (record rerun count as part of the trace).</p>
+<p>Decision checklist (recommended defaults and when to relax):</p>
+<ul>
+<li><strong>Tool schemas</strong>:</li>
+<li>Default: prefer typed, validated arguments plus explicit error codes for recovery.</li>
+<li>Relax when: prototyping a new tool where integration speed matters more than repeatability, but only in non-production contexts.</li>
+<li><strong>Patch budgets</strong>:</li>
+<li>Default: small, diff-only edits with per-call and per-task size limits.</li>
+<li>Relax when: performing mechanical, reviewable migrations (e.g., dependency rename) where change breadth is intentional and measurable.</li>
+<li><strong>Evaluation gates</strong>:</li>
+<li>Default: require passing tests and static checks (a minimal green CI run) before any final output.</li>
+<li>Relax when: the repo cannot run tests in the current environment; use an explicit fallback gate and tighten patch budgets rather than skipping evaluation.</li>
+<li><strong>Stop conditions</strong>:</li>
+<li>Default: stop on repeated failure modes (same check failing twice) with a structured report.</li>
+<li>Relax when: failures are due to flaky infrastructure and you can rerun deterministically (record rerun count as part of the trace).</li>
+</ul>
 <h2 id="failure-modes">Failure Modes</h2>
 <ul>
 <li><strong>Schema underspecification</strong>: tools accept ambiguous inputs, producing inconsistent outcomes.</li>

@@ -521,13 +521,17 @@
 <h2 id="thesis">Thesis</h2>
 <p>AI-first software engineering is an architectural inversion. Machine reasoning becomes a primary execution substrate. The harness—tools, constraints, evaluation, and traceability—becomes the primary design surface.</p>
 <p>This inversion is practical. Reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable loop.</p>
-<p>A concrete, testable implication (holding the model constant):
-1. A stronger harness should reduce <em>iterations-to-pass</em>.
-2. A stronger harness should reduce <em>time-to-green</em>.
-3. A stronger harness should increase <em>attribution rate</em> (more failures have a primary cause you can act on).</p>
-<p>Operational definition:
-- <strong>Model capability</strong> changes when you swap models while holding tools, constraints, and evaluation constant.
-- <strong>Harness capability</strong> changes when you keep the model constant but alter tools, policies, evaluation gates, or trace capture.</p>
+<p>A concrete, testable implication (holding the model constant):</p>
+<ol>
+<li>A stronger harness should reduce <em>iterations-to-pass</em>.</li>
+<li>A stronger harness should reduce <em>time-to-green</em>.</li>
+<li>A stronger harness should increase <em>attribution rate</em> (more failures have a primary cause you can act on).</li>
+</ol>
+<p>Operational definition:</p>
+<ul>
+<li><strong>Model capability</strong> changes when you swap models while holding tools, constraints, and evaluation constant.</li>
+<li><strong>Harness capability</strong> changes when you keep the model constant but alter tools, policies, evaluation gates, or trace capture.</li>
+</ul>
 <p>In this framing, <em>attribution rate</em> is a harness outcome. It depends on what evidence you capture and which evaluation gates you run. It is not just a function of model fluency.</p>
 <p>This chapter’s claim is a hypothesis: some observed “capability” gains in practice are attributable to harness engineering rather than model changes.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
@@ -569,9 +573,11 @@
   V -. record .-&gt; TR
   X -. use .-&gt; TR
 </div>
-<p>Legend:
-- <strong>Solid arrows</strong> are the operational loop (plan → act → verify).
-- <strong>Dashed arrows</strong> are trace capture and trace usage.</p>
+<p>Legend:</p>
+<ul>
+<li><strong>Solid arrows</strong> are the operational loop (plan → act → verify).</li>
+<li><strong>Dashed arrows</strong> are trace capture and trace usage.</li>
+</ul>
 <p>Takeaway: without a trace, attribution is guesswork. You will not know if the fix is spec/prompt, tool/runtime, code, or eval/CI. The same three measurable signals below should show up consistently in how you run (and later audit) the loop.</p>
 <ul>
 <li><strong>Measurable signals</strong> (to separate model vs harness effects):</li>
@@ -606,11 +612,15 @@
 </li>
 </ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
-<p>Refactor a small library function using an agent loop.
-- Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).
-- Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.</p>
+<p>Refactor a small library function using an agent loop.</p>
 <ul>
-<li>Minimal trace record (copyable):</li>
+<li>Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).</li>
+<li>
+<p>Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.</p>
+</li>
+<li>
+<p>Minimal trace record (copyable):</p>
+</li>
 </ul>
 <table>
 <thead>
@@ -685,11 +695,15 @@
 </li>
 </ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
-<p>Ship a minor API change in a production service.
-- Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.
-- Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.</p>
+<p>Ship a minor API change in a production service.</p>
 <ul>
-<li>Minimal trace report (copyable):</li>
+<li>Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.</li>
+<li>
+<p>Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.</p>
+</li>
+<li>
+<p>Minimal trace report (copyable):</p>
+</li>
 </ul>
 <table>
 <thead>

@@ -521,10 +521,12 @@
 <h2 id="thesis">Thesis</h2>
 <p>Governance defines the safe operating envelope for autonomy. It is not optional once agents can change code, invoke tools, or affect production systems. The “operating envelope” defines what an agent is allowed to do. It also defines when those actions are allowed and what evidence must exist afterward to support review and rollback.</p>
 <p>Hypothesis: autonomy without enforceable governance increases throughput in the short term. Over time, defect rate and operational risk rise. Changes can outpace review, exceed intended access scopes, or ship without traceable accountability.</p>
-<p>What governance is / is not:
-- Governance is <strong>enforced constraints + auditability</strong> (tool/CI checks, logs, approvals), not a document that can be ignored.
-- Governance is <strong>risk-shaped</strong> (stricter rules for higher-risk operations), not uniform friction applied everywhere.
-- Governance is <strong>measurable</strong> (blocked unsafe changes, incidents, review latency), not a “best effort” policy.</p>
+<p>What governance is / is not:</p>
+<ul>
+<li>Governance is <strong>enforced constraints + auditability</strong> (tool/CI checks, logs, approvals), not a document that can be ignored.</li>
+<li>Governance is <strong>risk-shaped</strong> (stricter rules for higher-risk operations), not uniform friction applied everywhere.</li>
+<li>Governance is <strong>measurable</strong> (blocked unsafe changes, incidents, review latency), not a “best effort” policy.</li>
+</ul>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
 <li>Agents can operate faster than human review cycles; governance prevents unsafe acceleration.</li>
@@ -595,12 +597,14 @@
 </ul>
 </li>
 </ul>
-<p>Governance loop (artifacts in parentheses):
-1. Policy definition (constitution / agent rules / CI policies)
-2. Enforcement at execution and merge time (tool allowlists / protected-path checks / CI gates)
-3. Telemetry and audit capture (structured traces / searchable logs / change attribution)
-4. Review routing and approvals (risk classification / CODEOWNERS / mandatory checkpoints)
-5. Policy update after incidents or near-misses (rule changes + new tests/evals)</p>
+<p>Governance loop (artifacts in parentheses):</p>
+<ol>
+<li>Policy definition (constitution / agent rules / CI policies)</li>
+<li>Enforcement at execution and merge time (tool allowlists / protected-path checks / CI gates)</li>
+<li>Telemetry and audit capture (structured traces / searchable logs / change attribution)</li>
+<li>Review routing and approvals (risk classification / CODEOWNERS / mandatory checkpoints)</li>
+<li>Policy update after incidents or near-misses (rule changes + new tests/evals)</li>
+</ol>
 <p>A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on (a) where enforcement blocks unsafe actions and (b) where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.</p>
 <pre class="mermaid">
 flowchart TB
@@ -615,57 +619,81 @@ flowchart TB
 <p>Takeaway: steps 2 and 3 are the “hard” parts of governance. Step 2 controls what can happen. Step 3 determines what proof exists afterward, so steps 4 and 5 can block unsafe merges and tighten policy based on observed failures.</p>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Protected-path governance.</p>
-<p>Policy text (agent rules / CI policy):
-- Rule: forbid edits to security-critical configs without explicit approval.
-- Protected paths (example): <code>infra/</code>, <code>.github/workflows/</code>, <code>config/prod/</code>, <code>secrets/</code>.</p>
-<p>Enforcement point (tool layer + CI):
-- Tool layer: rejects any patch touching a protected path unless an approval token is present in the task context (e.g., <code>APPROVAL=SECURITY-1234</code>) and the approver identity is recorded.
-- CI: re-checks the merged diff; fails the build if protected paths changed without the recorded approval.</p>
-<p>Example attempted edit (input and check):
-- Agent proposes changing <code>.github/workflows/release.yml</code> to add a new step that uploads artifacts.
-- Policy check inspects the diff and matches a protected path.</p>
-<p>Expected rejection message (testable outcome):
-- “Rejected: write to protected path <code>.github/workflows/</code> requires approval. Provide approval token + approver identity, or move the change to an approved human-owned PR.”</p>
-<p>Remediation path (approval and artifacts produced):
-- Human reviewer evaluates the intent, then supplies an approval token and identity.
-- Artifact produced: an audit entry containing (a) file paths touched, (b) approval token, (c) approver, (d) timestamps, (e) tool execution trace id.
-- CI verifies the audit entry exists and is linked to the commit/PR before allowing merge.</p>
+<p>Policy text (agent rules / CI policy):</p>
+<ul>
+<li>Rule: forbid edits to security-critical configs without explicit approval.</li>
+<li>Protected paths (example): <code>infra/</code>, <code>.github/workflows/</code>, <code>config/prod/</code>, <code>secrets/</code>.</li>
+</ul>
+<p>Enforcement point (tool layer + CI):</p>
+<ul>
+<li>Tool layer: rejects any patch touching a protected path unless an approval token is present in the task context (e.g., <code>APPROVAL=SECURITY-1234</code>) and the approver identity is recorded.</li>
+<li>CI: re-checks the merged diff; fails the build if protected paths changed without the recorded approval.</li>
+</ul>
+<p>Example attempted edit (input and check):</p>
+<ul>
+<li>Agent proposes changing <code>.github/workflows/release.yml</code> to add a new step that uploads artifacts.</li>
+<li>Policy check inspects the diff and matches a protected path.</li>
+</ul>
+<p>Expected rejection message (testable outcome):</p>
+<ul>
+<li>“Rejected: write to protected path <code>.github/workflows/</code> requires approval. Provide approval token + approver identity, or move the change to an approved human-owned PR.”</li>
+</ul>
+<p>Remediation path (approval and artifacts produced):</p>
+<ul>
+<li>Human reviewer evaluates the intent, then supplies an approval token and identity.</li>
+<li>Artifact produced: an audit entry containing (a) file paths touched, (b) approval token, (c) approver, (d) timestamps, (e) tool execution trace id.</li>
+<li>CI verifies the audit entry exists and is linked to the commit/PR before allowing merge.</li>
+</ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Incident response for a bad autonomous change.</p>
-<p>Detection signal:
-- Trigger: regression detected by the <code>smoke-prod</code> gate post-merge.
-- Example threshold (checkable): <code>smoke-prod</code> fails if HTTP 5xx rate exceeds 1.0% over a 10-minute canary window.
-- Example threshold (checkable): <code>smoke-prod</code> fails if p95 latency regresses by more than 20% versus the previous baseline.
-- Gate semantics (checkable): <code>smoke-prod</code> fails if either condition is met.
-- Gate semantics (checkable): OR semantics.</p>
-<p>Immediate containment (rollback):
-- Action: revert the merge commit (or roll back the deployment) using the pre-defined rollback procedure.
-- Containment SLO (example): rollback initiated within 5 minutes of <code>smoke-prod</code> failure and completed within 15 minutes.
-- Output: a rollback commit/deployment event linked to the original agent run id.</p>
-<p>Trace queries (audit-driven investigation):
-- Use the audit trail to answer: which tools were invoked, which files were changed, which tests were executed, and whether any approvals were used.
-- Minimum required evidence: a searchable trace that reconstructs the diff, command outputs, and decision points (e.g., “skipped test X due to timeout”).
-- SLO evidence: audit record includes timestamps for detection, rollback initiation, and rollback completion, plus a deployment event id that can be cross-referenced.</p>
-<p>Root-cause classification (review-driven):
-- Classify the incident into a governance-relevant bucket, for example:
-  - Missing gate: the regression would have been caught by a specific test that did not run.
-  - Mis-scoped permissions: the agent changed a file outside the intended scope.
-  - Review routing failure: change risk was misclassified and did not receive the required human checkpoint.</p>
-<p>Policy change (closing the gap):
-- Update agent rules/CI policy to prevent recurrence, e.g., “Changes touching <code>config/prod/</code> must run <code>smoke-prod</code> suite,” or “Any change to deployment steps requires CODEOWNER approval.”</p>
-<p>New eval/test gate (enforced going forward):
-- Add or strengthen a regression test/eval that fails deterministically on the known pattern.
-- Wire it into CI so it is mandatory for the relevant risk class, and confirm the audit system records that the gate ran (not just that it exists).</p>
+<p>Detection signal:</p>
+<ul>
+<li>Trigger: regression detected by the <code>smoke-prod</code> gate post-merge.</li>
+<li>Example threshold (checkable): <code>smoke-prod</code> fails if HTTP 5xx rate exceeds 1.0% over a 10-minute canary window.</li>
+<li>Example threshold (checkable): <code>smoke-prod</code> fails if p95 latency regresses by more than 20% versus the previous baseline.</li>
+<li>Gate semantics (checkable): <code>smoke-prod</code> fails if either condition is met.</li>
+<li>Gate semantics (checkable): OR semantics.</li>
+</ul>
+<p>Immediate containment (rollback):</p>
+<ul>
+<li>Action: revert the merge commit (or roll back the deployment) using the pre-defined rollback procedure.</li>
+<li>Containment SLO (example): rollback initiated within 5 minutes of <code>smoke-prod</code> failure and completed within 15 minutes.</li>
+<li>Output: a rollback commit/deployment event linked to the original agent run id.</li>
+</ul>
+<p>Trace queries (audit-driven investigation):</p>
+<ul>
+<li>Use the audit trail to answer: which tools were invoked, which files were changed, which tests were executed, and whether any approvals were used.</li>
+<li>Minimum required evidence: a searchable trace that reconstructs the diff, command outputs, and decision points (e.g., “skipped test X due to timeout”).</li>
+<li>SLO evidence: audit record includes timestamps for detection, rollback initiation, and rollback completion, plus a deployment event id that can be cross-referenced.</li>
+</ul>
+<p>Root-cause classification (review-driven):</p>
+<ul>
+<li>Classify the incident into a governance-relevant bucket, for example:</li>
+<li>Missing gate: the regression would have been caught by a specific test that did not run.</li>
+<li>Mis-scoped permissions: the agent changed a file outside the intended scope.</li>
+<li>Review routing failure: change risk was misclassified and did not receive the required human checkpoint.</li>
+</ul>
+<p>Policy change (closing the gap):</p>
+<ul>
+<li>Update agent rules/CI policy to prevent recurrence, e.g., “Changes touching <code>config/prod/</code> must run <code>smoke-prod</code> suite,” or “Any change to deployment steps requires CODEOWNER approval.”</li>
+</ul>
+<p>New eval/test gate (enforced going forward):</p>
+<ul>
+<li>Add or strengthen a regression test/eval that fails deterministically on the known pattern.</li>
+<li>Wire it into CI so it is mandatory for the relevant risk class, and confirm the audit system records that the gate ran (not just that it exists).</li>
+</ul>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
 <li>Strong governance reduces risk but can slow iteration; the goal is to pay friction only where risk is high.</li>
 <li>Overly strict permissions increase human workload via escalations and can create “approval queues.”</li>
 <li>Excessive auditing can create privacy and compliance burdens.</li>
 </ul>
-<p>Operational metrics to make these trade-offs visible:
-- Friction cost: median time-to-approval for high-risk changes; escalation rate (% of tasks requiring human intervention); rework rate after policy rejections.
-- Prevented incidents: count of blocked protected-path writes; count of merges prevented due to missing required gates; incident rate per 100 changes for governed vs ungoverned paths.
-- Governance effectiveness: time-to-rollback from detection; percentage of changes with complete trace metadata; false-positive rate of risk classification (unnecessary blocks).</p>
+<p>Operational metrics to make these trade-offs visible:</p>
+<ul>
+<li>Friction cost: median time-to-approval for high-risk changes; escalation rate (% of tasks requiring human intervention); rework rate after policy rejections.</li>
+<li>Prevented incidents: count of blocked protected-path writes; count of merges prevented due to missing required gates; incident rate per 100 changes for governed vs ungoverned paths.</li>
+<li>Governance effectiveness: time-to-rollback from detection; percentage of changes with complete trace metadata; false-positive rate of risk classification (unnecessary blocks).</li>
+</ul>
 <h2 id="failure-modes">Failure Modes</h2>
 <ul>
 <li><strong>Policy drift</strong>: rules become outdated and stop reflecting real risks.</li>
