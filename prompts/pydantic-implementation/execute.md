@@ -52,6 +52,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` now forwards validated version map payloads through `VersionMapTransit` before updating chapter commit pointers.
 - The planner input payload is converted into a `PlannerInputTransit` dataclass before being forwarded to the planner LLM prompt.
 - Metrics history entries are now forwarded through `MetricsHistoryTransit` before append/write operations.
+- Planner and critic role output ingestion now forwards validated payloads through `PlannerPlanTransit` and `CriticReportTransit` before runtime evaluation checks.
 - Kernel runtime logic continues consuming internal dataclasses (`PlannerPlan`, `CriticReport`) after validation.
 - `state/role_io_templates.py` now validates `state/ledger.json` through `LedgerPayload` and forwards chapter data via the `TemplateContext` dataclass before template writes.
 - `state/role_io_templates.py` now also forwards validated ledger payloads between template preparation steps via `LedgerTransit`.

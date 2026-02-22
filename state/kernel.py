@@ -720,6 +720,20 @@ class CriticReport:
     decision: Literal["approve", "refine"]
 
 
+@dataclass(frozen=True)
+class PlannerPlanTransit:
+    raw: dict[str, Any]
+    payload: PlannerPlanPayload
+    plan: PlannerPlan
+
+
+@dataclass(frozen=True)
+class CriticReportTransit:
+    raw: dict[str, Any]
+    payload: CriticReportPayload
+    report: CriticReport
+
+
 def _require_exact_keys(obj: dict[str, Any], keys: set[str], ctx: str) -> None:
     extra = set(obj.keys()) - keys
     missing = keys - set(obj.keys())
@@ -729,27 +743,28 @@ def _require_exact_keys(obj: dict[str, Any], keys: set[str], ctx: str) -> None:
         raise KernelError(f"{ctx}: extra keys not allowed: {sorted(extra)}")
 
 
-def _load_planner_plan(path: Path) -> PlannerPlan:
+def _load_planner_plan(path: Path) -> PlannerPlanTransit:
     raw = _load_json(path)
     try:
         payload = PlannerPlanPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid planner output payload: {exc}") from exc
-    return PlannerPlan(
+    plan = PlannerPlan(
         focus_areas=list(payload.focus_areas),
         structural_changes=list(payload.structural_changes),
         risk_flags=list(payload.risk_flags),
         target_word_delta=payload.target_word_delta,
     )
+    return PlannerPlanTransit(raw=raw, payload=payload, plan=plan)
 
 
-def _load_critic_report(path: Path) -> CriticReport:
+def _load_critic_report(path: Path) -> CriticReportTransit:
     raw = _load_json(path)
     try:
         payload = CriticReportPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid critic output payload: {exc}") from exc
-    return CriticReport(
+    report = CriticReport(
         structure_score=payload.structure_score,
         clarity_score=payload.clarity_score,
         example_density=payload.example_density,
@@ -759,6 +774,7 @@ def _load_critic_report(path: Path) -> CriticReport:
         violations=list(payload.violations),
         decision=payload.decision,
     )
+    return CriticReportTransit(raw=raw, payload=payload, report=report)
 
 
 @dataclass(frozen=True)
@@ -1233,9 +1249,11 @@ def run_kernel(
             )
 
             evaluation_phase_started_at = _time.perf_counter()
-            plan = _load_planner_plan(planner_out)
+            plan_transit = _load_planner_plan(planner_out)
+            plan = plan_transit.plan
             revised = _read_text(writer_out)
-            critic = _load_critic_report(critic_out)
+            critic_transit = _load_critic_report(critic_out)
+            critic = critic_transit.report
 
             revised_headings = _markdown_headings(revised)
             if revised_headings != original_headings:
