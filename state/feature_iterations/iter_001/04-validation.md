@@ -1,11 +1,14 @@
 # Validation
 
-## Verification performed
-- Confirmed iteration selection rule: no existing `state/feature_iterations/iter_XXX`, so created `iter_001`.
-- Confirmed all seven required artifact files exist in `state/feature_iterations/iter_001/`.
-- Cross-checked plan scope against `DEVELOPMENT.md` requirements for UV usage, modular harness design, and eval discipline.
+## Verification commands run
+- `ls state/feature_iterations/iter_001`
+- `rg --files state/feature_iterations/iter_001`
 
-## Results
-- Artifact completeness: **PASS**
-- Scope alignment with prompt (features/tests/evals planning only): **PASS**
-- Acceptance criteria from `01-task.md`: **PASS**
+## Observed results
+- All seven required artifact files are present in `state/feature_iterations/iter_001/`.
+- Content covers features, tests, and eval mapping for future harness work.
+
+## Acceptance criteria status
+- Planning scope defined: **PASS**
+- Feature/test/eval coverage in plan artifacts: **PASS**
+- One concrete next task recorded: **PASS**

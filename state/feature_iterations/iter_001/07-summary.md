@@ -1,9 +1,10 @@
-# Summary
+# Iteration summary
 
-This seed feature iteration established the custom harness improvement backlog without implementing code changes.
-It selected and documented the story "Plan custom state harness improvements" as required.
-The plan now covers three dimensions explicitly: new harness features, targeted tests, and eval/regression detection paths.
-Future work is sequenced around deterministic trace-summary observability in `state/kernel.py`.
-Validation confirmed the full seven-file artifact contract and prompt alignment.
-Risks and deferrals were documented to keep implementation steps bounded and verifiable.
-The repository is now prepared for execution-oriented feature iterations beginning with `iter_002`.
+This seed iteration created `state/feature_iterations/iter_001/` and completed the seven-file contract.
+The selected task is a planning story for custom harness improvements in `state/`.
+The plan now explicitly covers feature additions, targeted smoke/unit validations, and eval-regression mapping.
+No production code changed in this iteration by design.
+Validation confirmed all required artifacts exist and align with the prompt contract.
+Key risk is plan drift if harness internals evolve before implementation.
+A single next task is defined: implement deterministic trace-summary instrumentation and matching smoke guards.
+This leaves a clear, testable handoff for the next autonomous iteration.

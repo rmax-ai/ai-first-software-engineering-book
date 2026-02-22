@@ -1,18 +1,19 @@
-# Next Iteration Recommendation
+# Recommended next iteration
 
 ## Task
-Implement deterministic trace-summary logging enhancements in `state/kernel.py` with backward-safe output shape guarantees.
+Implement deterministic trace-summary instrumentation in `state/kernel.py` and thread corresponding shape guards into `state/copilot_sdk_uv_smoke.py`.
 
-## Why this is next
-It unlocks the highest observability gain for subsequent harness changes while providing a focused, testable vertical slice touching core orchestration behavior.
+## Why next
+It is the smallest high-impact feature from the plan: it improves observability and creates immediately testable behavior with limited surface area.
 
 ## Acceptance criteria
-- Add trace-summary emission points in `state/kernel.py` for key loop decisions and outcomes.
-- Preserve existing public interfaces and current successful execution paths.
-- Add/extend deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py` that validates summary presence and shape.
-- Run targeted verification commands and record outputs in the new iteration `04-validation.md`.
+- Add trace-summary payload emission in `state/kernel.py` without changing public CLI contract.
+- Add/adjust deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py` to validate trace-summary structure.
+- Update any affected eval expectations in `evals/*.yaml` only if required by new observable output.
+- Record verification evidence from targeted `uv run python ...` commands.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/*`
+- `evals/chapter-quality.yaml` (only if needed)
+- `evals/drift-detection.yaml` (only if needed)

@@ -1,13 +1,12 @@
-# Risks and Decisions
+# Risks and decisions
 
-## Risks discovered
-- Planning quality risk: future implementation could drift without strict acceptance criteria tied to deterministic smoke outputs.
-- Coupling risk: logging changes in `state/kernel.py` may affect eval assumptions if trace formats are unstable.
+## Risks
+- Planning quality depends on current harness assumptions; future code inspection may refine ordering.
+- Eval mapping may need adjustment if eval schemas evolve.
 
-## Decisions made
-- Keep this iteration planning-only per seed prompt to avoid premature code churn.
-- Require each future implementation step to include explicit smoke/eval evidence and measurable expected signals.
+## Decisions and trade-offs
+- Chose a planning-only iteration per prompt seed requirement; no code changes this round.
+- Prioritized deterministic observability and verification-first sequencing over broad design expansion.
 
 ## Deferred intentionally
-- No direct code edits to harness modules in this iteration.
-- No eval YAML edits until the first concrete behavior change is implemented.
+- Implementation in `state/kernel.py` and related files is deferred to the next iteration.
