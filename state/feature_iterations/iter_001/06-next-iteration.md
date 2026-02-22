@@ -1,19 +1,17 @@
-# Recommended next iteration
+# Next Iteration Recommendation
 
-## Task
-Implement deterministic trace-summary instrumentation in `state/kernel.py` and thread corresponding shape guards into `state/copilot_sdk_uv_smoke.py`.
+## Recommended next task
+Implement deterministic trace-summary checkpoints in `state/kernel.py` and cover them with targeted smoke validation.
 
-## Why next
-It is the smallest high-impact feature from the plan: it improves observability and creates immediately testable behavior with limited surface area.
+## Why this is next
+Trace-summary visibility is the highest leverage foundation for subsequent template and eval work; it reduces debugging ambiguity and provides measurable regression signals.
 
 ## Acceptance criteria
-- Add trace-summary payload emission in `state/kernel.py` without changing public CLI contract.
-- Add/adjust deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py` to validate trace-summary structure.
-- Update any affected eval expectations in `evals/*.yaml` only if required by new observable output.
-- Record verification evidence from targeted `uv run python ...` commands.
+- `state/kernel.py` emits structured trace-summary checkpoints for key loop phases and terminal outcomes.
+- `state/copilot_sdk_uv_smoke.py` includes at least one deterministic mode that validates new trace-summary shape/fields.
+- Validation evidence includes one targeted command run and observed pass/fail output recorded in iteration artifacts.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `evals/chapter-quality.yaml` (only if needed)
-- `evals/drift-detection.yaml` (only if needed)
+- `state/feature_iterations/iter_002/04-validation.md`

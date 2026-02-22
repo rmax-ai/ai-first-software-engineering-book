@@ -1,10 +1,10 @@
-# Plan custom state harness improvements
+# Task: Plan custom state harness improvements
 
 ## Why this task now
-The feature-iteration runner requires a seed planning iteration before implementation work. A concrete plan now reduces churn and keeps later diffs small and verifiable.
+This is the seed feature iteration and establishes the actionable backlog for future harness improvements. A concrete plan is needed before implementation so later iterations can deliver focused, verifiable deltas in `state/` and `evals/`.
 
 ## Acceptance criteria
-- Defines proposed harness features touching `state/kernel.py` and `state/role_io_templates.py`.
-- Defines targeted tests including `uv run python state/copilot_sdk_uv_smoke.py` and focused deterministic checks.
-- Defines regression-eval mapping for `evals/*.yaml`, `state/metrics.json`, and expected signals.
-- Provides one concrete next implementation task with file paths.
+- Document planned harness **features** with explicit target files.
+- Document planned **tests** that validate each proposed behavior.
+- Document planned **evaluations** and expected regression signals.
+- Keep scope to planning only; no harness implementation changes.

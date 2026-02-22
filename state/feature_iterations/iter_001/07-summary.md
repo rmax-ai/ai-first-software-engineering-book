@@ -1,10 +1,9 @@
-# Iteration summary
+# Iteration Summary
 
-This seed iteration created `state/feature_iterations/iter_001/` and completed the seven-file contract.
-The selected task is a planning story for custom harness improvements in `state/`.
-The plan now explicitly covers feature additions, targeted smoke/unit validations, and eval-regression mapping.
-No production code changed in this iteration by design.
-Validation confirmed all required artifacts exist and align with the prompt contract.
-Key risk is plan drift if harness internals evolve before implementation.
-A single next task is defined: implement deterministic trace-summary instrumentation and matching smoke guards.
-This leaves a clear, testable handoff for the next autonomous iteration.
+This seed feature iteration established a planning baseline for custom harness improvements.
+A new `iter_001` folder was created with the full seven-artifact contract.
+The task and plan focus on future work in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+The plan explicitly covers feature behavior, test strategy, and eval/regression alignment.
+Validation confirms all required artifacts exist and satisfy prompt requirements.
+No harness code was changed in this iteration by design.
+The handoff recommends implementing deterministic trace-summary checkpoints next.
