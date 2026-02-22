@@ -115,6 +115,14 @@ class JSONTextPayload(BaseModel):
     text: str
 
 
+class LiveModeEnvPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    provider: Provider
+    model: str
+    base_url: str | None = None
+
+
 @dataclass(frozen=True)
 class LedgerSnapshotTransit:
     source_path: Path
@@ -141,6 +149,35 @@ class JSONTextTransit:
 
     def to_text(self) -> str:
         return self.payload.text
+
+
+@dataclass(frozen=True)
+class LiveModeEnvTransit:
+    payload: LiveModeEnvPayload
+
+    @classmethod
+    def from_env(cls) -> "LiveModeEnvTransit":
+        return cls(
+            payload=LiveModeEnvPayload.model_validate(
+                {
+                    "provider": os.environ.get("KERNEL_LLM_PROVIDER", "copilot"),
+                    "model": os.environ.get("KERNEL_LLM_MODEL", "gpt-4.1-mini"),
+                    "base_url": os.environ.get("KERNEL_LLM_BASE_URL"),
+                }
+            )
+        )
+
+    @property
+    def provider(self) -> Provider:
+        return self.payload.provider
+
+    @property
+    def model(self) -> str:
+        return self.payload.model
+
+    @property
+    def base_url(self) -> str | None:
+        return self.payload.base_url
 
 
 def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
@@ -324,16 +361,12 @@ def run_live_mode() -> int:
     except ImportError as exc:
         raise SystemExit("FAIL: copilot package is not installed") from exc
 
-    provider_raw = os.environ.get("KERNEL_LLM_PROVIDER", "copilot")
-    if provider_raw not in {"copilot", "mock"}:
-        raise SystemExit(
-            "FAIL: KERNEL_LLM_PROVIDER must be one of copilot|mock"
-        )
-    provider = cast(Provider, provider_raw)
-    model = os.environ.get("KERNEL_LLM_MODEL", "gpt-4.1-mini")
-    base_url = os.environ.get("KERNEL_LLM_BASE_URL")
+    try:
+        live_mode_env = LiveModeEnvTransit.from_env()
+    except ValidationError as exc:
+        raise SystemExit(f"FAIL: invalid live-mode env payload: {exc}") from exc
 
-    client = LLMClient(provider=provider, model=model, base_url=base_url)
+    client = LLMClient(provider=live_mode_env.provider, model=live_mode_env.model, base_url=live_mode_env.base_url)
     try:
         response = client.chat(
             messages=[
@@ -349,7 +382,7 @@ def run_live_mode() -> int:
         client.close()
 
     print("PASS: live Copilot SDK chat works")
-    print(f"provider={provider} model={model}")
+    print(f"provider={live_mode_env.provider} model={live_mode_env.model}")
     print(f"content={response.content!r}")
     print(
         "usage="

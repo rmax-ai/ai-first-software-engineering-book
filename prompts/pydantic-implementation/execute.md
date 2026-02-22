@@ -141,3 +141,4 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/role_io_templates.py` now validates raw ledger JSON text through `JSONTextPayload` and forwards source-path text via `JSONTextTransit` before JSON mapping parsing.
 - `state/copilot_sdk_uv_smoke.py` now validates fixture chapter mappings through `KernelFixtureChapterMappingPayload` and forwards chapter metadata via `KernelFixtureChapterMappingTransit` before `KernelFixtureChapterTransit` builds fixture ledger chapter state.
 - `state/copilot_sdk_uv_smoke.py` now forwards latest validated trace-summary payloads through `TraceSummaryTransit` before required-key checks in trace-summary smoke mode.
+- `state/copilot_sdk_smoke_test.py` now validates live-mode environment ingestion through `LiveModeEnvPayload` and forwards provider/model/base-url values via `LiveModeEnvTransit` before `LLMClient` initialization.
