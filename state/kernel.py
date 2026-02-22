@@ -136,6 +136,12 @@ class MetricsPayload(BaseModel):
     chapters: dict[str, MetricsChapterPayload] = Field(default_factory=dict)
 
 
+@dataclass(frozen=True)
+class MetricsTransit:
+    raw: dict[str, Any]
+    payload: MetricsPayload
+
+
 class VersionMapPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -307,13 +313,13 @@ def _load_eval_config(path: Path) -> DeterministicEvalConfigPayload:
         raise KernelError(f"Invalid eval config payload: {path}: {exc}") from exc
 
 
-def _load_metrics(path: Path) -> tuple[dict[str, Any], MetricsPayload]:
+def _load_metrics(path: Path) -> MetricsTransit:
     raw = _load_json(path)
     try:
         payload = MetricsPayload.model_validate(raw)
     except ValidationError as exc:
         raise KernelError(f"Invalid metrics payload: {path}: {exc}") from exc
-    return raw, payload
+    return MetricsTransit(raw=raw, payload=payload)
 
 
 def _load_version_map(path: Path) -> VersionMapTransit:
@@ -1349,7 +1355,8 @@ def run_kernel(
             )
 
             # Update metrics.json (minimal, per schema)
-            metrics, _ = _load_metrics(METRICS_PATH)
+            metrics_transit = _load_metrics(METRICS_PATH)
+            metrics = metrics_transit.raw
             metrics.setdefault("chapters", {})
             ch_metrics = metrics["chapters"].setdefault(chapter_id, {})
             ch_metrics.setdefault("history", [])

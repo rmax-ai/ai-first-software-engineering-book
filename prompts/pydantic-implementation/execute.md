@@ -49,6 +49,7 @@ Stop after you have implemented the typed ingestion/transit layer, documented th
 - `state/kernel.py` now forwards validated ledger payloads between kernel setup stages through `LedgerTransit` instead of raw tuple unpacking.
 - `state/kernel.py` validates deterministic eval YAML payloads through `DeterministicEvalConfigPayload` and forwards them between evaluators via `DeterministicEvalTransit`.
 - `state/kernel.py` validates `state/metrics.json` and `state/version_map.json` through `MetricsPayload` and `VersionMapPayload` before updating runtime artifacts.
+- `state/kernel.py` now forwards validated metrics payloads through `MetricsTransit` before updating chapter metrics history.
 - `state/kernel.py` now forwards validated version map payloads through `VersionMapTransit` before updating chapter commit pointers.
 - The planner input payload is converted into a `PlannerInputTransit` dataclass before being forwarded to the planner LLM prompt.
 - Metrics history entries are now forwarded through `MetricsHistoryTransit` before append/write operations.
