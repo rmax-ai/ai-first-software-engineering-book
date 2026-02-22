@@ -376,6 +376,8 @@ class ChapterTextTransit:
 
 @dataclass(frozen=True)
 class WriterOutputTransit:
+    source_path: Path
+    raw_text: str
     payload: WriterOutputPayload
 
     def to_markdown(self) -> str:
@@ -645,11 +647,12 @@ def _load_chapter_text(path: Path) -> ChapterTextTransit:
 
 
 def _load_writer_output(path: Path) -> WriterOutputTransit:
+    writer_text = _read_text(path)
     try:
-        payload = WriterOutputPayload.model_validate({"text": _read_text(path)})
+        payload = WriterOutputPayload.model_validate({"text": writer_text})
     except ValidationError as exc:
         raise KernelError(f"Invalid writer output payload: {path}: {exc}") from exc
-    return WriterOutputTransit(payload=payload)
+    return WriterOutputTransit(source_path=path, raw_text=writer_text, payload=payload)
 
 
 def _load_critic_eval_inputs() -> CriticEvalInputsTransit:
@@ -739,7 +742,7 @@ def _extract_markdown(text: str) -> WriterOutputTransit:
         payload = WriterOutputPayload.model_validate({"text": markdown})
     except ValidationError as exc:
         raise KernelError(f"Invalid writer markdown payload from LLM response: {exc}") from exc
-    return WriterOutputTransit(payload=payload)
+    return WriterOutputTransit(source_path=Path("<llm-response-markdown>"), raw_text=markdown, payload=payload)
 
 
 def _llm_trace_dir(itdir: Path) -> Path:
