@@ -122,3 +122,38 @@ Replace `<chapter>` with the chapter identifier listed below.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Failed passes: 24.
 - Total commits created for this re-run loop: 24.
+
+## Re-run 2026-02-22T18:21:03Z
+| Chapter | Pass | Result | Subagents | Commit |
+|--------:|-----:|--------|-----------|--------|
+| 01-paradigm-shift | 1 | failed(1) | none | `396931a` |
+| 01-paradigm-shift | 2 | failed(1) | none | `4765e5b` |
+| 01-paradigm-shift | 3 | failed(1) | none | `65cbeba` |
+| 02-harness-engineering | 1 | failed(1) | none | `5ba5ab4` |
+| 02-harness-engineering | 2 | failed(1) | none | `65be119` |
+| 02-harness-engineering | 3 | failed(1) | none | `1f7298f` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `6811d75` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `c56a0de` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `5ea79b3` |
+| 04-memory-systems | 1 | failed(1) | none | `7388eaf` |
+| 04-memory-systems | 2 | failed(1) | none | `7a7d6b5` |
+| 04-memory-systems | 3 | failed(1) | none | `55198e2` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `67863cf` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `556094e` |
+| 05-evaluation-and-traces | 3 | failed(1) | none | `273bb18` |
+| 06-agent-governance | 1 | failed(1) | none | `7d25c08` |
+| 06-agent-governance | 2 | failed(1) | none | `969cb59` |
+| 06-agent-governance | 3 | failed(1) | none | `0441a60` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `6b7d370` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `a0f92d2` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `ebabad0` |
+| 99-future-directions | 1 | failed(1) | none | `68bae56` |
+| 99-future-directions | 2 | failed(1) | none | `2702d10` |
+| 99-future-directions | 3 | failed(1) | none | `791c380` |
+
+### Re-run Summary (2026-02-22T18:21:03Z)
+- Completed 24/24 chapter passes so far.
+- Kernel runs were executed with governance unlock/unhold before each pass.
+- Failed passes: 24.
+- Total commits created for this re-run loop: 24.
+
