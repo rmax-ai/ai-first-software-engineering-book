@@ -1,12 +1,12 @@
 # Risks and Decisions
 
 ## Risks
-- Planning artifacts can drift from actual harness constraints if later iterations skip `DEVELOPMENT.md` and eval contract checks.
-- Metric/eval coupling changes may require synchronized updates across `state/` and `evals/` to avoid false regression signals.
+- Backlog items may be too broad if next iterations do not keep changes narrowly scoped.
+- New observability hooks in `state/kernel.py` could add noisy output unless explicitly gated.
 
 ## Decisions and trade-offs
-- Chose a planning-only iteration to satisfy the seed requirement and reduce risk of premature implementation churn.
-- Kept backlog recommendations concrete (file-level targets) rather than broad architecture proposals to improve execution predictability.
+- Decision: keep this iteration planning-only to minimize risk and establish a clear backlog first.
+- Trade-off: no immediate harness behavior improvements this iteration, but lower execution risk in follow-up implementation tasks.
 
 ## Deferred intentionally
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml` are deferred to the next iteration.
+- Actual code changes in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py` deferred to next iteration.
