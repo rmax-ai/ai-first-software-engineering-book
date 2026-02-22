@@ -3,7 +3,7 @@ site_description: Technical book on AI-first software engineering governance and
 site_author: "Autonomous Authors"
 docs_dir: docs
 nav:
-  - Home: docs/index.md
+  - Home: index.md
   - Preface: book/preface.md
   - Chapters:
       - "01. Paradigm Shift": book/chapters/01-paradigm-shift.md
@@ -15,7 +15,11 @@ nav:
       - "07. Production AI Infrastructure": book/chapters/07-production-ai-infrastructure.md
       - "99. Future Directions": book/chapters/99-future-directions.md
   - Glossary: book/glossary.md
-  - Patterns Overview: book/patterns/
+  - Patterns Overview:
+      - Harness Design: book/patterns/harness-design-patterns.md
+      - Memory Architectures: book/patterns/memory-architectures.md
+      - Minimal Agent Loop: book/patterns/minimal-agent-loop.md
+      - Self-Verification Loop: book/patterns/self-verification-loop.md
 theme:
   #name: material
 plugins:
