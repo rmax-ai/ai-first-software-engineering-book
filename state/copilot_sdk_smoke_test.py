@@ -19,6 +19,8 @@ Usage:
   uv run python state/copilot_sdk_smoke_test.py --mode stop-unavailable-destroy-failure-close-idempotency
   uv run python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-unavailable-close-idempotency
   uv run python state/copilot_sdk_smoke_test.py --mode stop-failure-destroy-failure-close-idempotency
+  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary
+  uv run python state/copilot_sdk_smoke_test.py --mode trace-summary-missing-key
   uv run python state/copilot_sdk_smoke_test.py --mode live
 
 Modes:
@@ -40,6 +42,8 @@ Modes:
 - stop-unavailable-destroy-failure-close-idempotency: forces stop() unavailable and session.destroy() failure, then verifies a second close() is a no-op.
 - stop-failure-destroy-unavailable-close-idempotency: forces stop() failure and session.destroy() unavailable, then verifies a second close() is a no-op.
 - stop-failure-destroy-failure-close-idempotency: forces stop() and session.destroy() failures, then verifies a second close() is a no-op.
+- trace-summary: validates required keys in a deterministic trace_summary fixture.
+- trace-summary-missing-key: verifies missing trace_summary keys are detected.
 - live: uses the real installed `copilot` package and your configured provider.
 """
 
@@ -64,6 +68,26 @@ llm_client = importlib.import_module("state.llm_client")
 LLMClient = llm_client.LLMClient
 LLMClientError = llm_client.LLMClientError
 Provider = llm_client.Provider
+
+TRACE_SUMMARY_REQUIRED_KEYS = {"decision", "drift_score", "diff_ratio", "deterministic_pass"}
+
+
+def _get_latest_trace_summary(metrics: dict[str, Any], chapter_id: str) -> dict[str, Any]:
+    chapters = metrics.get("chapters", {})
+    assert isinstance(chapters, dict), "expected chapters dictionary"
+    chapter_metrics = chapters.get(chapter_id, {})
+    assert isinstance(chapter_metrics, dict), "expected chapter metrics dictionary"
+    history = chapter_metrics.get("history", [])
+    assert isinstance(history, list) and history, f"expected metrics history for chapter {chapter_id}"
+    latest = history[-1]
+    assert isinstance(latest, dict), "expected latest history entry to be a dictionary"
+    trace_summary = latest.get("trace_summary")
+    assert isinstance(trace_summary, dict), "expected latest history entry to contain trace_summary dictionary"
+    return trace_summary
+
+
+def _missing_trace_summary_keys(trace_summary: dict[str, Any]) -> list[str]:
+    return sorted(TRACE_SUMMARY_REQUIRED_KEYS - set(trace_summary))
 
 
 def _install_stub_copilot_module() -> None:
@@ -685,6 +709,57 @@ def run_stop_failure_destroy_failure_close_idempotency_mode() -> int:
     return 0
 
 
+def run_trace_summary_mode() -> int:
+    metrics_fixture = {
+        "chapters": {
+            "01-paradigm-shift": {
+                "history": [
+                    {
+                        "trace_summary": {
+                            "decision": "accept",
+                            "drift_score": 0.1,
+                            "diff_ratio": 0.2,
+                            "deterministic_pass": True,
+                        }
+                    }
+                ]
+            }
+        }
+    }
+
+    trace_summary = _get_latest_trace_summary(metrics_fixture, "01-paradigm-shift")
+    missing = _missing_trace_summary_keys(trace_summary)
+    assert not missing, f"unexpected missing trace_summary keys: {missing}"
+
+    print("PASS: trace-summary mode validates required trace_summary keys")
+    return 0
+
+
+def run_trace_summary_missing_key_mode() -> int:
+    metrics_fixture = {
+        "chapters": {
+            "01-paradigm-shift": {
+                "history": [
+                    {
+                        "trace_summary": {
+                            "decision": "accept",
+                            "drift_score": 0.1,
+                            "deterministic_pass": True,
+                        }
+                    }
+                ]
+            }
+        }
+    }
+
+    trace_summary = _get_latest_trace_summary(metrics_fixture, "01-paradigm-shift")
+    missing = _missing_trace_summary_keys(trace_summary)
+    assert missing == ["diff_ratio"], f"expected diff_ratio missing-key detection, got: {missing}"
+
+    print("PASS: trace-summary-missing-key mode detects required key omissions")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
     parser.add_argument(
@@ -707,10 +782,12 @@ def main() -> int:
             "stop-unavailable-destroy-failure-close-idempotency",
             "stop-failure-destroy-unavailable-close-idempotency",
             "stop-failure-destroy-failure-close-idempotency",
+            "trace-summary",
+            "trace-summary-missing-key",
             "live",
         ],
         default="stub",
-        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, stop-unavailable-destroy-failure-close-idempotency = repeated close() after stop() unavailable and destroy() failure, stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, live = real provider call",
+        help="stub = offline synthetic test, sdk-unavailable = forced missing SDK error, bootstrap-failure = forced worker-loop bootstrap error, shutdown-failure = forced SDK shutdown error, stop-unavailable = missing SDK stop() callable, destroy-unavailable = missing session destroy() callable, destroy-failure = forced session destroy error, force-stop-unavailable = stop() failure with missing force_stop(), force-stop-close-idempotency = repeated close() after force_stop() unavailable, stop-close-idempotency = repeated close() after stop() unavailable, close-idempotency = repeated close() after shutdown failure, destroy-close-idempotency = repeated close() after destroy failure, destroy-unavailable-close-idempotency = repeated close() after destroy() unavailable, stop-destroy-unavailable-close-idempotency = repeated close() after stop()/destroy() unavailable, stop-unavailable-destroy-failure-close-idempotency = repeated close() after stop() unavailable and destroy() failure, stop-failure-destroy-unavailable-close-idempotency = repeated close() after stop() failure and destroy() unavailable, stop-failure-destroy-failure-close-idempotency = repeated close() after stop() and destroy() failures, trace-summary = deterministic required-key assertion, trace-summary-missing-key = deterministic missing-key detection, live = real provider call",
     )
     args = parser.parse_args()
 
@@ -748,6 +825,10 @@ def main() -> int:
         return run_stop_failure_destroy_unavailable_close_idempotency_mode()
     if args.mode == "stop-failure-destroy-failure-close-idempotency":
         return run_stop_failure_destroy_failure_close_idempotency_mode()
+    if args.mode == "trace-summary":
+        return run_trace_summary_mode()
+    if args.mode == "trace-summary-missing-key":
+        return run_trace_summary_missing_key_mode()
     return run_live_mode()
 
 
