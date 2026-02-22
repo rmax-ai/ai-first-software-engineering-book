@@ -841,6 +841,24 @@ def run_docstring_mode_coverage_guard_mode() -> int:
     return 0
 
 
+def _build_mode_help(mode_specs: Sequence[tuple[str, Callable[[], int], str]]) -> str:
+    return ", ".join(f"{name} = {description}" for name, _handler, description in mode_specs)
+
+
+def run_mode_help_coverage_guard_mode() -> int:
+    all_mode_specs = _all_mode_specs()
+    mode_help = _build_mode_help(all_mode_specs)
+    missing_descriptions = [
+        name for name, _handler, description in all_mode_specs if f"{name} = {description}" not in mode_help
+    ]
+    assert not missing_descriptions, (
+        f"expected mode_help entries for all mode descriptions, missing: {missing_descriptions}"
+    )
+
+    print("PASS: mode-help-coverage-guard mode validates argparse mode help coverage for all modes")
+    return 0
+
+
 TraceSummaryModeHandler = Callable[[], int]
 TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] = (
     ("trace-summary", run_trace_summary_mode, "deterministic required-key assertion"),
@@ -881,6 +899,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "docstring-mode-coverage-guard",
         run_docstring_mode_coverage_guard_mode,
         "deterministic module-doc mode coverage assertion",
+    ),
+    (
+        "mode-help-coverage-guard",
+        run_mode_help_coverage_guard_mode,
+        "deterministic argparse mode-help coverage assertion",
     ),
 )
 
@@ -971,7 +994,7 @@ __doc__ = _build_module_docstring()
 def main() -> int:
     all_mode_specs = _all_mode_specs()
     mode_names = [name for name, _handler, _description in all_mode_specs]
-    mode_help = ", ".join(f"{name} = {description}" for name, _handler, description in all_mode_specs)
+    mode_help = _build_mode_help(all_mode_specs)
     mode_handlers = {name: handler for name, handler, _description in all_mode_specs}
     parser = argparse.ArgumentParser(description="Copilot SDK smoke test")
     parser.add_argument(
