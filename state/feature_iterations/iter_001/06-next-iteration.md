@@ -1,17 +1,18 @@
 # Next iteration recommendation
 
-## Recommended task
-Implement deterministic trace-summary schema guards in `state/copilot_sdk_smoke_test.py` and wire them into the table-driven mode matrix.
+## Recommended next task
+Implement deterministic loop self-evaluation logging in `state/kernel.py` and wire it into iteration artifacts produced by the harness.
 
 ## Why this is next
-The seed plan depends on observable, regression-testable traces; adding smoke guards first provides immediate safety before editing kernel orchestration logic.
+It is the smallest high-impact implementation slice from this plan and directly supports auditability requirements already defined in `AGENTS.md` and the harness execution rules.
 
 ## Acceptance criteria
-- Add one new deterministic smoke mode that validates trace-summary schema shape and required keys.
-- Ensure the new mode is registered in the shared table-driven mode spec used for CLI choices/help and dispatch.
-- Execute `uv run python state/copilot_sdk_smoke_test.py --mode <new-mode>` successfully and capture result in validation artifacts.
+- Add structured self-evaluation fields (goal/evidence/risk/decision) captured per loop.
+- Ensure exhausted-loop stop paths emit a clear, bounded next action.
+- Add/extend targeted checks (smoke/unit) to verify the new structured output shape.
+- Document the executed verification command(s) and observed output in the new iteration's `04-validation.md`.
 
 ## Expected files to touch
-- `state/copilot_sdk_smoke_test.py`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
+- `state/kernel.py`
+- `state/copilot_sdk_uv_smoke.py`
+- Optional focused test helpers under `state/`

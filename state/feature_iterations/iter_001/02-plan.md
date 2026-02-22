@@ -1,25 +1,27 @@
-# Plan
+# Iteration plan
 
-1. Baseline current harness behavior and constraints from `DEVELOPMENT.md`, `state/kernel.py`, and existing smoke/eval assets.
-2. Add deterministic trace-summary observability in `state/kernel.py`:
-   - Emit stable per-step trace entries for planner/writer/critic + budget/eval checkpoints.
-   - Keep output schema explicit so regressions are detectable.
-3. Tighten role I/O scaffolds in `state/role_io_templates.py`:
-   - Normalize expected headings/sections for each role.
-   - Add validation hooks to fail fast on malformed role outputs.
-4. Expand harness smoke coverage in `state/copilot_sdk_uv_smoke.py`:
-   - Add deterministic modes that assert trace schema and role-output guards.
-   - Keep CLI mode list table-driven for discoverability.
-5. Wire eval protection in `evals/*.yaml`:
-   - Add/adjust checks that confirm trace completeness and required chapter quality/style gates.
-   - Ensure failures surface clear, actionable messages.
-6. Validate each implementation slice using `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` plus targeted kernel invocations.
-7. Record outcomes in each future iteration folder (`03-execution.md` and `04-validation.md`) and keep one scoped task per iteration.
+1. Define observability and control upgrades for the harness loop in `state/kernel.py`:
+   - Structured per-loop self-evaluation capture.
+   - Deterministic stop-state reporting when loop budget is exhausted.
+   - Explicit evidence bookkeeping for verification commands and outcomes.
+2. Plan clearer role-I/O boundaries in `state/role_io_templates.py`:
+   - Template slots for plan/change/evaluate/decision phases.
+   - Compact handoff fields that map to iteration artifacts.
+3. Plan smoke and targeted test coverage in `state/copilot_sdk_uv_smoke.py` and nearby harness tests:
+   - Add/extend deterministic modes that assert self-evaluation logging and stop-condition behavior.
+   - Add table-driven checks for missing or malformed execution evidence.
+4. Plan eval integration under `evals/`:
+   - Identify/update YAML contracts that should gate harness regressions in structure, drift, and style.
+   - Define expected signals that should align with `state/metrics.json` updates.
+5. Sequence future iterations:
+   - Implement one behavior slice at a time with minimal diffs.
+   - Run targeted `uv run python ...` checks per slice and document evidence in each iteration folder.
 
-## Expected files to change in later iterations
+## Files expected to change in future iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
+- Potential targeted harness test files under `state/`

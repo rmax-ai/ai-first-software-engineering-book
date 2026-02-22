@@ -1,12 +1,12 @@
 # Risks and decisions
 
 ## Risks discovered
-- Plan-level artifacts can drift from actual harness behavior if future iterations skip targeted smoke/eval checks.
-- Adding new trace/eval guards may create false positives unless schemas remain stable and explicit.
+- The planned harness changes touch core orchestration (`state/kernel.py`), so regressions in loop termination or evidence formatting are possible if implemented too broadly.
+- Eval YAML changes can create false negatives if expected signals are not tightly aligned with harness outputs.
 
-## Decisions and trade-offs
-- Chose a planning-only iteration to match the seed contract exactly, deferring all code edits.
-- Prioritized deterministic observability + guardrails first, trading short-term feature delivery for safer subsequent implementation.
+## Decisions made and trade-offs
+- Chose a planning-only seed iteration to reduce implementation risk and establish explicit acceptance criteria before changing runtime behavior.
+- Chose narrow, file-specific future slices instead of a multi-file implementation burst to keep diffs reviewable and verifiable.
 
-## Deferred intentionally
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+## Intentionally deferred
+- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
