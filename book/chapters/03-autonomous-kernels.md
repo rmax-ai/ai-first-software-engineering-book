@@ -24,6 +24,7 @@ Hypothesis: small, well-governed autonomous kernels (tight loops with explicit b
 - **Persistence**: ledger entries, trace logs, artifacts.
 
 To make this operational, treat each loop step as a checkpoint with a “must record” trace payload and a “must decide” stop condition:
+
 - **Intent**: state the task class and success condition (e.g., “tests pass,” “build passes,” “repro no longer fails”).
 - **Plan**: enumerate the next 1–3 actions only (not the whole project), each tied to a verification gate and a budget slice.
 - **Act**: perform the minimal change that addresses the current hypothesis; avoid speculative edits that cannot be evaluated.
@@ -51,6 +52,7 @@ flowchart LR
 ```
 
 A compact “must capture” checklist (minimum viable trace):
+
 | Loop stage | Budget signal | Permission signal | Verification signal | Persistence artifact |
 |---|---|---|---|---|
 | intent | remaining iterations/time | required read scope | success criteria defined | intent string + criteria |
