@@ -448,30 +448,30 @@ Replace `<chapter>` with the chapter identifier listed below.
 ## Re-run 2026-02-22T17:05:27Z
 | Chapter | Pass | Result | Subagents | Commit |
 |--------:|-----:|--------|-----------|--------|
-| 99-future-directions | 3 | failed(1) | none |  |
-| 99-future-directions | 2 | failed(1) | none |  |
-| 99-future-directions | 1 | failed(1) | none |  |
-| 07-production-ai-infrastructure | 3 | failed(1) | none |  |
-| 07-production-ai-infrastructure | 2 | failed(1) | none |  |
-| 07-production-ai-infrastructure | 1 | failed(1) | none |  |
-| 06-agent-governance | 3 | failed(1) | none |  |
-| 06-agent-governance | 2 | failed(1) | none |  |
-| 06-agent-governance | 1 | failed(1) | none |  |
-| 05-evaluation-and-traces | 3 | failed(1) | none |  |
-| 05-evaluation-and-traces | 2 | failed(1) | none |  |
-| 05-evaluation-and-traces | 1 | failed(1) | none |  |
-| 04-memory-systems | 3 | failed(1) | none |  |
-| 04-memory-systems | 2 | failed(1) | none |  |
-| 04-memory-systems | 1 | failed(1) | none |  |
-| 03-autonomous-kernels | 3 | failed(1) | none |  |
-| 03-autonomous-kernels | 2 | failed(1) | none |  |
-| 03-autonomous-kernels | 1 | failed(1) | none |  |
-| 02-harness-engineering | 3 | failed(1) | none |  |
-| 02-harness-engineering | 2 | failed(1) | none |  |
-| 02-harness-engineering | 1 | failed(1) | none |  |
-| 01-paradigm-shift | 3 | failed(1) | none |  |
-| 01-paradigm-shift | 2 | failed(1) | none |  |
-| 01-paradigm-shift | 1 | failed(1) | none |  |
+| 99-future-directions | 3 | failed(1) | none | `chore: pass 3 for chapter 99-future-directions` |
+| 99-future-directions | 2 | failed(1) | none | `chore: pass 2 for chapter 99-future-directions` |
+| 99-future-directions | 1 | failed(1) | none | `chore: pass 1 for chapter 99-future-directions` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `chore: pass 3 for chapter 07-production-ai-infrastructure` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `chore: pass 2 for chapter 07-production-ai-infrastructure` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `chore: pass 1 for chapter 07-production-ai-infrastructure` |
+| 06-agent-governance | 3 | failed(1) | none | `chore: pass 3 for chapter 06-agent-governance` |
+| 06-agent-governance | 2 | failed(1) | none | `chore: pass 2 for chapter 06-agent-governance` |
+| 06-agent-governance | 1 | failed(1) | none | `chore: pass 1 for chapter 06-agent-governance` |
+| 05-evaluation-and-traces | 3 | failed(1) | none | `chore: pass 3 for chapter 05-evaluation-and-traces` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `chore: pass 2 for chapter 05-evaluation-and-traces` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `chore: pass 1 for chapter 05-evaluation-and-traces` |
+| 04-memory-systems | 3 | failed(1) | none | `chore: pass 3 for chapter 04-memory-systems` |
+| 04-memory-systems | 2 | failed(1) | none | `chore: pass 2 for chapter 04-memory-systems` |
+| 04-memory-systems | 1 | failed(1) | none | `chore: pass 1 for chapter 04-memory-systems` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `chore: pass 3 for chapter 03-autonomous-kernels` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `chore: pass 2 for chapter 03-autonomous-kernels` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `chore: pass 1 for chapter 03-autonomous-kernels` |
+| 02-harness-engineering | 3 | failed(1) | none | `chore: pass 3 for chapter 02-harness-engineering` |
+| 02-harness-engineering | 2 | failed(1) | none | `chore: pass 2 for chapter 02-harness-engineering` |
+| 02-harness-engineering | 1 | failed(1) | none | `chore: pass 1 for chapter 02-harness-engineering` |
+| 01-paradigm-shift | 3 | failed(1) | none | `chore: pass 3 for chapter 01-paradigm-shift` |
+| 01-paradigm-shift | 2 | failed(1) | none | `chore: pass 2 for chapter 01-paradigm-shift` |
+| 01-paradigm-shift | 1 | failed(1) | none | `chore: pass 1 for chapter 01-paradigm-shift` |
 
 ### Re-run Summary (2026-02-22T17:05:27Z)
 - Completed 24/24 chapter passes with one commit per pass.
