@@ -1,0 +1,22 @@
+{
+  // markdownlint-cli2 configuration for this repository
+  // See https://github.com/markdownlint/markdownlint-cli2#configuration for options
+  "default": true,
+  "config": {
+    "MD013": false,
+    "MD033": false,
+    "MD041": false,
+    "MD045": {
+      "style": "consistent"
+    }
+  },
+  "rules": {
+    "MD007": {
+      "indent": 2
+    },
+    "MD022": false,
+    "MD046": {
+      "style": "fenced"
+    }
+  }
+}

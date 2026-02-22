@@ -55,11 +55,12 @@ Treat each loop step as a checkpoint with two requirements: (1) what must be rec
    - Must record: summary lines (or pointers/hashes to full logs).
    - Stop condition: if a gate fails, iterate.
    - Stop condition: if no credible gate exists, stop and escalate.
-   - Gate waivers: acceptable only when the trace records:
+   - Gate waivers are acceptable only when the trace records:
      - why the gate is not runnable
      - what alternative check was run
      - what risk remains
-     - A waiver is not a “pass”; it is a recorded exception.
+     - the waiver decision and its rationale
+   - A waiver is not a “pass”; it is a recorded exception.
 
 5. **Record trace**: persist replayable evidence for what happened and why.
    - Must record: commands executed.
@@ -76,8 +77,8 @@ Treat each loop step as a checkpoint with two requirements: (1) what must be rec
    - Stop condition: stop when a budget is exhausted.
    - Stop condition: stop when permissions/scope are insufficient.
 
-A diagram is useful because the kernel has a fixed stage order, while budgets, permissions, and gates constrain stages from the side.
-Read the solid arrows as the stage sequence. Read the dotted arrows as constraints and required checks.
+A diagram is useful here because the kernel has a fixed stage order, while budgets, permissions, and gates constrain stages from the side.
+Read solid arrows as the stage sequence. Read dotted arrows as constraints and required checks.
 Takeaway: “done” is a verification outcome, and trace artifacts are explicit outputs.
 
 Mermaid mapping of stages to controls and outputs.
@@ -101,9 +102,9 @@ flowchart LR
 
 How to read this diagram:
 
-- Solid arrows show the execution order; dotted arrows show constraints that shape what actions are allowed.
-- Gates flow into **Verify** because “done” is a verification outcome, not an intent.
-- Persistence flows out of **Record trace** because the trace is an output, not a side effect.
+- Solid arrows show execution order; dotted arrows show constraints and required checks.
+- **Verify** is where gates produce pass/fail evidence that drives stop vs iterate.
+- **Record trace** produces the artifacts you need to replay what happened.
 
 A compact “must capture” checklist (minimum viable trace).
 
@@ -122,7 +123,6 @@ This checklist is the smallest set of fields that enables replay, audit, and deb
 Bug-fix kernel for a CLI tool.
 
 - Input:
-
   - failing test case: `tests/test_parse.py::test_rejects_empty_input`
   - repro command: `python -m mycli parse ""`
   - observed: exit code `0`
@@ -172,15 +172,20 @@ Mini-runbook (a single bounded kernel run):
      - Command: `pytest -k parse`
      - Expected summary (example): `12 passed, 0 failed, 31 deselected in 1.07s`
    - Record:
-     - both commands
-     - both exit codes (`0`)
-     - both summary lines
+     - command 1: `pytest -k rejects_empty_input`
+     - exit code 1: `0`
+     - summary 1 (example): `1 passed, 42 deselected in 0.28s`
+     - command 2: `pytest -k parse`
+     - exit code 2: `0`
+     - summary 2 (example): `12 passed, 0 failed, 31 deselected in 1.07s`
    - Stop rule: if Gate 1 passes but Gate 2 fails, treat as “not fixed” and iterate (the patch likely broke a nearby invariant).
 
 4. Record trace (auditable, replayable)
    - Action: persist a kernel trace and a ledger entry.
    - Record (minimum):
-     - budgets consumed: `iterations=1/3`, `tool_calls=3/10`, `diff_lines=7/40`
+     - budgets consumed: `iterations=1/3`
+     - budgets consumed: `tool_calls=3/10`
+     - budgets consumed: `diff_lines=7/40`
      - commands executed + exit codes
      - final test summary lines:
        - `12 passed, 0 failed, 31 deselected in 1.07s`
@@ -191,7 +196,9 @@ Mini-runbook (a single bounded kernel run):
    - Stop failure: tool-call budget exhausted.
    - Stop failure: diff budget exceeded.
    - Stop failure: verification indicates a broader refactor is required.
-   - Stop escalation output: include the next action for a human (e.g., “tokenization treats whitespace-only as empty; requires editing `src/lexer.py`, outside current write scope”).
+   - Stop escalation output: include the next action for a human.
+     - Example: “tokenization treats whitespace-only as empty.”
+     - Example: “requires editing `src/lexer.py`, outside current write scope.”
 
 This stays stable and debuggable because the kernel cannot declare success without passing named gates, and each iteration is bounded by explicit budgets.
 
@@ -200,20 +207,22 @@ This stays stable and debuggable because the kernel cannot declare success witho
 Dependency upgrade kernel.
 
 - Input:
-
   - target version: `libX 4.2.0 → 4.3.0`
   - constraints:
     - Python `>=3.10`
     - cannot change public API
     - CI must stay green
-  - upgrade guide note: breaking rename `OldClient` → `Client`
+  - upgrade guide note:
+    - breaking rename `OldClient` → `Client`
   - budgets:
     - max 4 iterations
     - max 15 tool calls
     - max 120 lines changed
   - permissions:
-    - write: `pyproject.toml` and `src/`
-    - run: `python -m compileall` and `pytest`
+    - write: `pyproject.toml`
+    - write: `src/`
+    - run: `python -m compileall`
+    - run: `pytest`
 
 Kernel steps with an explicit remediation branch:
 
@@ -259,7 +268,7 @@ Kernel steps with an explicit remediation branch:
    - If **compile passes but tests fail**:
      - Localize:
        - Run the smallest failing unit (single file or single test) based on the first failure.
-       - Example: `pytest tests/test_libx_integration.py -q`
+       - Example command: `pytest tests/test_libx_integration.py -q`
        - Example summary: `1 failed, 18 passed in 4.92s`
      - Patch:
        - Address the behavioral change with a targeted adjustment.
@@ -286,9 +295,15 @@ Kernel steps with an explicit remediation branch:
    - Stop success: Gate A and Gate B pass within budget.
    - Stop failure: repeated failures indicate the upgrade exceeds current permission/scope (e.g., requires API redesign), or budgets are exhausted.
    - Required outputs on stop:
-     - change summary: files touched + primary reason
-     - verification summary: Gate A command + result and Gate B command + result, including summary lines
-     - rollback plan: “revert manifest bump and lockfile” (or equivalent) with the exact files to revert
+     - change summary:
+       - files touched
+       - primary reason
+     - verification summary:
+       - Gate A command + result (include summary lines)
+       - Gate B command + result (include summary lines)
+     - rollback plan:
+       - “revert manifest bump and lockfile” (or equivalent)
+       - exact files to revert
 
 This avoids “fix-forward” drift by forcing an early gate (compile) to localize breakage, and by stopping when remediation expands beyond the change budget.
 

@@ -11153,6 +11153,92 @@
             "diff_ratio": 0.015267175572519083,
             "drift_score": 0.26932935965083704
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.2,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Thesis contains a sentence likely over 28 words: \"In this framing, attribution rate is a harness outcome: it depends on what evidence you capture and which evaluation gates you run, not just on how fluent the model is.\"",
+              "## Concrete Example 1 includes markdown table rows with empty first column cells (\"|  | ... |\"); this is likely to render inconsistently across markdown engines",
+              "## Concrete Example 2 includes markdown table rows with empty first column cells (\"|  | ... |\"); this is likely to render inconsistently across markdown engines",
+              "## Concrete Example 2 \"Measured outputs\" includes sub-bullets without concrete numeric thresholds or units (e.g., \"contract-test failures introduced\"), reducing checkability"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.16314414913252126,
+            "passed": false,
+            "similarity_max": 0.7644480071021004
+          },
+          "iteration": 416,
+          "timestamp": "2026-02-22T20:33:14Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 1.0,
+            "drift_score": 0.16314414913252126
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.92,
+            "decision": "refine",
+            "drift_score": 0.17,
+            "example_density": 0.87,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "## System Breakdown contains a sentence over 28 words: \"A diagram helps here because the distinction (model vs harness) changes how evidence moves between steps.\"",
+              "## System Breakdown contains a sentence over 28 words: \"The goal is to make trace capture and evaluation gates explicit so attribution is a concrete step, not a guess.\"",
+              "## System Breakdown contains a sentence over 28 words: \"When you read it, focus on (a) where the trace is recorded and (b) where the trace is consumed to decide what to change next.\"",
+              "## System Breakdown contains a sentence over 28 words: \"Takeaway: if you cannot produce a trace, attribution is guesswork.\"",
+              "## Concrete Example 2 \"Measured outputs\" includes an explicit time-to-green target (\u2264 30 minutes) but does not specify whether this target is illustrative or a required gate, which may reduce checkability across different team contexts"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.19793334948088268,
+            "passed": false,
+            "similarity_max": 0.762126695345108
+          },
+          "iteration": 417,
+          "timestamp": "2026-02-22T20:34:06Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.15343915343915343,
+            "drift_score": 0.19793334948088268
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.93,
+            "decision": "approve",
+            "drift_score": 0.16,
+            "example_density": 0.87,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.1981187612926157,
+            "passed": false,
+            "similarity_max": 0.7665716519602913
+          },
+          "iteration": 418,
+          "timestamp": "2026-02-22T20:34:52Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.05263157894736842,
+            "drift_score": 0.1981187612926157
+          }
         }
       ]
     },
@@ -21635,6 +21721,83 @@
             "diff_ratio": 0.0,
             "drift_score": 0.3077309236947791
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.24,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard: the sentence beginning with \"Boundary: the minimal contract surface is about what the harness and tools promise to each other\" exceeds 40 words (hard_fail_over)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3060450005674725,
+            "passed": false,
+            "similarity_max": 0.649142432635312
+          },
+          "iteration": 390,
+          "timestamp": "2026-02-22T20:37:13Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 1.0,
+            "drift_score": 0.3060450005674725
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "approve",
+            "drift_score": 0.23,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.30565915078523287,
+            "passed": false,
+            "similarity_max": 0.6436607061432394
+          },
+          "iteration": 391,
+          "timestamp": "2026-02-22T20:38:23Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.011142061281337047,
+            "drift_score": 0.30565915078523287
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "approve",
+            "drift_score": 0.23,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.30565915078523287,
+            "passed": false,
+            "similarity_max": 0.6436607061432394
+          },
+          "iteration": 392,
+          "timestamp": "2026-02-22T20:39:33Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.30565915078523287
+          }
         }
       ]
     },
@@ -31906,6 +32069,34 @@
             "diff_ratio": 0.0,
             "drift_score": 0.012642681693396907
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.03,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": [
+              "The chapter output includes a trailing non-chapter block (<reminder>...</reminder>) after ## Research Directions; the chapter should end immediately after the last bullet in ## Research Directions.",
+              "At least one sentence in ## System Breakdown still exceeds the style-guard max of 28 words (e.g., the first sentence beginning 'The loop stages are the execution path...')."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.023039424992883577,
+            "passed": false,
+            "similarity_max": 0.6932161213103303
+          },
+          "iteration": 382,
+          "timestamp": "2026-02-22T20:41:08Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.1743119266055046,
+            "drift_score": 0.023039424992883577
+          }
         }
       ]
     },
@@ -41953,6 +42144,83 @@
             "deterministic_pass": false,
             "diff_ratio": 0.018867924528301886,
             "drift_score": 0.3139821029082774
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.94,
+            "decision": "approve",
+            "drift_score": 0.18,
+            "example_density": 0.92,
+            "failure_modes_present": true,
+            "structure_score": 0.96,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.014095415117719952,
+            "passed": false,
+            "similarity_max": 0.6083293844353764
+          },
+          "iteration": 374,
+          "timestamp": "2026-02-22T20:42:49Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 1.0,
+            "drift_score": 0.014095415117719952
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.95,
+            "decision": "refine",
+            "drift_score": 0.02,
+            "example_density": 0.92,
+            "failure_modes_present": true,
+            "structure_score": 0.97,
+            "tradeoff_presence": true,
+            "violations": [
+              "## System Breakdown: the Schema subgraph is not explicitly stated as 'minimum viable' immediately adjacent to the diagram; a reader could interpret it as a complete schema requirement"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.011878654970760233,
+            "passed": false,
+            "similarity_max": 0.6188838590137269
+          },
+          "iteration": 375,
+          "timestamp": "2026-02-22T20:43:59Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.14473684210526316,
+            "drift_score": 0.011878654970760233
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.96,
+            "decision": "approve",
+            "drift_score": 0.02,
+            "example_density": 0.92,
+            "failure_modes_present": true,
+            "structure_score": 0.98,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.01156701240593858,
+            "passed": false,
+            "similarity_max": 0.6255684930841361
+          },
+          "iteration": 376,
+          "timestamp": "2026-02-22T20:44:48Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.017857142857142856,
+            "drift_score": 0.01156701240593858
           }
         }
       ]
@@ -52064,6 +52332,116 @@
             "diff_ratio": 0.5132275132275133,
             "drift_score": 0.3370460623207503
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.93,
+            "decision": "refine",
+            "drift_score": 0.21,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md.",
+              "Style-guard sentence length is still likely violated in ## System Breakdown where some bullets include multiple clauses and exceed 28 words, e.g., the Node candidate line under stack detection and some deploy/release sub-bullets."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.34278034418187164,
+            "passed": false,
+            "similarity_max": 0.7011406758535231
+          },
+          "iteration": 376,
+          "timestamp": "2026-02-22T20:31:11Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.42660550458715596,
+            "drift_score": 0.34278034418187164
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.28,
+            "example_density": 0.95,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md.",
+              "Mermaid diagram is not in standard fenced ```mermaid form; it is embedded as an HTML <pre class=\"mermaid\"> block, which may not be recognized by the toolchain as a Mermaid diagram."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3555629049362439,
+            "passed": false,
+            "similarity_max": 0.6935302725447328
+          },
+          "iteration": 377,
+          "timestamp": "2026-02-22T20:46:45Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 1.0,
+            "drift_score": 0.3555629049362439
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.91,
+            "decision": "refine",
+            "drift_score": 0.27,
+            "example_density": 0.95,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.35567083490425444,
+            "passed": false,
+            "similarity_max": 0.69353902793877
+          },
+          "iteration": 378,
+          "timestamp": "2026-02-22T20:47:45Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.06493506493506493,
+            "drift_score": 0.35567083490425444
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.91,
+            "decision": "refine",
+            "drift_score": 0.27,
+            "example_density": 0.95,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.35567083490425444,
+            "passed": false,
+            "similarity_max": 0.69353902793877
+          },
+          "iteration": 379,
+          "timestamp": "2026-02-22T20:49:02Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.35567083490425444
+          }
         }
       ]
     },
@@ -62112,6 +62490,108 @@
             "deterministic_pass": false,
             "diff_ratio": 0.02654867256637168,
             "drift_score": 0.3034530386740331
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.94,
+            "decision": "approve",
+            "drift_score": 0.22,
+            "example_density": 0.86,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.053351953329651855,
+            "passed": false,
+            "similarity_max": 0.6879818201499066
+          },
+          "iteration": 374,
+          "timestamp": "2026-02-22T20:32:34Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.6140350877192983,
+            "drift_score": 0.053351953329651855
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.84,
+            "decision": "refine",
+            "drift_score": 0.12,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Thesis contains a 30-word sentence (\"The \u201coperating envelope\u201d is the set of actions...\") exceeding the style-guard max_words limit of 28."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.05291338078954105,
+            "passed": false,
+            "similarity_max": 0.6647528826820969
+          },
+          "iteration": 375,
+          "timestamp": "2026-02-22T20:50:19Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.08333333333333333,
+            "drift_score": 0.05291338078954105
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "approve",
+            "drift_score": 0.11,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.08145295715520438,
+            "passed": false,
+            "similarity_max": 0.6625757146628457
+          },
+          "iteration": 376,
+          "timestamp": "2026-02-22T20:51:12Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.012738853503184714,
+            "drift_score": 0.08145295715520438
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "approve",
+            "drift_score": 0.11,
+            "example_density": 0.78,
+            "failure_modes_present": true,
+            "structure_score": 0.92,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.08145295715520438,
+            "passed": false,
+            "similarity_max": 0.6625757146628457
+          },
+          "iteration": 377,
+          "timestamp": "2026-02-22T20:52:02Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.08145295715520438
           }
         }
       ]
@@ -72217,6 +72697,88 @@
             "diff_ratio": 0.0,
             "drift_score": 0.05911330049261086
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.89,
+            "decision": "refine",
+            "drift_score": 0.07,
+            "example_density": 0.84,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": [
+              "Non-chapter content is appended after the chapter: the '<reminder> ... </reminder>' block appears after ## Research Directions, violating the chapter-only markdown expectation for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.30228578892371993,
+            "passed": false,
+            "similarity_max": 0.7474953897012834
+          },
+          "iteration": 376,
+          "timestamp": "2026-02-22T20:53:21Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.8243243243243243,
+            "drift_score": 0.30228578892371993
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.88,
+            "decision": "refine",
+            "drift_score": 0.07,
+            "example_density": 0.84,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": [
+              "Non-chapter content is appended after the chapter: the '<reminder> ... </reminder>' block appears after ## Research Directions, violating the chapter-only markdown expectation for book/chapters/*.md.",
+              "At least one sentence exceeds the 28-word maximum: in ## System Breakdown, the sentence beginning 'A diagram helps here because the tool/runtime plane...' is 35 words."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.30228578892371993,
+            "passed": false,
+            "similarity_max": 0.7474953897012834
+          },
+          "iteration": 377,
+          "timestamp": "2026-02-22T20:54:31Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.30228578892371993
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.89,
+            "decision": "refine",
+            "drift_score": 0.07,
+            "example_density": 0.84,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": [
+              "Non-chapter content is appended after the chapter: the '<reminder> ... </reminder>' block appears after ## Research Directions, violating the chapter-only markdown expectation for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3011437908496732,
+            "passed": false,
+            "similarity_max": 0.7468532292409621
+          },
+          "iteration": 378,
+          "timestamp": "2026-02-22T20:55:22Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.01904761904761905,
+            "drift_score": 0.3011437908496732
+          }
         }
       ]
     },
@@ -82291,6 +82853,118 @@
             "deterministic_pass": false,
             "diff_ratio": 0.023255813953488372,
             "drift_score": 0.057915057915057896
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "refine",
+            "drift_score": 0.06,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Why This Matters contains a sentence over 28 words: \"So what changes for teams? Treat tool schemas, trace formats, and eval definitions as versioned products: write contracts, test them, and require replayable traces so failures can be audited and compared across models.\"",
+              "## Concrete Example 2 contains a sentence over 28 words: \"A diagram helps here because trace interchange is a pipeline with explicit checkpoints. Focus on where validation happens, what gets exported, and what the replay step is allowed to claim as \u201cverified.\u201d\""
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.14104882459312837,
+            "passed": false,
+            "similarity_max": 0.7350974064791986
+          },
+          "iteration": 375,
+          "timestamp": "2026-02-22T20:57:11Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.5692307692307692,
+            "drift_score": 0.14104882459312837
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.87,
+            "decision": "refine",
+            "drift_score": 0.06,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Why This Matters contains a sentence over 28 words: \"So what changes for teams? Treat tool schemas, trace formats, and eval definitions as versioned products: write contracts, test them, and require replayable traces so failures can be audited and compared across models.\"",
+              "## Concrete Example 2 contains a sentence over 28 words: \"A diagram helps here because trace interchange is a pipeline with explicit checkpoints. Focus on where validation happens, what gets exported, and what the replay step is allowed to claim as \u201cverified.\u201d\""
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.0,
+            "passed": false,
+            "similarity_max": 0.7350974064791986
+          },
+          "iteration": 375,
+          "timestamp": "2026-02-22T21:13:23Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.0
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.86,
+            "decision": "refine",
+            "drift_score": 0.06,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Thesis contains a sentence over 40 words: \"Here, \u201cinterfaces\u201d means the concrete artifacts that let components interoperate. In practice, interfaces are what make runs portable: a tool-call schema that two runtimes both validate, a trace format that two analysis tools both parse, and an eval definition that two teams can both reproduce.\"",
+              "## Thesis contains a sentence over 40 words: \"\u201cVerification\u201d means methods that detect incorrect behavior reliably. In practice, verification is what makes runs auditable: it lets you show that a tool call matched a contract, that a replay stayed within a declared nondeterminism boundary, and that a reported score came from a pinned dataset and scoring implementation.\"",
+              "## System Breakdown contains a sentence over 28 words: \"These four areas are coupled: interfaces create portability, verification enables auditability, and governance sets the rules for how shared artifacts evolve.\""
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.2538421338684727,
+            "passed": false,
+            "similarity_max": 0.7335743628754856
+          },
+          "iteration": 376,
+          "timestamp": "2026-02-22T21:14:27Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.13529411764705881,
+            "drift_score": 0.2538421338684727
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.05,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "## System Breakdown contains a sentence over 28 words: \"Focus on the arrows: they show what must be versioned and validated before you can compare runs across teams or models.\""
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.2547019104907123,
+            "passed": false,
+            "similarity_max": 0.7333718108773
+          },
+          "iteration": 377,
+          "timestamp": "2026-02-22T21:15:12Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.032432432432432434,
+            "drift_score": 0.2547019104907123
           }
         }
       ]

@@ -16,17 +16,44 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 ## System Breakdown
 - **Trace schema** (minimum viable):
   - task id
-  - plan (the intended steps and stop conditions)
-  - tool calls (tool name, arguments, start/end timestamps, exit status)
-  - tool outputs (stdout/stderr excerpts or pointers to stored artifacts)
-  - diffs (patches applied, file paths touched)
-  - evaluation results (which checks ran, pass/fail, key failure signatures)
-  - budgets (time, iteration count, token/cost limits where applicable)
-  - stop reason (completed, blocked by gate, permission denied, budget exceeded)
-  - redaction policy (what is removed or hashed: secrets, tokens, PII, proprietary paths)
-  - environment fingerprint (repo URL if applicable, commit SHA, branch, tool versions, OS/arch)
-  - retry/iteration counters (attempt number per step, total loop count)
-  - When used for incident review, the trace must support queries like:
+  - plan
+    - intended steps
+    - stop conditions
+  - tool calls
+    - tool name
+    - arguments
+    - start/end timestamps
+    - exit status
+  - tool outputs
+    - stdout/stderr excerpts, or pointers to stored artifacts
+  - diffs
+    - patches applied
+    - file paths touched
+  - evaluation results
+    - which checks ran
+    - pass/fail
+    - key failure signatures
+  - budgets
+    - time
+    - iteration count
+    - token/cost limits (if applicable)
+  - stop reason
+    - completed
+    - blocked by gate
+    - permission denied
+    - budget exceeded
+  - redaction policy
+    - what is removed or hashed (secrets, tokens, PII, proprietary paths)
+  - environment fingerprint
+    - repo URL (if applicable)
+    - commit SHA
+    - branch
+    - tool versions
+    - OS/arch
+  - retry/iteration counters
+    - attempt number per step
+    - total loop count
+  - Query examples (incident review):
     - “show all tasks that modified `pyproject.toml` and failed secret scanning”
     - “list failures where `tests` failed but a patch was still applied”
     - “group stop reasons by action class over the last N runs”
@@ -40,7 +67,7 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
   A gating model is only useful if the trace explains the choice.
   A reviewer should be able to see why a gate passed, failed, or was skipped.
 
-  Diagram: the flow below shows how an action class routes to gates.
+  A diagram helps here because the logic is a decision flow.
   Focus on the first safety decision and the first failing gate.
 
 ```mermaid
@@ -55,37 +82,47 @@ flowchart TB
   E -->|no| F[CONTINUE / COMPLETE\nrecord: evaluation_results + budgets\nstop_reason=completed]
 ```
 
+  After you review the flow, the key takeaway is this: every STOP is a first-class outcome.
+  The trace must record enough to explain the stop and replay the same checks.
+
   Legend:
   - Diamonds are harness decision points.
   - Every STOP must record enough fields to replay the same checks.
 
   - Minimal gating matrix (example, stated as rules):
+
     - read-only (grep/view/list):
-      - safety: required permission check for the accessed path(s)
-      - quality: skipped; record `skipped_reason: "read_only_action"`
-      - correctness: skipped; record `skipped_reason: "read_only_action"`
-      - performance: skipped; record `skipped_reason: "read_only_action"`
+      - safety: require permission check for accessed path(s)
+      - quality: skip; record `skipped_reason: "read_only_action"`
+      - correctness: skip; record `skipped_reason: "read_only_action"`
+      - performance: skip; record `skipped_reason: "read_only_action"`
+
     - patch edit (apply diff to code/docs):
-      - safety: required protected-path check for all touched files
-        - if any touched file is protected, stop with `stop_reason: "permission_denied"`
-      - quality: required if repo has lint/typecheck config
+      - safety:
+        - require protected-path check for all touched files
+        - if any touched file is protected:
+          - stop with `stop_reason: "permission_denied"`
+      - quality:
+        - require lint/typecheck if repo has config
         - otherwise record `skipped_reason: "no_config"`
-      - correctness: required targeted tests for touched modules
-        - if a module→test mapping exists:
-          - run the mapped command
-          - record `selection_reason: "mapping"`
-        - else if the plan declares `test_command`:
-          - run it
-          - record `selection_reason: "plan.test_command"`
-        - else if the repo declares a default test command:
-          - run it
-          - record `selection_reason` with the source path
-        - else if a stack can be detected:
-          - run the stack fallback command
-          - record `selection_reason: "fallback.detected_stack"`
-        - else:
-          - record `skipped_reason: "no_test_runner_detected"`
-          - stop with `stop_reason: "blocked_by_correctness_gate"`
+      - correctness:
+        - require targeted tests for touched modules
+        - selection order:
+          1) if a module→test mapping exists:
+             - run the mapped command
+             - record `selection_reason: "mapping"`
+          2) else if the plan declares `test_command`:
+             - run it
+             - record `selection_reason: "plan.test_command"`
+          3) else if the repo declares a default test command:
+             - run it
+             - record `selection_reason` with the source path
+          4) else if a stack can be detected:
+             - run the stack fallback command
+             - record `selection_reason: "fallback.detected_stack"`
+          5) else:
+             - record `skipped_reason: "no_test_runner_detected"`
+             - stop with `stop_reason: "blocked_by_correctness_gate"`
       - fallback by detected stack:
         - Deterministic stack detection (precedence order):
           - Inputs:
@@ -93,7 +130,7 @@ flowchart TB
             - repo evidence files (repo root only)
           - Step 1 — candidates from touched paths:
             - Python if any touched path ends with `.py`
-            - Node if any touched path ends with `.js`, `.jsx`, `.ts`, `.tsx`
+            - Node if any touched path ends with `.js`, `.jsx`, `.ts`, or `.tsx`
             - Go if any touched path ends with `.go`
           - Step 2 — if no candidates, use evidence files:
             - Python if `pyproject.toml`, `pytest.ini`, `setup.cfg`, or `requirements.txt` exists
@@ -102,68 +139,103 @@ flowchart TB
           - Step 3 — tie-break precedence:
             - Python → Node → Go
           - Trace requirements:
-            - record `selection_reason` (e.g., `touched_ext:.py`)
-            - record `detected_stacks` before tie-break (e.g., `[python,node]`)
+            - record `selection_reason` (example: `touched_ext:.py`)
+            - record `detected_stacks` before tie-break (example: `[python,node]`)
         - Python: `pytest -q`
         - Node: `npm test`
         - Go: `go test ./...`
-      - performance: required only when applicable
-        - required if any touched path is under `deploy/`
-        - required if any touched path is under `prod/`
-        - required if the plan declares `latency_budget_ms` or `cost_budget_usd`
+      - performance:
+        - require only when applicable
+        - require if any touched path is under `deploy/`
+        - require if any touched path is under `prod/`
+        - require if the plan declares `latency_budget_ms` or `cost_budget_usd`
         - otherwise record `skipped_reason: "not_applicable"`
+
     - dependency install (lockfile changes, package adds):
-      - safety: required secret scan of the diff and updated lockfile(s)
-        - record scan tool name and any hit signatures
-      - safety: required protected-path check for touched files
-        - stop with `stop_reason: "permission_denied"` if blocked
-      - quality: required if repo has lint/typecheck config
+      - safety:
+        - require secret scan of the diff and updated lockfile(s)
+        - record scan tool name
+        - record any hit signatures
+      - safety:
+        - require protected-path check for touched files
+        - if blocked, stop with `stop_reason: "permission_denied"`
+      - quality:
+        - require lint/typecheck if repo has config
         - otherwise record `skipped_reason: "no_config"`
-      - correctness: required tests that import the changed dependency
+      - correctness:
+        - require tests that import the changed dependency
         - if unknown, select a command using the patch-edit rule
         - record `selection_reason` for the path taken
-      - performance: required only when runtime or deploy files change
+      - performance:
+        - require only when runtime or deploy files change
         - examples: `Dockerfile`, `deploy/**`
         - otherwise record `skipped_reason: "not_applicable"`
+
     - deploy/release (publish, migrate, prod config):
-      - safety: required explicit permission grant
+      - safety:
+        - require explicit permission grant
         - record grant artifact (id or prompt) in the trace
-      - safety: required secret scan
-        - stop on any forbidden hit; record hit signatures
-      - quality: required lint/typecheck if configured
+      - safety:
+        - require secret scan
+        - stop on any forbidden hit
+        - record hit signatures
+      - quality:
+        - require lint/typecheck if configured
         - otherwise record `skipped_reason: "no_config"`
-      - correctness: required full suite or contract tests for release
+      - correctness:
+        - require full suite or contract tests for release
         - record suite name and command
-      - performance: required if a budget is declared in the plan
-        - stop if exceeded; record measured values
+      - performance:
+        - require if a budget is declared in the plan
+        - stop if exceeded
+        - record measured values
 
 ## Concrete Example 1
 Tracing a refactor.
 
-- Record: each patch + test run + failure signature, but also the environment fingerprint and the exact tool invocations so a reviewer can replay the same sequence.
+- Record each patch, each test run, and each failure signature.
+- Also record the environment fingerprint and exact tool invocations.
+- That combination lets a reviewer replay the same sequence.
 
 Pseudo-trace excerpt (illustrative):
 
-- task_id: `refactor-auth-2026-02-22-001`
+    task_id: refactor-auth-2026-02-22-001
 
-- environment:
-  - repo_sha: `a1b2c3d`
-  - tool_versions: `{ "pytest": "8.1.1", "python": "3.12.1" }`
+    environment:
+      repo_sha: a1b2c3d
+      tool_versions:
+        pytest: 8.1.1
+        python: 3.12.1
 
-- plan:
-  - “rename `AuthClient` → `CopilotClient`; update imports; run targeted tests; stop if tests fail.”
+    plan:
+      - rename AuthClient -> CopilotClient
+      - update imports
+      - run targeted tests
+      - stop if tests fail
 
-- tool_calls:
-  1) `{ "tool": "apply_patch", "files": ["src/auth/client.py"], "exit_status": 0 }`
-  2) `{ "tool": "bash", "cmd": "pytest -q tests/test_auth_client.py::test_retry", "exit_status": 1, "failure_signature": "ImportError: cannot import name 'AuthClient'" }`
+    tool_calls:
+      - tool: apply_patch
+        files:
+          - src/auth/client.py
+        exit_status: 0
+      - tool: bash
+        cmd: pytest -q tests/test_auth_client.py::test_retry
+        exit_status: 1
+        failure_signature: ImportError: cannot import name 'AuthClient'
 
-- diffs + evaluation + stop:
-  - diffs:
-    - `src/auth/client.py`: renamed symbol
-    - `tests/test_auth_client.py`: unchanged
-  - evaluation_results:
-    - correctness: `pytest -q tests/test_auth_client.py::test_retry` → FAIL (ImportError)
-  - stop_reason: “blocked by correctness gate”
+    diffs:
+      - path: src/auth/client.py
+        summary: renamed symbol
+      - path: tests/test_auth_client.py
+        summary: unchanged
+
+    evaluation_results:
+      correctness:
+        cmd: pytest -q tests/test_auth_client.py::test_retry
+        outcome: FAIL
+        signature: ImportError
+
+    stop_reason: blocked_by_correctness_gate
 
 Query step using structured fields (one possible workflow):
 - Query: `repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"`
@@ -184,26 +256,35 @@ Decision rule using the query result:
   - Rerun `pytest -q tests/test_auth_client.py::test_retry`.
 
 Attribution using the trace:
-- Not a model vs tool ambiguity: the patch tool succeeded and the test runner executed; the failure signature is a stable ImportError.
-- Not a harness misapplication: matching_tasks share the same repo_sha and the diffs confirm the same single-file touch pattern.
-- Likely root cause: refactor incompleteness (imports/usages not updated outside `client.py`); the next action is to expand the diff scope and re-run the same correctness gate.
+- Model vs tool is not ambiguous here.
+- The patch tool succeeded, and the test runner executed.
+- The failure signature is a stable ImportError.
+- The diffs show a narrow touch pattern, so the likely cause is refactor incompleteness.
 
 ## Concrete Example 2
 Drift detection for an agent loop.
 
-- Maintain: a stable eval suite and a small set of “golden” tasks.
-  - A “golden task” should include:
-    - fixed input prompt and any fixed attachments
-    - fixed repo state (commit SHA) or a pinned fixture repository
-    - expected outcome constraints (e.g., “touch only `src/foo.py`”, “no network”, “no new dependencies”)
-    - expected evaluations (which checks must pass)
-    - budgets (max iterations, max wall time, max tool calls)
-- Detect: changes in iteration counts, regression rate, and stop reasons over time.
-  - Define a baseline as a pinned reference run-set, such as “the last green run-set on release tag `vX.Y`” for the same golden task and the same repo_sha (or the same pinned fixture).
-  - Example drift signals with thresholds (current window vs baseline window):
-    - iteration drift: median loop iterations in the most recent 50 runs increases by ≥ 30% compared to the baseline’s 50-run median
-    - regression rate: correctness-gate failure rate in the most recent 50 runs increases by ≥ 5 percentage points compared to the baseline’s 50-run rate
-    - stop-reason shift: in the most recent 50 runs, “budget exceeded” becomes the most frequent stop_reason while the baseline window had “completed” as the most frequent stop_reason
+- Maintain a stable eval suite and a small set of “golden” tasks.
+- A “golden task” should include:
+  - fixed input prompt and any fixed attachments
+  - fixed repo state (commit SHA) or a pinned fixture repository
+  - expected outcome constraints (e.g., “touch only `src/foo.py`”, “no network”, “no new dependencies”)
+  - expected evaluations (which checks must pass)
+  - budgets (max iterations, max wall time, max tool calls)
+- Define a baseline run-set for each golden task.
+  - Example: “last green run-set on release tag `vX.Y`”.
+  - Keep repo_sha and harness version pinned for the baseline.
+
+- Detect changes in iteration counts, regression rate, and stop reasons over time.
+  - iteration drift:
+    - median loop iterations in the most recent 50 runs increases by ≥ 30%
+    - compare against the baseline’s 50-run median
+  - regression rate:
+    - correctness-gate failure rate in the most recent 50 runs increases by ≥ 5 percentage points
+    - compare against the baseline’s 50-run rate
+  - stop-reason shift:
+    - in the most recent 50 runs, “budget exceeded” becomes the most frequent stop_reason
+    - baseline window had “completed” as the most frequent stop_reason
 
 The point is not to predict every future failure. The point is to detect that something changed (model, tool, harness, or repo) and to have enough trace evidence to localize the change.
 

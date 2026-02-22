@@ -1,210 +1,108 @@
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Technical book on AI-first software engineering governance and execution">
-      
-      
-        <meta name="author" content="Autonomous Authors">
-      
-      
-      
-        <link rel="prev" href="../05-evaluation-and-traces/">
-      
-      
-        <link rel="next" href="../07-production-ai-infrastructure/">
-      
-      
-        
-      
-      
-      <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
-    
-    
-      
-        <title>06. Agent Governance - AI-First Software Engineering</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+<!DOCTYPE html>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#chapter-06-agent-governance" class="md-skip">
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Technical book on AI-first software engineering governance and execution" name="description"/>
+<meta content="Autonomous Authors" name="author"/>
+<link href="../05-evaluation-and-traces/" rel="prev"/>
+<link href="../07-production-ai-infrastructure/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
+<title>06. Agent Governance - AI-First Software Engineering</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#chapter-06-agent-governance">
           Skip to content
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
+</div>
+<div data-md-component="announce">
+</div>
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="AI-First Software Engineering" class="md-header__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="AI-First Software Engineering" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
             AI-First Software Engineering
           </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
             
               06. Agent Governance
             
           </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
+</div>
+</div>
+</div>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+<ol class="md-search-result__list" role="presentation"></ol>
 </div>
-      
-    
-    
-  </nav>
-  
+</div>
+</div>
+</div>
+</div>
+</nav>
 </header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="AI-First Software Engineering" class="md-nav__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="AI-First Software Engineering" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
     AI-First Software Engineering
   </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
     
   
     Home
@@ -212,26 +110,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../preface/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../preface/">
+<span class="md-ellipsis">
     
   
     Preface
@@ -239,39 +122,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
     
   
     Chapters
@@ -279,35 +135,21 @@
 
     
   </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
             
   
     Chapters
   
 
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../01-paradigm-shift/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../01-paradigm-shift/">
+<span class="md-ellipsis">
     
   
     01. Paradigm Shift
@@ -315,27 +157,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../02-harness-engineering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../02-harness-engineering/">
+<span class="md-ellipsis">
     
   
     02. Harness Engineering
@@ -343,27 +169,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../03-autonomous-kernels/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../03-autonomous-kernels/">
+<span class="md-ellipsis">
     
   
     03. Autonomous Kernels
@@ -371,27 +181,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../04-memory-systems/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../04-memory-systems/">
+<span class="md-ellipsis">
     
   
     04. Memory Systems
@@ -399,27 +193,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../05-evaluation-and-traces/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../05-evaluation-and-traces/">
+<span class="md-ellipsis">
     
   
     05. Evaluation and Traces
@@ -427,36 +205,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
     
   
     06. Agent Governance
@@ -464,17 +218,10 @@
 
     
   </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
     
   
     06. Agent Governance
@@ -482,135 +229,91 @@
 
     
   </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#thesis" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#thesis">
+<span class="md-ellipsis">
       
         Thesis
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#why-this-matters" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-matters">
+<span class="md-ellipsis">
       
         Why This Matters
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#system-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#system-breakdown">
+<span class="md-ellipsis">
       
         System Breakdown
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#concrete-example-1" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example-1">
+<span class="md-ellipsis">
       
         Concrete Example 1
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#concrete-example-2" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example-2">
+<span class="md-ellipsis">
       
         Concrete Example 2
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#trade-offs" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#trade-offs">
+<span class="md-ellipsis">
       
         Trade-offs
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#failure-modes" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
       
         Failure Modes
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#research-directions" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#research-directions">
+<span class="md-ellipsis">
       
         Research Directions
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-production-ai-infrastructure/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../07-production-ai-infrastructure/">
+<span class="md-ellipsis">
     
   
     07. Production AI Infrastructure
@@ -618,27 +321,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../99-future-directions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../99-future-directions/">
+<span class="md-ellipsis">
     
   
     99. Future Directions
@@ -646,34 +333,14 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../glossary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../glossary/">
+<span class="md-ellipsis">
     
   
     Glossary
@@ -681,37 +348,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
     
   
     Patterns Overview
@@ -719,35 +361,21 @@
 
     
   </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
             
   
     Patterns Overview
   
 
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../patterns/harness-design-patterns/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/harness-design-patterns/">
+<span class="md-ellipsis">
     
   
     Harness Design
@@ -755,27 +383,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../patterns/memory-architectures/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/memory-architectures/">
+<span class="md-ellipsis">
     
   
     Memory Architectures
@@ -783,27 +395,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../patterns/minimal-agent-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/minimal-agent-loop/">
+<span class="md-ellipsis">
     
   
     Minimal Agent Loop
@@ -811,27 +407,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../patterns/self-verification-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/self-verification-loop/">
+<span class="md-ellipsis">
     
   
     Self-Verification Loop
@@ -839,157 +419,112 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
+</a>
+</li>
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#thesis" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#thesis">
+<span class="md-ellipsis">
       
         Thesis
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#why-this-matters" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-matters">
+<span class="md-ellipsis">
       
         Why This Matters
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#system-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#system-breakdown">
+<span class="md-ellipsis">
       
         System Breakdown
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#concrete-example-1" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example-1">
+<span class="md-ellipsis">
       
         Concrete Example 1
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#concrete-example-2" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example-2">
+<span class="md-ellipsis">
       
         Concrete Example 2
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#trade-offs" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#trade-offs">
+<span class="md-ellipsis">
       
         Trade-offs
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#failure-modes" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
       
         Failure Modes
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#research-directions" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#research-directions">
+<span class="md-ellipsis">
       
         Research Directions
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
 <h1 id="chapter-06-agent-governance">Chapter 06 — Agent Governance</h1>
 <h2 id="thesis">Thesis</h2>
-<p>Governance defines the safe operating envelope for autonomy: permissions, budgets, review policies, auditability, and incident response.</p>
-<p>Hypothesis: autonomy without enforceable governance increases throughput in the short term but increases defect rate and operational risk over time.</p>
+<p>Governance defines the safe operating envelope for autonomy. It is not optional once agents can change code, invoke tools, or affect production systems. The “operating envelope” defines what an agent is allowed to do. It also defines when those actions are allowed and what evidence must exist afterward to support review and rollback.</p>
+<p>Hypothesis: autonomy without enforceable governance increases throughput in the short term. Over time, defect rate and operational risk rise. Changes can outpace review, exceed intended access scopes, or ship without traceable accountability.</p>
+<p>What governance is / is not:
+- Governance is <strong>enforced constraints + auditability</strong> (tool/CI checks, logs, approvals), not a document that can be ignored.
+- Governance is <strong>risk-shaped</strong> (stricter rules for higher-risk operations), not uniform friction applied everywhere.
+- Governance is <strong>measurable</strong> (blocked unsafe changes, incidents, review latency), not a “best effort” policy.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
 <li>Agents can operate faster than human review cycles; governance prevents unsafe acceleration.</li>
@@ -999,25 +534,138 @@
 <h2 id="system-breakdown">System Breakdown</h2>
 <ul>
 <li><strong>Policy artifacts</strong>: constitution (principles), agent rules (operational constraints), CI policies (enforcement).</li>
-<li><strong>Permissions</strong>: read/write scopes, protected files, tool allowlists.</li>
-<li><strong>Budgets</strong>: time, iterations, tool calls, diff size, cost ceilings.</li>
-<li><strong>Review</strong>: mandatory human checkpoints for specific risk classes.</li>
-<li><strong>Audit</strong>: trace retention, searchable logs, change attribution.</li>
+<li>Enforceable rules:<ul>
+<li>“No writes to protected paths without approval token.”</li>
+<li>“All tool calls must declare intent and target files.”</li>
 </ul>
+</li>
+<li>Enforcement:<ul>
+<li>Pre-commit or tool-layer policy checks reject disallowed patches.</li>
+<li>CI re-validates policies on the merge commit.</li>
+</ul>
+</li>
+<li><strong>Permissions</strong>: read/write scopes, protected files, tool allowlists.</li>
+<li>Enforceable rules:<ul>
+<li>“Read-only by default; write requires explicit scope.”</li>
+<li>“Network access disabled unless allowlisted per job.”</li>
+</ul>
+</li>
+<li>Enforcement:<ul>
+<li>Runtime tool allowlist/denylist.</li>
+<li>Repository protected-branch rules and CODEOWNERS coverage for specific paths.</li>
+</ul>
+</li>
+<li><strong>Budgets</strong>: time, iterations, tool calls, diff size, cost ceilings.</li>
+<li>Enforceable rules:<ul>
+<li>“Max N iterations per task.”</li>
+<li>“Max diff size for autonomous edits.”</li>
+<li>“Stop on repeated failures.”</li>
+</ul>
+</li>
+<li>Enforcement:<ul>
+<li>Harness-level counters.</li>
+<li>CI policy fails if changes exceed thresholds or if required checkpoints were skipped.</li>
+</ul>
+</li>
+<li><strong>Review</strong>: mandatory human checkpoints for specific risk classes.</li>
+<li>Enforceable rules:<ul>
+<li>“Human approval required for security configs, auth paths, dependency upgrades.”</li>
+<li>“Two-person review for rollback scripts.”</li>
+</ul>
+</li>
+<li>Enforcement:<ul>
+<li>CODEOWNERS + branch protection.</li>
+<li>CI classifies changes and blocks merge unless approvals match the risk class.</li>
+</ul>
+</li>
+<li><strong>Audit</strong>: trace retention, searchable logs, change attribution.</li>
+<li>Enforceable rules:<ul>
+<li>“All tool executions emit structured logs.”</li>
+<li>“Each patch links to an agent run id and input prompt.”</li>
+</ul>
+</li>
+<li>Enforcement:<ul>
+<li>Log collection in CI artifacts or a central store.</li>
+<li>Merge requires a commit trailer field <code>Agent-Run-Id: &lt;run_id&gt;</code>.</li>
+<li>CI validates this trailer case-sensitively.</li>
+<li>The key must be exactly <code>Agent-Run-Id</code>.</li>
+<li><code>&lt;run_id&gt;</code> must be lowercase and match <code>run_[a-z0-9]{12}</code>.</li>
+<li>Valid: <code>Agent-Run-Id: run_3f9c2a1b7d4e</code>.</li>
+<li>Invalid: <code>agent-run-id: run_3f9c2a1b7d4e</code>, <code>Agent-Run-Id: RUN_3F9C2A1B7D4E</code>.</li>
+</ul>
+</li>
+</ul>
+<p>Governance loop (artifacts in parentheses):
+1. Policy definition (constitution / agent rules / CI policies)
+2. Enforcement at execution and merge time (tool allowlists / protected-path checks / CI gates)
+3. Telemetry and audit capture (structured traces / searchable logs / change attribution)
+4. Review routing and approvals (risk classification / CODEOWNERS / mandatory checkpoints)
+5. Policy update after incidents or near-misses (rule changes + new tests/evals)</p>
+<p>A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on (a) where enforcement blocks unsafe actions and (b) where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.</p>
+<pre class="mermaid">
+flowchart TB
+  A["1. Policy definition<br/>(constitution / agent rules / CI policies)"]
+  B["2. Enforcement<br/>(tool allowlists / protected paths / CI gates)"]
+  C["3. Telemetry + audit capture<br/>(structured traces / logs / attribution)"]
+  D["4. Review routing + approvals<br/>(risk class / CODEOWNERS / checkpoints)"]
+  E["5. Policy update<br/>(incidents / near-misses / new evals)"]
+
+  A --&gt; B --&gt; C --&gt; D --&gt; E --&gt; A
+</pre>
+<p>Takeaway: steps 2 and 3 are the “hard” parts of governance. Step 2 controls what can happen. Step 3 determines what proof exists afterward, so steps 4 and 5 can block unsafe merges and tighten policy based on observed failures.</p>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
-<p>Protected-path governance.
+<p>Protected-path governance.</p>
+<p>Policy text (agent rules / CI policy):
 - Rule: forbid edits to security-critical configs without explicit approval.
-- Enforcement: tool layer rejects patches; CI verifies policy compliance.</p>
+- Protected paths (example): <code>infra/</code>, <code>.github/workflows/</code>, <code>config/prod/</code>, <code>secrets/</code>.</p>
+<p>Enforcement point (tool layer + CI):
+- Tool layer: rejects any patch touching a protected path unless an approval token is present in the task context (e.g., <code>APPROVAL=SECURITY-1234</code>) and the approver identity is recorded.
+- CI: re-checks the merged diff; fails the build if protected paths changed without the recorded approval.</p>
+<p>Example attempted edit (input and check):
+- Agent proposes changing <code>.github/workflows/release.yml</code> to add a new step that uploads artifacts.
+- Policy check inspects the diff and matches a protected path.</p>
+<p>Expected rejection message (testable outcome):
+- “Rejected: write to protected path <code>.github/workflows/</code> requires approval. Provide approval token + approver identity, or move the change to an approved human-owned PR.”</p>
+<p>Remediation path (approval and artifacts produced):
+- Human reviewer evaluates the intent, then supplies an approval token and identity.
+- Artifact produced: an audit entry containing (a) file paths touched, (b) approval token, (c) approver, (d) timestamps, (e) tool execution trace id.
+- CI verifies the audit entry exists and is linked to the commit/PR before allowing merge.</p>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
-<p>Incident response for a bad autonomous change.
-- Trigger: regression detected by eval gates post-merge.
-- Response: rollback + trace review + policy update + new regression test.</p>
+<p>Incident response for a bad autonomous change.</p>
+<p>Detection signal:
+- Trigger: regression detected by the <code>smoke-prod</code> gate post-merge.
+- Example threshold (checkable): <code>smoke-prod</code> fails if HTTP 5xx rate exceeds 1.0% over a 10-minute canary window.
+- Example threshold (checkable): <code>smoke-prod</code> fails if p95 latency regresses by more than 20% versus the previous baseline.
+- Gate semantics (checkable): <code>smoke-prod</code> fails if either condition is met.
+- Gate semantics (checkable): OR semantics.</p>
+<p>Immediate containment (rollback):
+- Action: revert the merge commit (or roll back the deployment) using the pre-defined rollback procedure.
+- Containment SLO (example): rollback initiated within 5 minutes of <code>smoke-prod</code> failure and completed within 15 minutes.
+- Output: a rollback commit/deployment event linked to the original agent run id.</p>
+<p>Trace queries (audit-driven investigation):
+- Use the audit trail to answer: which tools were invoked, which files were changed, which tests were executed, and whether any approvals were used.
+- Minimum required evidence: a searchable trace that reconstructs the diff, command outputs, and decision points (e.g., “skipped test X due to timeout”).
+- SLO evidence: audit record includes timestamps for detection, rollback initiation, and rollback completion, plus a deployment event id that can be cross-referenced.</p>
+<p>Root-cause classification (review-driven):
+- Classify the incident into a governance-relevant bucket, for example:
+  - Missing gate: the regression would have been caught by a specific test that did not run.
+  - Mis-scoped permissions: the agent changed a file outside the intended scope.
+  - Review routing failure: change risk was misclassified and did not receive the required human checkpoint.</p>
+<p>Policy change (closing the gap):
+- Update agent rules/CI policy to prevent recurrence, e.g., “Changes touching <code>config/prod/</code> must run <code>smoke-prod</code> suite,” or “Any change to deployment steps requires CODEOWNER approval.”</p>
+<p>New eval/test gate (enforced going forward):
+- Add or strengthen a regression test/eval that fails deterministically on the known pattern.
+- Wire it into CI so it is mandatory for the relevant risk class, and confirm the audit system records that the gate ran (not just that it exists).</p>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
-<li>Strong governance reduces risk but can slow iteration.</li>
-<li>Overly strict permissions increase human workload via escalations.</li>
+<li>Strong governance reduces risk but can slow iteration; the goal is to pay friction only where risk is high.</li>
+<li>Overly strict permissions increase human workload via escalations and can create “approval queues.”</li>
 <li>Excessive auditing can create privacy and compliance burdens.</li>
 </ul>
+<p>Operational metrics to make these trade-offs visible:
+- Friction cost: median time-to-approval for high-risk changes; escalation rate (% of tasks requiring human intervention); rework rate after policy rejections.
+- Prevented incidents: count of blocked protected-path writes; count of merges prevented due to missing required gates; incident rate per 100 changes for governed vs ungoverned paths.
+- Governance effectiveness: time-to-rollback from detection; percentage of changes with complete trace metadata; false-positive rate of risk classification (unnecessary blocks).</p>
 <h2 id="failure-modes">Failure Modes</h2>
 <ul>
 <li><strong>Policy drift</strong>: rules become outdated and stop reflecting real risks.</li>
@@ -1026,64 +674,34 @@
 </ul>
 <h2 id="research-directions">Research Directions</h2>
 <ul>
-<li>Policy-as-code patterns for agent systems.</li>
-<li>Automated risk scoring for diffs to route reviews.</li>
-<li>Governance metrics: prevented incidents vs friction cost.</li>
+<li>Policy-as-code patterns for agent systems. Deliverable: a versioned policy repository with rule tests and a CI job that validates enforcement on every change.</li>
+<li>Automated risk scoring for diffs to route reviews. Deliverable: a diff classifier with explicit routing rules (which paths/operations require which approvals) and measured false-positive/false-negative rates.</li>
+<li>Governance metrics: prevented incidents vs friction cost. Deliverable: a dashboard spec that defines the core counters (blocked changes, escalations, incident rate, time-to-rollback) and the data sources for each.</li>
 </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
+</article>
+</div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
       Material for MkDocs
     </a>
-  
 </div>
-      
-    </div>
-  </div>
+</div>
+</div>
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-    
-  </body>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+</body>
 </html>

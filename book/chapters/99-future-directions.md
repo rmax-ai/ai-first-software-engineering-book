@@ -1,11 +1,17 @@
 # Chapter 99 — Future Directions
 
 ## Thesis
-The focus is not larger models; it is system-level interfaces and verification: stronger tool contracts, better evaluations, structured memory, and governance primitives that scale across teams and models.
+The frontier is not larger models. It is system-level interfaces and verification.
 
-Here, “interfaces” means the concrete artifacts that let components interoperate. This includes tool-call schemas (inputs/outputs and error contracts), trace formats (event types and required fields), and evaluation definitions (tasks, scoring, and pass/fail rules).
+Concretely, that means investing in artifacts that scale across teams and models:
+- stronger tool contracts
+- better evaluations
+- structured memory
+- governance primitives
 
-“Verification” means methods that detect incorrect behavior reliably. Examples include contract tests for tools, replay checks for agent runs, property-based testing for invariants, and runtime enforcement (schema validation, pre/post-conditions, and budget limits).
+Here, “interfaces” means the concrete artifacts that let components interoperate. In practice, interfaces are what make runs portable. Examples include a tool-call schema that two runtimes both validate, a trace format that two analysis tools both parse, and an eval definition that two teams can both reproduce.
+
+“Verification” means methods that detect incorrect behavior reliably. In practice, verification is what makes runs auditable. It lets you show that a tool call matched a contract and that a replay stayed within a declared nondeterminism boundary. It also lets you show that a reported score came from a pinned dataset and scoring implementation.
 
 Hypothesis: as autonomy scales, the limiting factor becomes organizational and infrastructural coupling, not raw inference capability. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.
 
@@ -14,7 +20,21 @@ Hypothesis: as autonomy scales, the limiting factor becomes organizational and i
 - Long-horizon autonomy introduces new failure classes (compounded assumptions, policy drift, supply-chain issues).
 - Without standards, every team reinvents trace formats, eval suites, and governance mechanisms.
 
+So what changes for teams? Treat tool schemas, trace formats, and eval definitions as versioned products. Write contracts and test them. Require replayable traces so failures can be audited and compared across models.
+
 ## System Breakdown
+These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve. The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows: they show what must be versioned and validated before you can compare runs across teams or models.
+
+<pre class="mermaid">
+flowchart TB
+  I[Interoperability<br/>trace formats · tool schemas · eval definitions] --> V[Verification<br/>contract tests · replay checks · property checks]
+  V --> G[Governance at scale<br/>policy registry · audit workflow · incident runbook]
+  I --> R[Ecosystem risks<br/>supply chain · dependency security · model updates]
+  R --> V
+</pre>
+
+Takeaway: you can improve one pillar in isolation, but cross-model portability depends on the whole chain. Interoperability defines what can be exchanged, and verification defines what can be trusted when it is exchanged.
+
 - **Interoperability**: shared trace formats, tool schemas, evaluation definitions.
 - **Verification**: stronger correctness checks, property-based testing, contract enforcement.
 - **Governance at scale**: org-level policies, audit workflows, incident response.
@@ -74,27 +94,52 @@ Standardized trace interchange.
 **Goal**
 Enable independent auditing and regression analysis by exporting traces from one agent runtime and replaying/analyzing them in another tool.
 
+A diagram helps here because trace interchange is a pipeline with explicit checkpoints. As you read it, track three things: where validation occurs, which fields get exported, and what the divergence check is allowed to claim as “verified.”
+
+<pre class="mermaid">
+flowchart LR
+  A[Generate run] --> B[Validate tool contracts]
+  B --> C[Emit trace<br/>schema_version, run_id, eval_id, model_id]
+  C --> D[Export trace]
+  D --> E[Replay harness]
+  E --> F{Divergence check}
+  F -->|Matches constraints| G[Audit / regression analysis]
+  F -->|Diverges| H[Flag portability failure]
+</pre>
+
+Legend: “Validate tool contracts” means schema-checking arguments/results (and negative cases) at runtime before they enter the trace. “Divergence check” means comparing the replayed run to declared constraints, not forcing byte-for-byte identity when nondeterminism is allowed.
+
+The point is not to standardize everything. It is to standardize the minimum needed so two independent tools can agree on what happened, and can detect when a run is not reproducible under stated constraints.
+
 **Minimal trace interchange contract (required fields)**
+
+**Run metadata**
 - `schema_version`: semantic version for the trace spec (e.g., `1.2.0`).
 - `run_id`: unique identifier for a single run; stable across exports.
-- `eval_id` and `eval_version`: the evaluation definition and dataset/scoring version.
+- `eval_id` and `eval_version`: eval definition and dataset/scoring version.
 - `harness_id` and `harness_version`: code hash or build identifier.
 - `model_id`: model name/version as reported by the provider.
-- `events[]`: ordered list where each event includes at least:
-  - `event_id`, `type`, `timestamp`, and `parent_event_id` (when applicable)
-  - For assistant/user text: content plus redaction markers if content is partially removed
-  - For tool calls: `tool_name`, `arguments` (post-validation), `result` (or structured error), and `duration_ms`
-  - For policy gates: decision, rule id/version, and rationale category (not freeform prose)
+
+**Event schema**
+- `events[]`: ordered list of events.
+  - `event_id`, `type`, `timestamp`, `parent_event_id` (when applicable)
+  - Assistant/user text: content plus redaction markers (when redacted)
+  - Tool calls: `tool_name`, validated `arguments`, `result` or structured error, `duration_ms`
+  - Policy gates: decision, rule id/version, rationale category (not freeform prose)
 
 **Versioning rule**
-- Backward-compatible additions increment MINOR; breaking changes increment MAJOR.
-- A replay tool must refuse to “verify” a trace whose MAJOR version is unsupported; it may still “view” it.
+- Backward-compatible additions increment MINOR.
+- Breaking changes increment MAJOR.
+- A replay tool must refuse to “verify” unsupported MAJOR versions; it may still “view” them.
 
 **Replay validity check (what must match)**
-- The replay harness must reproduce the same sequence of tool calls (tool name + validated arguments) and the same tool outcomes when tools are deterministic and versioned.
-- When nondeterminism exists (timeouts, stochastic tools, external APIs), the trace must record the nondeterminism boundary (e.g., tool snapshot id, cached response id, or allowed outcome set).
+- Under deterministic conditions, the tool-call sequence must match.
+  Match means tool name plus validated arguments.
+- For deterministic, versioned tools, outcomes must also match.
+- When nondeterminism exists (timeouts, stochastic tools, external APIs), record the boundary.
+  Examples: tool snapshot id, cached response id, or allowed outcome set.
   Replay is valid only if outcomes stay within that boundary.
-- If the replay diverges in tool-call sequence under deterministic conditions, the run is not reproducible and should be flagged as a portability failure.
+- If replay diverges in tool-call sequence under deterministic conditions, flag a portability failure.
 
 ## Trade-offs
 - Standardization improves portability but can slow experimentation.
@@ -102,12 +147,22 @@ Enable independent auditing and regression analysis by exporting traces from one
 - More governance improves safety but can reduce developer autonomy.
 
 **Decision checklist (operational)**
-- Standardize when multiple teams depend on the same tools/traces, when incidents require cross-team auditing, or when model swaps are frequent.
-  Delay standardization when the interface changes weekly and only one team uses it.
+
+**Standardize**
+- Standardize when multiple teams depend on the same tools/traces.
+- Standardize when incidents require cross-team auditing.
+- Standardize when model swaps are frequent.
+- Delay standardization when the interface changes weekly and only one team uses it.
+- Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint, require semantic versioning, a contract test suite, and a changelog entry for every interface change.
+
+**Verify**
 - Use tests/contracts when failures are frequent, expensive, or safety-critical.
-  Prefer lighter checks when the component is experimental and low-impact, but still enforce schema validation and basic budgets.
-- Escalate governance when a change affects shared tool contracts, trace schemas, or eval definitions.
-  Keep governance minimal for isolated experiments that do not affect shared artifacts.
+- Prefer lighter checks for experimental, low-impact components.
+- Still enforce schema validation and basic budgets.
+
+**Govern**
+- Escalate governance when changes affect shared tool contracts, trace schemas, or eval definitions.
+- Keep governance minimal for isolated experiments that do not affect shared artifacts.
 - Set thresholds explicitly: acceptable tool error rate, maximum budget hits per run, and the severity that triggers an incident workflow.
 
 ## Failure Modes

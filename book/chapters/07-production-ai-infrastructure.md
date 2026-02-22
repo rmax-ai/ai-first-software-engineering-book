@@ -3,21 +3,45 @@
 ## Thesis
 Production AI-first systems are distributed systems: they require orchestration, isolation, observability, caching, cost control, and reproducible environments.
 
-Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. The tool/runtime plane is the execution and control surface around the model. It includes sandboxed execution environments and tool adapters (test runner, browser, repo API). It also includes orchestration policies: queueing, concurrency limits, retries, and idempotency. It includes observability across steps and artifacts for replay and audit. Restated: if you can reliably run tools and record what happened, you can reproduce runs. With reproducible runs, you can improve outcomes even when model behavior varies. Examples include lower tool-failure rate, higher replay success rate, fewer flaky retries, and lower cost per merged change.
+Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. The tool/runtime plane is the execution and control surface around the model. It includes sandboxed execution environments, tool adapters (test runner, browser, repo API), and orchestration policies (queueing, concurrency limits, retries, idempotency). It also includes observability and artifacts for replay and audit. Restated: if you can reliably run tools and record what happened, you can reproduce runs and improve outcomes even when model behavior varies.
 
 ## Why This Matters
 - Without isolation, tool execution becomes a security and reliability risk.
 - Without observability, failures cannot be attributed or fixed systematically.
 - Without cost controls, autonomy can become economically unstable.
 - Operational signals: tool-failure rate, replay success rate, mean tool latency, retry rate, and spend per successful task.
-- Example targets and alerts (illustrative, not mandates):
-  - Tool-failure rate: alert if >2% over 1 hour for a repo, or if a single tool exceeds a fixed error budget per day.
-  - Replay success rate: alert if <95% on a weekly replay audit sample for “green” runs.
-  - Mean tool latency: alert if p95 step duration doubles week-over-week for a stable workload.
-  - Retry rate: alert if retries exceed 1.2× baseline for two consecutive days, indicating rising flakiness.
-  - Spend per successful task: alert if median cost-to-merge exceeds a set cap, or if “wasted spend” rises above a fixed share of daily budget.
+
+Example targets and alerts (illustrative, not mandates):
+
+| Metric | Signal to watch | Illustrative alert |
+| --- | --- | --- |
+| Tool-failure rate | Tool exits non-zero or returns invalid output | Alert if >2% over 1 hour for a repo; or if one tool burns its daily error budget |
+| Replay success rate | “Green” runs fail to replay from recorded inputs | Alert if <95% on a weekly replay audit sample |
+| Mean tool latency | Step duration inflation for stable workloads | Alert if p95 step duration doubles week-over-week |
+| Retry rate | Rising retries indicate flakiness or degraded infra | Alert if retries exceed 1.2× baseline for two consecutive days |
+| Spend per successful task | Cost-to-merge and wasted tokens trend upward | Alert if median cost-to-merge exceeds a cap; or wasted spend exceeds a daily share |
 
 ## System Breakdown
+A diagram helps here because the tool/runtime plane has coupled components. It is not a single service. Focus on the contracts between boxes. Each box should emit stable, versioned signals for replay and debugging.
+
+```mermaid
+flowchart LR
+  M[Model prompt] --> O[Orchestration<br/>Queues • Concurrency • Retries • Idempotency]
+  O --> E[Execution<br/>Sandbox • Pinned deps • Timeouts]
+  E --> T[Tool services<br/>Tests • Build • Browser • Repo API]
+  T --> OB[Observability<br/>Traces • Metrics • Logs • Correlation IDs]
+  T --> A[Artifacts<br/>Diffs • Reports • Replay bundle]
+  E --> S[Security<br/>Allowlists • Least privilege • Secret injection]
+
+  OB --> A
+  S -. governs .-> E
+  S -. governs .-> T
+  O -. tags .-> OB
+  O -. stores run id .-> A
+```
+
+Takeaway: reliability comes from strict contracts at each boundary. Record the environment and tool versions, constrain execution, and connect every step to a run id. Then you can replay, attribute failures, and control spend.
+
 - **Execution**: sandboxes/containers, dependency pinning, deterministic runners. Contract: identical inputs produce the same tool environment (image hash + lockfile), with a hard wall-clock timeout per step.
 - **Tool services**: test runners, build systems, browsers, repo APIs. Contract: every tool call is versioned and returns structured output (exit code, stdout/stderr, and a machine-readable summary).
 - **Orchestration**: queues, concurrency limits, backpressure. Contract: max concurrency is enforced (per repo/org), retries are bounded (count + backoff), and each task carries an idempotency key.
@@ -38,19 +62,26 @@ Sandboxed tool execution for code changes.
 - Evaluation gate:
   - Promote only if required checks pass (e.g., all tests green, no new lints, diff applies cleanly).
   - Require reproducibility: either a replay succeeds at least once, or the environment hash matches a known-good cache entry.
-  - On failure, generate a human-facing summary: run id link, failed step, top error class, and a short “what to try next” hint (e.g., rerun without cache or inspect a specific log).
+  - On failure, generate a human-facing summary with: run id link, failed step, and top error class.
+  - Include a short “what to try next” hint (e.g., rerun without cache, or inspect a specific log).
 
 ## Concrete Example 2
 Cost-aware autonomy for a batch of maintenance tasks.
 - Budget: per-task token/cost ceilings (e.g., $0.50 and 20k tokens) plus a batch budget (e.g., $50/day), enforced by the orchestrator.
 - Strategy: fail fast on low-signal tasks (small, repetitive, or high-latency tool loops) and escalate to human review when confidence is low or blast radius is high.
-- Decision policy: treat a task as “low-signal” when:
-  - (a) there is no progress after N tool steps (e.g., 6 as an example value),
-  - (b) similar errors repeat (e.g., the same stack trace twice), or
-  - (c) predicted cost-to-complete exceeds the remaining budget.
-  - Escalate when the change touches production config, security-sensitive files, or exceeds a diff size threshold (e.g., >200 lines changed as an example value).
-  - If a per-task or batch budget is exceeded, stop further tool calls, write a short spend-and-status summary (last step, last error, run id), and escalate for human review.
-- Measure: cost per successful task, time-to-merge, regression rate (e.g., post-merge rollback or test failures within 24h), and “wasted spend” (tokens spent on tasks that are abandoned or escalated).
+- Decision policy:
+  - Treat a task as “low-signal” when:
+    - (a) there is no progress after N tool steps (e.g., 6),
+    - (b) the same error repeats (e.g., the same stack trace twice), or
+    - (c) predicted cost-to-complete exceeds remaining budget.
+  - Escalate when the change touches production config or security-sensitive files.
+  - Escalate when the diff exceeds a size threshold (e.g., >200 lines changed).
+  - If per-task or batch budget is exceeded:
+    - stop further tool calls,
+    - write a short spend-and-status summary (last step, last error, run id),
+    - escalate for human review.
+- Measure (throughput): cost per successful task and time-to-merge.
+- Measure (quality): regression rate (e.g., rollback or test failures within 24h) and “wasted spend” (tokens spent on tasks that are abandoned or escalated).
 
 ## Trade-offs
 - Isolation increases safety but adds operational complexity. Default: start with containerized execution + allowlists; revisit if tool latency dominates (e.g., repeated cold starts) and you can prove tighter scoping by repo/path.

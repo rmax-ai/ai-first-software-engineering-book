@@ -1,9 +1,9 @@
 # Chapter 06 — Agent Governance
 
 ## Thesis
-Governance defines the safe operating envelope for autonomy: permissions, budgets, review policies, auditability, and incident response. In practice, the “operating envelope” is the set of actions an agent is allowed to take, under what conditions it may take them, and what evidence must exist afterward to support review and rollback.
+Governance defines the safe operating envelope for autonomy. It is not optional once agents can change code, invoke tools, or affect production systems. The “operating envelope” defines what an agent is allowed to do. It also defines when those actions are allowed and what evidence must exist afterward to support review and rollback.
 
-Hypothesis: autonomy without enforceable governance increases throughput in the short term but increases defect rate and operational risk over time because changes can outpace review, exceed intended access scopes, or ship without traceable accountability.
+Hypothesis: autonomy without enforceable governance increases throughput in the short term. Over time, defect rate and operational risk rise. Changes can outpace review, exceed intended access scopes, or ship without traceable accountability.
 
 What governance is / is not:
 - Governance is **enforced constraints + auditability** (tool/CI checks, logs, approvals), not a document that can be ignored.
@@ -17,20 +17,46 @@ What governance is / is not:
 
 ## System Breakdown
 - **Policy artifacts**: constitution (principles), agent rules (operational constraints), CI policies (enforcement).
-  - Enforceable rules: “No writes to protected paths without approval token”; “All tool calls must declare intent and target files.”
-  - Enforcement: pre-commit/tool-layer policy check rejects disallowed patches; CI re-validates policies on the merge commit.
+  - Enforceable rules:
+    - “No writes to protected paths without approval token.”
+    - “All tool calls must declare intent and target files.”
+  - Enforcement:
+    - Pre-commit or tool-layer policy checks reject disallowed patches.
+    - CI re-validates policies on the merge commit.
 - **Permissions**: read/write scopes, protected files, tool allowlists.
-  - Enforceable rules: “Read-only by default; write requires explicit scope”; “Network access disabled unless allowlisted per job.”
-  - Enforcement: runtime tool allowlist/denylist; repository protected-branch and CODEOWNERS coverage for specific paths.
+  - Enforceable rules:
+    - “Read-only by default; write requires explicit scope.”
+    - “Network access disabled unless allowlisted per job.”
+  - Enforcement:
+    - Runtime tool allowlist/denylist.
+    - Repository protected-branch rules and CODEOWNERS coverage for specific paths.
 - **Budgets**: time, iterations, tool calls, diff size, cost ceilings.
-  - Enforceable rules: “Max N iterations per task”; “Max diff size for autonomous edits”; “Stop on repeated failures.”
-  - Enforcement: harness-level counters; CI policy fails if changes exceed thresholds or if required checkpoints were skipped.
+  - Enforceable rules:
+    - “Max N iterations per task.”
+    - “Max diff size for autonomous edits.”
+    - “Stop on repeated failures.”
+  - Enforcement:
+    - Harness-level counters.
+    - CI policy fails if changes exceed thresholds or if required checkpoints were skipped.
 - **Review**: mandatory human checkpoints for specific risk classes.
-  - Enforceable rules: “Human approval required for security configs, auth paths, dependency upgrades”; “Two-person review for rollback scripts.”
-  - Enforcement: CODEOWNERS + branch protection; CI classifies changes and blocks merge unless approvals match the risk class.
+  - Enforceable rules:
+    - “Human approval required for security configs, auth paths, dependency upgrades.”
+    - “Two-person review for rollback scripts.”
+  - Enforcement:
+    - CODEOWNERS + branch protection.
+    - CI classifies changes and blocks merge unless approvals match the risk class.
 - **Audit**: trace retention, searchable logs, change attribution.
-  - Enforceable rules: “All tool executions emit structured logs”; “Each patch links to an agent run id and input prompt.”
-  - Enforcement: log collection in CI artifacts or a central store; merge requires a commit trailer field `Agent-Run-Id: <run_id>` that is validated case-sensitively. The key must be exactly `Agent-Run-Id` and `<run_id>` must be lowercase and match `run_[a-z0-9]{12}` (valid: `Agent-Run-Id: run_3f9c2a1b7d4e`; invalid: `agent-run-id: run_3f9c2a1b7d4e`, `Agent-Run-Id: RUN_3F9C2A1B7D4E`).
+  - Enforceable rules:
+    - “All tool executions emit structured logs.”
+    - “Each patch links to an agent run id and input prompt.”
+  - Enforcement:
+    - Log collection in CI artifacts or a central store.
+    - Merge requires a commit trailer field `Agent-Run-Id: <run_id>`.
+    - CI validates this trailer case-sensitively.
+    - The key must be exactly `Agent-Run-Id`.
+    - `<run_id>` must be lowercase and match `run_[a-z0-9]{12}`.
+    - Valid: `Agent-Run-Id: run_3f9c2a1b7d4e`.
+    - Invalid: `agent-run-id: run_3f9c2a1b7d4e`, `Agent-Run-Id: RUN_3F9C2A1B7D4E`.
 
 Governance loop (artifacts in parentheses):
 1. Policy definition (constitution / agent rules / CI policies)
@@ -38,6 +64,21 @@ Governance loop (artifacts in parentheses):
 3. Telemetry and audit capture (structured traces / searchable logs / change attribution)
 4. Review routing and approvals (risk classification / CODEOWNERS / mandatory checkpoints)
 5. Policy update after incidents or near-misses (rule changes + new tests/evals)
+
+A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on (a) where enforcement blocks unsafe actions and (b) where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.
+
+<pre class="mermaid">
+flowchart TB
+  A["1. Policy definition<br/>(constitution / agent rules / CI policies)"]
+  B["2. Enforcement<br/>(tool allowlists / protected paths / CI gates)"]
+  C["3. Telemetry + audit capture<br/>(structured traces / logs / attribution)"]
+  D["4. Review routing + approvals<br/>(risk class / CODEOWNERS / checkpoints)"]
+  E["5. Policy update<br/>(incidents / near-misses / new evals)"]
+
+  A --> B --> C --> D --> E --> A
+</pre>
+
+Takeaway: steps 2 and 3 are the “hard” parts of governance. Step 2 controls what can happen. Step 3 determines what proof exists afterward, so steps 4 and 5 can block unsafe merges and tighten policy based on observed failures.
 
 ## Concrete Example 1
 Protected-path governance.
@@ -67,8 +108,10 @@ Incident response for a bad autonomous change.
 
 Detection signal:
 - Trigger: regression detected by the `smoke-prod` gate post-merge.
-- Example threshold (checkable): `smoke-prod` fails if HTTP 5xx rate exceeds 1.0% over a 10-minute canary window, or if p95 latency regresses by more than 20% versus the previous baseline.
-- Gate semantics (checkable): `smoke-prod` fails if either condition is met (OR semantics).
+- Example threshold (checkable): `smoke-prod` fails if HTTP 5xx rate exceeds 1.0% over a 10-minute canary window.
+- Example threshold (checkable): `smoke-prod` fails if p95 latency regresses by more than 20% versus the previous baseline.
+- Gate semantics (checkable): `smoke-prod` fails if either condition is met.
+- Gate semantics (checkable): OR semantics.
 
 Immediate containment (rollback):
 - Action: revert the merge commit (or roll back the deployment) using the pre-defined rollback procedure.

@@ -1,210 +1,108 @@
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Technical book on AI-first software engineering governance and execution">
-      
-      
-        <meta name="author" content="Autonomous Authors">
-      
-      
-      
-        <link rel="prev" href="../../preface/">
-      
-      
-        <link rel="next" href="../02-harness-engineering/">
-      
-      
-        
-      
-      
-      <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
-    
-    
-      
-        <title>01. Paradigm Shift - AI-First Software Engineering</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+<!DOCTYPE html>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#chapter-01-paradigm-shift" class="md-skip">
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Technical book on AI-first software engineering governance and execution" name="description"/>
+<meta content="Autonomous Authors" name="author"/>
+<link href="../../preface/" rel="prev"/>
+<link href="../02-harness-engineering/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
+<title>01. Paradigm Shift - AI-First Software Engineering</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#chapter-01-paradigm-shift">
           Skip to content
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
+</div>
+<div data-md-component="announce">
+</div>
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="AI-First Software Engineering" class="md-header__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="AI-First Software Engineering" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
             AI-First Software Engineering
           </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
             
               01. Paradigm Shift
             
           </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
+</div>
+</div>
+</div>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+<ol class="md-search-result__list" role="presentation"></ol>
 </div>
-      
-    
-    
-  </nav>
-  
+</div>
+</div>
+</div>
+</div>
+</nav>
 </header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="AI-First Software Engineering" class="md-nav__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="AI-First Software Engineering" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
     AI-First Software Engineering
   </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
     
   
     Home
@@ -212,26 +110,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../preface/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../preface/">
+<span class="md-ellipsis">
     
   
     Preface
@@ -239,39 +122,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
     
   
     Chapters
@@ -279,44 +135,22 @@
 
     
   </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
             
   
     Chapters
   
 
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
     
   
     01. Paradigm Shift
@@ -324,17 +158,10 @@
 
     
   </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
     
   
     01. Paradigm Shift
@@ -342,135 +169,91 @@
 
     
   </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#thesis" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#thesis">
+<span class="md-ellipsis">
       
         Thesis
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#why-this-matters" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-matters">
+<span class="md-ellipsis">
       
         Why This Matters
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#system-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#system-breakdown">
+<span class="md-ellipsis">
       
         System Breakdown
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#concrete-example-1" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example-1">
+<span class="md-ellipsis">
       
         Concrete Example 1
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#concrete-example-2" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example-2">
+<span class="md-ellipsis">
       
         Concrete Example 2
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#trade-offs" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#trade-offs">
+<span class="md-ellipsis">
       
         Trade-offs
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#failure-modes" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
       
         Failure Modes
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#research-directions" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#research-directions">
+<span class="md-ellipsis">
       
         Research Directions
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../02-harness-engineering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../02-harness-engineering/">
+<span class="md-ellipsis">
     
   
     02. Harness Engineering
@@ -478,27 +261,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../03-autonomous-kernels/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../03-autonomous-kernels/">
+<span class="md-ellipsis">
     
   
     03. Autonomous Kernels
@@ -506,27 +273,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../04-memory-systems/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../04-memory-systems/">
+<span class="md-ellipsis">
     
   
     04. Memory Systems
@@ -534,27 +285,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../05-evaluation-and-traces/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../05-evaluation-and-traces/">
+<span class="md-ellipsis">
     
   
     05. Evaluation and Traces
@@ -562,27 +297,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../06-agent-governance/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../06-agent-governance/">
+<span class="md-ellipsis">
     
   
     06. Agent Governance
@@ -590,27 +309,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../07-production-ai-infrastructure/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../07-production-ai-infrastructure/">
+<span class="md-ellipsis">
     
   
     07. Production AI Infrastructure
@@ -618,27 +321,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../99-future-directions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../99-future-directions/">
+<span class="md-ellipsis">
     
   
     99. Future Directions
@@ -646,34 +333,14 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../glossary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../glossary/">
+<span class="md-ellipsis">
     
   
     Glossary
@@ -681,37 +348,12 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
     
   
     Patterns Overview
@@ -719,35 +361,21 @@
 
     
   </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
             
   
     Patterns Overview
   
 
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../patterns/harness-design-patterns/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/harness-design-patterns/">
+<span class="md-ellipsis">
     
   
     Harness Design
@@ -755,27 +383,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../patterns/memory-architectures/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/memory-architectures/">
+<span class="md-ellipsis">
     
   
     Memory Architectures
@@ -783,27 +395,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../patterns/minimal-agent-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/minimal-agent-loop/">
+<span class="md-ellipsis">
     
   
     Minimal Agent Loop
@@ -811,27 +407,11 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../patterns/self-verification-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/self-verification-loop/">
+<span class="md-ellipsis">
     
   
     Self-Verification Loop
@@ -839,162 +419,117 @@
 
     
   </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
+</a>
+</li>
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#thesis" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#thesis">
+<span class="md-ellipsis">
       
         Thesis
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#why-this-matters" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-matters">
+<span class="md-ellipsis">
       
         Why This Matters
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#system-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#system-breakdown">
+<span class="md-ellipsis">
       
         System Breakdown
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#concrete-example-1" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example-1">
+<span class="md-ellipsis">
       
         Concrete Example 1
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#concrete-example-2" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-example-2">
+<span class="md-ellipsis">
       
         Concrete Example 2
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#trade-offs" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#trade-offs">
+<span class="md-ellipsis">
       
         Trade-offs
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#failure-modes" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
       
         Failure Modes
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#research-directions" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#research-directions">
+<span class="md-ellipsis">
       
         Research Directions
       
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
 <h1 id="chapter-01-paradigm-shift">Chapter 01 — Paradigm Shift</h1>
 <h2 id="thesis">Thesis</h2>
-<p>AI-first software engineering is an architectural inversion: machine reasoning becomes a primary execution substrate, and the harness (tools, constraints, evaluation, traceability) becomes the primary design surface.</p>
-<p>The inversion is practical: reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable, testable loop.</p>
-<p>A concrete, testable implication: holding the model constant, improving the harness should predictably reduce iteration count, increase pass rates, and improve failure attribution.</p>
+<p>AI-first software engineering is an architectural inversion. Machine reasoning becomes a primary execution substrate. The harness—tools, constraints, evaluation, and traceability—becomes the primary design surface.</p>
+<p>This inversion is practical. Reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable loop.</p>
+<p>A concrete, testable implication (holding the model constant):
+1. A stronger harness should reduce <em>iterations-to-pass</em>.
+2. A stronger harness should reduce <em>time-to-green</em>.
+3. A stronger harness should increase <em>attribution rate</em> (more failures have a primary cause you can act on).</p>
 <p>Operational definition:
 - <strong>Model capability</strong> changes when you swap models while holding tools, constraints, and evaluation constant.
 - <strong>Harness capability</strong> changes when you keep the model constant but alter tools, policies, evaluation gates, or trace capture.</p>
-<p>This chapter’s claim is a hypothesis: many observed “capability” gains in practice are attributable to harness engineering rather than model changes.</p>
+<p>In this framing, <em>attribution rate</em> is a harness outcome. It depends on what evidence you capture and which evaluation gates you run. It is not just a function of model fluency.</p>
+<p>This chapter’s claim is a hypothesis: some observed “capability” gains in practice are attributable to harness engineering rather than model changes.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
 <li>Without a clear boundary between model capability and harness capability, teams misattribute failures and waste effort.</li>
@@ -1009,43 +544,255 @@
 <li>Every non-trivial change is traceable to a plan and verified by checks.</li>
 <li>The system can attribute regressions to a layer (prompt, tool, code, eval).</li>
 <li>Autonomy is gated by evaluations and budgets.</li>
+</ul>
+<p>A diagram helps here because the distinction (model vs harness) changes how evidence moves. The diagram makes the handoffs explicit. It also shows where trace capture happens. Focus on two points. First: where the trace is recorded. Second: where the trace is used for attribution and the next plan.</p>
+<div class="mermaid">flowchart TB
+  P["Plan&lt;br&gt;(spec + intent)"]
+  A["Act&lt;br&gt;(propose patch)"]
+  T["Tools&lt;br&gt;(apply + run)"]
+  V["Verify&lt;br&gt;(evals/CI)"]
+  D{Checks pass?}
+  S[Stop&lt;br&gt;ship/merge]
+  X[Attribute&lt;br&gt;root cause]
+  TR["(Trace)"]
+
+  P --&gt; A
+  A --&gt; T
+  T --&gt; V
+  V --&gt; D
+  D -- yes --&gt; S
+  D -- no --&gt; X
+  X --&gt; P
+
+  A -. record .-&gt; TR
+  T -. record .-&gt; TR
+  V -. record .-&gt; TR
+  X -. use .-&gt; TR
+</div>
+<p>Legend:
+- <strong>Solid arrows</strong> are the operational loop (plan → act → verify).
+- <strong>Dashed arrows</strong> are trace capture and trace usage.</p>
+<p>Takeaway: without a trace, attribution is guesswork. You will not know if the fix is spec/prompt, tool/runtime, code, or eval/CI. The same three measurable signals below should show up consistently in how you run (and later audit) the loop.</p>
+<ul>
 <li><strong>Measurable signals</strong> (to separate model vs harness effects):</li>
 <li><em>Iterations-to-pass</em>: number of propose→verify cycles until all required checks pass.</li>
 <li><em>Time-to-green</em>: wall-clock time from first attempt to passing evaluation gates.</li>
-<li><em>Attribution rate</em>: fraction of failures with a clear primary cause (prompt/spec vs tool/runtime vs code vs eval).</li>
+<li><em>Attribution rate</em>: fraction of failures with a clear primary cause.<ul>
+<li>Bucket: prompt/spec vs tool/runtime vs code vs eval.</li>
+</ul>
+</li>
 <li><strong>Attribution checklist</strong> (what evidence makes a failure “belong” to a layer):</li>
-<li><strong>Spec/prompt</strong>: requirement is ambiguous or contradictory; different reasonable interpretations change expected output; clarifying text resolves the failure without code changes.</li>
-<li><strong>Tool/runtime</strong>: tool errors, timeouts, missing permissions, flaky environment, or nondeterministic command outputs; rerun under identical inputs yields different results.</li>
-<li><strong>Code</strong>: deterministic failing tests or typechecks tied to a specific diff; reverting the diff restores the previous behavior.</li>
-<li><strong>Eval/CI</strong>: mismatch between what is asserted and what is intended; tests are incorrect, overly strict, or missing a required case; fixing the test changes outcomes without changing product behavior.</li>
+<li><strong>Spec/prompt</strong>:<ul>
+<li>Requirement is ambiguous or contradictory.</li>
+<li>Reasonable interpretations change expected output.</li>
+<li>Clarifying text resolves the failure without code changes.</li>
+</ul>
+</li>
+<li><strong>Tool/runtime</strong>:<ul>
+<li>Tool errors, timeouts, missing permissions, or flaky environment.</li>
+<li>Identical reruns yield different results.</li>
+</ul>
+</li>
+<li><strong>Code</strong>:<ul>
+<li>Deterministic failing tests or typechecks tied to a specific diff.</li>
+<li>Reverting the diff restores the previous behavior.</li>
+</ul>
+</li>
+<li><strong>Eval/CI</strong>:<ul>
+<li>What is asserted does not match what is intended.</li>
+<li>Tests are incorrect, overly strict, or missing a required case.</li>
+<li>Fixing the test changes outcomes without changing product behavior.</li>
+</ul>
+</li>
 </ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Refactor a small library function using an agent loop.
 - Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).
-- Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.
-- Measured outputs:
-  - Iterations-to-pass and time-to-green.
-  - Diff size (files touched, lines changed) and whether changes are localized to the intended function.
-  - Failure attribution per iteration (spec/prompt vs tool/runtime vs code vs eval) using the checklist above.
-- Stop rule:
-  - Stop when the originally failing unit test passes, the full unit test suite passes, and the diff is constrained to the intended surface area.
-  - If the loop reaches a fixed budget (e.g., N iterations or T minutes) without progress, stop and escalate to a human with the trace and the smallest reproducible failing case.</p>
+- Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.</p>
+<ul>
+<li>Minimal trace record (copyable):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spec note path</td>
+<td><code>docs/specs/parse-date.md</code> (example)</td>
+</tr>
+<tr>
+<td>Failing test</td>
+<td><code>tests/test_parse_date.py::test_rejects_empty</code></td>
+</tr>
+<tr>
+<td>Commands (in order)</td>
+<td><code>pytest -q</code></td>
+</tr>
+<tr>
+<td>Commands (in order)</td>
+<td><code>ruff check .</code> (example)</td>
+</tr>
+<tr>
+<td>Diff identifier</td>
+<td>commit SHA or patch ID (e.g., <code>abc1234</code>)</td>
+</tr>
+<tr>
+<td>Evaluation outputs</td>
+<td>failing test names</td>
+</tr>
+<tr>
+<td>Evaluation outputs</td>
+<td>exit codes</td>
+</tr>
+<tr>
+<td>Evaluation outputs</td>
+<td>first failing assertion (or minimal log excerpt)</td>
+</tr>
+<tr>
+<td>Attribution decision</td>
+<td>one of <code>{spec/prompt, tool/runtime, code, eval/CI}</code></td>
+</tr>
+<tr>
+<td>Evidence</td>
+<td>1–2 sentences tied to the outputs above</td>
+</tr>
+</tbody>
+</table>
+<p>Example attribution:
+  - <strong>code</strong> — the same test fails deterministically after the diff; reverting the diff restores pass.</p>
+<ul>
+<li>Measured outputs:</li>
+<li>Iterations-to-pass.</li>
+<li>Time-to-green.</li>
+<li>Diff size (files touched, lines changed).</li>
+<li>Locality: changes stay within the intended function/surface area.</li>
+<li>
+<p>Attribution per iteration using the checklist above (recorded in the trace).</p>
+</li>
+<li>
+<p>Stop rule:</p>
+</li>
+<li>Stop when the original failing test passes and the full unit test suite passes.</li>
+<li>Also require the diff to stay constrained to the intended surface area.</li>
+<li>If you hit a fixed budget (N iterations or T minutes), stop and hand off:<ul>
+<li>the trace record</li>
+<li>the smallest reproducible failing case</li>
+</ul>
+</li>
+</ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Ship a minor API change in a production service.
 - Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.
-- Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.
-- Measured outputs:
-  - Iterations-to-pass and time-to-green (from first migration-plan draft to all required checks passing in staging).
-  - Attribution rate per iteration using the checklist above (spec/prompt vs tool/runtime vs code vs eval).
-  - Backward-compat outcomes: number of contract-test failures introduced, and whether rollback was exercised successfully in staging.
-- Guardrails:
-  - Protected paths or modules that require explicit human review before edits (e.g., auth, billing, infra).
-  - Required checks (contract tests, integration tests, lint/typecheck, and a staging smoke test).
-  - Rollback plan defined up front (feature flag, config switch, or revert procedure) and verified in staging.
-  - Approval gate: no deploy until a human reviews the migration plan, the diff, and the evaluation results.
-- Stop rule:
-  - Stop when all required checks pass in staging, the migration plan is consistent with backward-compat constraints, and the trace report can explain every material change.
-  - If any guardrail is violated (protected file touched, required test skipped, rollback unclear), stop immediately and require human intervention.</p>
+- Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.</p>
+<ul>
+<li>Minimal trace report (copyable):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contract/version</td>
+<td><code>openapi.yaml</code> (example)</td>
+</tr>
+<tr>
+<td>Compatibility window</td>
+<td>“compatible within v1.x”</td>
+</tr>
+<tr>
+<td>Backward-compat constraints</td>
+<td>“no required fields added”</td>
+</tr>
+<tr>
+<td>Backward-compat constraints</td>
+<td>“no behavior change on existing endpoints”</td>
+</tr>
+<tr>
+<td>Staging target</td>
+<td><code>staging-us-east-1</code> (example)</td>
+</tr>
+<tr>
+<td>Commands (in order)</td>
+<td><code>make contract-test</code></td>
+</tr>
+<tr>
+<td>Commands (in order)</td>
+<td><code>npm run lint</code></td>
+</tr>
+<tr>
+<td>Commands (in order)</td>
+<td><code>npm run typecheck</code></td>
+</tr>
+<tr>
+<td>Commands (in order)</td>
+<td><code>./scripts/staging-smoke.sh</code></td>
+</tr>
+<tr>
+<td>Diff identifier</td>
+<td>PR number + commit SHA (e.g., <code>PR #482</code>, <code>def5678</code>)</td>
+</tr>
+<tr>
+<td>Evaluation outputs</td>
+<td>failing checks</td>
+</tr>
+<tr>
+<td>Evaluation outputs</td>
+<td>log paths/links</td>
+</tr>
+<tr>
+<td>Evaluation outputs</td>
+<td>timestamps (supports time-to-green)</td>
+</tr>
+<tr>
+<td>Attribution decisions</td>
+<td>per failure: <code>{spec/prompt, tool/runtime, code, eval/CI}</code> + evidence</td>
+</tr>
+</tbody>
+</table>
+<p>Example attribution:
+  - <strong>eval/CI</strong> — contract test rejects an allowed optional field; fixing the assertion changes outcomes without changing API behavior.</p>
+<ul>
+<li>Measured outputs:</li>
+<li>Iterations-to-pass and time-to-green (from first migration-plan draft to all required checks passing in staging).</li>
+<li>Attribution rate per iteration using the checklist above (spec/prompt vs tool/runtime vs code vs eval).</li>
+<li>
+<p>Backward-compat outcomes:</p>
+<ul>
+<li>contract-test failures introduced (required gate: 0 new failures in required checks)</li>
+<li>rollback verification in staging (required gate: exercise rollback successfully at least once)</li>
+<li>time-to-green (default target: ≤ 30 minutes from first implementation attempt to all required checks passing in staging; set per service)</li>
+</ul>
+</li>
+<li>
+<p>Guardrails:</p>
+</li>
+<li>Protected paths or modules that require explicit human review before edits (e.g., auth, billing, infra).</li>
+<li>Required checks (contract tests, integration tests, lint/typecheck, and a staging smoke test).</li>
+<li>Rollback plan defined up front (feature flag, config switch, or revert procedure) and verified in staging.</li>
+<li>Approval gate: no deploy until a human reviews the migration plan, the diff, and the evaluation results.</li>
+<li>
+<p>Mapping: Guardrails define <em>what must be protected</em>, required checks define <em>what must be proven</em>, and the approval gate defines <em>who must accept the evidence</em> before deploy.</p>
+</li>
+<li>
+<p>Stop rule:</p>
+</li>
+<li>Stop when all required checks pass in staging and the migration plan matches backward-compat constraints.</li>
+<li>Require that the trace report can explain every material change.</li>
+<li>If you hit a fixed budget (N iterations or T minutes), pause the rollout and escalate with:<ul>
+<li>the trace report</li>
+<li>the smallest reproducible failing case</li>
+</ul>
+</li>
+<li>If any guardrail is violated (protected file touched, required test skipped, rollback unclear), stop immediately and require human intervention.</li>
+</ul>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
 <li>Strong harness constraints reduce freedom (and sometimes speed) but increase reproducibility.</li>
@@ -1065,60 +812,31 @@
 <li>Minimal trace schema that supports attribution and replay.</li>
 <li>Formal definitions of autonomy envelopes and stop conditions.</li>
 </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
+</article>
+</div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
       Material for MkDocs
     </a>
-  
 </div>
-      
-    </div>
-  </div>
+</div>
+</div>
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-    
-  </body>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
 </html>
