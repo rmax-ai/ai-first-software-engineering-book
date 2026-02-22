@@ -2,13 +2,11 @@
 
 ## Verification commands run
 - `ls state/feature_iterations/iter_001`
-- `rg "^# " state/feature_iterations/iter_001/*.md`
+- `rg -n "state/kernel.py|state/role_io_templates.py|state/copilot_sdk_uv_smoke.py|evals/" state/feature_iterations/iter_001/*.md`
 
 ## Observed results
-- All seven required markdown artifacts exist in `state/feature_iterations/iter_001/`.
-- Each artifact has a top-level heading and task-specific content.
+- `ls` returned all seven required artifacts (`01-task.md` through `07-summary.md`).
+- `rg` confirmed references to planned feature/test/eval files in planning and next-iteration artifacts.
 
-## Acceptance criteria check
-- ✅ Plan covers feature, test, and eval surfaces for future harness work.
-- ✅ File targets for future implementation are explicit (`state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, `evals/*.yaml`).
-- ✅ Exactly one next task is defined in `06-next-iteration.md`.
+## Acceptance criteria status
+- Pass. The iteration artifacts are present, complete, and include required feature/test/eval planning coverage.

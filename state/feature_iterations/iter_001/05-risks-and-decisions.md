@@ -1,15 +1,12 @@
 # Risks and decisions
 
-## Risks discovered
-- Planning artifacts can drift from actual harness state if follow-up iterations defer implementation too long.
-- Observability additions in `state/kernel.py` may increase output volume if not bounded.
-- Eval wiring can become brittle if YAML contracts and smoke outputs are changed independently.
+## Risks
+- Plan quality risk: if scope is too broad, follow-up iterations may lose minimal-diff discipline.
+- Coverage risk: eval updates might lag behind kernel changes unless each iteration keeps eval wiring in scope.
 
-## Decisions made
-- Prioritized a planning-only iteration to reduce implementation churn and force explicit acceptance criteria first.
-- Chose deterministic, file-specific backlog items over broad refactor themes.
-- Anchored future verification to existing uv smoke and eval contracts to detect regressions early.
+## Decisions and trade-offs
+- Chose planning-only seed iteration as required by prompt, deferring code edits to later iterations.
+- Kept recommendations focused on deterministic behavior and measurable verification signals.
 
 ## Deferred intentionally
-- No runtime behavior changes in `state/` were implemented in this iteration.
-- No eval YAML modifications were made before a concrete implementation task is selected.
+- Implementation details for trace event schema and parser internals are deferred to next iteration tasks.
