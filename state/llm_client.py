@@ -124,6 +124,13 @@ class SDKSessionEventsPayload(BaseModel):
     events: list[SDKSessionEventPayload]
 
 
+class APIKeyEnvPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    env_var: str
+    value: str = ""
+
+
 @dataclass(frozen=True)
 class ChatMessagesTransit:
     payload: ChatMessagesPayload
@@ -212,6 +219,18 @@ class SDKSessionEventsTransit:
     @property
     def event_payloads(self) -> list[SDKSessionEventPayload]:
         return self.payload.events
+
+
+@dataclass(frozen=True)
+class APIKeyEnvTransit:
+    payload: APIKeyEnvPayload
+
+    @classmethod
+    def from_env(cls, env_var: str) -> "APIKeyEnvTransit":
+        return cls(payload=APIKeyEnvPayload.model_validate({"env_var": env_var, "value": os.environ.get(env_var, "")}))
+
+    def value(self) -> str:
+        return self.payload.value.strip()
 
 
 class LLMClient:
@@ -394,7 +413,11 @@ class LLMClient:
                     options_kwargs: dict[str, Any] = {}
                     if self._base_url:
                         options_kwargs["base_url"] = self._base_url
-                    api_key = os.environ.get(self._api_key_env, "").strip()
+                    try:
+                        api_key_env = APIKeyEnvTransit.from_env(self._api_key_env)
+                    except ValidationError as exc:
+                        raise LLMClientError(f"Invalid Copilot SDK API key environment payload: {exc}") from exc
+                    api_key = api_key_env.value()
                     if api_key:
                         options_kwargs["api_key"] = api_key
                     try:
