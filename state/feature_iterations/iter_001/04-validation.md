@@ -1,18 +1,14 @@
 # Validation
 
 ## Verification commands run
-1. `test -f DEVELOPMENT.md && echo "PASS: DEVELOPMENT.md is present"`
-2. `test -f prompts/incremental-improvements/execute.md && echo "PASS: execute.md is present"`
-3. `ls state/feature_iterations/iter_001/*.md | wc -l`
-4. `rg -n "state/kernel.py|state/role_io_templates.py|state/copilot_sdk_uv_smoke.py|evals/" state/feature_iterations/iter_001/02-plan.md`
+- `rg --files state/feature_iterations/iter_001`
+- `git --no-pager diff -- state/feature_iterations/iter_001`
 
 ## Observed results
-- PASS: DEVELOPMENT.md is present
-- PASS: execute.md is present
-- PASS: iter_001 contains 7 markdown artifacts (expected 7)
-- PASS: plan includes explicit references to required harness/eval file paths
+- All seven required artifact files are present under `state/feature_iterations/iter_001/`.
+- Diff only contains the new iteration documentation artifacts; no harness code behavior changed.
 
-## Acceptance criteria status
-- Planning scope only: **PASS**
-- Features/tests/evals coverage in plan: **PASS**
-- Seven artifact contract fulfilled: **PASS**
+## Acceptance criteria check
+- Backlog planning for features/tests/evals: **pass**
+- Concrete future file touchpoints listed: **pass**
+- Planning-only scope preserved: **pass**

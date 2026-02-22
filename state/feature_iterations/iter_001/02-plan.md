@@ -1,21 +1,28 @@
-# Iteration plan
+# Plan
 
-1. Inspect harness development guidance in `DEVELOPMENT.md` and align the backlog to UV-based execution and deterministic guardrails.
-2. Define **feature track** for `state/kernel.py` and `state/role_io_templates.py`:
-   - Add richer trace markers for loop phases and budget decisions in `state/kernel.py`.
-   - Tighten role I/O templates in `state/role_io_templates.py` so role outputs are easier to validate deterministically.
-3. Define **test track** for `state/copilot_sdk_uv_smoke.py` and adjacent harness checks:
-   - Add focused smoke modes that exercise the new trace and role-template controls.
-   - Keep deterministic mode coverage explicit and table-driven where possible.
-4. Define **evaluation track** for `evals/*.yaml`:
-   - Map new trace and template expectations to specific eval gates.
-   - Require measurable signals (ledger/metrics deltas or explicit eval assertions) to detect regressions.
-5. Break execution into smallest slices: first trace visibility, then role-template constraints, then smoke/eval wiring.
+1. Review harness guidance in `DEVELOPMENT.md` and align backlog items with `state/` architecture constraints.
+2. Define feature work for `state/kernel.py`:
+   - richer per-step trace summaries,
+   - deterministic execution-budget diagnostics,
+   - explicit failure classification for eval-gate exits.
+3. Define role-IO scaffolding work in `state/role_io_templates.py`:
+   - clearer role handoff contracts,
+   - stricter prompt-shape validation helpers.
+4. Define verification harness work in `state/copilot_sdk_uv_smoke.py`:
+   - add targeted smoke modes for new diagnostics and trace outputs.
+5. Define eval wiring work in `evals/*.yaml`:
+   - map new behavior to measurable gates,
+   - align expected output signals with `state/metrics.json` fields.
+6. Capture sequencing for follow-up iterations:
+   - implement kernel observability first,
+   - then role-IO constraints,
+   - then smoke coverage and eval-gate updates.
 
-## Expected files to change in future iterations
+## Expected files in later iterations
 - `state/kernel.py`
 - `state/role_io_templates.py`
 - `state/copilot_sdk_uv_smoke.py`
 - `evals/chapter-quality.yaml`
 - `evals/style-guard.yaml`
 - `evals/drift-detection.yaml`
+- `state/metrics.json`

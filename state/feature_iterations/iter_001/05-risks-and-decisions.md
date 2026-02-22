@@ -1,12 +1,12 @@
-# Risks and decisions
+# Risks and Decisions
 
 ## Risks discovered
-- Planning-only output can drift from actual code constraints if follow-up slices are too large.
-- Trace and role-template changes may affect multiple deterministic guards simultaneously.
+- Planning quality depends on future iterations preserving deterministic behavior and eval compatibility.
+- Expanding observability in `state/kernel.py` can add output churn if metrics contracts are not updated in lockstep.
 
-## Decisions and trade-offs
-- Chose a narrowly scoped seed backlog to keep follow-up iterations small and verifiable.
-- Deferred implementation to preserve the prompt contract for this first iteration.
+## Decisions made
+- Keep this iteration planning-only to minimize risk and establish an auditable backlog.
+- Prioritize kernel observability before role-IO/eval expansion so downstream tests target stable signals.
 
 ## Deferred intentionally
-- Any direct edits to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml`.
+- Any implementation changes to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
