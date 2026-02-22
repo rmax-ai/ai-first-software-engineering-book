@@ -1,9 +1,9 @@
 # Task: Plan custom state harness improvements
 
 ## Why this task now
-The feature-iteration track is starting and needs a concrete backlog before implementation work can proceed safely.
+`prompts/incremental-improvements/execute.md` defines the seed iteration as a planning-only pass to establish a concrete backlog for improving the custom harness in `state/`.
 
 ## Acceptance criteria
-- Produce a concise plan that covers harness **features**, **tests**, and **eval** regression gates.
-- Define at least one concrete follow-up task with clear acceptance criteria.
-- Keep this iteration planning-only (no production code changes).
+- Provide a concise plan that covers harness **features**, **tests**, and **eval/regression** signals.
+- Name concrete files for likely follow-up implementation work.
+- Leave one focused next iteration task with clear acceptance criteria.

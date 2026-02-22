@@ -1,24 +1,17 @@
-# Recommended Next Iteration Task
+# Next iteration recommendation
 
-## Next task
-Add deterministic trace-summary telemetry helper(s) in `state/kernel.py` and validate coverage in `state/copilot_sdk_uv_smoke.py`.
+## Task
+Implement deterministic trace-summary logging scaffolding in `state/kernel.py` with initial smoke coverage hooks.
 
-## Why this is next
-The plan identified observability and deterministic execution signals as the highest-value baseline needed before broader harness refactors.
+## Why next
+The plan depends on trustworthy and structured observability first; downstream role I/O and eval updates should build on stable trace-summary outputs.
 
 ## Acceptance criteria
-- `state/kernel.py` gains a focused helper path that emits stable trace-summary fields for iteration outcomes.
-- `state/copilot_sdk_uv_smoke.py` adds/updates one deterministic scenario that asserts the new trace-summary shape.
-- Validation includes `uv run python state/copilot_sdk_uv_smoke.py` with recorded pass/fail evidence.
-- Iteration docs under the next `state/feature_iterations/iter_XXX/` capture command output and risk notes.
+- Add a minimal, deterministic trace-summary emitter path in `state/kernel.py` without breaking current interfaces.
+- Add or update targeted smoke coverage in `state/copilot_sdk_uv_smoke.py` to validate trace-summary presence/shape.
+- Document expected metric signal impact in `state/metrics.json` (or related writer path) for regression visibility.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `state/feature_iterations/iter_002/01-task.md`
-- `state/feature_iterations/iter_002/02-plan.md`
-- `state/feature_iterations/iter_002/03-execution.md`
-- `state/feature_iterations/iter_002/04-validation.md`
-- `state/feature_iterations/iter_002/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_002/06-next-iteration.md`
-- `state/feature_iterations/iter_002/07-summary.md`
+- `state/metrics.json`
