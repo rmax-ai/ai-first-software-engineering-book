@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, cast
 
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict, ValidationError, model_validator
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -148,6 +148,19 @@ class SmokeCLIArgsPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     mode: str
+    allowed_modes: tuple[str, ...]
+
+    @model_validator(mode="after")
+    def _validate_mode(self) -> "SmokeCLIArgsPayload":
+        if self.mode not in self.allowed_modes:
+            raise ValueError(f"unsupported mode '{self.mode}'")
+        return self
+
+
+class SmokeModeOptionsPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    modes: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -210,10 +223,37 @@ class LiveModeEnvTransit:
 @dataclass(frozen=True)
 class SmokeCLIArgsTransit:
     payload: SmokeCLIArgsPayload
+    mode_options: "SmokeModeOptionsTransit"
 
     @classmethod
-    def from_namespace(cls, args: argparse.Namespace) -> "SmokeCLIArgsTransit":
-        return cls(payload=SmokeCLIArgsPayload.model_validate({"mode": str(args.mode)}))
+    def from_namespace(
+        cls, args: argparse.Namespace, mode_options: "SmokeModeOptionsTransit"
+    ) -> "SmokeCLIArgsTransit":
+        return cls(
+            payload=SmokeCLIArgsPayload.model_validate(
+                {"mode": str(args.mode), "allowed_modes": mode_options.allowed_modes}
+            ),
+            mode_options=mode_options,
+        )
+
+    @property
+    def mode(self) -> str:
+        return self.payload.mode
+
+
+@dataclass(frozen=True)
+class SmokeModeOptionsTransit:
+    payload: SmokeModeOptionsPayload
+
+    @classmethod
+    def from_mode_specs(
+        cls, mode_specs: Sequence[tuple[str, Callable[[], int], str]]
+    ) -> "SmokeModeOptionsTransit":
+        return cls(payload=SmokeModeOptionsPayload.model_validate({"modes": tuple(name for name, _handler, _desc in mode_specs)}))
+
+    @property
+    def allowed_modes(self) -> tuple[str, ...]:
+        return self.payload.modes
 
 
 def _load_ledger_snapshot(path: Path) -> LedgerSnapshotTransit:
@@ -4087,8 +4127,9 @@ def main() -> int:
     mode_handlers = {name: handler for name, handler, _description in all_mode_specs}
     parser = _build_parser(all_mode_specs)
     args = parser.parse_args()
-    cli_args = SmokeCLIArgsTransit.from_namespace(args)
-    return mode_handlers[cli_args.payload.mode]()
+    mode_options = SmokeModeOptionsTransit.from_mode_specs(all_mode_specs)
+    cli_args = SmokeCLIArgsTransit.from_namespace(args, mode_options)
+    return mode_handlers[cli_args.mode]()
 
 
 if __name__ == "__main__":
