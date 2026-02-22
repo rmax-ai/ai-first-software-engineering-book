@@ -1,13 +1,13 @@
 # Risks and decisions
 
 ## Risks discovered
-- Planning artifacts can drift from actual code constraints if future iterations skip re-validation against current `state/` behavior.
-- Eval updates may become noisy without deterministic smoke signal definitions tied to explicit failure modes.
+- Planning quality may drift from actual harness constraints if future iterations skip command-backed verification.
+- Eval updates can accidentally widen scope if not tied to specific harness behaviors.
 
-## Decisions made
-- Keep this seed iteration planning-only, per prompt requirements.
-- Prioritize deterministic trace/logging foundation before expanding eval contracts.
-- Avoid speculative code changes until acceptance criteria are locked in the iteration backlog.
+## Decisions and trade-offs
+- Chose planning-only output for this seed iteration to establish a clean backlog before code edits.
+- Prioritized deterministic, test-first follow-up work over speculative refactors.
 
-## Deferred intentionally
-- No implementation in `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, or `evals/*.yaml` in this iteration.
+## Intentionally deferred
+- Direct implementation in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
+- Eval YAML edits until the first concrete behavior change is selected.

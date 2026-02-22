@@ -1,23 +1,19 @@
-# Iteration plan
+# Iteration plan (single task)
 
-1. Audit current harness touchpoints in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py` to anchor realistic improvements.
-2. Define feature backlog items with explicit expected behavior:
-   - richer trace logging and run summaries in `state/kernel.py`
-   - clearer role-input/output template contracts in `state/role_io_templates.py`
-   - deterministic smoke controls and assertions in `state/copilot_sdk_uv_smoke.py`
-3. Define test strategy for each item:
-   - targeted unit tests for pure helper behavior
-   - `uv run python state/copilot_sdk_uv_smoke.py` modes for deterministic integration coverage
-4. Define evaluation wiring:
-   - map improvements to existing eval contracts in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
-   - define expected `state/metrics.json` or trace-signal deltas that prove regression resistance
-5. Stage implementation order for future iterations: logging foundation first, role-IO normalization second, smoke/eval tightening third.
+1. Review harness guidance in `DEVELOPMENT.md` and align scope to deterministic, minimal-surface harness changes.
+2. Define feature backlog themes for:
+   - richer trace observability in `state/kernel.py`
+   - clearer role I/O scaffolding in `state/role_io_templates.py`
+   - stronger deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py`
+   - regression gates in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
+3. Map each theme to target verification commands (`uv run python ...`) and expected evidence artifacts.
+4. Record risks/trade-offs and defer implementation to subsequent iterations.
 
-## Files expected to change in later iterations
-- `state/kernel.py`
-- `state/role_io_templates.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `evals/chapter-quality.yaml`
-- `evals/style-guard.yaml`
-- `evals/drift-detection.yaml`
-- related harness tests under `state/` and/or `book/`
+## Expected files to change this iteration
+- `state/feature_iterations/iter_001/01-task.md`
+- `state/feature_iterations/iter_001/02-plan.md`
+- `state/feature_iterations/iter_001/03-execution.md`
+- `state/feature_iterations/iter_001/04-validation.md`
+- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
+- `state/feature_iterations/iter_001/06-next-iteration.md`
+- `state/feature_iterations/iter_001/07-summary.md`
