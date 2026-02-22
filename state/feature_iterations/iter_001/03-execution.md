@@ -1,10 +1,11 @@
-# Execution log
+# Execution
 
 ## Commands/tools run
 - `view prompts/incremental-improvements/execute.md`
 - `view DEVELOPMENT.md`
 - `glob state/feature_iterations/iter_*`
-- `apply_patch` to create `iter_001` artifacts
+- `glob state/{kernel.py,role_io_templates.py,copilot_sdk_uv_smoke.py}`
+- `glob evals/*.yaml`
 
 ## Files changed
 - `state/feature_iterations/iter_001/01-task.md`
@@ -16,5 +17,6 @@
 - `state/feature_iterations/iter_001/07-summary.md`
 
 ## Rationale
-- Created the required seven-file contract for a seed planning iteration.
-- Kept scope to planning only, per prompt instructions.
+- Created the seed planning iteration with the required seven-artifact contract.
+- Scoped content to planning only, as required by the prompt.
+

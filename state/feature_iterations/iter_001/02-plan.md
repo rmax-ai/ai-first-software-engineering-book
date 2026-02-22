@@ -1,19 +1,15 @@
-# Iteration plan (single task)
+# Plan
 
-1. Review harness guidance in `DEVELOPMENT.md` and align scope to deterministic, minimal-surface harness changes.
-2. Define feature backlog themes for:
-   - richer trace observability in `state/kernel.py`
-   - clearer role I/O scaffolding in `state/role_io_templates.py`
-   - stronger deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py`
-   - regression gates in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml`
-3. Map each theme to target verification commands (`uv run python ...`) and expected evidence artifacts.
-4. Record risks/trade-offs and defer implementation to subsequent iterations.
+1. Baseline current harness observability in `state/kernel.py` by cataloging emitted trace/metrics structures and identifying missing deterministic checkpoints.
+2. Define a role-IO contract pass for `state/role_io_templates.py` to tighten schema consistency, required fields, and failure messaging for prompt scaffolds.
+3. Expand deterministic smoke coverage in `state/copilot_sdk_uv_smoke.py` with table-driven scenarios that validate the new checkpoints and role-IO invariants.
+4. Align eval gates in `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, and `evals/drift-detection.yaml` so regressions in trace shape, role scaffolds, and smoke behavior are caught.
+5. Document expected metric and ledger impacts for each change so validation in future iterations is command-driven and repeatable.
 
-## Expected files to change this iteration
-- `state/feature_iterations/iter_001/01-task.md`
-- `state/feature_iterations/iter_001/02-plan.md`
-- `state/feature_iterations/iter_001/03-execution.md`
-- `state/feature_iterations/iter_001/04-validation.md`
-- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_001/06-next-iteration.md`
-- `state/feature_iterations/iter_001/07-summary.md`
+## Expected files to change in later iterations
+- `state/kernel.py`
+- `state/role_io_templates.py`
+- `state/copilot_sdk_uv_smoke.py`
+- `evals/chapter-quality.yaml`
+- `evals/style-guard.yaml`
+- `evals/drift-detection.yaml`

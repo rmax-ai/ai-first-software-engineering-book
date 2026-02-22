@@ -1,10 +1,10 @@
 # Task: Plan custom state harness improvements
 
 ## Why this task now
-- No prior `state/feature_iterations/` backlog exists, so a seed plan is required before implementation iterations.
-- `DEVELOPMENT.md` prioritizes deterministic harness evolution in `state/` with explicit validation and eval linkage.
+- This is the seed iteration defined by `prompts/incremental-improvements/execute.md`.
+- A concrete plan is required before implementation iterations can safely change harness behavior.
 
 ## Acceptance criteria
-- Produce a concise improvement plan that explicitly covers features, tests, and eval/regression signals.
-- Identify concrete follow-up work touching `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-- Leave one actionable next task with bounded scope and verifiable outcomes.
+- Produce a concise backlog plan that covers features, tests, and eval signals for the harness.
+- Explicitly map future work to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+- Keep this iteration planning-only (no runtime behavior changes).

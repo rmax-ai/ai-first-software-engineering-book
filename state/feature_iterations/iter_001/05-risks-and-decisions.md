@@ -1,13 +1,13 @@
 # Risks and decisions
 
 ## Risks discovered
-- Planning quality may drift from actual harness constraints if future iterations skip command-backed verification.
-- Eval updates can accidentally widen scope if not tied to specific harness behaviors.
+- The plan assumes trace and metrics extensions in `state/kernel.py` can remain backward compatible with existing consumers.
+- Additional smoke modes may increase deterministic test runtime if not kept table-driven.
 
 ## Decisions and trade-offs
-- Chose planning-only output for this seed iteration to establish a clean backlog before code edits.
-- Prioritized deterministic, test-first follow-up work over speculative refactors.
+- Chose a planning-only iteration to satisfy the seed requirement and avoid speculative code edits.
+- Kept the next-step recommendation singular to preserve strict iteration scope.
 
-## Intentionally deferred
-- Direct implementation in `state/kernel.py`, `state/role_io_templates.py`, and `state/copilot_sdk_uv_smoke.py`.
-- Eval YAML edits until the first concrete behavior change is selected.
+## Deferred intentionally
+- Any code or eval YAML implementation details are deferred to follow-up iterations.
+

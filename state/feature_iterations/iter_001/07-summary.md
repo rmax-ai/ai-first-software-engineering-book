@@ -1,9 +1,8 @@
-# Iteration summary
+# Summary
 
-This seed iteration completed one planning task: defining the custom harness improvement backlog.
-The output follows the required seven-artifact contract under `state/feature_iterations/iter_001/`.
-The plan explicitly covers feature targets in `state/kernel.py` and `state/role_io_templates.py`.
-It also defines test direction for `state/copilot_sdk_uv_smoke.py` and regression gating expectations in `evals/`.
-No harness implementation files were modified in this iteration.
-Validation focused on artifact completeness and explicit path coverage.
-The next iteration is scoped to one concrete implementation slice: deterministic trace-summary observability.
+This iteration completed the seed planning task for the custom harness under `state/`.
+The work established a concise roadmap covering feature work, targeted tests, and eval-gate alignment.
+No runtime code paths were modified; this was intentionally planning-only per prompt contract.
+The plan explicitly maps upcoming changes to `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
+Validation confirmed expected harness and eval files exist and that `iter_001` was initialized correctly.
+A single concrete follow-up task was defined to implement deterministic trace checkpoints and smoke coverage.

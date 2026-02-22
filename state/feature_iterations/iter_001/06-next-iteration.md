@@ -1,20 +1,17 @@
 # Recommended next task
 
 ## Task
-Implement deterministic trace-summary observability in `state/kernel.py` and validate via smoke coverage.
+Implement deterministic trace checkpoint helpers in `state/kernel.py` and cover them with targeted smoke assertions in `state/copilot_sdk_uv_smoke.py`.
 
 ## Why this is next
-- It is the highest-impact feature from the seed plan and directly improves harness transparency.
-- It can be validated with focused changes to smoke tests and eval guard expectations.
+- It establishes the observability foundation needed before role-IO schema tightening and eval-gate expansion.
 
 ## Acceptance criteria
-- Add a minimal trace-summary emitter path in `state/kernel.py` with stable output shape.
-- Extend `state/copilot_sdk_uv_smoke.py` with one deterministic mode that asserts the new trace summary shape.
-- Update relevant eval contract(s) under `evals/` only if required to gate the new behavior.
-- Run `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` and record pass/fail evidence.
+- Add checkpoint helper(s) in `state/kernel.py` that emit stable, testable trace summary entries.
+- Extend `state/copilot_sdk_uv_smoke.py` with at least one deterministic mode validating the new checkpoint entry shape.
+- Run `uv run python state/copilot_sdk_uv_smoke.py --mode <new-mode>` and record passing output in the next iteration validation artifact.
 
 ## Expected files to touch
 - `state/kernel.py`
 - `state/copilot_sdk_uv_smoke.py`
-- `evals/chapter-quality.yaml` (if gating update is required)
-- `state/feature_iterations/iter_002/*.md`
+
