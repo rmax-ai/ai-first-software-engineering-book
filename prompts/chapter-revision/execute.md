@@ -246,3 +246,36 @@ Replace `<chapter>` with the chapter identifier listed below.
 - Completed 24/24 chapter passes with one commit per pass.
 - Kernel runs were executed with governance unlock/unhold before each pass.
 - Total commits created for this re-run loop: 24.
+
+## Re-run 2026-02-22T16:22:29Z
+| Chapter | Pass | Result | Subagents | Commit |
+|--------:|-----:|--------|-----------|--------|
+| 01-paradigm-shift | 1 | failed(1) | none | `55e0eb9` |
+| 01-paradigm-shift | 2 | failed(1) | none | `b66b831` |
+| 01-paradigm-shift | 3 | failed(1) | none | `f844808` |
+| 02-harness-engineering | 1 | failed(1) | none | `6fe9d41` |
+| 02-harness-engineering | 2 | failed(1) | none | `079b922` |
+| 02-harness-engineering | 3 | failed(1) | none | `82761e8` |
+| 03-autonomous-kernels | 1 | failed(1) | none | `7873fa5` |
+| 03-autonomous-kernels | 2 | failed(1) | none | `97259ad` |
+| 03-autonomous-kernels | 3 | failed(1) | none | `f9cef85` |
+| 04-memory-systems | 1 | failed(1) | none | `a2f22b8` |
+| 04-memory-systems | 2 | failed(1) | none | `e499595` |
+| 04-memory-systems | 3 | failed(1) | none | `c6a3b47` |
+| 05-evaluation-and-traces | 1 | failed(1) | none | `d49ece8` |
+| 05-evaluation-and-traces | 2 | failed(1) | none | `9232289` |
+| 05-evaluation-and-traces | 3 | failed(1) | none | `2d4490d` |
+| 06-agent-governance | 1 | failed(1) | none | `3347d9e` |
+| 06-agent-governance | 2 | failed(1) | none | `df7ccdc` |
+| 06-agent-governance | 3 | failed(1) | none | `f79264f` |
+| 07-production-ai-infrastructure | 1 | failed(1) | none | `12c41be` |
+| 07-production-ai-infrastructure | 2 | failed(1) | none | `e522f2b` |
+| 07-production-ai-infrastructure | 3 | failed(1) | none | `3a73022` |
+| 99-future-directions | 1 | failed(1) | none | `3f58874` |
+| 99-future-directions | 2 | failed(1) | none | `c86ef80` |
+| 99-future-directions | 3 | failed(1) | none | `fdcbe09` |
+
+### Re-run Summary (2026-02-22T16:22:29Z)
+- Completed 24/24 chapter passes with one commit per pass.
+- Kernel runs were executed with governance unlock/unhold before each pass.
+- Total commits created for this re-run loop: 24.
