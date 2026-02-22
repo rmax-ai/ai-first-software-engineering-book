@@ -1,0 +1,113 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.76; drift_score=0.31"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": false,
+      "required_missing": [
+        "## Thesis",
+        "## Why This Matters",
+        "## System Breakdown",
+        "## Concrete Example 1",
+        "## Concrete Example 2",
+        "## Trade-offs",
+        "## Failure Modes",
+        "## Research Directions"
+      ],
+      "scores": {
+        "examples_count": 0.0,
+        "failure_modes": 0.0,
+        "system_breakdown": 0.0,
+        "thesis_clarity": 0.0,
+        "tradeoffs": 0.0
+      },
+      "timestamp": "2026-02-22T21:49:53Z",
+      "total": 0.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.8529411764705882,
+          "harness": 0.4132231404958677,
+          "model": 0.4576271186440678
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": false,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.007060333761232349
+      },
+      "timestamp": "2026-02-22T21:49:53Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.06145966709346991,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "\u201cHarness\u201d means everything around the agent that constrains, records, and verifies those actions: the step loop, tool boundary, context construction, budget enforcement, and the evidence you require b",
+          "words": 67
+        },
+        {
+          "sentence": "More concretely: how do you get repeatable outcomes (bounded iteration), explainable outcomes (traces and errors), and safe outcomes (tool gating and verification) while still keeping enough capabilit",
+          "words": 34
+        },
+        {
+          "sentence": "Together, these patterns form a cohesive system: define a strict side-effect boundary (tools), bound the process (budgets), require proof (evidence), keep inputs minimal (narrow context), and prevent ",
+          "words": 33
+        },
+        {
+          "sentence": "A small harness configuration can be expressed as a policy document (conceptual): ```yaml tools: allowlist: [read_file, grep_search, apply_patch, get_errors, run_in_terminal] budgets: max_steps: 20 ma",
+          "words": 55
+        },
+        {
+          "sentence": "```mermaid flowchart TB K[Kernel\\n(step loop + budgets)] --> C[Context builder\\n(select + summarize)] C --> M[Model\\n(decide next action)] M --> TR[Tool router\\n(allowlist + schema validate)] TR --> S",
+          "words": 44
+        },
+        {
+          "sentence": "\"outputs/logs (dashed)\" .-> T ``` In the diagram, solid arrows represent control/data flow for the run (what happens next), while dashed arrows represent trace and gate signals (what must be recorded ",
+          "words": 33
+        },
+        {
+          "sentence": "Trace snippet (expected high-level events, in order): - `plan_created` (includes constraints and intended files) - `files_selected` (file list + selection rationale) - `patch_applied` (diff id + check",
+          "words": 53
+        }
+      ],
+      "timestamp": "2026-02-22T21:49:53Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/patterns/harness-design-patterns.md",
+      "state/ledger/iteration_log/2026-02-22T21-49-53Z__chapter-harness-design-patterns__iter-000001.json",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 1 for harness-design-patterns"
+  },
+  "iteration": 3060,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 9380,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 122376
+  },
+  "scope": {
+    "chapters_modified": [
+      "harness-design-patterns"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-22T21:49:53Z"
+}

@@ -83056,6 +83056,38 @@
         }
       ]
     },
+    "harness-design-patterns": {
+      "history": [
+        {
+          "critic": {
+            "clarity_score": 0.82,
+            "decision": "refine",
+            "drift_score": 0.18,
+            "example_density": 0.72,
+            "failure_modes_present": true,
+            "structure_score": 0.86,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard sentence length: multiple sentences likely exceed the 28-word max (e.g., ## Context paragraph defining \u201cagent\u201d vs \u201charness\u201d; several ## Forces sub-bullets are also long).",
+              "Style-guard anthropomorphism risk: phrasing like \u201cThe harness enters Plan mode\u201d attributes human-like action to the harness; rephrase to \u201cThe run begins in Plan mode\u201d or similar."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.3102963200684638,
+            "passed": false,
+            "similarity_max": 0.7962725236077428
+          },
+          "iteration": 1,
+          "timestamp": "2026-02-22T21:49:53Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.7628865979381443,
+            "drift_score": 0.3102963200684638
+          }
+        }
+      ]
+    },
     "preface": {
       "history": [
         {
