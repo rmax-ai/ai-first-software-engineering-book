@@ -1,10 +1,14 @@
 # Task: Plan custom state harness improvements
 
 ## Why this task now
-- `prompts/incremental-improvements/execute.md` defines the seed iteration as planning-only work for harness improvements in `state/`.
-- No prior `state/feature_iterations/iter_XXX` folder exists, so this establishes the initial backlog and execution direction.
+- This is the seed feature iteration and no prior `state/feature_iterations/iter_XXX` guidance exists.
+- A concrete plan is needed before making harness behavior changes in `state/`.
 
 ## Acceptance criteria
-- Produce a concise plan that explicitly covers harness **features**, **tests**, and **evaluations**.
-- Identify concrete follow-on work touching `state/kernel.py`, `state/role_io_templates.py`, `state/copilot_sdk_uv_smoke.py`, and `evals/*.yaml`.
-- Provide one actionable next task with clear acceptance criteria and expected files.
+- Document a concise backlog covering harness **features**, **tests**, and **evals**.
+- Provide a step-by-step implementation sequence for later iterations touching:
+  - `state/kernel.py`
+  - `state/role_io_templates.py`
+  - `state/copilot_sdk_uv_smoke.py`
+  - `evals/*.yaml`
+- Record validation evidence that the plan aligns with `DEVELOPMENT.md`.

@@ -1,17 +1,23 @@
 # Plan
 
-1. Define the planning scope from `prompts/incremental-improvements/execute.md` and `DEVELOPMENT.md`.
-2. Break harness improvements into three streams:
-   - Features in `state/kernel.py` and `state/role_io_templates.py`
-   - Test coverage in `state/copilot_sdk_uv_smoke.py` (plus targeted harness tests)
-   - Regression signals in `evals/*.yaml` and metrics expectations
-3. Convert those streams into a backlog-ready next step that is small enough for one iteration.
-
-## Expected files to change this iteration
-- `state/feature_iterations/iter_001/01-task.md`
-- `state/feature_iterations/iter_001/02-plan.md`
-- `state/feature_iterations/iter_001/03-execution.md`
-- `state/feature_iterations/iter_001/04-validation.md`
-- `state/feature_iterations/iter_001/05-risks-and-decisions.md`
-- `state/feature_iterations/iter_001/06-next-iteration.md`
-- `state/feature_iterations/iter_001/07-summary.md`
+1. Baseline current harness structure by reviewing:
+   - `state/kernel.py`
+   - `state/role_io_templates.py`
+   - `state/copilot_sdk_uv_smoke.py`
+   - `evals/chapter-quality.yaml`, `evals/style-guard.yaml`, `evals/drift-detection.yaml`
+2. Define feature changes for `state/kernel.py`:
+   - Add richer per-step trace fields for deterministic debugging.
+   - Add explicit guardrail outcome tagging (pass/fail/blocked) for each loop stage.
+3. Define role I/O scaffold improvements in `state/role_io_templates.py`:
+   - Tighten template structure for role prompts and expected outputs.
+   - Add stable placeholders that support deterministic replay.
+4. Define smoke-test coverage in `state/copilot_sdk_uv_smoke.py`:
+   - Add targeted scenarios validating new trace fields and guardrail tags.
+   - Keep scenarios deterministic and runnable via `uv run`.
+5. Define eval wiring updates in `evals/*.yaml`:
+   - Add checks that assert trace signal presence and formatting.
+   - Add regression checks tied to expected metric/ledger outputs.
+6. Sequence future iterations:
+   - Iteration A: kernel trace + tests
+   - Iteration B: role templates + tests
+   - Iteration C: smoke/eval integration and regression validation

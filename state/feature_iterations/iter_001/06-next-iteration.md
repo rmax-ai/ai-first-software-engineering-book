@@ -1,20 +1,18 @@
-# Recommended next task
+# Next iteration recommendation
 
 ## Task
-Implement structured trace logging and deterministic decision records in `state/kernel.py`.
+Implement deterministic trace outcome tagging in `state/kernel.py` with targeted tests.
 
-## Why this is next
-- It is the highest-value foundation item from this plan: better visibility makes later feature and eval changes safer and faster.
-- It directly addresses current debugging and observability gaps without requiring a broad redesign.
+## Why next
+- It is the highest-leverage foundation for observability and enables later smoke/eval assertions.
 
 ## Acceptance criteria
-- Add structured trace events for key loop decisions (task selection, verification result, stop/continue decision) in `state/kernel.py`.
-- Ensure trace output is deterministic and can be validated in tests/smokes.
-- Add targeted verification updates in `state/copilot_sdk_uv_smoke.py` that assert new trace signals.
-- Document expected regression checks against `evals/chapter-quality.yaml` and `evals/drift-detection.yaml`.
+- Add explicit per-stage outcome tags (`pass`, `fail`, `blocked`) to kernel trace records.
+- Preserve current public CLI behavior and command-line interface.
+- Add/adjust targeted tests or deterministic smoke checks proving tags are emitted in success and failure paths.
+- Document validation commands and outputs in the next iteration artifacts.
 
 ## Expected files to touch
 - `state/kernel.py`
-- `state/copilot_sdk_uv_smoke.py`
-- `evals/chapter-quality.yaml`
-- `evals/drift-detection.yaml`
+- `state/copilot_sdk_uv_smoke.py` (or targeted state test module if present)
+- `state/feature_iterations/iter_002/*.md`
