@@ -548,86 +548,124 @@
 <li><strong>Persistence</strong>: ledger entries, trace logs, artifacts.</li>
 </ul>
 <p>The loop stages are the execution path. Budgets, permissions, and evaluation gates are the controls that constrain what can happen at each stage and what evidence is required to stop.</p>
-<p>Treat each loop step as a checkpoint with two requirements: (1) what must be recorded, and (2) what stop condition must be evaluated.</p>
+<p>Treat each loop step as a checkpoint:</p>
+<ul>
+<li>what must be recorded</li>
+<li>what stop condition must be evaluated</li>
+</ul>
 <ol>
 <li>
 <p><strong>Intent</strong>: state the task class and the success condition.</p>
 <ul>
-<li>Must record: intent string.</li>
-<li>Must record: success criteria (e.g., “repro no longer fails”).</li>
-<li>Stop condition: if success criteria are ambiguous, stop and request clarification.</li>
+<li><strong>Must record:</strong><ul>
+<li>intent string</li>
+<li>success criteria (e.g., “repro no longer fails”)</li>
+</ul>
+</li>
+<li><strong>Stop condition:</strong><ul>
+<li>if success criteria are ambiguous, stop and request clarification</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
 <p><strong>Plan</strong>: enumerate the next 1–3 actions only, each tied to a gate and a budget slice.</p>
 <ul>
-<li>Must record: planned steps.</li>
-<li>Must record: named gates.</li>
-<li>Must record: allocated budget slice.</li>
-<li>Stop condition: if the plan requires tools/paths outside permissions, stop and request escalation.</li>
+<li><strong>Must record:</strong><ul>
+<li>planned steps</li>
+<li>named gates</li>
+<li>allocated budget slice</li>
+</ul>
+</li>
+<li><strong>Stop condition:</strong><ul>
+<li>if the plan requires tools/paths outside permissions, stop and request escalation</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
 <p><strong>Act</strong>: perform the minimal change that tests the current hypothesis.</p>
 <ul>
-<li>Must record: files touched.</li>
-<li>Must record: diff stats (and any migration steps taken).</li>
-<li>Stop condition: if diff budget or file-touch budget is exceeded, stop and escalate.</li>
+<li><strong>Must record:</strong><ul>
+<li>files touched</li>
+<li>diff stats (and any migration steps taken)</li>
+</ul>
+</li>
+<li><strong>Stop condition:</strong><ul>
+<li>if diff budget or file-touch budget is exceeded, stop and escalate</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
 <p><strong>Verify</strong>: run the smallest evaluation that is credible for the task class.</p>
 <ul>
-<li>Must record: exact command(s).</li>
-<li>Must record: exit codes.</li>
-<li>Must record: summary lines (or pointers/hashes to full logs).</li>
-<li>Stop condition: if a gate fails, iterate.</li>
-<li>Stop condition: if no credible gate exists, stop and escalate.</li>
-<li>Gate waivers are acceptable only when the trace records:<ul>
+<li><strong>Must record:</strong><ul>
+<li>exact command(s)</li>
+<li>exit codes</li>
+<li>summary lines (or pointers/hashes to full logs)</li>
+</ul>
+</li>
+<li><strong>Stop condition:</strong><ul>
+<li>if a gate fails, iterate</li>
+<li>if no credible gate exists, stop and escalate</li>
+</ul>
+</li>
+<li><strong>Waiver (only if explicitly recorded):</strong><ul>
 <li>why the gate is not runnable</li>
 <li>what alternative check was run</li>
 <li>what risk remains</li>
 <li>the waiver decision and its rationale</li>
+<li>A waiver is not a “pass”; it is a recorded exception.</li>
 </ul>
 </li>
-<li>A waiver is not a “pass”; it is a recorded exception.</li>
 </ul>
 </li>
 <li>
 <p><strong>Record trace</strong>: persist replayable evidence for what happened and why.</p>
 <ul>
-<li>Must record: commands executed.</li>
-<li>Must record: outputs (or pointers).</li>
-<li>Must record: budgets consumed.</li>
-<li>Must record: permissions exercised.</li>
-<li>Stop condition: if persistence fails (cannot write trace), stop; do not continue “blind.”</li>
+<li><strong>Must record:</strong><ul>
+<li>commands executed</li>
+<li>outputs (or pointers)</li>
+<li>budgets consumed</li>
+<li>permissions exercised</li>
+</ul>
+</li>
+<li><strong>Stop condition:</strong><ul>
+<li>if persistence fails (cannot write trace), stop; do not continue “blind”</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
 <p><strong>Stop/iterate</strong>: decide based on evidence and remaining budget.</p>
 <ul>
-<li>Must record: decision.</li>
-<li>Must record: rationale.</li>
-<li>Must record: the next action (either “done” or “what to try next”).</li>
-<li>Stop condition: stop on success.</li>
-<li>Stop condition: stop when a budget is exhausted.</li>
-<li>Stop condition: stop when permissions/scope are insufficient.</li>
+<li><strong>Must record:</strong><ul>
+<li>decision</li>
+<li>rationale</li>
+<li>the next action (either “done” or “what to try next”)</li>
+</ul>
+</li>
+<li><strong>Stop condition:</strong><ul>
+<li>stop on success</li>
+<li>stop when a budget is exhausted</li>
+<li>stop when permissions/scope are insufficient</li>
+</ul>
+</li>
 </ul>
 </li>
 </ol>
-<p>A diagram is useful here because the kernel has a fixed stage order, while budgets, permissions, and gates constrain stages from the side.
-Read solid arrows as the stage sequence. Read dotted arrows as constraints and required checks.
-Takeaway: “done” is a verification outcome, and trace artifacts are explicit outputs.</p>
+<p>A diagram is useful here because the stage order is fixed. Budgets, permissions, and gates constrain stages from the side. Focus on (1) the linear stage flow and (2) the constraints that must be satisfied before “stop” is allowed.</p>
 <p>Mermaid mapping of stages to controls and outputs.</p>
 <div class="mermaid">flowchart LR
   I[Intent] --&gt; P[Plan] --&gt; A[Act] --&gt; V[Verify] --&gt; R[Record trace] --&gt; S{Stop / iterate}
 
-  B[(Budgets\niterations/time/tool calls/diff size)] -. constrains .-&gt; P
+  B[(Budgets&lt;br/&gt;iterations/time/tool calls/diff size)] -. constrains .-&gt; P
   B -. constrains .-&gt; A
   B -. constrains .-&gt; V
-  Perm[(Permissions\nread/write scopes\nprotected paths\nallowed tools)] -. constrains .-&gt; A
-  Gate[(Evaluation gates\nby action class)] -. required .-&gt; V
-  Persist[(Persistence\nledger/trace logs/artifacts)] -. produced .-&gt; R
+  Perm[(Permissions&lt;br/&gt;read/write scopes&lt;br/&gt;protected paths&lt;br/&gt;allowed tools)] -. constrains .-&gt; A
+  Gate[(Evaluation gates&lt;br/&gt;by action class)] -. required .-&gt; V
+  Persist[(Persistence&lt;br/&gt;ledger/trace logs/artifacts)] -. produced .-&gt; R
 
   V --&gt;|pass| S
   V --&gt;|fail| P
@@ -636,12 +674,12 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 </div>
 <p>How to read this diagram:</p>
 <ul>
-<li>Solid arrows show execution order; dotted arrows show constraints and required checks.</li>
-<li><strong>Verify</strong> is where gates produce pass/fail evidence that drives stop vs iterate.</li>
-<li><strong>Record trace</strong> produces the artifacts you need to replay what happened.</li>
+<li>Solid arrows show stage order; dotted arrows show constraints and required checks.</li>
+<li><strong>Verify</strong> produces pass/fail evidence that drives stop vs iterate.</li>
+<li>Takeaway: “done” is a verification outcome, and trace artifacts are explicit outputs.</li>
 </ul>
 <p>A compact “must capture” checklist (minimum viable trace).</p>
-<p>This checklist is the smallest set of fields that enables replay, audit, and debugging without relying on memory or “it seemed fine.”</p>
+<p>This checklist is the smallest set of fields that enables replay, audit, and debugging. It avoids relying on memory or “it seemed fine.”</p>
 <table>
 <thead>
 <tr>
@@ -729,8 +767,11 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <li>Command: <code>pytest -k rejects_empty_input</code></li>
 </ul>
 </li>
-<li>Gate: the reproduction must fail in a controlled way.</li>
-<li>Gate: the failure should match the same assertion and code path.</li>
+<li>Gate:<ul>
+<li>the reproduction must fail in a controlled way</li>
+<li>the failure should match the same assertion and code path</li>
+</ul>
+</li>
 <li>Record:<ul>
 <li>command: <code>pytest -k rejects_empty_input</code></li>
 <li>exit code: <code>1</code></li>
@@ -750,10 +791,16 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <ul>
 <li>Action: implement the smallest boundary check consistent with the hypothesis.</li>
 <li>Hypothesis: empty string is being treated as a valid token stream in <code>src/parser.py</code>.</li>
-<li>Change: reject empty input at the parse entrypoint.</li>
-<li>Change: avoid touching downstream call sites.</li>
-<li>Gate: stay within 40 changed lines.</li>
-<li>Gate: touch only <code>src/parser.py</code> (unless escalation is explicitly allowed).</li>
+<li>Change:<ul>
+<li>reject empty input at the parse entrypoint</li>
+<li>avoid touching downstream call sites</li>
+</ul>
+</li>
+<li>Gate:<ul>
+<li>stay within 40 changed lines</li>
+<li>touch only <code>src/parser.py</code> (unless escalation is explicitly allowed)</li>
+</ul>
+</li>
 <li>Record:<ul>
 <li>files touched: <code>src/parser.py</code></li>
 <li>diff stats (example): <code>src/parser.py | 7 ++++++-</code></li>
@@ -900,24 +947,24 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <ul>
 <li>If <strong>compile/import fails</strong>:<ul>
 <li>Localize:<ul>
-<li>Capture the first error site (file + symbol) from the compile output.</li>
-<li>Example line: <code>***   File "src/integrations/libx.py", line 12</code></li>
-<li>Example line: <code>ImportError: cannot import name 'OldClient' from 'libx'</code></li>
+<li>capture the first error site (file + symbol) from the compile output</li>
+<li>example line: <code>***   File "src/integrations/libx.py", line 12</code></li>
+<li>example line: <code>ImportError: cannot import name 'OldClient' from 'libx'</code></li>
 </ul>
 </li>
 <li>Patch:<ul>
-<li>Apply the minimal mechanical fix in the smallest set of files.</li>
-<li>Example: rename <code>OldClient</code> to <code>Client</code>.</li>
+<li>apply the minimal mechanical fix in the smallest set of files</li>
+<li>example: rename <code>OldClient</code> to <code>Client</code></li>
 </ul>
 </li>
 <li>Verify:<ul>
-<li>Rerun Gate A only.</li>
-<li>Proceed only when it returns exit code <code>0</code>.</li>
+<li>rerun Gate A only</li>
+<li>proceed only when it returns exit code <code>0</code></li>
 </ul>
 </li>
 <li>Budget guard:<ul>
-<li>If more than 5 files are touched, stop and escalate (“requires broader refactor”).</li>
-<li>If cumulative diff exceeds 120 lines, stop and escalate (“exceeds change budget for this kernel”).</li>
+<li>if more than 5 files are touched, stop and escalate (“requires broader refactor”)</li>
+<li>if cumulative diff exceeds 120 lines, stop and escalate (“exceeds change budget for this kernel”)</li>
 </ul>
 </li>
 </ul>
@@ -926,20 +973,20 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <ul>
 <li>If <strong>compile passes but tests fail</strong>:<ul>
 <li>Localize:<ul>
-<li>Run the smallest failing unit (single file or single test) based on the first failure.</li>
-<li>Example command: <code>pytest tests/test_libx_integration.py -q</code></li>
-<li>Example summary: <code>1 failed, 18 passed in 4.92s</code></li>
+<li>run the smallest failing unit (single file or single test) based on the first failure</li>
+<li>example command: <code>pytest tests/test_libx_integration.py -q</code></li>
+<li>example summary: <code>1 failed, 18 passed in 4.92s</code></li>
 </ul>
 </li>
 <li>Patch:<ul>
-<li>Address the behavioral change with a targeted adjustment.</li>
-<li>Record the reason.</li>
-<li>Example: “libX now defaults timeout=None; set explicit timeout=5.0 in wrapper”.</li>
+<li>address the behavioral change with a targeted adjustment</li>
+<li>record the reason</li>
+<li>example: “libX now defaults timeout=None; set explicit timeout=5.0 in wrapper”</li>
 </ul>
 </li>
 <li>Verify:<ul>
-<li>Rerun the failing tests.</li>
-<li>Proceed to the full suite gate only after the localized failure is cleared.</li>
+<li>rerun the failing tests</li>
+<li>proceed to the full suite gate only after the localized failure is cleared</li>
 </ul>
 </li>
 </ul>
@@ -959,11 +1006,11 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 </ul>
 </li>
 <li>Verification risk handling:<ul>
-<li>A narrowed verification set is acceptable only as an explicit gate waiver.</li>
-<li>Record why the full gate is unavailable.</li>
-<li>Record what alternative gate was run.</li>
-<li>Record what risk remains.</li>
-<li>Do not label a waiver as “green”; label it as “waived.”</li>
+<li>a narrowed verification set is acceptable only as an explicit gate waiver</li>
+<li>record why the full gate is unavailable</li>
+<li>record what alternative gate was run</li>
+<li>record what risk remains</li>
+<li>do not label a waiver as “green”; label it as “waived”</li>
 </ul>
 </li>
 </ul>

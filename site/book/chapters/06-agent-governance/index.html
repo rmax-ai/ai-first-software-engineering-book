@@ -519,7 +519,8 @@
 <article class="md-content__inner md-typeset">
 <h1 id="chapter-06-agent-governance">Chapter 06 — Agent Governance</h1>
 <h2 id="thesis">Thesis</h2>
-<p>Governance defines the safe operating envelope for autonomy. It is not optional once agents can change code, invoke tools, or affect production systems. The “operating envelope” defines what an agent is allowed to do. It also defines when those actions are allowed and what evidence must exist afterward to support review and rollback.</p>
+<p>Governance defines the safe operating envelope for agents. It is not optional once agents can change code, invoke tools, or affect production systems.</p>
+<p>The “operating envelope” defines what an agent is allowed to do. It defines when those actions are allowed. It defines what evidence must exist afterward to support review and rollback.</p>
 <p>Hypothesis: autonomy without enforceable governance increases throughput in the short term. Over time, defect rate and operational risk rise. Changes can outpace review, exceed intended access scopes, or ship without traceable accountability.</p>
 <p>What governance is / is not:</p>
 <ul>
@@ -535,7 +536,7 @@
 </ul>
 <h2 id="system-breakdown">System Breakdown</h2>
 <ul>
-<li><strong>Policy artifacts</strong>: constitution (principles), agent rules (operational constraints), CI policies (enforcement).<ul>
+<li><strong>Policy artifacts</strong>: constitution, agent rules, CI policies.<ul>
 <li>Enforceable rules:<ul>
 <li>“No writes to protected paths without approval token.”</li>
 <li>“All tool calls must declare intent and target files.”</li>
@@ -615,7 +616,7 @@
 <li>Review routing and approvals (risk classification / CODEOWNERS / mandatory checkpoints)</li>
 <li>Policy update after incidents or near-misses (rule changes + new tests/evals)</li>
 </ol>
-<p>A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on (a) where enforcement blocks unsafe actions and (b) where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.</p>
+<p>A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on two things: where enforcement blocks unsafe actions, and where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.</p>
 <pre class="mermaid">
 flowchart TB
   A["1. Policy definition<br/>(constitution / agent rules / CI policies)"]
