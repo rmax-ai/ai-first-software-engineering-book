@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.9433333333333334,
+  "diff_size": 0.0,
+  "drift_score": 0.1080163409703504,
+  "iteration": 395,
+  "planner_focus": [
+    "Preserve Mermaid formatting compliance (standalone fenced blocks; short labels)",
+    "Avoid reintroducing long diagram labels or inline Mermaid that can trigger sentence-length violations"
+  ],
+  "timestamp": "2026-02-23T17:52:42Z"
+}

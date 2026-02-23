@@ -1,0 +1,89 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.09; drift_score=0.01"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-23T17:58:52Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.004659289458357601
+      },
+      "timestamp": "2026-02-23T17:58:52Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.09006391632771645,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "<pre class=\"mermaid\"> flowchart TB I[\"Interoperability\"] V[\"Verification\"] G[\"Governance\"] R[\"Ecosystem risk\"] I --> V V --> G I --> R R --> V </pre> Takeaway: you can improve one pillar in isolation,",
+          "words": 40
+        },
+        {
+          "sentence": "Track where validation occurs, where trace export happens, and what the divergence check is allowed to claim as \u201cverified.\u201d <pre class=\"mermaid\"> flowchart LR A[\"Generate\"] B[\"Validate\"] C[\"Emit trace",
+          "words": 81
+        },
+        {
+          "sentence": "- `event_id` - `type` - `timestamp` - `parent_event_id` (when applicable) - Assistant/user text: - `content` - redaction markers (when redacted) - Tool calls: - `tool_name` - validated `arguments` - `",
+          "words": 42
+        }
+      ],
+      "timestamp": "2026-02-23T17:58:52Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/99-future-directions.md",
+      "state/ledger/iteration_log/2026-02-23T17-58-52Z__chapter-99-future-directions__iter-000399.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/99-future-directions/2026-02-23.json"
+    ],
+    "notes": "Kernel refinement iteration 399 for 99-future-directions"
+  },
+  "iteration": 3117,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 10165,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 145121
+  },
+  "scope": {
+    "chapters_modified": [
+      "99-future-directions"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-23T17:58:52Z"
+}

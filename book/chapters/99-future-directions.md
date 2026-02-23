@@ -31,24 +31,27 @@ These four areas are coupled. Interfaces create portability, and verification en
 
 The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows. They show what must be versioned and validated before you can compare runs across teams or models.
 
-```mermaid
+Diagram: the dependency chain across the four pillars.
+
+<pre class="mermaid">
 flowchart TB
-  I["Interoperability<br/>traces·schemas·evals"]
-  V["Verification<br/>contract-tests·replay·properties"]
-  G["Governance<br/>policy-registry·audit·runbook"]
-  R["Ecosystem-risk<br/>supply-chain·deps·model-updates"]
-  I-->V
-  V-->G
-  I-->R
-  R-->V
-```
+  I["Interoperability"]
+  V["Verification"]
+  G["Governance"]
+  R["Ecosystem risk"]
+
+  I -->|Contracts| V
+  V -->|Audit claims| G
+  I -->|Surface area| R
+  R -->|Pressure| V
+</pre>
 
 Takeaway: you can improve one pillar in isolation, but cross-model portability depends on the whole chain. Interoperability defines what can be exchanged, and verification defines what can be trusted when it is exchanged.
 
-- **Interoperability**: shared trace formats, tool schemas, evaluation definitions.
-- **Verification**: stronger correctness checks, property-based testing, contract enforcement.
-- **Governance at scale**: org-level policies, audit workflows, incident response.
-- **Ecosystem risks**: prompt/tool supply chain, dependency security, model updates.
+- **Interoperability**: shared trace formats, tool schemas, evaluation definitions (traces·schemas·evals).
+- **Verification**: stronger correctness checks, property-based testing, contract enforcement (contract-tests·replay·properties).
+- **Governance at scale**: org-level policies, audit workflows, incident response (policy-registry·audit·runbook).
+- **Ecosystem risks**: prompt/tool supply chain, dependency security, model updates (supply-chain·deps·model-updates).
 
 Note: structured memory fits here as a versioned interface artifact. Treat memory schemas and retention/redaction rules as contracts.
 
@@ -114,30 +117,31 @@ Standardized trace interchange.
 **Goal**
 Enable independent auditing and regression analysis by exporting traces from one agent runtime and replaying/analyzing them in another tool.
 
-A diagram helps here because trace interchange is a pipeline. It has explicit checkpoints. As you read it, track where validation occurs. Then track which fields get exported. Finally, track what the divergence check is allowed to claim as “verified.”
+A diagram helps here because trace interchange is a pipeline with explicit checkpoints. Track where validation occurs, where trace export happens, and what the divergence check is allowed to claim as “verified.”
 
-```mermaid
+<pre class="mermaid">
 flowchart LR
-A["Generate-run"]
-B["Validate-contracts"]
-C["Emit-trace"]
-C1["Fields<br/>schema_version·run_id·eval_id·model_id"]
-D["Export-trace"]
-E["Replay-harness"]
-F{"Divergence?"}
-G["Audit/regression"]
-H["Flag-failure"]
-A-->B
-B-->C
-C-->C1
-C1-->D
-D-->E
-E-->F
-F-->|Matches|G
-F-->|Diverges|H
-```
+  A["Generate"]
+  B["Validate"]
+  C["Emit trace"]
+  D["Export"]
+  E["Replay"]
+  F{"Divergence check"}
+  G["Audit"]
+  H["Flag failure"]
 
-Legend: “Validate tool contracts” means schema-checking arguments/results at runtime. This includes negative cases. Validate before the call enters the trace.
+  A --> B
+  B --> C
+  C --> D
+  D --> E
+  E --> F
+  F -->|Matches| G
+  F -->|Diverges| H
+</pre>
+
+Legend: the “Validate” step is runtime schema-checking for tool arguments/results (including negative cases) before the call enters the trace.
+
+Takeaway: validate and record tool contracts before export; replay checks divergence against declared constraints before audit conclusions.
 
 “Divergence check” means comparing the replayed run to declared constraints. It does not require byte-for-byte identity. Use it when nondeterminism is allowed.
 

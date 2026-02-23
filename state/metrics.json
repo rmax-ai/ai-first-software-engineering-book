@@ -202,27 +202,30 @@
     "99-future-directions": {
       "latest": {
         "critic": {
-          "clarity_score": 0.95,
-          "decision": "approve",
-          "drift_score": 0.01,
-          "example_density": 0.9,
+          "clarity_score": 0.86,
+          "decision": "refine",
+          "drift_score": 0.02,
+          "example_density": 0.7,
           "failure_modes_present": true,
-          "structure_score": 0.98,
+          "structure_score": 0.93,
           "tradeoff_presence": true,
-          "violations": []
+          "violations": [
+            "## System Breakdown: Mermaid diagram is not in a fenced code block starting with ```mermaid; it is wrapped in <pre class=\"mermaid\"> instead.",
+            "## Concrete Example 2: Mermaid diagram is not in a fenced code block starting with ```mermaid; it is wrapped in <pre class=\"mermaid\"> instead."
+          ]
         },
         "deterministic": {
-          "drift_score": 0.11023441368016147,
+          "drift_score": 0.0051440329218107,
           "passed": false,
-          "similarity_max": 0.7737587100828398
+          "similarity_max": 0.7797022287744707
         },
-        "iteration": 386,
-        "timestamp": "2026-02-23T12:25:24Z",
+        "iteration": 402,
+        "timestamp": "2026-02-23T18:02:22Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
-          "diff_ratio": 0.008264462809917356,
-          "drift_score": 0.11023441368016147
+          "diff_ratio": 0.07377049180327869,
+          "drift_score": 0.0051440329218107
         }
       }
     },
@@ -398,5 +401,5 @@
       }
     }
   },
-  "generated_at": "2026-02-23T17:32:43Z"
+  "generated_at": "2026-02-23T18:02:22Z"
 }

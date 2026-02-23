@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.9433333333333334,
+  "diff_size": 0.0,
+  "drift_score": 0.00509313154831199,
+  "iteration": 391,
+  "planner_focus": [
+    "Confirm Mermaid code fences remain isolated (```mermaid on its own line) under ## System Breakdown",
+    "Confirm Mermaid code fences remain isolated and preceded by short standalone lines (not inline with sentences) under ## Concrete Example 2",
+    "Keep Mermaid labels stable: preserve <br/>, keep quotes consistent, and avoid edits that would reintroduce long single-line sentences around diagrams"
+  ],
+  "timestamp": "2026-02-23T17:48:44Z"
+}

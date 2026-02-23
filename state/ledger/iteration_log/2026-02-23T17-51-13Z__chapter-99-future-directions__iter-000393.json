@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.9433333333333334,
+  "diff_size": 0.24701195219123506,
+  "drift_score": 0.1080163409703504,
+  "iteration": 393,
+  "planner_focus": [
+    "Fix Mermaid blocks so they don\u2019t trigger sentence-length/style guard checks",
+    "Shorten diagram node labels; move detailed lists out of diagram labels into nearby prose",
+    "Keep diagram references tight: mention-before, explain-after, and explicit takeaway per diagram"
+  ],
+  "timestamp": "2026-02-23T17:51:13Z"
+}

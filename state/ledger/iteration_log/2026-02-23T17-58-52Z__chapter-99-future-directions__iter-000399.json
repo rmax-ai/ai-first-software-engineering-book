@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8133333333333334,
+  "diff_size": 0.09236947791164658,
+  "drift_score": 0.006794797126771501,
+  "iteration": 399,
+  "planner_focus": [
+    "## System Breakdown: ensure Mermaid block is isolated (blank lines before/after) so it does not get concatenated into adjacent sentences during rendering/evaluation",
+    "## Concrete Example 2: ensure Mermaid flowchart uses consistent node syntax and quoting, and keep the decision node label explicit and readable",
+    "## System Breakdown + ## Concrete Example 2: keep diagram introductions and takeaways as short standalone paragraphs (no inline backticks adjacent to diagrams) to avoid format-collapsed long sentences"
+  ],
+  "timestamp": "2026-02-23T17:58:52Z"
+}

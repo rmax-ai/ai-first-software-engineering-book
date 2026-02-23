@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.9433333333333334,
+  "diff_size": 0.0,
+  "drift_score": 0.1080163409703504,
+  "iteration": 394,
+  "planner_focus": [
+    "Keep Mermaid blocks strictly isolated (blank line before/after) and avoid embedding dense lists inside node labels",
+    "Maintain short, readable diagram labels and keep detailed field lists in prose bullets to avoid style-guard sentence-length artifacts"
+  ],
+  "timestamp": "2026-02-23T17:51:59Z"
+}

@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8300000000000001,
+  "diff_size": 0.0,
+  "drift_score": 0.005159198113207547,
+  "iteration": 398,
+  "planner_focus": [
+    "Maintain Mermaid fence isolation in ## System Breakdown (blank line before and after the Mermaid block; fence markers on their own lines)",
+    "Maintain Mermaid fence isolation in ## Concrete Example 2 (blank line before and after the Mermaid block; fence markers on their own lines)",
+    "Preserve the nested, one-field-per-line bullets under ## Concrete Example 2 -> **Event schema** to avoid flattened long lines"
+  ],
+  "timestamp": "2026-02-23T17:57:34Z"
+}

@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.9433333333333334,
+  "diff_size": 0.0,
+  "drift_score": 0.005165289256198347,
+  "iteration": 389,
+  "planner_focus": [
+    "Normalize Mermaid fence separation in ## System Breakdown to avoid accidental inline parsing by downstream tokenizers",
+    "Normalize Mermaid fence separation in ## Concrete Example 2 to avoid accidental inline parsing by downstream tokenizers",
+    "Keep Mermaid blocks consistently formatted (fence lines standalone) to prevent style-guard sentence-length false positives"
+  ],
+  "timestamp": "2026-02-23T17:45:59Z"
+}

@@ -242,6 +242,420 @@
         "diff_ratio": 0.008264462809917356,
         "drift_score": 0.11023441368016147
       }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.11,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.005165289256198347,
+        "passed": false,
+        "similarity_max": 0.7737587100828398
+      },
+      "iteration": 387,
+      "timestamp": "2026-02-23T17:44:04Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.16666666666666666,
+        "drift_score": 0.005165289256198347
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.11,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.005165289256198347,
+        "passed": false,
+        "similarity_max": 0.7737587100828398
+      },
+      "iteration": 388,
+      "timestamp": "2026-02-23T17:45:03Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.016260162601626018,
+        "drift_score": 0.005165289256198347
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.11,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.005165289256198347,
+        "passed": false,
+        "similarity_max": 0.7737587100828398
+      },
+      "iteration": 389,
+      "timestamp": "2026-02-23T17:45:59Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.005165289256198347
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.00509313154831199,
+        "passed": false,
+        "similarity_max": 0.7730317990406049
+      },
+      "iteration": 390,
+      "timestamp": "2026-02-23T17:47:51Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.05371900826446281,
+        "drift_score": 0.00509313154831199
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.00509313154831199,
+        "passed": false,
+        "similarity_max": 0.7730317990406049
+      },
+      "iteration": 391,
+      "timestamp": "2026-02-23T17:48:44Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.00509313154831199
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.00509313154831199,
+        "passed": false,
+        "similarity_max": 0.7730317990406049
+      },
+      "iteration": 392,
+      "timestamp": "2026-02-23T17:49:35Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.00509313154831199
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.1080163409703504,
+        "passed": false,
+        "similarity_max": 0.7773604176876118
+      },
+      "iteration": 393,
+      "timestamp": "2026-02-23T17:51:13Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.24701195219123506,
+        "drift_score": 0.1080163409703504
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.1080163409703504,
+        "passed": false,
+        "similarity_max": 0.7773604176876118
+      },
+      "iteration": 394,
+      "timestamp": "2026-02-23T17:51:59Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.1080163409703504
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.1080163409703504,
+        "passed": false,
+        "similarity_max": 0.7773604176876118
+      },
+      "iteration": 395,
+      "timestamp": "2026-02-23T17:52:42Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.1080163409703504
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "approve",
+        "drift_score": 0.12,
+        "example_density": 0.7,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.005159198113207547,
+        "passed": false,
+        "similarity_max": 0.7773604176876118
+      },
+      "iteration": 396,
+      "timestamp": "2026-02-23T17:55:59Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.005159198113207547
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "approve",
+        "drift_score": 0.12,
+        "example_density": 0.7,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.005159198113207547,
+        "passed": false,
+        "similarity_max": 0.7773604176876118
+      },
+      "iteration": 397,
+      "timestamp": "2026-02-23T17:56:50Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.005159198113207547
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "refine",
+        "drift_score": 0.12,
+        "example_density": 0.7,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": [
+          "User instruction conflict: 'Output the full revised chapter markdown only' but also 'No code fences'; the chapter contains Mermaid fenced blocks (```mermaid ... ```)."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.005159198113207547,
+        "passed": false,
+        "similarity_max": 0.7773604176876118
+      },
+      "iteration": 398,
+      "timestamp": "2026-02-23T17:57:34Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.005159198113207547
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.84,
+        "decision": "refine",
+        "drift_score": 0.03,
+        "example_density": 0.7,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "## System Breakdown: Mermaid diagram is not in a fenced code block with the `mermaid` language tag (uses `<pre class=\"mermaid\">` instead).",
+          "## Concrete Example 2: Mermaid diagram is not in a fenced code block with the `mermaid` language tag (uses `<pre class=\"mermaid\">` instead).",
+          "## Concrete Example 2: The section contains two separate lines starting with \"Legend:\"; the first makes the second partially redundant."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.006794797126771501,
+        "passed": false,
+        "similarity_max": 0.779310052967069
+      },
+      "iteration": 399,
+      "timestamp": "2026-02-23T17:58:52Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.09236947791164658,
+        "drift_score": 0.006794797126771501
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.86,
+        "decision": "refine",
+        "drift_score": 0.02,
+        "example_density": 0.7,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": [
+          "User instruction conflict remains in the revised markdown: the chapter contains Mermaid fenced code blocks (```mermaid ... ```), but the run-level instruction says \"No code fences\".",
+          "## Concrete Example 2: The Mermaid decision node uses `F{\"Divergence check\"}` which mixes the decision-shape syntax with quoted text; make the label consistently readable across renderers (e.g., keep the label unquoted unless it contains parentheses)."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.005180580224985198,
+        "passed": false,
+        "similarity_max": 0.7811090061300259
+      },
+      "iteration": 400,
+      "timestamp": "2026-02-23T17:59:51Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.04065040650406504,
+        "drift_score": 0.005180580224985198
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "refine",
+        "drift_score": 0.02,
+        "example_density": 0.7,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": [
+          "User instruction conflict remains: the chapter contains Mermaid fenced code blocks (```mermaid ... ```), but the run-level instruction says \"No code fences\"."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.005180580224985198,
+        "passed": false,
+        "similarity_max": 0.7811090061300259
+      },
+      "iteration": 401,
+      "timestamp": "2026-02-23T18:00:56Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.00819672131147541,
+        "drift_score": 0.005180580224985198
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.86,
+        "decision": "refine",
+        "drift_score": 0.02,
+        "example_density": 0.7,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": [
+          "## System Breakdown: Mermaid diagram is not in a fenced code block starting with ```mermaid; it is wrapped in <pre class=\"mermaid\"> instead.",
+          "## Concrete Example 2: Mermaid diagram is not in a fenced code block starting with ```mermaid; it is wrapped in <pre class=\"mermaid\"> instead."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0051440329218107,
+        "passed": false,
+        "similarity_max": 0.7797022287744707
+      },
+      "iteration": 402,
+      "timestamp": "2026-02-23T18:02:22Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.07377049180327869,
+        "drift_score": 0.0051440329218107
+      }
     }
   ]
 }

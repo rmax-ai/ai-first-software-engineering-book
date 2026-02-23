@@ -1,0 +1,89 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.00; drift_score=0.01"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-23T17:57:34Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.003537735849056604
+      },
+      "timestamp": "2026-02-23T17:57:34Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.09117647058823529,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "```mermaid flowchart TB I[\"Interoperability\"] V[\"Verification\"] G[\"Governance\"] R[\"Ecosystem risk\"] I --> V V --> G I --> R R --> V ``` Takeaway: you can improve one pillar in isolation, but cross-mod",
+          "words": 37
+        },
+        {
+          "sentence": "Finally, track what the divergence check is allowed to claim as \u201cverified.\u201d ```mermaid flowchart LR A[\"Generate\"] B[\"Validate\"] C[\"Emit trace\"] D[\"Export\"] E[\"Replay\"] F{\"Divergence\"} G[\"Audit\"] H[\"Fl",
+          "words": 66
+        },
+        {
+          "sentence": "- `event_id` - `type` - `timestamp` - `parent_event_id` (when applicable) - Assistant/user text: - `content` - redaction markers (when redacted) - Tool calls: - `tool_name` - validated `arguments` - `",
+          "words": 42
+        }
+      ],
+      "timestamp": "2026-02-23T17:57:34Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/99-future-directions.md",
+      "state/ledger/iteration_log/2026-02-23T17-57-34Z__chapter-99-future-directions__iter-000398.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/99-future-directions/2026-02-23.json"
+    ],
+    "notes": "Kernel refinement iteration 398 for 99-future-directions"
+  },
+  "iteration": 3116,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 30362,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 760011
+  },
+  "scope": {
+    "chapters_modified": [
+      "99-future-directions"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-23T17:57:34Z"
+}
