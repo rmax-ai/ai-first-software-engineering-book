@@ -533,16 +533,26 @@
 <p>In practice, “small enough” means: (1) explicit stop conditions, (2) verification evidence attached to the final result, and (3) reproducible step-by-step logs when something goes wrong.</p>
 <h2 id="forces">Forces</h2>
 <ul>
-<li><strong>Capability vs. determinism</strong>: richer loops solve more tasks but increase variance across runs.</li>
+<li><strong>Capability vs. determinism</strong>: richer loops solve more tasks but increase variance across runs.<ul>
 <li>Design choice: restrict the model to “exactly one next action” per step (tool call or stop) and enforce budgets outside the model.</li>
-<li><strong>Observability vs. speed</strong>: more logging and checks slow iteration, but missing data makes incidents expensive.</li>
+</ul>
+</li>
+<li><strong>Observability vs. speed</strong>: more logging and checks slow iteration, but missing data makes incidents expensive.<ul>
 <li>Design choice: log only what you need to reproduce outcomes (inputs selected, tool call args, normalized error, changed files, verification output).</li>
-<li><strong>Safety vs. throughput</strong>: tighter constraints reduce risk but may block progress on ambiguous tasks.</li>
+</ul>
+</li>
+<li><strong>Safety vs. throughput</strong>: tighter constraints reduce risk but may block progress on ambiguous tasks.<ul>
 <li>Design choice: define “blocked” as an explicit stop state with a reason and the smallest missing prerequisite (permission, missing file, unclear spec).</li>
-<li><strong>Tool side effects</strong>: tools mutate state; retries can duplicate actions unless idempotent.</li>
+</ul>
+</li>
+<li><strong>Tool side effects</strong>: tools mutate state; retries can duplicate actions unless idempotent.<ul>
 <li>Design choice: include an idempotency key (or dry-run) for side-effecting tools; record a side-effect summary in the trace.</li>
-<li><strong>Context limits</strong>: the loop must decide what to read, summarize, and omit.</li>
+</ul>
+</li>
+<li><strong>Context limits</strong>: the loop must decide what to read, summarize, and omit.<ul>
 <li>Design choice: build a narrow context per step (only the files/lines needed for the next action) and summarize prior trace events.</li>
+</ul>
+</li>
 </ul>
 <h2 id="solution">Solution</h2>
 <p>Implement the smallest loop that aims to ensure: one action per step, explicit termination, and verification evidence on stop.</p>
@@ -559,13 +569,15 @@
 <p>A minimal state machine:</p>
 <ul>
 <li><strong>Inputs</strong>: goal, repo root, tool allowlist, budgets (steps/time/cost), memory handles.</li>
-<li><strong>Per-step</strong>:</li>
+<li><strong>Per-step</strong>:<ul>
 <li>Build a narrow context (selected files + short trace summary + constraints).</li>
 <li>Ask the model for <code>NextAction</code>.</li>
 <li>If <code>NextAction.type == stop</code>: return a result object (including verification evidence or explicit “blocked”).</li>
 <li>Otherwise: run the tool, capture outputs and <em>observable side effects</em>.</li>
 <li>Append the event to the trace.</li>
 <li>Update budgets; stop if exceeded.</li>
+</ul>
+</li>
 </ul>
 <p>A diagram helps because the loop is mostly control flow. It makes the decision points explicit. Focus on the two branches: “stop with evidence” vs “execute tool and record side effects.” Budgets are enforced outside the model.</p>
 <div class="mermaid">
@@ -701,24 +713,36 @@ budgets:
 </code></pre>
 <h2 id="failure-modes">Failure modes</h2>
 <ul>
-<li><strong>Missing termination criteria</strong>: the loop continues despite completion; budgets are consumed.</li>
+<li><strong>Missing termination criteria</strong>: the loop continues despite completion; budgets are consumed.<ul>
 <li>Signal: repeated “tool” actions with no change in verification status (e.g., same failing check output or no new evidence).</li>
 <li>Mitigation: require stop conditions to reference a measurable predicate (e.g., “tests pass”, “lint exit code 0”) and stop on budget exhaustion with a structured “incomplete” result.</li>
-<li><strong>Ambiguous tool failures</strong>: errors are treated as partial success; corrupted state accumulates.</li>
+</ul>
+</li>
+<li><strong>Ambiguous tool failures</strong>: errors are treated as partial success; corrupted state accumulates.<ul>
 <li>Signal: tool exit is non-zero/exceptional but the step is recorded as “success” or the next step assumes the effect happened.</li>
 <li>Mitigation: normalize errors into a small set of categories and force the trace event to include one of: success, failure, timeout, or validation error.</li>
-<li><strong>Silent side effects</strong>: tools mutate state without reporting what changed; traces cannot explain outcomes.</li>
+</ul>
+</li>
+<li><strong>Silent side effects</strong>: tools mutate state without reporting what changed; traces cannot explain outcomes.<ul>
 <li>Signal: external systems change (tickets created, PR opened, files edited) but the trace lacks changed-file lists, IDs, or diffs.</li>
 <li>Mitigation: for side-effect tools, record a side-effect summary (changed files, created IDs/URLs) and prefer “dry run” modes when available.</li>
-<li><strong>Non-idempotent retries</strong>: a retry duplicates actions (double-writes, duplicate tickets, repeated API calls).</li>
+</ul>
+</li>
+<li><strong>Non-idempotent retries</strong>: a retry duplicates actions (double-writes, duplicate tickets, repeated API calls).<ul>
 <li>Signal: repeated tool calls with identical args produce multiple created artifacts (two tickets, two PRs) or duplicated file edits.</li>
 <li>Mitigation: add idempotency keys per step, detect “already exists” responses, and make retries conditional on evidence that the previous attempt did not apply.</li>
-<li><strong>Context bloat</strong>: the loop pulls in too much content; constraints are ignored or diluted.</li>
+</ul>
+</li>
+<li><strong>Context bloat</strong>: the loop pulls in too much content; constraints are ignored or diluted.<ul>
 <li>Signal: growing context size with decreasing step quality (missed constraints, irrelevant edits, inconsistent behavior across runs).</li>
 <li>Mitigation: hard cap context size, require a short “why these files/lines” selection rationale, and summarize prior trace events instead of re-including them.</li>
-<li><strong>Planning without execution</strong>: repeated re-planning without tool calls; no measurable progress.</li>
+</ul>
+</li>
+<li><strong>Planning without execution</strong>: repeated re-planning without tool calls; no measurable progress.<ul>
 <li>Signal: multiple consecutive steps that emit plans or analyses but no tool execution and no new evidence.</li>
 <li>Mitigation: enforce a per-step contract (“exactly one next action”) and treat “plan” as an input artifact, not a step output unless it is the requested deliverable.</li>
+</ul>
+</li>
 </ul>
 <h2 id="when-not-to-use">When not to use</h2>
 <ul>

@@ -544,21 +544,23 @@
 <ul>
 <li><strong>Actors</strong>: human governor, agent loop, tools/runtime, evaluation/CI.</li>
 <li><strong>Artifacts</strong>: specs, plans, diffs, traces, eval results, decision records.</li>
-<li><strong>Invariants</strong> (hypotheses to test):</li>
+<li><strong>Invariants</strong> (hypotheses to test):<ul>
 <li>Every non-trivial change is traceable to a plan and verified by checks.</li>
 <li>The system can attribute regressions to a layer (prompt, tool, code, eval).</li>
 <li>Autonomy is gated by evaluations and budgets.</li>
 </ul>
+</li>
+</ul>
 <p>A diagram helps here because the distinction (model vs harness) changes how evidence moves. The diagram makes the handoffs explicit. It also shows where trace capture happens. Focus on two points. First: where the trace is recorded. Second: where the trace is used for attribution and the next plan.</p>
 <div class="mermaid">flowchart TB
-  P["Plan&lt;br&gt;(spec + intent)"]
-  A["Act&lt;br&gt;(propose patch)"]
-  T["Tools&lt;br&gt;(apply + run)"]
-  V["Verify&lt;br&gt;(evals/CI)"]
+  P[Plan\n(spec + intent)]
+  A[Act\n(propose patch)]
+  T[Tools\n(apply + run)]
+  V[Verify\n(evals/CI)]
   D{Checks pass?}
-  S[Stop&lt;br&gt;ship/merge]
-  X[Attribute&lt;br&gt;root cause]
-  TR["(Trace)"]
+  S[Stop\nship/merge]
+  X[Attribute\nroot cause]
+  TR[(Trace)]
 
   P --&gt; A
   A --&gt; T
@@ -580,14 +582,16 @@
 </ul>
 <p>Takeaway: without a trace, attribution is guesswork. You will not know if the fix is spec/prompt, tool/runtime, code, or eval/CI. The same three measurable signals below should show up consistently in how you run (and later audit) the loop.</p>
 <ul>
-<li><strong>Measurable signals</strong> (to separate model vs harness effects):</li>
+<li><strong>Measurable signals</strong> (to separate model vs harness effects):<ul>
 <li><em>Iterations-to-pass</em>: number of propose→verify cycles until all required checks pass.</li>
 <li><em>Time-to-green</em>: wall-clock time from first attempt to passing evaluation gates.</li>
 <li><em>Attribution rate</em>: fraction of failures with a clear primary cause.<ul>
 <li>Bucket: prompt/spec vs tool/runtime vs code vs eval.</li>
 </ul>
 </li>
-<li><strong>Attribution checklist</strong> (what evidence makes a failure “belong” to a layer):</li>
+</ul>
+</li>
+<li><strong>Attribution checklist</strong> (what evidence makes a failure “belong” to a layer):<ul>
 <li><strong>Spec/prompt</strong>:<ul>
 <li>Requirement is ambiguous or contradictory.</li>
 <li>Reasonable interpretations change expected output.</li>
@@ -611,17 +615,17 @@
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Refactor a small library function using an agent loop.</p>
 <ul>
 <li>Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).</li>
-<li>
-<p>Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.</p>
-</li>
+<li>Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.</li>
+</ul>
+<ul>
 <li>
 <p>Minimal trace record (copyable):</p>
-</li>
-</ul>
 <table>
 <thead>
 <tr>
@@ -673,19 +677,21 @@
 </tbody>
 </table>
 <p>Example attribution:
-  - <strong>code</strong> — the same test fails deterministically after the diff; reverting the diff restores pass.</p>
+- <strong>code</strong> — the same test fails deterministically after the diff; reverting the diff restores pass.</p>
+</li>
+</ul>
 <ul>
-<li>Measured outputs:</li>
+<li>Measured outputs:<ul>
 <li>Iterations-to-pass.</li>
 <li>Time-to-green.</li>
 <li>Diff size (files touched, lines changed).</li>
 <li>Locality: changes stay within the intended function/surface area.</li>
-<li>
-<p>Attribution per iteration using the checklist above (recorded in the trace).</p>
+<li>Attribution per iteration using the checklist above (recorded in the trace).</li>
+</ul>
 </li>
-<li>
-<p>Stop rule:</p>
-</li>
+</ul>
+<ul>
+<li>Stop rule:<ul>
 <li>Stop when the original failing test passes and the full unit test suite passes.</li>
 <li>Also require the diff to stay constrained to the intended surface area.</li>
 <li>If you hit a fixed budget (N iterations or T minutes), stop and hand off:<ul>
@@ -694,17 +700,17 @@
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Ship a minor API change in a production service.</p>
 <ul>
 <li>Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.</li>
-<li>
-<p>Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.</p>
-</li>
+<li>Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.</li>
+</ul>
+<ul>
 <li>
 <p>Minimal trace report (copyable):</p>
-</li>
-</ul>
 <table>
 <thead>
 <tr>
@@ -772,32 +778,34 @@
 </tbody>
 </table>
 <p>Example attribution:
-  - <strong>eval/CI</strong> — contract test rejects an allowed optional field; fixing the assertion changes outcomes without changing API behavior.</p>
+- <strong>eval/CI</strong> — contract test rejects an allowed optional field; fixing the assertion changes outcomes without changing API behavior.</p>
+</li>
+</ul>
 <ul>
-<li>Measured outputs:</li>
+<li>Measured outputs:<ul>
 <li>Iterations-to-pass and time-to-green (from first migration-plan draft to all required checks passing in staging).</li>
 <li>Attribution rate per iteration using the checklist above (spec/prompt vs tool/runtime vs code vs eval).</li>
-<li>
-<p>Backward-compat outcomes:</p>
-<ul>
+<li>Backward-compat outcomes:<ul>
 <li>contract-test failures introduced (required gate: 0 new failures in required checks)</li>
 <li>rollback verification in staging (required gate: exercise rollback successfully at least once)</li>
 <li>time-to-green (default target: ≤ 30 minutes from first implementation attempt to all required checks passing in staging; set per service)</li>
 </ul>
 </li>
-<li>
-<p>Guardrails:</p>
+</ul>
 </li>
+</ul>
+<ul>
+<li>Guardrails:<ul>
 <li>Protected paths or modules that require explicit human review before edits (e.g., auth, billing, infra).</li>
 <li>Required checks (contract tests, integration tests, lint/typecheck, and a staging smoke test).</li>
 <li>Rollback plan defined up front (feature flag, config switch, or revert procedure) and verified in staging.</li>
 <li>Approval gate: no deploy until a human reviews the migration plan, the diff, and the evaluation results.</li>
-<li>
-<p>Mapping: Guardrails define <em>what must be protected</em>, required checks define <em>what must be proven</em>, and the approval gate defines <em>who must accept the evidence</em> before deploy.</p>
+<li>Mapping: Guardrails define <em>what must be protected</em>, required checks define <em>what must be proven</em>, and the approval gate defines <em>who must accept the evidence</em> before deploy.</li>
+</ul>
 </li>
-<li>
-<p>Stop rule:</p>
-</li>
+</ul>
+<ul>
+<li>Stop rule:<ul>
 <li>Stop when all required checks pass in staging and the migration plan matches backward-compat constraints.</li>
 <li>Require that the trace report can explain every material change.</li>
 <li>If you hit a fixed budget (N iterations or T minutes), pause the rollout and escalate with:<ul>
@@ -806,6 +814,8 @@
 </ul>
 </li>
 <li>If any guardrail is violated (protected file touched, required test skipped, rollback unclear), stop immediately and require human intervention.</li>
+</ul>
+</li>
 </ul>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>

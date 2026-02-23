@@ -25,3 +25,6 @@ theme:
 plugins:
   - search
   - mermaid2
+markdown_extensions:
+  - mdx_truly_sane_lists
+

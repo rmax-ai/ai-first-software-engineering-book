@@ -535,7 +535,7 @@
 </ul>
 <h2 id="system-breakdown">System Breakdown</h2>
 <ul>
-<li><strong>Policy artifacts</strong>: constitution (principles), agent rules (operational constraints), CI policies (enforcement).</li>
+<li><strong>Policy artifacts</strong>: constitution (principles), agent rules (operational constraints), CI policies (enforcement).<ul>
 <li>Enforceable rules:<ul>
 <li>“No writes to protected paths without approval token.”</li>
 <li>“All tool calls must declare intent and target files.”</li>
@@ -546,7 +546,9 @@
 <li>CI re-validates policies on the merge commit.</li>
 </ul>
 </li>
-<li><strong>Permissions</strong>: read/write scopes, protected files, tool allowlists.</li>
+</ul>
+</li>
+<li><strong>Permissions</strong>: read/write scopes, protected files, tool allowlists.<ul>
 <li>Enforceable rules:<ul>
 <li>“Read-only by default; write requires explicit scope.”</li>
 <li>“Network access disabled unless allowlisted per job.”</li>
@@ -557,7 +559,9 @@
 <li>Repository protected-branch rules and CODEOWNERS coverage for specific paths.</li>
 </ul>
 </li>
-<li><strong>Budgets</strong>: time, iterations, tool calls, diff size, cost ceilings.</li>
+</ul>
+</li>
+<li><strong>Budgets</strong>: time, iterations, tool calls, diff size, cost ceilings.<ul>
 <li>Enforceable rules:<ul>
 <li>“Max N iterations per task.”</li>
 <li>“Max diff size for autonomous edits.”</li>
@@ -569,7 +573,9 @@
 <li>CI policy fails if changes exceed thresholds or if required checkpoints were skipped.</li>
 </ul>
 </li>
-<li><strong>Review</strong>: mandatory human checkpoints for specific risk classes.</li>
+</ul>
+</li>
+<li><strong>Review</strong>: mandatory human checkpoints for specific risk classes.<ul>
 <li>Enforceable rules:<ul>
 <li>“Human approval required for security configs, auth paths, dependency upgrades.”</li>
 <li>“Two-person review for rollback scripts.”</li>
@@ -580,7 +586,9 @@
 <li>CI classifies changes and blocks merge unless approvals match the risk class.</li>
 </ul>
 </li>
-<li><strong>Audit</strong>: trace retention, searchable logs, change attribution.</li>
+</ul>
+</li>
+<li><strong>Audit</strong>: trace retention, searchable logs, change attribution.<ul>
 <li>Enforceable rules:<ul>
 <li>“All tool executions emit structured logs.”</li>
 <li>“Each patch links to an agent run id and input prompt.”</li>
@@ -594,6 +602,8 @@
 <li><code>&lt;run_id&gt;</code> must be lowercase and match <code>run_[a-z0-9]{12}</code>.</li>
 <li>Valid: <code>Agent-Run-Id: run_3f9c2a1b7d4e</code>.</li>
 <li>Invalid: <code>agent-run-id: run_3f9c2a1b7d4e</code>, <code>Agent-Run-Id: RUN_3F9C2A1B7D4E</code>.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -668,10 +678,12 @@ flowchart TB
 </ul>
 <p>Root-cause classification (review-driven):</p>
 <ul>
-<li>Classify the incident into a governance-relevant bucket, for example:</li>
+<li>Classify the incident into a governance-relevant bucket, for example:<ul>
 <li>Missing gate: the regression would have been caught by a specific test that did not run.</li>
 <li>Mis-scoped permissions: the agent changed a file outside the intended scope.</li>
 <li>Review routing failure: change risk was misclassified and did not receive the required human checkpoint.</li>
+</ul>
+</li>
 </ul>
 <p>Policy change (closing the gap):</p>
 <ul>

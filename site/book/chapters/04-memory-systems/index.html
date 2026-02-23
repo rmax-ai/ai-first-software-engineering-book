@@ -523,10 +523,12 @@
 <ul>
 <li><strong>Structured</strong>: stored as records with explicit fields (not free-form chat logs), so constraints, sources, and updates are representable.</li>
 <li><strong>Queryable</strong>: retrievable by filters (task, file, timeframe, decision id), with ranking that prefers fresh, high-provenance entries.</li>
-<li><strong>Governed</strong>: subject to retention, redaction, and correction rules, so stale or wrong entries can be superseded, expired entries can be hidden by default, and sensitive traces can be minimized.</li>
+<li><strong>Governed</strong>: subject to retention, redaction, and correction rules, so stale or wrong entries can be superseded, expired entries can be hidden by default, and sensitive traces can be minimized.<ul>
 <li><strong>Correction</strong>: add a new record that <code>supersedes</code> a prior id (no silent edits).</li>
 <li><strong>Redaction</strong>: remove or mask sensitive content while preserving minimal provenance where policy allows.</li>
 <li><strong>Retention</strong>: apply expiry and access rules over time (e.g., via <code>valid_through</code> or class-specific TTLs).</li>
+</ul>
+</li>
 </ul>
 <p>Definition of done for “good memory”:</p>
 <ul>
@@ -544,14 +546,13 @@
 </ul>
 <h2 id="system-breakdown">System Breakdown</h2>
 <p>A diagram helps here because memory systems fail at the <em>interfaces</em> (write → retrieve → act), not inside a single component. As you read it, focus on two gates: (1) retrieval is bounded and ranked, and (2) action is gated by provenance and freshness checks.</p>
-<div class="mermaid">
-flowchart TB
-  W[Write event\n(policy: when/what to store)] --&gt; R[Record\n(min schema fields)]
-  R --&gt; I[Index + Rank\n(Read policy)]
-  I --&gt; V{Verify before acting\n(provenance + freshness)}
-  V --&gt;|pass| A[Apply next step\n(change, fix, decision)]
-  V --&gt;|fail| Q[Refine query\nor re-run tests]
-  R --&gt; G[Govern\n(retention/redaction/correction)]
+<div class="mermaid">flowchart TB
+  W["Write event&lt;br&gt;(policy: when/what to store)"] --&gt; R["Record&lt;br&gt;(min schema fields)"]
+  R --&gt; I["Index + Rank&lt;br&gt;(Read policy)"]
+  I --&gt; V{"Verify before acting&lt;br&gt;(provenance + freshness)"}
+  V --&gt;|pass| A["Apply next step&lt;br&gt;(change, fix, decision)"]
+  V --&gt;|fail| Q[Refine query&lt;br&gt;or re-run tests]
+  R --&gt; G["Govern&lt;br&gt;(retention/redaction/correction)"]
   G --&gt; R
 
   subgraph Schema[Minimum schema fields]
@@ -576,26 +577,32 @@ flowchart TB
 <p>Rule-of-thumb for write policy (“store” vs “don’t store”):</p>
 <ul>
 <li><strong>Store</strong>: decisions, constraints, conventions, and reproducible traces that can be pointed to (command + output snippet + commit/diff hash).</li>
-<li>
-<p><strong>Don’t store</strong>: raw transcripts, personal data, or long tool logs without a bounded retrieval key and an explicit retention/redaction rule.</p>
-</li>
-<li>
-<p><strong>Memory classes</strong>:</p>
-</li>
+<li><strong>Don’t store</strong>: raw transcripts, personal data, or long tool logs without a bounded retrieval key and an explicit retention/redaction rule.</li>
+</ul>
+<ul>
+<li><strong>Memory classes</strong>:<ul>
 <li>Episodic: traces of actions/tool I/O/diffs.</li>
 <li>Semantic: stable project facts and conventions.</li>
 <li>Decisions: recorded trade-offs and constraints.</li>
 <li>State: current plan, progress, open issues (kept memory-specific: pointers to the latest plan/progress, not a second project management system).</li>
-<li><strong>Write policy</strong>: what gets stored, when, by whom, and with what validation.</li>
+</ul>
+</li>
+<li><strong>Write policy</strong>: what gets stored, when, by whom, and with what validation.<ul>
 <li>Enforces that each record has a <code>source</code> pointer and a calibrated <code>confidence</code>.</li>
 <li>Sets <code>valid_through</code> for entries that must be refreshed (e.g., “current deployment procedure”).</li>
-<li><strong>Read policy</strong>: retrieval filters, ranking, freshness, and provenance checks.</li>
+</ul>
+</li>
+<li><strong>Read policy</strong>: retrieval filters, ranking, freshness, and provenance checks.<ul>
 <li>Filters by <code>type</code>, time window via <code>timestamp</code>, and task keys stored in the record.</li>
 <li>Ranks by freshness (prefer newest <code>timestamp</code>; hide expired <code>valid_through</code> by default unless explicitly requested), then by <code>confidence</code>.</li>
 <li>Prefers “not superseded”: if a record is listed in another record’s <code>supersedes</code>, it should be down-ranked or hidden by default.</li>
-<li><strong>Governance</strong>: retention, access control, redaction, and correction mechanisms.</li>
+</ul>
+</li>
+<li><strong>Governance</strong>: retention, access control, redaction, and correction mechanisms.<ul>
 <li>Uses <code>supersedes</code> for explicit corrections rather than silent edits.</li>
 <li>Applies retention/redaction rules to episodic traces, while keeping minimal decision/semantic records with strong provenance.</li>
+</ul>
+</li>
 </ul>
 <p>Minimum memory record schema (applies to all classes):</p>
 <ul>
@@ -690,33 +697,37 @@ flowchart TB
 <p>Trace-indexed memory stores enough episodic detail to support “find similar failure, verify with evidence” workflows.</p>
 <p>Capture → index → retrieve → verify:</p>
 <ol>
-<li><strong>Capture</strong>: store reproducible evidence for the iteration.</li>
+<li>
+<p><strong>Capture</strong>: store reproducible evidence for the iteration.</p>
+<ul>
 <li>Test command and a short failing stack trace snippet.</li>
 <li>Files changed plus a diff hash.</li>
-<li>
-<p>Environment notes that affect reproducibility (OS, dependency lockfile hash).</p>
+<li>Environment notes that affect reproducibility (OS, dependency lockfile hash).</li>
+</ul>
 </li>
 <li>
 <p><strong>Index</strong>: attach keys that support bounded queries later.</p>
-</li>
+<ul>
 <li><code>task_id</code>, <code>iteration</code>, <code>files_touched</code>.</li>
 <li><code>error_signature</code> (e.g., exception type + top frame).</li>
-<li>
-<p><code>timestamp</code> and <code>source</code> pointers.</p>
+<li><code>timestamp</code> and <code>source</code> pointers.</li>
+</ul>
 </li>
 <li>
 <p><strong>Retrieve</strong>: query with tight filters, then rank for usefulness.</p>
-</li>
+<ul>
 <li>Example query: “Show traces where <code>error_signature</code> matches ‘KeyError: CONFIG’ and <code>files_touched</code> includes <code>settings.py</code> from the last 30 days.”</li>
-<li>
-<p>Ranking rule: prefer freshest <code>timestamp</code> (and not-expired <code>valid_through</code> when present), then higher <code>confidence</code> (e.g., traces tied to commits that later passed CI), and prefer “not superseded.”</p>
+<li>Ranking rule: prefer freshest <code>timestamp</code> (and not-expired <code>valid_through</code> when present), then higher <code>confidence</code> (e.g., traces tied to commits that later passed CI), and prefer “not superseded.”</li>
+</ul>
 </li>
 <li>
 <p><strong>Verify (provenance + freshness)</strong>: gate action on checks from <strong>Read policy</strong>.</p>
-</li>
+<ul>
 <li>Does the trace point to exact tool output and a commit hash (<code>source</code>)?</li>
 <li>Is the trace superseded by a newer trace for the same signature (<code>supersedes</code>)?</li>
 <li>Do current tests reproduce the signature, or has the failure mode changed?</li>
+</ul>
+</li>
 </ol>
 <p>Expected outcome (measurable):</p>
 <ul>
