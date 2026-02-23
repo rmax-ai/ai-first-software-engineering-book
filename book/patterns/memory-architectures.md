@@ -125,20 +125,20 @@ Bugfix agent memory layout:
 
 End-to-end walkthrough (one bugfix, four layers):
 
-1) **Retrieval index (Layer 4) proposes candidates**  
+1) **Retrieval index (Layer 4) proposes candidates**
    The agent runs “retrieve top 5 related incidents” using the failing test name and a short error signature (e.g., `TypeError: cannot read property 'id' of null`). It gets excerpts like:
    - an incident note mentioning “null user during CLI parsing”
    - a PR discussion that links to `src/parse.ts`
    These excerpts are treated as leads. The agent follows the links and re-checks the current sources.
 
-2) **Run-local scratch (Layer 1) captures hypotheses, not conclusions**  
+2) **Run-local scratch (Layer 1) captures hypotheses, not conclusions**
    The agent writes volatile notes such as:
    - “Hypothesis A: null handling in parse.ts”
    - “Hypothesis B: fixture missing `id` field”
    - “Next checks: reproduce with `npm test -t parse`”
    If the hypothesis changes after inspecting sources, the scratch note is overwritten.
 
-3) **Session task state (Layer 2) makes progress and verification explicit**  
+3) **Session task state (Layer 2) makes progress and verification explicit**
    The agent maintains a task record (checklist-style) like:
    - Repro step captured: `npm test -t "parse handles null user"` ✅
    - Minimal failing input recorded (fixture path) ✅
@@ -147,7 +147,7 @@ End-to-end walkthrough (one bugfix, four layers):
    - Verification rerun (tests/lint) ⬜
    This is the place to see what was done and what remains. It is cleared when the task closes.
 
-4) **Project durable facts (Layer 3) is written only after verification**  
+4) **Project durable facts (Layer 3) is written only after verification**
    After tests pass, the agent writes a durable note (ADR/runbook/“root cause” entry) that includes:
    - the root cause (“parser assumed non-null user; null can occur when flag X is omitted”)
    - the fix (“guard + explicit error message”)
