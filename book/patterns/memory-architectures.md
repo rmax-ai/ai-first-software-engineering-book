@@ -172,6 +172,26 @@ Second scenario (non-bugfix): onboarding and runbook lookup:
 - **Unversioned dependency**: behavior depends on memory that is not tied to code/version. Mitigation: **version memory alongside the system** (or bind to release identifiers) so the dependency is explicit and reviewable.
 - **Privacy leakage**: sensitive content is stored, retrieved, or logged without appropriate handling. Mitigation: enforce **retention/redaction policies** (delete by scope/source/time) and keep derived indexes rebuildable so deletion is enforceable.
 
+## Operational checklists
+
+### Write gate (what is allowed to persist)
+
+- Store durable facts only when they have **provenance** (a source pointer) and are backed by **verification evidence**.
+- Store decisions as append-only records; corrections should create a new record that **supersedes** the old id (no silent edits).
+- Set `valid_through` for entries that are known to go stale (runbooks, “current procedure” notes) so retrieval can hide expired items by default.
+
+### Read gate (what is allowed to influence action)
+
+- Treat retrieved items as **leads**, not truth; confirm against current sources (files, traces, tests).
+- Prefer items that are: (1) not expired (`valid_through`), (2) not superseded, (3) high-confidence, (4) source-linked.
+- If a retrieved claim would change code or policy, require a verification step before acting (rerun the relevant check or reproduce the failure signature).
+
+### Governance ops (correction, retention, redaction)
+
+- **Correction**: create a new record with `supersedes: [old_id]` and a source pointer to the evidence that invalidated the old record.
+- **Retention**: enforce TTLs by record type (episodic traces often shorter-lived than decisions) and make expiry a default visibility rule.
+- **Redaction**: remove or hash sensitive fields while preserving minimal provenance where policy permits; ensure derived indexes remain rebuildable.
+
 ## When not to use
 
 - Short-lived tasks where the context window is sufficient.

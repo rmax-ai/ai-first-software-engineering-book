@@ -98,6 +98,18 @@ Practical gating logic:
 - If checks fail with actionable errors: attempt bounded repair (for example, up to 2 iterations), re-running the same checks and re-capturing evidence each time.
 - If failures are environmental/flaky: stop with a “blocked” report and clear reproduction steps.
 
+### Action-class check selection
+
+Verification gets easier to govern when check selection is deterministic.
+One practical approach is to derive the minimum check set from an **action class**, then record selection rationale:
+
+- **Read-only**: no verification gates beyond permission/path access; record `skipped_reason: "read_only_action"`.
+- **Patch edit**: at least one quality gate (format/lint/typecheck) and one correctness gate (targeted test or golden diff).
+- **Dependency change**: include secret scanning for the diff/lockfile and at least one correctness gate that imports/exercises the changed dependency.
+- **Release/deploy**: require explicit approval plus a full suite/contract test gate.
+
+If the repo does not have a test runner or the gate is not runnable, treat it as blocked or as an explicit waiver (with recorded risk), not as a pass.
+
 A minimal blocked report template:
 
 - **What failed**: check name + command.

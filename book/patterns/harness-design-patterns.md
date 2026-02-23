@@ -76,6 +76,47 @@ End-to-end mini-walkthrough (how the patterns compose in a typical repo edit):
 - **Why it works**: limits the ability to bypass controls (for example, editing policies during execution).
 - **Example**: planning cannot call side-effect tools; verification cannot modify code.
 
+### Pattern 6: Action-Class Gating Matrix
+
+- **Idea**: classify work by action class (read-only, patch edit, dependency change, release), then require a minimum set of gates per class.
+- **Why it works**: it prevents “verification roulette” where different runs pick different checks, and it makes skipped checks auditable.
+- **What to record**: the action class, required checks, the selection reason for each check, and an explicit `skipped_reason` when something is not runnable.
+
+A minimal action-class set:
+
+- **Read-only** (search/view/list): permission gate only; record `skipped_reason: "read_only_action"` for correctness/quality.
+- **Patch edit** (code/docs diff): protected-path gate + quality gate + correctness gate (targeted tests) unless explicitly waived.
+- **Dependency change** (lockfile / adds): secret scan + protected-path gate + correctness gate (import/targeted tests).
+- **Release/deploy**: explicit approval + full suite/contract tests + secret scan.
+
+### Pattern 7: Protected Paths + Explicit Approvals
+
+- **Idea**: treat sensitive paths as protected and require an explicit approval artifact to modify them.
+- **Why it works**: it prevents silent privilege expansion (the agent “discovers” it can edit workflows, prod configs, or secrets) and creates review routing that matches risk.
+- **Mechanics**:
+  - Tool router rejects patches touching protected paths unless an approval token is present.
+  - Trace records approval token + approver identity + timestamps.
+  - CI re-validates the merged diff and blocks merge if the approval artifact is missing.
+
+### Pattern 8: Golden Tasks + Drift Detection
+
+- **Idea**: keep a small set of pinned “golden tasks” and track their metrics over time to detect drift.
+- **Why it works**: it turns “the agent feels worse lately” into measurable signals tied to fixed inputs.
+- **Pin what matters**: prompt/attachments, repo SHA (or fixture repo), harness version, budgets, and required gates.
+- **Track**: iterations-to-pass, gate failure rate, and stop-reason distribution (e.g., “budget exceeded” becoming dominant).
+
+### Pattern 9: Normalized Errors for Attribution
+
+- **Idea**: normalize failures into stable categories so you can attribute incidents to the right layer.
+- **Why it works**: the most important debugging question is usually “model mistake vs tool failure vs harness bug vs missing test,” and raw logs make that hard.
+- **Minimal fields**: `error_kind` (validation/timeout/runtime/policy), `failure_signature` (stable excerpt), `layer` (model/tool/harness/eval), and `repro_command` when applicable.
+
+### Pattern 10: Waivers as First-Class Outcomes
+
+- **Idea**: if a required gate cannot run, that is not a pass; it is an explicit waiver with recorded risk.
+- **Why it works**: it preserves auditability and makes “we shipped without tests” visible and measurable.
+- **Waiver record**: which gate was waived, why it was not runnable, what alternative check ran (if any), what risk remains, and who approved the waiver.
+
 ## Implementation sketch
 
 Minimal harness components:

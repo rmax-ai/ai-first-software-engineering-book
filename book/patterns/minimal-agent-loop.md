@@ -217,3 +217,41 @@ A minimal trace for the verification steps:
 - The task is deterministic and can be solved with a single script/command.
 - Side effects are unacceptable without human approval (e.g., production mutations).
 - You cannot capture traces or run verification; you will be unable to debug or detect drift.
+
+## Operational checklists
+
+### Minimal trace event contract
+
+To keep the loop debuggable, each step should emit one structured event with the same core fields:
+
+- **Identity**: task id, step id, iteration counters.
+- **Action**: action class (read-only / patch edit / dependency change / release), tool name, validated arguments (or a hash/pointer if large).
+- **Timing**: start/end timestamps; duration.
+- **Result**: status (success/failure/timeout/validation/policy), normalized error (if any), and a bounded output excerpt or artifact pointer.
+- **Side effects**: changed files (and counts), created external ids/URLs when applicable.
+- **Budgets**: remaining budgets (steps/time/tool calls/diff lines) after the step.
+
+### Stop conditions catalog
+
+Stop conditions should be phrased as measurable predicates, not intentions:
+
+- **Verified success**: required gates ran and passed (tests/lint/build) and evidence is recorded.
+- **Blocked**: a required gate/tool is not runnable within permissions or environment; include reproduction steps and the smallest missing prerequisite.
+- **Budget exhausted**: max iterations/tool calls/time/diff size exceeded; include the last failure signature and the next best action for a human.
+
+### Budget defaults (practical starting point)
+
+Budgets are kernel-enforced, not prompt-enforced. A conservative default for repo edits:
+
+- iterations: 3–6
+- tool calls: 10–25
+- wall time: 5–15 minutes
+- diff size: 40–200 changed lines (lower for autonomous changes in critical paths)
+
+## What to measure
+
+- **Iterations-to-pass**: median iterations to first passing verification gate.
+- **Stop-reason mix**: distribution of `completed` vs `blocked` vs `budget_exhausted`.
+- **Reproducibility rate**: rerun the same checks and measure consistent pass/fail.
+
+These metrics are useful because they indicate whether the loop is converging (verification improves) or spinning (budgets drain without new evidence).
