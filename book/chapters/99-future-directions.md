@@ -4,38 +4,38 @@
 
 The frontier is not larger models. It is system-level interfaces and verification.
 
-Concretely, that means investing in artifacts that scale across teams and models:
+Concretely, invest in artifacts that scale across teams and models:
 
 - stronger tool contracts
 - better evaluations
 - structured memory
 - governance primitives
 
-Here, “interfaces” means the concrete artifacts that let components interoperate. In practice, interfaces are what make runs portable. Examples include a tool-call schema that two runtimes both validate, a trace format that two analysis tools both parse, and an eval definition that two teams can both reproduce.
+Here, “interfaces” means the concrete artifacts that let components interoperate. In practice, interfaces are what make runs portable. Examples include a tool-call schema that two runtimes both validate. Another example is a trace format that two analysis tools both parse. A third example is an eval definition that two teams can both reproduce.
 
-“Verification” means methods that detect incorrect behavior reliably. In practice, verification is what makes runs auditable. It lets you show that a tool call matched a contract and that a replay stayed within a declared nondeterminism boundary. It also lets you show that a reported score came from a pinned dataset and scoring implementation.
+“Verification” means methods that detect incorrect behavior reliably. In practice, verification is what makes runs auditable. It lets you show that a tool call matched a contract. It also lets you show that a replay stayed within a declared nondeterminism boundary. Finally, it lets you show that a reported score came from a pinned dataset and scoring implementation.
 
-Hypothesis: as autonomy scales, the limiting factor becomes organizational and infrastructural coupling, not raw inference capability. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.
+Hypothesis: the main frontier is not larger models; it is better system-level interfaces. That includes verifiable tool contracts, stronger evaluations, and memory/governance primitives that scale. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.
 
 ## Why This Matters
 
 - Teams will operate heterogeneous models and tools; interoperability becomes a reliability constraint.
-- Long-horizon autonomy introduces new failure classes (compounded assumptions, policy drift, supply-chain issues).
+- Long-horizon autonomy introduces new failure classes: compounded assumptions, policy drift, and supply-chain issues.
 - Without standards, every team reinvents trace formats, eval suites, and governance mechanisms.
 
 So what changes for teams? Treat tool schemas, trace formats, and eval definitions as versioned products. Write contracts and test them. Require replayable traces so failures can be audited and compared across models.
 
 ## System Breakdown
 
-These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve. The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows: they show what must be versioned and validated before you can compare runs across teams or models.
+These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve. The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows. They show what must be versioned and validated before you can compare runs across teams or models.
 
-<pre class="mermaid">
+```mermaid
 flowchart TB
-  I[Interoperability<br/>trace formats · tool schemas · eval definitions] --> V[Verification<br/>contract tests · replay checks · property checks]
-  V --> G[Governance at scale<br/>policy registry · audit workflow · incident runbook]
-  I --> R[Ecosystem risks<br/>supply chain · dependency security · model updates]
+  I["Interoperability<br/>trace formats · tool schemas · eval definitions"] --> V["Verification<br/>contract tests · replay checks · property checks"]
+  V --> G["Governance at scale<br/>policy registry · audit workflow · incident runbook"]
+  I --> R["Ecosystem risks<br/>supply chain · dependency security · model updates"]
   R --> V
-</pre>
+```
 
 Takeaway: you can improve one pillar in isolation, but cross-model portability depends on the whole chain. Interoperability defines what can be exchanged, and verification defines what can be trusted when it is exchanged.
 
@@ -85,8 +85,8 @@ Cross-model portability experiment.
 **Expected outputs**
 
 - A per-model result table, plus a “signature diff” report. The report shows which failure clusters are model-specific vs shared.
-- A set of “portability blockers” attributed to either:
-  - Harness/tool coupling (e.g., a tool contract ambiguity that different models interpret differently), or
+- A set of “portability blockers,” attributed to one of these sources:
+  - Harness/tool coupling (e.g., a tool contract ambiguity that different models interpret differently).
   - Model behavior (e.g., consistent violation of a particular tool precondition).
 
 **Interpreting disagreements**
@@ -108,18 +108,18 @@ Enable independent auditing and regression analysis by exporting traces from one
 
 A diagram helps here because trace interchange is a pipeline with explicit checkpoints. As you read it, track three things: where validation occurs, which fields get exported, and what the divergence check is allowed to claim as “verified.”
 
-<pre class="mermaid">
+```mermaid
 flowchart LR
-  A[Generate run] --> B[Validate tool contracts]
-  B --> C[Emit trace<br/>schema_version, run_id, eval_id, model_id]
-  C --> D[Export trace]
-  D --> E[Replay harness]
-  E --> F{Divergence check}
-  F -->|Matches constraints| G[Audit / regression analysis]
-  F -->|Diverges| H[Flag portability failure]
-</pre>
+  A["Generate run"] --> B["Validate tool contracts"]
+  B --> C["Emit trace<br/>schema_version, run_id, eval_id, model_id"]
+  C --> D["Export trace"]
+  D --> E["Replay harness"]
+  E --> F{"Divergence check"}
+  F -->|Matches constraints| G["Audit / regression analysis"]
+  F -->|Diverges| H["Flag portability failure"]
+```
 
-Legend: “Validate tool contracts” means schema-checking arguments/results (and negative cases) at runtime before they enter the trace. “Divergence check” means comparing the replayed run to declared constraints, not forcing byte-for-byte identity when nondeterminism is allowed.
+Legend: “Validate tool contracts” means schema-checking arguments/results (and negative cases) at runtime before they enter the trace. “Divergence check” means comparing the replayed run to declared constraints. It does not force byte-for-byte identity when nondeterminism is allowed.
 
 The point is not to standardize everything. It is to standardize the minimum needed so two independent tools can agree on what happened, and can detect when a run is not reproducible under stated constraints.
 
@@ -171,7 +171,8 @@ The point is not to standardize everything. It is to standardize the minimum nee
 - Standardize when incidents require cross-team auditing.
 - Standardize when model swaps are frequent.
 - Delay standardization when the interface changes weekly and only one team uses it.
-- Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint, require semantic versioning, a contract test suite, and a changelog entry for every interface change.
+- Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint.
+- In that case, require semantic versioning, a contract test suite, and a changelog entry for every interface change.
 
 **Verify**
 

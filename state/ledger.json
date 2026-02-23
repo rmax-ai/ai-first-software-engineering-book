@@ -921,25 +921,65 @@
       "status": "hold"
     },
     "99-future-directions": {
-      "current_iteration": 377,
+      "current_iteration": 380,
       "drift_history": [],
       "human_validation": {
         "approved": false,
         "approved_at": null,
         "approved_by": ""
       },
+      "iteration_log_files": [
+        "state/ledger/iteration_log/2026-02-23T11-27-07Z__chapter-99-future-directions__iter-000378.json",
+        "state/ledger/iteration_log/2026-02-23T11-27-55Z__chapter-99-future-directions__iter-000379.json",
+        "state/ledger/iteration_log/2026-02-23T11-28-36Z__chapter-99-future-directions__iter-000380.json"
+      ],
+      "iteration_log_tail": [
+        {
+          "critic_score": 0.9266666666666666,
+          "diff_size": 0.2753623188405797,
+          "drift_score": 0.06324163314922654,
+          "iteration": 378,
+          "planner_focus": [
+            "Reduce sentence length violations by splitting long sentences under ## Thesis and ## Why This Matters",
+            "Fix diagram formatting so Mermaid blocks are fenced (```mermaid) instead of inline <pre class=\"mermaid\">, especially under ## System Breakdown and ## Concrete Example 2",
+            "Tighten list formatting so bullets are not parsed as part of a single long sentence (wrap lines, add blank lines where needed)",
+            "Preserve the core claim (interfaces + verification) while lowering drift risk by reusing the chapter hypothesis language verbatim in ## Thesis"
+          ],
+          "timestamp": "2026-02-23T11:27:07Z"
+        },
+        {
+          "critic_score": 0.9266666666666666,
+          "diff_size": 0.0,
+          "drift_score": 0.06324163314922654,
+          "iteration": 379,
+          "planner_focus": [
+            "No further edits required; maintain current thesis wording under ## Thesis to preserve alignment with the chapter hypothesis",
+            "Keep sentences under the 28-word limit, especially in ## System Breakdown diagram lead-in and ## Concrete Example 2 legend, if future tweaks are made"
+          ],
+          "timestamp": "2026-02-23T11:27:55Z"
+        },
+        {
+          "critic_score": 0.9266666666666666,
+          "diff_size": 0.0,
+          "drift_score": 0.06324163314922654,
+          "iteration": 380,
+          "planner_focus": [
+            "No changes needed; keep the thesis aligned to the chapter hypothesis under ## Thesis",
+            "Preserve Mermaid fenced diagrams under ## System Breakdown and ## Concrete Example 2 to avoid formatter regressions"
+          ],
+          "timestamp": "2026-02-23T11:28:36Z"
+        }
+      ],
       "last_eval": {
         "critic": {
-          "clarity_score": 0.9,
-          "decision": "refine",
-          "drift_score": 0.05,
+          "clarity_score": 0.92,
+          "decision": "approve",
+          "drift_score": 0.18,
           "example_density": 0.9,
           "failure_modes_present": true,
-          "structure_score": 0.95,
+          "structure_score": 0.96,
           "tradeoff_presence": true,
-          "violations": [
-            "## System Breakdown contains a sentence over 28 words: \"Focus on the arrows: they show what must be versioned and validated before you can compare runs across teams or models.\""
-          ]
+          "violations": []
         },
         "deterministic": {
           "chapter_quality": {
@@ -953,15 +993,15 @@
               "thesis_clarity": 1.0,
               "tradeoffs": 1.0
             },
-            "timestamp": "2026-02-22T21:15:12Z",
+            "timestamp": "2026-02-23T11:28:36Z",
             "total": 1.0
           },
           "drift_detection": {
             "drift_metrics": {
               "anchor_deltas": {
-                "agent": 0.2941176470588235,
-                "harness": 0.0,
-                "model": 0.09090909090909094
+                "agent": 0.0,
+                "harness": 0.06578947368421051,
+                "model": 0.01379310344827589
               },
               "cross_chapter_similarity_hits": []
             },
@@ -969,59 +1009,47 @@
             "pass": true,
             "repetition_metrics": {
               "duplicate_sentence_ratio": 0.0,
-              "near_duplicate_ngram_ratio": 0.0017835909631391202
+              "near_duplicate_ngram_ratio": 0.004697592483852026
             },
-            "timestamp": "2026-02-22T21:15:12Z"
+            "timestamp": "2026-02-23T11:28:36Z"
           },
-          "drift_score": 0.2547019104907123,
+          "drift_score": 0.06324163314922654,
           "passed": false,
-          "similarity_max": 0.7333718108773,
+          "similarity_max": 0.7726215248071266,
           "style_guard": {
-            "adjective_density": 0.09311981020166074,
+            "adjective_density": 0.09080257762155829,
             "forbidden_hits": [],
             "pass": false,
             "sentence_length_violations": [
               {
-                "sentence": "Concretely, that means investing in artifacts that scale across teams and models: - stronger tool contracts - better evaluations - structured memory - governance primitives Here, \u201cinterfaces\u201d means th",
-                "words": 31
+                "sentence": "Concretely, invest in artifacts that scale across teams and models: - stronger tool contracts - better evaluations - structured memory - governance primitives Here, \u201cinterfaces\u201d means the concrete art",
+                "words": 29
               },
               {
-                "sentence": "Examples include a tool-call schema that two runtimes both validate, a trace format that two analysis tools both parse, and an eval definition that two teams can both reproduce.",
-                "words": 30
+                "sentence": "```mermaid flowchart TB I[\"Interoperability<br/>trace formats \u00b7 tool schemas \u00b7 eval definitions\"] --> V[\"Verification<br/>contract tests \u00b7 replay checks \u00b7 property checks\"] V --> G[\"Governance at scal",
+                "words": 63
               },
               {
-                "sentence": "<pre class=\"mermaid\"> flowchart TB I[Interoperability<br/>trace formats \u00b7 tool schemas \u00b7 eval definitions] --> V[Verification<br/>contract tests \u00b7 replay checks \u00b7 property checks] V --> G[Governance a",
-                "words": 66
-              },
-              {
-                "sentence": "- A set of \u201cportability blockers\u201d attributed to either: - Harness/tool coupling (e.g., a tool contract ambiguity that different models interpret differently), or - Model behavior (e.g., consistent vio",
-                "words": 34
-              },
-              {
-                "sentence": "As you read it, track three things: where validation occurs, which fields get exported, and what the divergence check is allowed to claim as \u201cverified.\u201d <pre class=\"mermaid\"> flowchart LR A[Generate r",
-                "words": 91
+                "sentence": "As you read it, track three things: where validation occurs, which fields get exported, and what the divergence check is allowed to claim as \u201cverified.\u201d ```mermaid flowchart LR A[\"Generate run\"] --> B",
+                "words": 88
               },
               {
                 "sentence": "- `event_id`, `type`, `timestamp`, `parent_event_id` (when applicable) - Assistant/user text: content plus redaction markers (when redacted) - Tool calls: `tool_name`, validated `arguments`, `result` ",
                 "words": 43
-              },
-              {
-                "sentence": "- Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint, require semantic versioning, a contract test suite, and ",
-                "words": 37
               }
             ],
-            "timestamp": "2026-02-22T21:15:12Z"
+            "timestamp": "2026-02-23T11:28:36Z"
           }
         }
       },
       "lifecycle": "draft",
       "path": "book/chapters/99-future-directions.md",
       "quality_metrics": {
-        "clarity_score": 0.9,
-        "drift_score": 0.2547019104907123,
+        "clarity_score": 0.92,
+        "drift_score": 0.06324163314922654,
         "example_density": 0.9,
         "failure_mode_presence": true,
-        "structure_score": 0.95,
+        "structure_score": 0.96,
         "tradeoff_presence": true
       },
       "research": {
@@ -1029,13 +1057,13 @@
         "hypothesis": "",
         "validation_status": "untested"
       },
-      "revision_count": 377,
+      "revision_count": 380,
       "stability": {
         "consecutive_passes": 0,
         "frozen_candidate": false,
-        "last_modified_iteration": 377
+        "last_modified_iteration": 380
       },
-      "status": "active_refinement"
+      "status": "hold"
     },
     "glossary": {
       "current_iteration": 3,
@@ -1955,7 +1983,7 @@
     },
     "timestamp": "ISO-8601 string"
   },
-  "repo_iteration_counter": 3070,
+  "repo_iteration_counter": 3073,
   "repo_iteration_log_files": [
     "state/ledger/repo_iteration_log/2026-02-22T21-49-53Z__iter-003060.json",
     "state/ledger/repo_iteration_log/2026-02-22T21-50-37Z__iter-003061.json",
@@ -1967,7 +1995,10 @@
     "state/ledger/repo_iteration_log/2026-02-22T21-56-02Z__iter-003067.json",
     "state/ledger/repo_iteration_log/2026-02-22T21-56-47Z__iter-003068.json",
     "state/ledger/repo_iteration_log/2026-02-22T21-57-49Z__iter-003069.json",
-    "state/ledger/repo_iteration_log/2026-02-22T21-58-49Z__iter-003070.json"
+    "state/ledger/repo_iteration_log/2026-02-22T21-58-49Z__iter-003070.json",
+    "state/ledger/repo_iteration_log/2026-02-23T11-27-07Z__iter-003071.json",
+    "state/ledger/repo_iteration_log/2026-02-23T11-27-55Z__iter-003072.json",
+    "state/ledger/repo_iteration_log/2026-02-23T11-28-36Z__iter-003073.json"
   ],
   "repo_iteration_log_tail": [
     {
@@ -3188,6 +3219,282 @@
         "patterns_modified": []
       },
       "timestamp": "2026-02-22T21:58:49Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.28; drift_score=0.06"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-23T11:27:07Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.06578947368421051,
+              "model": 0.01379310344827589
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.004697592483852026
+          },
+          "timestamp": "2026-02-23T11:27:07Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.09080257762155829,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "Concretely, invest in artifacts that scale across teams and models: - stronger tool contracts - better evaluations - structured memory - governance primitives Here, \u201cinterfaces\u201d means the concrete art",
+              "words": 29
+            },
+            {
+              "sentence": "```mermaid flowchart TB I[\"Interoperability<br/>trace formats \u00b7 tool schemas \u00b7 eval definitions\"] --> V[\"Verification<br/>contract tests \u00b7 replay checks \u00b7 property checks\"] V --> G[\"Governance at scal",
+              "words": 63
+            },
+            {
+              "sentence": "As you read it, track three things: where validation occurs, which fields get exported, and what the divergence check is allowed to claim as \u201cverified.\u201d ```mermaid flowchart LR A[\"Generate run\"] --> B",
+              "words": 88
+            },
+            {
+              "sentence": "- `event_id`, `type`, `timestamp`, `parent_event_id` (when applicable) - Assistant/user text: content plus redaction markers (when redacted) - Tool calls: `tool_name`, validated `arguments`, `result` ",
+              "words": 43
+            }
+          ],
+          "timestamp": "2026-02-23T11:27:07Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/99-future-directions.md",
+          "state/ledger/iteration_log/2026-02-23T11-27-07Z__chapter-99-future-directions__iter-000378.json",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 378 for 99-future-directions"
+      },
+      "iteration": 3071,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 9736,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 145894
+      },
+      "scope": {
+        "chapters_modified": [
+          "99-future-directions"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-23T11:27:07Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.06"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-23T11:27:55Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.06578947368421051,
+              "model": 0.01379310344827589
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.004697592483852026
+          },
+          "timestamp": "2026-02-23T11:27:55Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.09080257762155829,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "Concretely, invest in artifacts that scale across teams and models: - stronger tool contracts - better evaluations - structured memory - governance primitives Here, \u201cinterfaces\u201d means the concrete art",
+              "words": 29
+            },
+            {
+              "sentence": "```mermaid flowchart TB I[\"Interoperability<br/>trace formats \u00b7 tool schemas \u00b7 eval definitions\"] --> V[\"Verification<br/>contract tests \u00b7 replay checks \u00b7 property checks\"] V --> G[\"Governance at scal",
+              "words": 63
+            },
+            {
+              "sentence": "As you read it, track three things: where validation occurs, which fields get exported, and what the divergence check is allowed to claim as \u201cverified.\u201d ```mermaid flowchart LR A[\"Generate run\"] --> B",
+              "words": 88
+            },
+            {
+              "sentence": "- `event_id`, `type`, `timestamp`, `parent_event_id` (when applicable) - Assistant/user text: content plus redaction markers (when redacted) - Tool calls: `tool_name`, validated `arguments`, `result` ",
+              "words": 43
+            }
+          ],
+          "timestamp": "2026-02-23T11:27:55Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/99-future-directions.md",
+          "state/ledger/iteration_log/2026-02-23T11-27-55Z__chapter-99-future-directions__iter-000379.json",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 379 for 99-future-directions"
+      },
+      "iteration": 3072,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 21822,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 470860
+      },
+      "scope": {
+        "chapters_modified": [
+          "99-future-directions"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-23T11:27:55Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.06"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-23T11:28:36Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.06578947368421051,
+              "model": 0.01379310344827589
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.0,
+            "near_duplicate_ngram_ratio": 0.004697592483852026
+          },
+          "timestamp": "2026-02-23T11:28:36Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.09080257762155829,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "Concretely, invest in artifacts that scale across teams and models: - stronger tool contracts - better evaluations - structured memory - governance primitives Here, \u201cinterfaces\u201d means the concrete art",
+              "words": 29
+            },
+            {
+              "sentence": "```mermaid flowchart TB I[\"Interoperability<br/>trace formats \u00b7 tool schemas \u00b7 eval definitions\"] --> V[\"Verification<br/>contract tests \u00b7 replay checks \u00b7 property checks\"] V --> G[\"Governance at scal",
+              "words": 63
+            },
+            {
+              "sentence": "As you read it, track three things: where validation occurs, which fields get exported, and what the divergence check is allowed to claim as \u201cverified.\u201d ```mermaid flowchart LR A[\"Generate run\"] --> B",
+              "words": 88
+            },
+            {
+              "sentence": "- `event_id`, `type`, `timestamp`, `parent_event_id` (when applicable) - Assistant/user text: content plus redaction markers (when redacted) - Tool calls: `tool_name`, validated `arguments`, `result` ",
+              "words": 43
+            }
+          ],
+          "timestamp": "2026-02-23T11:28:36Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/99-future-directions.md",
+          "state/ledger/iteration_log/2026-02-23T11-28-36Z__chapter-99-future-directions__iter-000380.json",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 380 for 99-future-directions"
+      },
+      "iteration": 3073,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 30914,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 927079
+      },
+      "scope": {
+        "chapters_modified": [
+          "99-future-directions"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-23T11:28:36Z"
     }
   ],
   "version": 2
