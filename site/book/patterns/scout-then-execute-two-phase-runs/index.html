@@ -7,23 +7,23 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="Technical book on AI-first software engineering governance and execution" name="description"/>
 <meta content="Autonomous Authors" name="author"/>
-<link href="../.." rel="prev"/>
-<link href="../chapters/01-paradigm-shift/" rel="next"/>
-<link href="../../assets/images/favicon.png" rel="icon"/>
+<link href="../diff-to-gates-router/" rel="prev"/>
+<link href="../patch-locality-budget/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
-<title>Preface - AI-First Software Engineering</title>
-<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<title>Scout-Then-Execute (Two-Phase Runs) - AI-First Software Engineering</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
 <body dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#preface">
+<a class="md-skip" href="#scout-then-execute-two-phase-runs">
           Skip to content
         </a>
 </div>
@@ -31,7 +31,7 @@
 </div>
 <header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="AI-First Software Engineering" class="md-header__button md-logo" data-md-component="logo" href="../.." title="AI-First Software Engineering">
+<a aria-label="AI-First Software Engineering" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
@@ -47,7 +47,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Preface
+              Scout-Then-Execute (Two-Phase Runs)
             
           </span>
 </div>
@@ -104,7 +104,7 @@
 <div class="md-sidebar__inner">
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
-<a aria-label="AI-First Software Engineering" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="AI-First Software Engineering">
+<a aria-label="AI-First Software Engineering" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
     AI-First Software Engineering
@@ -121,7 +121,7 @@
 </div>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../..">
+<a class="md-nav__link" href="../../..">
 <span class="md-ellipsis">
     
   
@@ -132,20 +132,8 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    Preface
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../preface/">
 <span class="md-ellipsis">
     
   
@@ -155,50 +143,6 @@
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#scope">
-<span class="md-ellipsis">
-      
-        Scope
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#key-distinction-model-vs-harness">
-<span class="md-ellipsis">
-      
-        Key distinction: model vs harness
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#what-the-repository-demonstrates">
-<span class="md-ellipsis">
-      
-        What the repository demonstrates
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#how-to-read">
-<span class="md-ellipsis">
-      
-        How to read
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
@@ -224,7 +168,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/01-paradigm-shift/">
+<a class="md-nav__link" href="../../chapters/01-paradigm-shift/">
 <span class="md-ellipsis">
     
   
@@ -236,7 +180,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/02-harness-engineering/">
+<a class="md-nav__link" href="../../chapters/02-harness-engineering/">
 <span class="md-ellipsis">
     
   
@@ -248,7 +192,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/03-autonomous-kernels/">
+<a class="md-nav__link" href="../../chapters/03-autonomous-kernels/">
 <span class="md-ellipsis">
     
   
@@ -260,7 +204,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/04-memory-systems/">
+<a class="md-nav__link" href="../../chapters/04-memory-systems/">
 <span class="md-ellipsis">
     
   
@@ -272,7 +216,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/05-evaluation-and-traces/">
+<a class="md-nav__link" href="../../chapters/05-evaluation-and-traces/">
 <span class="md-ellipsis">
     
   
@@ -284,7 +228,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/06-agent-governance/">
+<a class="md-nav__link" href="../../chapters/06-agent-governance/">
 <span class="md-ellipsis">
     
   
@@ -296,7 +240,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/07-production-ai-infrastructure/">
+<a class="md-nav__link" href="../../chapters/07-production-ai-infrastructure/">
 <span class="md-ellipsis">
     
   
@@ -308,7 +252,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/99-future-directions/">
+<a class="md-nav__link" href="../../chapters/99-future-directions/">
 <span class="md-ellipsis">
     
   
@@ -323,7 +267,7 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../glossary/">
+<a class="md-nav__link" href="../../glossary/">
 <span class="md-ellipsis">
     
   
@@ -334,8 +278,8 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
 <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
 <span class="md-ellipsis">
     
@@ -347,7 +291,7 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
             
@@ -358,7 +302,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/harness-design-patterns/">
+<a class="md-nav__link" href="../harness-design-patterns/">
 <span class="md-ellipsis">
     
   
@@ -370,7 +314,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/memory-architectures/">
+<a class="md-nav__link" href="../memory-architectures/">
 <span class="md-ellipsis">
     
   
@@ -382,7 +326,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/minimal-agent-loop/">
+<a class="md-nav__link" href="../minimal-agent-loop/">
 <span class="md-ellipsis">
     
   
@@ -394,7 +338,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/self-verification-loop/">
+<a class="md-nav__link" href="../self-verification-loop/">
 <span class="md-ellipsis">
     
   
@@ -406,7 +350,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/risk-shaped-autonomy-tiers/">
+<a class="md-nav__link" href="../risk-shaped-autonomy-tiers/">
 <span class="md-ellipsis">
     
   
@@ -418,7 +362,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/diff-to-gates-router/">
+<a class="md-nav__link" href="../diff-to-gates-router/">
 <span class="md-ellipsis">
     
   
@@ -429,8 +373,20 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/scout-then-execute-two-phase-runs/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Scout-Then-Execute (Two-Phase Runs)
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -440,9 +396,142 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#context">
+<span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/patch-locality-budget/">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forces">
+<span class="md-ellipsis">
+      
+        Forces
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solution">
+<span class="md-ellipsis">
+      
+        Solution
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
+      
+        Implementation sketch
+      
+    </span>
+</a>
+<nav aria-label="Implementation sketch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scout-phase-read-only">
+<span class="md-ellipsis">
+      
+        Scout phase (read-only)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#execute-phase-mutating">
+<span class="md-ellipsis">
+      
+        Execute phase (mutating)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#re-scout-triggers">
+<span class="md-ellipsis">
+      
+        Re-scout triggers
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-examples">
+<span class="md-ellipsis">
+      
+        Concrete examples
+      
+    </span>
+</a>
+<nav aria-label="Concrete examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-fix-a-failing-test-without-touching-unrelated-code">
+<span class="md-ellipsis">
+      
+        Example 1: Fix a failing test without touching unrelated code
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-add-a-new-documentation-page-safely">
+<span class="md-ellipsis">
+      
+        Example 2: Add a new documentation page safely
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
+      
+        When not to use
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patch-locality-budget/">
 <span class="md-ellipsis">
     
   
@@ -454,7 +543,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/waiver-ledger-exceptions-are-data/">
+<a class="md-nav__link" href="../waiver-ledger-exceptions-are-data/">
 <span class="md-ellipsis">
     
   
@@ -466,7 +555,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/evidence-bundle-standard/">
+<a class="md-nav__link" href="../evidence-bundle-standard/">
 <span class="md-ellipsis">
     
   
@@ -478,7 +567,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/failure-signature-index/">
+<a class="md-nav__link" href="../failure-signature-index/">
 <span class="md-ellipsis">
     
   
@@ -490,7 +579,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/golden-task-canary-suite/">
+<a class="md-nav__link" href="../golden-task-canary-suite/">
 <span class="md-ellipsis">
     
   
@@ -502,7 +591,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/replayable-trace-runs/">
+<a class="md-nav__link" href="../replayable-trace-runs/">
 <span class="md-ellipsis">
     
   
@@ -514,7 +603,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/memory-write-barrier/">
+<a class="md-nav__link" href="../memory-write-barrier/">
 <span class="md-ellipsis">
     
   
@@ -543,37 +632,126 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#scope">
+<a class="md-nav__link" href="#context">
 <span class="md-ellipsis">
       
-        Scope
+        Context
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#key-distinction-model-vs-harness">
+<a class="md-nav__link" href="#problem">
 <span class="md-ellipsis">
       
-        Key distinction: model vs harness
+        Problem
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#what-the-repository-demonstrates">
+<a class="md-nav__link" href="#forces">
 <span class="md-ellipsis">
       
-        What the repository demonstrates
+        Forces
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#how-to-read">
+<a class="md-nav__link" href="#solution">
 <span class="md-ellipsis">
       
-        How to read
+        Solution
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
+      
+        Implementation sketch
+      
+    </span>
+</a>
+<nav aria-label="Implementation sketch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scout-phase-read-only">
+<span class="md-ellipsis">
+      
+        Scout phase (read-only)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#execute-phase-mutating">
+<span class="md-ellipsis">
+      
+        Execute phase (mutating)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#re-scout-triggers">
+<span class="md-ellipsis">
+      
+        Re-scout triggers
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-examples">
+<span class="md-ellipsis">
+      
+        Concrete examples
+      
+    </span>
+</a>
+<nav aria-label="Concrete examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-fix-a-failing-test-without-touching-unrelated-code">
+<span class="md-ellipsis">
+      
+        Example 1: Fix a failing test without touching unrelated code
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-add-a-new-documentation-page-safely">
+<span class="md-ellipsis">
+      
+        Example 2: Add a new documentation page safely
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
+      
+        When not to use
       
     </span>
 </a>
@@ -585,119 +763,142 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="preface">Preface</h1>
-<p>This book treats AI-first software engineering as an engineering discipline rather than a product feature.</p>
-<h2 id="scope">Scope</h2>
-<p>This book focuses on <em>system design for AI-assisted and agentic development</em>:</p>
+<h1 id="scout-then-execute-two-phase-runs">Scout-Then-Execute (Two-Phase Runs)</h1>
+<h2 id="context">Context</h2>
+<p>Most failures in autonomous repo work come from acting too early:</p>
 <ul>
-<li>Harness design: tool contracts, constraints, budgets, evaluation gates, and traces.</li>
-<li>Operational reliability: reproducibility, attribution, rollback, and incident response.</li>
-<li>Governance: permissions, protected surfaces, and enforcement via tooling/CI.</li>
-<li>Memory as an engineered subsystem: provenance, retention, correction, and drift control.</li>
+<li>Editing the wrong files because the structure was misread.</li>
+<li>Making a plausible patch that fails on build/test.</li>
+<li>Touching protected surfaces without realizing it.</li>
 </ul>
-<p>Concrete boundaries:</p>
+<p>A harness can reduce this by forcing an explicit read-only discovery phase before any mutations.</p>
+<h2 id="problem">Problem</h2>
+<p>How do you make autonomous runs reliable and governable when the model’s first guess is often wrong?</p>
+<p>You need a structure that:</p>
 <ul>
-<li><strong>In scope:</strong> a PR review agent that must cite file paths, run linters/tests, and attach logs before approval.</li>
-<li><strong>In scope:</strong> a code-change workflow that requires a reproducible “plan → change → evaluate → record” trace for each iteration.</li>
-<li><strong>Out of scope:</strong> model training/fine-tuning, or discussions of model internals beyond what is needed to reason about behavior and failure modes.</li>
+<li>Limits side effects until the harness has enough evidence to proceed.</li>
+<li>Produces a concrete plan that can be checked against policy (budgets, protected paths, gates).</li>
+<li>Keeps the run auditable: the trace shows what was discovered and why the next action was safe.</li>
 </ul>
-<p>What you’ll be able to do after this book:</p>
+<h2 id="forces">Forces</h2>
 <ul>
-<li>Specify tool contracts and evaluation gates so “done” is defined by evidence (tests, builds, checks), not plausibility.</li>
-<li>Design governance boundaries (permissions, protected surfaces) that limit blast radius while keeping workflows productive.</li>
-<li>Make agent loops reproducible and auditable via traces, state, and rollback-friendly change management.</li>
+<li><strong>Speed vs. correctness</strong>: scouting adds a step, but prevents large rework.</li>
+<li><strong>Context limits</strong>: scouting can bloat context if unconstrained.</li>
+<li><strong>Staleness</strong>: repository state can change between phases.</li>
+<li><strong>Tool boundary</strong>: the model must not “accidentally” mutate state during discovery.</li>
+<li><strong>Evaluation gates</strong>: you want to select checks based on what you find, not on guesswork.</li>
 </ul>
-<p>Trade-offs are part of the scope. Stronger gates increase confidence, but they also add latency and maintenance cost. The goal is to make these costs explicit and tunable.</p>
-<p>This book does <strong>not</strong> attempt to:</p>
-<ul>
-<li>Train foundation models or discuss model internals beyond what is necessary to reason about system behavior.</li>
-<li>Provide a survey of all agent frameworks; patterns are described in terms of interfaces and invariants.</li>
-<li>Substitute evaluation with plausibility; “done” requires evidence.</li>
-</ul>
-<h2 id="key-distinction-model-vs-harness">Key distinction: model vs harness</h2>
-<ul>
-<li><strong>Model</strong>: the reasoning component that proposes plans and edits.</li>
-<li><strong>Harness</strong>: the execution and control environment (tools, policies, evaluation, tracing, state).</li>
-</ul>
-<p>The harness turns suggestions into an engineering workflow.
-It enforces a small set of invariants:</p>
-<ul>
-<li>Tool access: what tools may be called, with what inputs/outputs (schemas, allowlists, budgets).</li>
-<li>Evidence: what checks must pass before accepting a change (tests, builds, linters, targeted checks).</li>
-<li>Record: what must be stored for audit and rollback (diffs, command output, artifacts, approvals).</li>
-</ul>
-<p>Minimal system breakdown (components and interactions):</p>
-<ul>
-<li><strong>Inputs</strong>: user request, repository state, policy config.</li>
-<li><strong>Planner</strong>: produces a plan with bounded scope and acceptance criteria.</li>
-<li><strong>Changer</strong>: proposes a minimal diff that targets the plan.</li>
-<li><strong>Evaluator</strong>: runs specified commands and collects results as artifacts.</li>
-<li><strong>Recorder</strong>: writes a trace (plan, diff, commands, outputs, decision).</li>
-</ul>
-<p>The diagram below is a literal control flow for request, verification, and recording.</p>
-<div class="mermaid">sequenceDiagram
-  participant U as User
-  participant M as Model
-  participant H as Harness
-  participant T as Tools/CI
-  U-&gt;&gt;H: request
-  H-&gt;&gt;M: plan (constraints, budgets)
-  M-&gt;&gt;H: proposed edits
-  H-&gt;&gt;T: run checks (tests/lint/build)
-  T--&gt;&gt;H: outputs (exit codes, logs)
-  H--&gt;&gt;U: record (diff + artifacts) + decision
+<h2 id="solution">Solution</h2>
+<p>Split the run into two explicit phases:</p>
+<ol>
+<li><strong>Scout</strong>: read-only exploration that produces a bounded working set, an execution plan, and the required gates.</li>
+<li><strong>Execute</strong>: apply patches only within the scoped working set, then run the selected gates and stop only with evidence.</li>
+</ol>
+<p>A diagram helps because the key is phase separation. Focus on the hard boundary: Scout cannot call side-effect tools, and Execute cannot change the policy/gates selection without re-scouting.</p>
+<div class="mermaid">flowchart TB
+  S[Scout phase&lt;br/&gt;read/search only] --&gt; P[Produce plan&lt;br/&gt;files, intended edits, required gates]
+  P --&gt; C{Policy check&lt;br/&gt;protected paths? budgets?}
+  C -- Pass --&gt; X[Execute phase&lt;br/&gt;apply patches in scope]
+  C -- Fail --&gt; A[Request approval&lt;br/&gt;or reduce scope]
+  X --&gt; V[Verify&lt;br/&gt;run required gates]
+  V --&gt; D{All gates pass?}
+  D -- Yes --&gt; Z[Stop success&lt;br/&gt;attach evidence]
+  D -- No --&gt; R[Bounded repair&lt;br/&gt;or blocked report]
+  R --&gt; X
 </div>
-<p>Mini-example: two systems use the same model to “fix failing tests.”
-In System A, the model edits files and declares success.
-Failures can be missed until later.</p>
-<p>In System B, the harness requires three artifacts before “done”:</p>
-<ol>
-<li>A minimal diff that names the files changed.</li>
-<li>A test command with exit code 0 (for example: <code>pytest -q tests/test_auth.py::test_login</code>).</li>
-<li>Attached output (command stdout/stderr) linked to the diff.</li>
-</ol>
-<p>Acceptance is a gate with an exit code.
-If the command is not run, or exits non-zero, the change is rejected.
-Acceptance criterion: detection occurs within the same iteration (≤ 1 loop).</p>
-<p>Second mini-example: PR review gating.
-A review agent may propose “approve.”
-Approval is only allowed if:</p>
+<h2 id="implementation-sketch">Implementation sketch</h2>
+<h3 id="scout-phase-read-only">Scout phase (read-only)</h3>
+<p>Constraints:</p>
 <ul>
-<li>The review comment cites at least 3 concrete file paths it inspected.</li>
-<li>The harness runs <code>ruff check .</code> and <code>pytest -q</code> and records exit code 0 for both.</li>
-<li>The harness attaches the command outputs to the review record.</li>
-<li>If either command is skipped or fails, approval is blocked.</li>
+<li>Only allow read/search tools.</li>
+<li>Enforce a narrow context budget (for example, max N files opened, max lines).</li>
 </ul>
-<p>Failure modes still exist, and the harness should surface them explicitly.
-Flaky tests can block merges and inflate reruns.
-Missing tool coverage can create blind spots for certain file types.
-Log omission can hide the true failure cause.
-Permission misconfiguration can allow unsafe writes.
-In each case, the harness should fail closed and record why.</p>
-<p>A recurring hypothesis in the chapters is that many reliability gains are harness-induced. Schema design, verification discipline, and traceability matter even when the model is unchanged.</p>
-<h2 id="what-the-repository-demonstrates">What the repository demonstrates</h2>
-<p>The repository is structured to make book development itself a reproducible agent loop:</p>
+<p>Outputs:</p>
 <ul>
-<li>Governance is defined in <code>CONSTITUTION.md</code> and <code>AGENTS.md</code>.</li>
-<li>Chapter quality, drift signals, and style guardrails are declared in <code>evals/</code>.</li>
-<li>Iteration state is recorded in <code>state/</code>.</li>
+<li><strong>Working set</strong>: explicit list of files to touch.</li>
+<li><strong>Planned diffs</strong>: high-level description of intended edits (not the patch yet).</li>
+<li><strong>Gate plan</strong>: required checks selected by a diff-to-gates router policy.</li>
+<li><strong>Risk assessment</strong>: tier recommendation (see “Risk-Shaped Autonomy Tiers”).</li>
+<li><strong>Stop conditions</strong>: what evidence is required to declare success.</li>
 </ul>
-<p>At a high level, each iteration is meant to be verifiable: plan → change → evaluate → record.</p>
-<p>Practically, “record” means the repository keeps enough evidence to audit decisions:</p>
+<h3 id="execute-phase-mutating">Execute phase (mutating)</h3>
+<p>Constraints:</p>
 <ul>
-<li>The plan that bounded the edit.</li>
-<li>The minimal diff that implemented it.</li>
-<li>The exact commands executed (including versions and working directory assumptions).</li>
-<li>The outputs needed to verify the result (exit codes, logs, reports).</li>
+<li>Only allow patch tools, and enforce patch locality budgets.</li>
+<li>Reject edits outside the scoped working set unless the run returns to Scout.</li>
+<li>Enforce approvals if protected surfaces are detected.</li>
 </ul>
-<p>The intention is to make each chapter a testable unit: clear thesis, system breakdown, concrete examples, trade-offs, failure modes, and research directions.</p>
-<h2 id="how-to-read">How to read</h2>
-<ol>
-<li>Start with the chapter that matches your immediate constraint (evaluation, governance, infra).</li>
-<li>Use <code>book/glossary.md</code> to disambiguate terms.</li>
-<li>Treat pattern documents in <code>book/patterns/</code> as reusable design primitives.</li>
-<li>If you’re new: read Preface → <code>book/glossary.md</code> → one document in <code>book/patterns/</code>.</li>
-</ol>
+<p>Verification:</p>
+<ul>
+<li>Run the gates produced in Scout.</li>
+<li>Capture command outputs and exit codes.</li>
+<li>Success requires evidence; otherwise stop as blocked or continue bounded repair.</li>
+</ul>
+<h3 id="re-scout-triggers">Re-scout triggers</h3>
+<p>Force a return to Scout when:</p>
+<ul>
+<li>The patch touches a file outside the scoped set.</li>
+<li>The diff grows beyond locality budgets.</li>
+<li>A required gate cannot run (missing tool/environment).</li>
+<li>A protected-path rule is encountered.</li>
+</ul>
+<h2 id="concrete-examples">Concrete examples</h2>
+<h3 id="example-1-fix-a-failing-test-without-touching-unrelated-code">Example 1: Fix a failing test without touching unrelated code</h3>
+<p>Scout:</p>
+<ul>
+<li>Run tests to get the failing file and assertion.</li>
+<li>Read only the failing test and the referenced implementation.</li>
+<li>Produce a working set of 2 files and select gates: re-run the single failing test + lint.</li>
+</ul>
+<p>Execute:</p>
+<ul>
+<li>Patch only the implementation and test (if needed).</li>
+<li>Re-run the targeted test; stop only when it passes and output is captured.</li>
+</ul>
+<p>Result: fewer “fixes” that ripple across the repo because scouting constrained the working set.</p>
+<h3 id="example-2-add-a-new-documentation-page-safely">Example 2: Add a new documentation page safely</h3>
+<p>Scout:</p>
+<ul>
+<li>Inspect existing pattern page structure.</li>
+<li>Confirm the nav structure in the site config.</li>
+<li>Select gates: markdown lint and <code>mkdocs build</code>.</li>
+</ul>
+<p>Execute:</p>
+<ul>
+<li>Create the new markdown page.</li>
+<li>Update nav (if required by the repo).</li>
+<li>Run <code>mkdocs build</code> and stop only on exit code 0.</li>
+</ul>
+<p>Result: avoids broken navigation and ensures the site builds.</p>
+<h2 id="failure-modes">Failure modes</h2>
+<ul>
+<li><strong>Scout becomes a full crawl</strong>: the phase reads too much and burns budget.<ul>
+<li>Mitigation: hard cap files/lines; require a selection rationale.</li>
+</ul>
+</li>
+<li><strong>Phase leakage</strong>: side effects happen during Scout.<ul>
+<li>Mitigation: enforce tool allowlists in the router/kernel; log rejected tool calls.</li>
+</ul>
+</li>
+<li><strong>Execute drift</strong>: patches expand beyond the scoped plan without re-scouting.<ul>
+<li>Mitigation: enforce a working-set contract; violations trigger re-scout.</li>
+</ul>
+</li>
+<li><strong>Stale assumptions</strong>: the repo changes between Scout and Execute.<ul>
+<li>Mitigation: record repo SHA or file checksums in Scout; re-scout if changed.</li>
+</ul>
+</li>
+<li><strong>Verification skipped</strong>: the run stops success after patching.<ul>
+<li>Mitigation: evidence-first stop gate; success requires gate artifacts.</li>
+</ul>
+</li>
+</ul>
+<h2 id="when-not-to-use">When not to use</h2>
+<ul>
+<li>Single-file, low-risk edits where the discovery phase adds more overhead than safety.</li>
+<li>Environments where read-only tool access is already expensive (slow repositories, heavy remote calls) and the task risk is low.</li>
+<li>Highly interactive tasks where the right working set is not knowable up front (but even there, you can keep Scout minimal and repeated).</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -732,8 +933,8 @@ In each case, the harness should fail closed and record why.</p>
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
 <script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
 mermaid.initialize({});</script></body>
 </html>

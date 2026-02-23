@@ -7,11 +7,10 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="Technical book on AI-first software engineering governance and execution" name="description"/>
 <meta content="Autonomous Authors" name="author"/>
-<link href="../memory-architectures/" rel="prev"/>
-<link href="../self-verification-loop/" rel="next"/>
+<link href="../replayable-trace-runs/" rel="prev"/>
 <link href="../../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
-<title>Minimal Agent Loop - AI-First Software Engineering</title>
+<title>Memory Write Barrier (Verified-Only Durable Memory) - AI-First Software Engineering</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
@@ -23,7 +22,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#minimal-agent-loop">
+<a class="md-skip" href="#memory-write-barrier-verified-only-durable-memory">
           Skip to content
         </a>
 </div>
@@ -47,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Minimal Agent Loop
+              Memory Write Barrier (Verified-Only Durable Memory)
             
           </span>
 </div>
@@ -325,20 +324,8 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    Minimal Agent Loop
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../minimal-agent-loop/">
 <span class="md-ellipsis">
     
   
@@ -348,139 +335,6 @@
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#context">
-<span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#problem">
-<span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#forces">
-<span class="md-ellipsis">
-      
-        Forces
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#solution">
-<span class="md-ellipsis">
-      
-        Solution
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#implementation-sketch">
-<span class="md-ellipsis">
-      
-        Implementation sketch
-      
-    </span>
-</a>
-<nav aria-label="Implementation sketch" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#concrete-example">
-<span class="md-ellipsis">
-      
-        Concrete example
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#failure-modes">
-<span class="md-ellipsis">
-      
-        Failure modes
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#when-not-to-use">
-<span class="md-ellipsis">
-      
-        When not to use
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#operational-checklists">
-<span class="md-ellipsis">
-      
-        Operational checklists
-      
-    </span>
-</a>
-<nav aria-label="Operational checklists" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#minimal-trace-event-contract">
-<span class="md-ellipsis">
-      
-        Minimal trace event contract
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#stop-conditions-catalog">
-<span class="md-ellipsis">
-      
-        Stop conditions catalog
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#budget-defaults-practical-starting-point">
-<span class="md-ellipsis">
-      
-        Budget defaults (practical starting point)
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#what-to-measure">
-<span class="md-ellipsis">
-      
-        What to measure
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../self-verification-loop/">
@@ -602,8 +456,20 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../memory-write-barrier/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Memory Write Barrier (Verified-Only Durable Memory)
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -613,6 +479,139 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#context">
+<span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forces">
+<span class="md-ellipsis">
+      
+        Forces
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solution">
+<span class="md-ellipsis">
+      
+        Solution
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
+      
+        Implementation sketch
+      
+    </span>
+</a>
+<nav aria-label="Implementation sketch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-model-conceptual">
+<span class="md-ellipsis">
+      
+        Data model (conceptual)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#write-barrier-algorithm-conceptual">
+<span class="md-ellipsis">
+      
+        Write barrier algorithm (conceptual)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#read-path-rule">
+<span class="md-ellipsis">
+      
+        Read path rule
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-examples">
+<span class="md-ellipsis">
+      
+        Concrete Examples
+      
+    </span>
+</a>
+<nav aria-label="Concrete Examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-codebase-agent-writes-durable-facts-only-after-tests-pass">
+<span class="md-ellipsis">
+      
+        Example 1: Codebase agent writes “durable facts” only after tests pass
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-incident-response-agent-updates-a-rollback-procedure-via-a-drill-gate">
+<span class="md-ellipsis">
+      
+        Example 2: Incident-response agent updates a rollback procedure via a drill gate
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
+      
+        When not to use
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -678,10 +677,59 @@
 <nav aria-label="Implementation sketch" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#concrete-example">
+<a class="md-nav__link" href="#data-model-conceptual">
 <span class="md-ellipsis">
       
-        Concrete example
+        Data model (conceptual)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#write-barrier-algorithm-conceptual">
+<span class="md-ellipsis">
+      
+        Write barrier algorithm (conceptual)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#read-path-rule">
+<span class="md-ellipsis">
+      
+        Read path rule
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-examples">
+<span class="md-ellipsis">
+      
+        Concrete Examples
+      
+    </span>
+</a>
+<nav aria-label="Concrete Examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-codebase-agent-writes-durable-facts-only-after-tests-pass">
+<span class="md-ellipsis">
+      
+        Example 1: Codebase agent writes “durable facts” only after tests pass
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-incident-response-agent-updates-a-rollback-procedure-via-a-drill-gate">
+<span class="md-ellipsis">
+      
+        Example 2: Incident-response agent updates a rollback procedure via a drill gate
       
     </span>
 </a>
@@ -707,55 +755,6 @@
     </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#operational-checklists">
-<span class="md-ellipsis">
-      
-        Operational checklists
-      
-    </span>
-</a>
-<nav aria-label="Operational checklists" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#minimal-trace-event-contract">
-<span class="md-ellipsis">
-      
-        Minimal trace event contract
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#stop-conditions-catalog">
-<span class="md-ellipsis">
-      
-        Stop conditions catalog
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#budget-defaults-practical-starting-point">
-<span class="md-ellipsis">
-      
-        Budget defaults (practical starting point)
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#what-to-measure">
-<span class="md-ellipsis">
-      
-        What to measure
-      
-    </span>
-</a>
-</li>
 </ul>
 </nav>
 </div>
@@ -763,264 +762,230 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="minimal-agent-loop">Minimal Agent Loop</h1>
+<h1 id="memory-write-barrier-verified-only-durable-memory">Memory Write Barrier (Verified-Only Durable Memory)</h1>
 <h2 id="context">Context</h2>
-<p>You need iterative work (planning + tool use + feedback) inside an engineering environment (repo, CI, tickets, docs). The primary risk is uncontrolled complexity: additional autonomy without corresponding observability and verification.</p>
+<p>Agents benefit from memory: durable records can prevent repeated mistakes, preserve decisions, and speed up multi-day work. But “memory” is a side-effect: once it persists, it can bias future runs, expand retention obligations, and become a hidden dependency.</p>
+<p>In most real systems, the dangerous failure mode is not <em>lack of memory</em> but <em>incorrect memory with authority</em>. A single unverified entry (“the API supports X”, “this command is safe”) can propagate into future runs as a false constraint or a false fact.</p>
+<p>This pattern is also called <strong>Memory Write Gate</strong> or <strong>Verified-Only Durable Memory</strong>.</p>
 <h2 id="problem">Problem</h2>
-<p>A minimal agent loop is a bounded plan→act→observe cycle where each step produces one concrete action and one auditable trace event. How do you get useful autonomous work while keeping the control surface small enough to debug, test, and govern?</p>
-<p>In practice, “small enough” means: (1) explicit stop conditions, (2) verification evidence attached to the final result, and (3) reproducible step-by-step logs when something goes wrong.</p>
+<p>How do you let an agent benefit from durable memory without letting unverified guesses, hallucinations, or transient hypotheses become long-lived “facts”?</p>
+<p>More concretely:</p>
+<ul>
+<li>How do you prevent durable memory from being updated during uncertain, mid-investigation steps?</li>
+<li>How do you ensure durable entries are traceable to sources and verification evidence?</li>
+<li>How do you support deletion, redaction, and correction without rewriting history?</li>
+</ul>
 <h2 id="forces">Forces</h2>
 <ul>
-<li><strong>Capability vs. determinism</strong>: richer loops solve more tasks but increase variance across runs.<ul>
-<li>Design choice: restrict the model to “exactly one next action” per step (tool call or stop) and enforce budgets outside the model.</li>
-</ul>
-</li>
-<li><strong>Observability vs. speed</strong>: more logging and checks slow iteration, but missing data makes incidents expensive.<ul>
-<li>Design choice: log only what you need to reproduce outcomes (inputs selected, tool call args, normalized error, changed files, verification output).</li>
-</ul>
-</li>
-<li><strong>Safety vs. throughput</strong>: tighter constraints reduce risk but may block progress on ambiguous tasks.<ul>
-<li>Design choice: define “blocked” as an explicit stop state with a reason and the smallest missing prerequisite (permission, missing file, unclear spec).</li>
-</ul>
-</li>
-<li><strong>Tool side effects</strong>: tools mutate state; retries can duplicate actions unless idempotent.<ul>
-<li>Design choice: include an idempotency key (or dry-run) for side-effecting tools; record a side-effect summary in the trace.</li>
-</ul>
-</li>
-<li><strong>Context limits</strong>: the loop must decide what to read, summarize, and omit.<ul>
-<li>Design choice: build a narrow context per step (only the files/lines needed for the next action) and summarize prior trace events.</li>
-</ul>
-</li>
+<li><strong>Usefulness vs. safety</strong>: writing more memory improves continuity but increases the chance of storing wrong or sensitive information.</li>
+<li><strong>Speed vs. verification</strong>: waiting for checks slows throughput; skipping checks increases drift.</li>
+<li><strong>Precision vs. recall</strong>: strict gates may reject valuable but partially verified information; loose gates store noise.</li>
+<li><strong>Authority leakage</strong>: retrieval systems often surface durable memory with high confidence (“we decided…”) even when it was only a hypothesis.</li>
+<li><strong>Governance requirements</strong>: audit, retention, and redaction become harder when memory is mutable or lacks provenance.</li>
+<li><strong>System coupling</strong>: if memory depends on the current code shape, refactors can invalidate it.</li>
 </ul>
 <h2 id="solution">Solution</h2>
-<p>Implement the smallest loop that aims to ensure: one action per step, explicit termination, and verification evidence on stop.</p>
-<ol>
-<li>Load state (workspace snapshot + budgets + any session memory).</li>
-<li>Produce exactly one next action using a typed schema (tool call or stop).</li>
-<li>Execute the action with timeouts, error normalization, and side-effect capture.</li>
-<li>Append a structured event to a trace.</li>
-<li>Update state and budgets.</li>
-<li>Stop only on explicit conditions (success with evidence, budget exhausted, or blocked with a reason).</li>
-</ol>
-<p>Keep loop policy simple. Push sophistication into tools (typed boundaries) and verification (tests/evals). A practical rule helps: a “success” stop cites concrete evidence (a passing command, a diff, or a test run). A “blocked” stop names the missing input needed to proceed.</p>
-<h2 id="implementation-sketch">Implementation sketch</h2>
-<p>A minimal state machine:</p>
+<p>Introduce a <strong>write barrier</strong> between the agent’s proposed memory updates and the durable memory store.</p>
 <ul>
-<li><strong>Inputs</strong>: goal, repo root, tool allowlist, budgets (steps/time/cost), memory handles.</li>
-<li><strong>Per-step</strong>:<ul>
-<li>Build a narrow context (selected files + short trace summary + constraints).</li>
-<li>Ask the model for <code>NextAction</code>.</li>
-<li>If <code>NextAction.type == stop</code>: return a result object (including verification evidence or explicit “blocked”).</li>
-<li>Otherwise: run the tool, capture outputs and <em>observable side effects</em>.</li>
-<li>Append the event to the trace.</li>
-<li>Update budgets; stop if exceeded.</li>
+<li>The agent may write freely to <strong>scratch</strong> and <strong>task state</strong>.</li>
+<li>Durable memory is written only through a <strong>gate</strong> that requires:<ul>
+<li><strong>verification evidence</strong> (tests/evals/checks or a domain-appropriate validation),</li>
+<li><strong>provenance</strong> (source pointers like file paths, trace IDs, commit hashes, URLs), and</li>
+<li><strong>a schema</strong> that separates facts/decisions from hypotheses and open questions.</li>
 </ul>
 </li>
 </ul>
-<p>A diagram helps because the loop is mostly control flow. It makes the decision points explicit. Focus on the two branches: “stop with evidence” vs “execute tool and record side effects.” Budgets are enforced outside the model.</p>
-<div class="mermaid">
-flowchart TB
-  A[Load state<br/>snapshot, budgets, memory] --&gt; B[Build narrow context<br/>files + trace summary + constraints]
-  B --&gt; C[Model returns NextAction<br/>typed: tool or stop]
-  C --&gt; D{NextAction.type == stop?}
-  D -- Yes --&gt; E[Return result<br/>include verification evidence<br/>or blocked reason]
-  D -- No --&gt; F[Execute tool<br/>timeouts + error normalization]
-  F --&gt; G[Capture outputs + side effects<br/>changed files, tickets, API writes]
-  G --&gt; H[Append structured trace event]
-  H --&gt; I[Update state + budgets]
-  I --&gt; J{Budget exceeded<br/>or stop condition met?}
-  J -- Yes --&gt; E
-  J -- No --&gt; B
+<p>A short diagram helps because the pattern is mostly about <em>where writes are allowed</em> and <em>what must happen before persistence</em>.</p>
+<div class="mermaid">flowchart TB
+  M["Model / Agent&lt;br/&gt;(propose memory updates)"] --&gt; S["Staging buffer&lt;br/&gt;(candidate memory writes)"]
+
+  S --&gt; V{Verification passed?}
+  V -- "No" --&gt; R["Reject or downgrade&lt;br/&gt;(store as scratch/open question)"]
+  V -- "Yes" --&gt; G["Governance checks&lt;br/&gt;(schema + provenance + policy)"]
+
+  G --&gt;|"approved"| D["Durable memory store&lt;br/&gt;(append-only records)"]
+  G --&gt;|"rejected"| R
+
+  D --&gt; I["Derived index&lt;br/&gt;(embeddings / search)"]
+  I --&gt; C["Context builder&lt;br/&gt;(retrieve top-k)"]
+  D --&gt; C
+
+  C --&gt; M
 </div>
-<p>Takeaway: emit one action at a time. Write a trace event every step. Stop only when a check (or other evidence) is recorded.</p>
-<p>Conceptual <code>NextAction</code> schema:</p>
-<pre><code>{
-  "type": "tool",
-  "toolName": "apply_patch",
-  "args": { "input": "...", "explanation": "..." },
-  "expectedOutcome": "File X updated; markdown lint passes",
-  "stopCondition": "After markdown lint passes",
-  "risk": "low"
+<p>Key invariants:</p>
+<ul>
+<li><strong>No direct writes to durable memory from the model</strong>.</li>
+<li><strong>Durable memory is append-only</strong>, with explicit “supersedes” links for corrections.</li>
+<li><strong>Every durable record has provenance and verification evidence</strong>.</li>
+<li><strong>Retrieval treats memory as a hint unless it is source-linked</strong> (and “critical” claims require source confirmation).</li>
+</ul>
+<h2 id="implementation-sketch">Implementation sketch</h2>
+<p>A practical implementation has three stores with different write rules:</p>
+<ul>
+<li><strong>Scratch (run-local)</strong>: overwrite is allowed; no long-lived authority.</li>
+<li><strong>Task state (session-local)</strong>: updated throughout the task; cleared on completion.</li>
+<li><strong>Durable memory (project-local)</strong>: append-only; written only through the barrier.</li>
+</ul>
+<h3 id="data-model-conceptual">Data model (conceptual)</h3>
+<p>Use a schema that makes authority explicit:</p>
+<ul>
+<li><code>kind</code>: <code>fact | decision | procedure | risk | preference | open_question</code></li>
+<li><code>confidence</code>: <code>low | medium | high</code></li>
+<li><code>scope</code>: <code>repo | service | team | user</code></li>
+<li><code>sources</code>: list of pointers (file paths, URLs, trace IDs, commit hashes)</li>
+<li><code>evidence</code>: what verification ran and its outcome</li>
+<li><code>supersedes</code>: list of record IDs (optional)</li>
+<li><code>valid_through</code>: optional expiry for volatile procedures</li>
+</ul>
+<p>A minimal record shape (conceptual):</p>
+<pre><code class="language-json">{
+  "id": "mem_2026-02-23T11:24:00Z_9b2f",
+  "kind": "decision",
+  "title": "Treat retrieval hits as leads, not truth",
+  "body": "Durable memory entries must cite sources and verification. Retrieval results require source confirmation for critical claims.",
+  "scope": "repo",
+  "confidence": "high",
+  "sources": ["book/patterns/memory-architectures.md"],
+  "evidence": {
+    "type": "check",
+    "name": "docs build",
+    "command": "uv run mkdocs build",
+    "exit_code": 0
+  },
+  "created_at": "2026-02-23T11:24:00Z"
 }
 </code></pre>
-<p>Practical kernel requirements:</p>
+<h3 id="write-barrier-algorithm-conceptual">Write barrier algorithm (conceptual)</h3>
+<ol>
+<li>
+<p><strong>Collect candidate writes</strong></p>
 <ul>
-<li>Enforce budgets outside the model.</li>
-<li>Validate tool arguments against schemas.</li>
-<li>Normalize errors (timeout vs. validation vs. runtime error).</li>
-<li>Record a trace event with enough data to reproduce the step.</li>
-<li>For side-effect tools, support an idempotency key (or a safe “dry run” mode) where possible.</li>
-<li>Treat verification as a first-class action: do not stop “success” until a check is recorded as evidence.</li>
+<li>The model emits <code>CandidateMemoryWrite</code> objects into a staging buffer.</li>
+<li>Each candidate includes an intended <code>kind</code>, <code>scope</code>, and a list of <code>sources</code>.</li>
 </ul>
-<h3 id="concrete-example">Concrete example</h3>
-<p>Goal: “Add two glossary terms and ensure formatting.”</p>
-<ol>
-<li><code>read_file(book/glossary.md)</code> to learn current format.</li>
-<li><code>apply_patch</code> to add the terms.</li>
-<li>Run a markdown check (or at minimum <code>get_errors</code>) and record output.</li>
-<li>Stop only after the check is clean; otherwise attempt a bounded fix.</li>
+</li>
+<li>
+<p><strong>Run verification</strong></p>
+<ul>
+<li>Execute checks appropriate to the action class (tests, lint, build, evals).</li>
+<li>Capture: command, exit code, duration, and a bounded log excerpt.</li>
+</ul>
+</li>
+<li>
+<p><strong>Enforce governance rules</strong></p>
+<ul>
+<li>Reject if <code>sources</code> are empty for <code>fact/decision/procedure</code>.</li>
+<li>Reject if verification is missing or failed.</li>
+<li>Reject if content violates policy (sensitive data classes, retention rules, protected scopes).</li>
+<li>Optionally require human approval for specific <code>scope</code> (e.g., org-wide runbooks).</li>
+</ul>
+</li>
+<li>
+<p><strong>Commit</strong></p>
+<ul>
+<li>Persist approved candidates as append-only records.</li>
+<li>If replacing an old entry, write a <em>new</em> record with <code>supersedes</code> instead of mutating.</li>
+</ul>
+</li>
+<li>
+<p><strong>Index (derived)</strong></p>
+<ul>
+<li>Update or rebuild embeddings/search index from the durable store.</li>
+<li>Treat indexes as derived: deletions/redactions are enforceable by rebuild.</li>
+</ul>
+</li>
 </ol>
-<p>What often goes wrong is step 3: the edit is “correct enough” to a reader, but the check fails (formatting, ordering, duplicate anchors). The trace is useful when it records (a) the specific failing check output and (b) the minimal follow-up patch that made it pass.</p>
-<p>An example trace event for step 2:</p>
-<pre><code>step: 2
-action:
-  type: tool
-  tool: apply_patch
-  expected_outcome: "Glossary updated with Acceptance criteria and Budget"
-result:
-  changed_files:
-    - book/glossary.md
-  tool_exit: success
-budgets:
-  steps_remaining: 17
-</code></pre>
-<p>Verification evidence (fail then pass) can be recorded as two consecutive events; the important part is that “success” cites the passing output, not the intention:</p>
-<pre><code>step: 3
-action:
-  type: tool
-  tool: markdown_check
-  expected_outcome: "No markdown errors"
-result:
-  tool_exit: failure
-  normalized_error:
-    kind: "validation"
-    summary: "Glossary terms not in alphabetical order"
-  evidence:
-    command: "markdownlint book/glossary.md"
-    exit_code: 1
-    stderr_snippet: "MD012/no-multiple-blanks: Multiple consecutive blank lines [Expected: 1; Actual: 2]"
-budgets:
-  steps_remaining: 16
-
-step: 4
-action:
-  type: tool
-  tool: apply_patch
-  expected_outcome: "Fix ordering/blank lines; markdown check passes"
-result:
-  changed_files:
-    - book/glossary.md
-  tool_exit: success
-budgets:
-  steps_remaining: 15
-
-step: 5
-action:
-  type: stop
-  stop_reason: "success"
-result:
-  verification_evidence:
-    command: "markdownlint book/glossary.md"
-    exit_code: 0
-</code></pre>
-<p>A second example uses a different verification surface: unit tests.</p>
-<p>Goal: “Fix one failing unit test and verify.”</p>
-<ol>
-<li>Run tests and capture the failing assertion.</li>
-<li><code>read_file(...)</code> only for the failing test and the referenced implementation.</li>
-<li><code>apply_patch</code> to fix the defect.</li>
-<li>Re-run tests; stop only when the test command exits 0.</li>
-</ol>
-<p>A minimal trace for the verification steps:</p>
-<pre><code>step: 1
-action:
-  type: tool
-  tool: run_tests
-  expected_outcome: "Test suite passes"
-result:
-  tool_exit: failure
-  evidence:
-    command: "pytest -q"
-    exit_code: 1
-    stderr_snippet: "E   AssertionError: expected 3, got 4"
-budgets:
-  steps_remaining: 19
-
-step: 4
-action:
-  type: tool
-  tool: run_tests
-  expected_outcome: "Test suite passes"
-result:
-  tool_exit: success
-  evidence:
-    command: "pytest -q"
-    exit_code: 0
-budgets:
-  steps_remaining: 16
-</code></pre>
+<h3 id="read-path-rule">Read path rule</h3>
+<p>Even with a strong write barrier, keep the read side honest:</p>
+<ul>
+<li>Retrieve top-k memory entries into context with their <strong>sources</strong> and <strong>evidence</strong>.</li>
+<li>For any claim that would change code or policy, require a <strong>confirmation step</strong> against the current source of truth (files/tests/traces).</li>
+</ul>
+<h2 id="concrete-examples">Concrete Examples</h2>
+<h3 id="example-1-codebase-agent-writes-durable-facts-only-after-tests-pass">Example 1: Codebase agent writes “durable facts” only after tests pass</h3>
+<p>Scenario: An agent fixes a bug and wants to store a durable note for future runs.</p>
+<ul>
+<li>During investigation, it writes hypotheses to scratch:<ul>
+<li>“Maybe null <code>user</code> reaches parser when <code>--anonymous</code> flag is set.”</li>
+</ul>
+</li>
+<li>It updates task state with a checklist:<ul>
+<li>reproduce failure ✅</li>
+<li>implement fix ⬜</li>
+<li>run targeted tests ⬜</li>
+</ul>
+</li>
+</ul>
+<p>The agent proposes a candidate durable entry:</p>
+<ul>
+<li><code>kind: fact</code></li>
+<li>“Root cause: parser assumed non-null user; null allowed when flag omitted.”</li>
+<li><code>sources: [path to failing test, path to fix]</code></li>
+</ul>
+<p>Write barrier behavior:</p>
+<ul>
+<li>If <code>pytest -q</code> (or the repo’s relevant test command) fails, the candidate is rejected or downgraded to <code>open_question</code> in task state.</li>
+<li>When tests pass, the barrier commits the record with evidence (command + exit code) and sources (files + commit hash).</li>
+</ul>
+<p>Outcome: future runs can retrieve the entry, see exactly which artifacts support it, and re-check the claim after refactors.</p>
+<h3 id="example-2-incident-response-agent-updates-a-rollback-procedure-via-a-drill-gate">Example 2: Incident-response agent updates a rollback procedure via a drill gate</h3>
+<p>Scenario: An agent suggests updating a rollback runbook.</p>
+<p>Candidate durable entry:</p>
+<ul>
+<li><code>kind: procedure</code></li>
+<li>“Rollback service X by running <code>./scripts/rollback.sh --to &lt;tag&gt;</code> then verifying health endpoint.”</li>
+<li><code>scope: service</code></li>
+<li><code>sources: [runbook file, drill trace ID, CI job URL]</code></li>
+</ul>
+<p>Write barrier behavior:</p>
+<ul>
+<li>Verification requirement is a <strong>drill</strong> (or staging deployment) rather than unit tests:<ul>
+<li>staging rollback executed</li>
+<li>health checks passed</li>
+<li>on-call reviewer acknowledged</li>
+</ul>
+</li>
+</ul>
+<p>If the drill is not performed, the barrier rejects the durable update and stores it as a suggestion in task state:</p>
+<ul>
+<li><code>kind: open_question</code></li>
+<li>“Proposed rollback steps need staging confirmation.”</li>
+</ul>
+<p>Outcome: the system avoids institutionalizing an untested operational procedure.</p>
 <h2 id="failure-modes">Failure modes</h2>
 <ul>
-<li><strong>Missing termination criteria</strong>: the loop continues despite completion; budgets are consumed.<ul>
-<li>Signal: repeated “tool” actions with no change in verification status (e.g., same failing check output or no new evidence).</li>
-<li>Mitigation: require stop conditions to reference a measurable predicate (e.g., “tests pass”, “lint exit code 0”) and stop on budget exhaustion with a structured “incomplete” result.</li>
+<li><strong>Verification that doesn’t prove the claim</strong>: tests pass but do not exercise the relevant behavior.<ul>
+<li>Mitigation: require <em>targeted</em> evidence (specific test name, repro steps, or a drill ID) for certain <code>kind</code> values.</li>
 </ul>
 </li>
-<li><strong>Ambiguous tool failures</strong>: errors are treated as partial success; corrupted state accumulates.<ul>
-<li>Signal: tool exit is non-zero/exceptional but the step is recorded as “success” or the next step assumes the effect happened.</li>
-<li>Mitigation: normalize errors into a small set of categories and force the trace event to include one of: success, failure, timeout, or validation error.</li>
+<li><strong>Barrier bypass</strong>: a code path allows durable writes without the gate.<ul>
+<li>Mitigation: enforce write access at the storage API level (capability token / allowlist), not in prompts.</li>
 </ul>
 </li>
-<li><strong>Silent side effects</strong>: tools mutate state without reporting what changed; traces cannot explain outcomes.<ul>
-<li>Signal: external systems change (tickets created, PR opened, files edited) but the trace lacks changed-file lists, IDs, or diffs.</li>
-<li>Mitigation: for side-effect tools, record a side-effect summary (changed files, created IDs/URLs) and prefer “dry run” modes when available.</li>
+<li><strong>Over-rejection</strong>: the barrier is too strict and prevents useful learning.<ul>
+<li>Mitigation: provide a safe alternative store (<code>open_question</code> / <code>hypothesis</code>) that is visible but non-authoritative.</li>
 </ul>
 </li>
-<li><strong>Non-idempotent retries</strong>: a retry duplicates actions (double-writes, duplicate tickets, repeated API calls).<ul>
-<li>Signal: repeated tool calls with identical args produce multiple created artifacts (two tickets, two PRs) or duplicated file edits.</li>
-<li>Mitigation: add idempotency keys per step, detect “already exists” responses, and make retries conditional on evidence that the previous attempt did not apply.</li>
+<li><strong>Authority confusion</strong>: consumers treat any retrieved record as truth.<ul>
+<li>Mitigation: include <code>kind</code>, <code>confidence</code>, <code>sources</code>, and <code>evidence</code> in retrieval output; require explicit source confirmation for critical actions.</li>
 </ul>
 </li>
-<li><strong>Context bloat</strong>: the loop pulls in too much content; constraints are ignored or diluted.<ul>
-<li>Signal: growing context size with decreasing step quality (missed constraints, irrelevant edits, inconsistent behavior across runs).</li>
-<li>Mitigation: hard cap context size, require a short “why these files/lines” selection rationale, and summarize prior trace events instead of re-including them.</li>
+<li><strong>Stale durable procedures</strong>: operational steps become invalid after infra changes.<ul>
+<li>Mitigation: add <code>valid_through</code> (or review cadence) and prefer append-only superseding records.</li>
 </ul>
 </li>
-<li><strong>Planning without execution</strong>: repeated re-planning without tool calls; no measurable progress.<ul>
-<li>Signal: multiple consecutive steps that emit plans or analyses but no tool execution and no new evidence.</li>
-<li>Mitigation: enforce a per-step contract (“exactly one next action”) and treat “plan” as an input artifact, not a step output unless it is the requested deliverable.</li>
+<li><strong>Privacy leakage</strong>: candidates include sensitive data and pass through accidentally.<ul>
+<li>Mitigation: apply redaction/classification checks before commit; make indexes rebuildable so deletions propagate.</li>
 </ul>
 </li>
 </ul>
 <h2 id="when-not-to-use">When not to use</h2>
 <ul>
-<li>The task is deterministic and can be solved with a single script/command.</li>
-<li>Side effects are unacceptable without human approval (e.g., production mutations).</li>
-<li>You cannot capture traces or run verification; you will be unable to debug or detect drift.</li>
+<li>You cannot run meaningful verification (no tests, no drills, no trusted checks) and would be gating on weak signals.</li>
+<li>The task is short-lived and scratch + task state are sufficient.</li>
+<li>The domain is too time-critical for gating (e.g., emergency response where the immediate goal is triage), and you accept that durable updates happen later via a post-incident review.</li>
+<li>Your memory store is not governable (no deletion/redaction, no audit logs, no provenance fields). In that case, durable writes are higher risk than the value they provide.</li>
 </ul>
-<h2 id="operational-checklists">Operational checklists</h2>
-<h3 id="minimal-trace-event-contract">Minimal trace event contract</h3>
-<p>To keep the loop debuggable, each step should emit one structured event with the same core fields:</p>
-<ul>
-<li><strong>Identity</strong>: task id, step id, iteration counters.</li>
-<li><strong>Action</strong>: action class (read-only / patch edit / dependency change / release), tool name, validated arguments (or a hash/pointer if large).</li>
-<li><strong>Timing</strong>: start/end timestamps; duration.</li>
-<li><strong>Result</strong>: status (success/failure/timeout/validation/policy), normalized error (if any), and a bounded output excerpt or artifact pointer.</li>
-<li><strong>Side effects</strong>: changed files (and counts), created external ids/URLs when applicable.</li>
-<li><strong>Budgets</strong>: remaining budgets (steps/time/tool calls/diff lines) after the step.</li>
-</ul>
-<h3 id="stop-conditions-catalog">Stop conditions catalog</h3>
-<p>Stop conditions should be phrased as measurable predicates, not intentions:</p>
-<ul>
-<li><strong>Verified success</strong>: required gates ran and passed (tests/lint/build) and evidence is recorded.</li>
-<li><strong>Blocked</strong>: a required gate/tool is not runnable within permissions or environment; include reproduction steps and the smallest missing prerequisite.</li>
-<li><strong>Budget exhausted</strong>: max iterations/tool calls/time/diff size exceeded; include the last failure signature and the next best action for a human.</li>
-</ul>
-<h3 id="budget-defaults-practical-starting-point">Budget defaults (practical starting point)</h3>
-<p>Budgets are kernel-enforced, not prompt-enforced. A conservative default for repo edits:</p>
-<ul>
-<li>iterations: 3–6</li>
-<li>tool calls: 10–25</li>
-<li>wall time: 5–15 minutes</li>
-<li>diff size: 40–200 changed lines (lower for autonomous changes in critical paths)</li>
-</ul>
-<h2 id="what-to-measure">What to measure</h2>
-<ul>
-<li><strong>Iterations-to-pass</strong>: median iterations to first passing verification gate.</li>
-<li><strong>Stop-reason mix</strong>: distribution of <code>completed</code> vs <code>blocked</code> vs <code>budget_exhausted</code>.</li>
-<li><strong>Reproducibility rate</strong>: rerun the same checks and measure consistent pass/fail.</li>
-</ul>
-<p>These metrics are useful because they indicate whether the loop is converging (verification improves) or spinning (budgets drain without new evidence).</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
