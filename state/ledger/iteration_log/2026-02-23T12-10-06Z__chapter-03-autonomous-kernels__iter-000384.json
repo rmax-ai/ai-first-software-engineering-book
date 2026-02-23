@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8333333333333334,
+  "diff_size": 0.00554016620498615,
+  "drift_score": 0.024146695715323165,
+  "iteration": 384,
+  "planner_focus": [
+    "Remove non-chapter trailing blocks so the chapter ends immediately after ## Research Directions",
+    "Preserve existing content while ensuring output formatting does not append any external <reminder> blocks"
+  ],
+  "timestamp": "2026-02-23T12:10:06Z"
+}

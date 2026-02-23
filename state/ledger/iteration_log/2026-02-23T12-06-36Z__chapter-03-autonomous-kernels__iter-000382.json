@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8666666666666667,
+  "diff_size": 0.43641618497109824,
+  "drift_score": 0.024157221737866896,
+  "iteration": 382,
+  "planner_focus": [
+    "Reduce sentence-length violations in ## System Breakdown and both ## Concrete Example sections by converting inline multi-clause bullets into nested bullets",
+    "Make verification and waiver rules easier to scan by standardizing 'Must record' vs 'Stop condition' vs 'Waiver' formatting in ## System Breakdown",
+    "Tighten diagram integration in ## System Breakdown so the mermaid figure is introduced, referenced, and summarized without duplicating surrounding text"
+  ],
+  "timestamp": "2026-02-23T12:06:36Z"
+}
