@@ -21991,6 +21991,83 @@
             "diff_ratio": 0.09895833333333333,
             "drift_score": 0.2779249586223873
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "approve",
+            "drift_score": 0.23,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.030820711518140188,
+            "passed": false,
+            "similarity_max": 0.6811797743153102
+          },
+          "iteration": 391,
+          "timestamp": "2026-02-23T12:03:00Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.01485148514851485,
+            "drift_score": 0.030820711518140188
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "approve",
+            "drift_score": 0.23,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.030820711518140188,
+            "passed": false,
+            "similarity_max": 0.6811797743153102
+          },
+          "iteration": 392,
+          "timestamp": "2026-02-23T12:03:53Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.030820711518140188
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.92,
+            "decision": "approve",
+            "drift_score": 0.05,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "No section bodies were eligible for modification (empty SECTION_EDIT_ALLOWLIST), so any refinement requests are blocked by constraints"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.030820711518140188,
+            "passed": false,
+            "similarity_max": 0.6811797743153102
+          },
+          "iteration": 393,
+          "timestamp": "2026-02-23T12:04:49Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.030820711518140188
+          }
         }
       ]
     },

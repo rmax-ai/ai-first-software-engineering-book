@@ -122,12 +122,12 @@ A useful way to operationalize the planes is to name what each plane consumes, w
   </tbody>
 </table>
 
-The “minimal contract surface” is the smallest set of stable interfaces required for the loop to be repeatable, bounded, and verifiable. It includes tool schemas (including error codes), patch discipline, and evaluation semantics.
+The “minimal contract surface” is the smallest set of stable interfaces required for repeatability, boundedness, and verifiability. It includes tool schemas (and error codes), patch discipline, and evaluation semantics.
 
 Boundary:
 
-- In scope: tool schemas, patch discipline, and gate semantics (including what evidence is recorded).
-- Out of scope: standardizing runtime infrastructure details, as long as the gate semantics stay consistent.
+- In scope: tool schemas, patch discipline, and gate semantics, including what evidence is recorded.
+- Out of scope: runtime infrastructure details. Those can vary, as long as gate semantics and recorded artifacts stay consistent.
 
 ## Concrete Example 1
 
