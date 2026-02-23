@@ -37,6 +37,7 @@ from ledger_log_store import append_chapter_iteration_entry, append_repo_iterati
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEDGER_PATH = REPO_ROOT / "state" / "ledger.json"
 METRICS_PATH = REPO_ROOT / "state" / "metrics.json"
+METRICS_ARCHIVE_ROOT = REPO_ROOT / "state" / "metrics"
 VERSION_MAP_PATH = REPO_ROOT / "state" / "version_map.json"
 ROADMAP_PATH = REPO_ROOT / "ROADMAP.md"
 EVAL_CHAPTER_QUALITY_PATH = REPO_ROOT / "evals" / "chapter-quality.yaml"
@@ -330,13 +331,14 @@ class JSONTextPayload(BaseModel):
 class MetricsChapterPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    history: list[dict[str, Any]] = Field(default_factory=list)
+    latest: dict[str, Any] | None = None
 
 
 class MetricsPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     chapters: dict[str, MetricsChapterPayload] = Field(default_factory=dict)
+    generated_at: str | None = None
 
 
 @dataclass(frozen=True)
@@ -606,6 +608,85 @@ class JSONTextTransit:
 
 def _utc_now_iso() -> str:
     return _dt.datetime.now(tz=_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _normalize_metrics_snapshot(raw: dict[str, Any]) -> dict[str, Any]:
+    chapters_in = raw.get("chapters") if isinstance(raw, dict) else None
+    if not isinstance(chapters_in, dict):
+        chapters_in = {}
+
+    chapters_out: dict[str, Any] = {}
+    for chapter_id, chapter_blob in chapters_in.items():
+        if not isinstance(chapter_id, str) or not chapter_id.strip():
+            continue
+        if not isinstance(chapter_blob, dict):
+            continue
+
+        latest: dict[str, Any] | None = None
+        latest_raw = chapter_blob.get("latest")
+        if isinstance(latest_raw, dict):
+            latest = latest_raw
+        else:
+            history_raw = chapter_blob.get("history")
+            if isinstance(history_raw, list) and history_raw:
+                tail = history_raw[-1]
+                if isinstance(tail, dict):
+                    latest = tail
+
+        if latest is None:
+            continue
+        chapters_out[chapter_id] = {"latest": latest}
+
+    return {"chapters": chapters_out, "generated_at": _utc_now_iso()}
+
+
+def _update_metrics_snapshot(*, metrics_path: Path, chapter_id: str, metrics_entry: dict[str, Any]) -> None:
+    snapshot: dict[str, Any]
+    if metrics_path.exists():
+        try:
+            snapshot = _normalize_metrics_snapshot(_load_metrics(metrics_path).raw)
+        except KernelError:
+            snapshot = {"chapters": {}, "generated_at": _utc_now_iso()}
+    else:
+        snapshot = {"chapters": {}, "generated_at": _utc_now_iso()}
+
+    snapshot.setdefault("chapters", {})
+    if not isinstance(snapshot["chapters"], dict):
+        snapshot["chapters"] = {}
+    snapshot["chapters"][chapter_id] = {"latest": dict(metrics_entry)}
+    snapshot["generated_at"] = _utc_now_iso()
+    _save_json(metrics_path, snapshot)
+
+
+def _append_metrics_archive_entry(*, chapter_id: str, metrics_entry: dict[str, Any]) -> str:
+    timestamp = metrics_entry.get("timestamp")
+    if isinstance(timestamp, str) and "T" in timestamp:
+        date = timestamp.split("T", 1)[0]
+    else:
+        date = _utc_now_iso().split("T", 1)[0]
+
+    archive_path = METRICS_ARCHIVE_ROOT / chapter_id / f"{date}.json"
+    payload: dict[str, Any]
+    if archive_path.exists():
+        try:
+            payload_raw = json.loads(archive_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise KernelError(f"Invalid archived metrics JSON: {archive_path}: {exc}") from exc
+        if not isinstance(payload_raw, dict):
+            raise KernelError(f"Invalid archived metrics payload: {archive_path}: expected object")
+        payload = payload_raw
+    else:
+        payload = {"chapter_id": chapter_id, "date": date, "history": []}
+
+    history = payload.get("history")
+    if not isinstance(history, list):
+        raise KernelError(f"Invalid archived metrics payload: {archive_path}: history must be a list")
+    history.append(dict(metrics_entry))
+    payload["history"] = history
+
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    archive_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return str(archive_path.relative_to(REPO_ROOT))
 
 
 def _load_json(path: Path) -> JSONMappingTransit:
@@ -2009,19 +2090,15 @@ def run_kernel(
             )
 
             # Update metrics.json (minimal, per schema)
-            metrics_transit = _load_metrics(METRICS_PATH)
-            metrics = metrics_transit.raw
-            metrics.setdefault("chapters", {})
-            ch_metrics = metrics["chapters"].setdefault(chapter_id, {})
-            ch_metrics.setdefault("history", [])
             metrics_history = MetricsHistoryTransit(
                 iteration=iteration,
                 critic=critic,
                 deterministic_eval=det,
                 diff_ratio=diff_ratio,
             )
-            ch_metrics["history"].append(metrics_history.to_metrics_entry())
-            _save_json(METRICS_PATH, metrics)
+            metrics_entry = metrics_history.to_metrics_entry()
+            metrics_archive_path = _append_metrics_archive_entry(chapter_id=chapter_id, metrics_entry=metrics_entry)
+            _update_metrics_snapshot(metrics_path=METRICS_PATH, chapter_id=chapter_id, metrics_entry=metrics_entry)
 
             # Update repo_iteration_log as file-backed shards.
             repo_iter = _next_repo_iteration(ledger)
@@ -2030,7 +2107,13 @@ def run_kernel(
                 "timestamp": _utc_now_iso(),
                 "agent_task": "kernel_refine",
                 "inputs": {
-                    "changed_files": [chapter_path, chapter_log_path, "state/ledger.json", "state/metrics.json"],
+                    "changed_files": [
+                        chapter_path,
+                        chapter_log_path,
+                        "state/ledger.json",
+                        "state/metrics.json",
+                        metrics_archive_path,
+                    ],
                     "notes": f"Kernel refinement iteration {iteration} for {chapter_id}",
                 },
                 "scope": {
@@ -2104,7 +2187,7 @@ def run_kernel(
                     )
 
                     if commit_on_refine:
-                        _run_git(["add", chapter_path, "state/ledger.json", "state/metrics.json"])
+                        _run_git(["add", chapter_path, "state/ledger.json", "state/metrics.json", metrics_archive_path])
                         _run_git(["commit", "-m", f"refine: {chapter_id} (iter {iteration})"])
                         commit_hash = _run_git(["rev-parse", "HEAD"]).strip()
                         version_map_transit = _load_version_map(VERSION_MAP_PATH)

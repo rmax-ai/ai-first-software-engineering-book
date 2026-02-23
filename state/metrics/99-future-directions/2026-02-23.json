@@ -1,0 +1,247 @@
+{
+  "chapter_id": "99-future-directions",
+  "date": "2026-02-23",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.92,
+        "decision": "approve",
+        "drift_score": 0.18,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.96,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.06324163314922654,
+        "passed": false,
+        "similarity_max": 0.7726215248071266
+      },
+      "iteration": 378,
+      "timestamp": "2026-02-23T11:27:07Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.2753623188405797,
+        "drift_score": 0.06324163314922654
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.92,
+        "decision": "approve",
+        "drift_score": 0.18,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.96,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.06324163314922654,
+        "passed": false,
+        "similarity_max": 0.7726215248071266
+      },
+      "iteration": 379,
+      "timestamp": "2026-02-23T11:27:55Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.06324163314922654
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.92,
+        "decision": "approve",
+        "drift_score": 0.18,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.96,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.06324163314922654,
+        "passed": false,
+        "similarity_max": 0.7726215248071266
+      },
+      "iteration": 380,
+      "timestamp": "2026-02-23T11:28:36Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.06324163314922654
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.93,
+        "decision": "refine",
+        "drift_score": 0.06,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.96,
+        "tradeoff_presence": true,
+        "violations": [
+          "## Concrete Example 2 contains a 41+ word sentence in the Legend paragraph (should be split to satisfy style-guard hard_fail_over=40).",
+          "## Thesis includes a 28+ word sentence: \u201cHere, \u201cinterfaces\u201d means the concrete artifacts that let components interoperate.\u201d (consider splitting to stay under max_words=28).",
+          "## Concrete Example 2 \u201cReplay validity check\u201d subsection has a bullet line that likely exceeds 28 words: \u201cWhen nondeterminism exists (timeouts, stochastic tools, external APIs), record the boundary.\u201d"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.006862745098039215,
+        "passed": false,
+        "similarity_max": 0.7719333155618433
+      },
+      "iteration": 381,
+      "timestamp": "2026-02-23T11:41:14Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.11057692307692307,
+        "drift_score": 0.006862745098039215
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.94,
+        "decision": "refine",
+        "drift_score": 0.06,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.96,
+        "tradeoff_presence": true,
+        "violations": [
+          "## Concrete Example 2 Legend paragraph still contains a 40+ word sentence: \u201cLegend: \u201cValidate tool contracts\u201d means schema-checking arguments/results at runtime. This includes negative cases, before the call enters the trace. \u201cDivergence check\u201d means comparing the replayed run to declared constraints.\u201d",
+          "## Concrete Example 2 \u201cReplay validity check\u201d contains a sentence likely over 28 words: \u201cWhen nondeterminism exists (timeouts, stochastic tools, external APIs), record the boundary. Record what the replay is allowed to vary within.\u201d",
+          "## Thesis sentence \u201cHere, \u201cinterfaces\u201d means concrete artifacts that let components interoperate.\u201d may still exceed 28 words depending on tokenization; keep it under the max_words=28 limit."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.00682660425199922,
+        "passed": false,
+        "similarity_max": 0.7718953075698886
+      },
+      "iteration": 382,
+      "timestamp": "2026-02-23T11:41:54Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.028169014084507043,
+        "drift_score": 0.00682660425199922
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "refine",
+        "drift_score": 0.06,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.97,
+        "tradeoff_presence": true,
+        "violations": [
+          "## Concrete Example 2 \u201cReplay validity check\u201d has a bullet line that likely exceeds 28 words: \u201cUnder deterministic conditions, the tool-call sequence must match.\u201d + the following \u201cMatch means\u2026\u201d line may be treated as a single sentence by the evaluator.",
+          "## Thesis paragraph contains a sentence that may exceed 28 words: \u201cExamples include a tool-call schema that two runtimes both validate.\u201d (depends on tokenization rules)."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.006822612085769981,
+        "passed": false,
+        "similarity_max": 0.7723740227671225
+      },
+      "iteration": 383,
+      "timestamp": "2026-02-23T11:42:34Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.046948356807511735,
+        "drift_score": 0.006822612085769981
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.94,
+        "decision": "refine",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.97,
+        "tradeoff_presence": true,
+        "violations": [
+          "Style-guard risk: the Mermaid diagram under ## System Breakdown may be tokenized as a single long sentence (the line containing I[\"Interoperability...\"], V[\"Verification...\"], G[\"Governance at scale...\"], R[\"Ecosystem risks...\"]) and exceed the 40-word hard-fail limit when newlines are normalized.",
+          "Style-guard risk: the Mermaid diagram under ## Concrete Example 2 may be tokenized as a single long sentence (the sequence A[\"Generate run\"] --> ... --> H[\"Flag portability failure\"]) and exceed the 40-word hard-fail limit when newlines are normalized."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.05832784207710292,
+        "passed": false,
+        "similarity_max": 0.7697172118074901
+      },
+      "iteration": 384,
+      "timestamp": "2026-02-23T12:23:20Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.22580645161290322,
+        "drift_score": 0.05832784207710292
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.94,
+        "decision": "refine",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.97,
+        "tradeoff_presence": true,
+        "violations": [
+          "Style-guard: in ## Thesis, the sentence starting with \u201cHypothesis: the main frontier is not larger models.\u201d continues through \u201cteams.\u201d and exceeds the 28-word maximum (approximately 39 words)."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.1102405192230175,
+        "passed": false,
+        "similarity_max": 0.7729918578503238
+      },
+      "iteration": 385,
+      "timestamp": "2026-02-23T12:24:43Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.15789473684210525,
+        "drift_score": 0.1102405192230175
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.95,
+        "decision": "approve",
+        "drift_score": 0.01,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.98,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.11023441368016147,
+        "passed": false,
+        "similarity_max": 0.7737587100828398
+      },
+      "iteration": 386,
+      "timestamp": "2026-02-23T12:25:24Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.008264462809917356,
+        "drift_score": 0.11023441368016147
+      }
+    }
+  ]
+}

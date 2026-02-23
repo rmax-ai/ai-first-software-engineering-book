@@ -1,0 +1,172 @@
+{
+  "chapter_id": "01-paradigm-shift",
+  "date": "2026-02-23",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.9,
+        "decision": "refine",
+        "drift_score": 0.2,
+        "example_density": 0.85,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": [
+          "## Thesis contains a sentence likely over 28 words: \"In this framing, attribution rate is a harness outcome: it depends on what evidence you capture and which evaluation gates you run, not just on how fluent the model is.\"",
+          "## Concrete Example 1 includes markdown table rows with empty first column cells (\"|  | ... |\"); this is likely to render inconsistently across markdown engines",
+          "## Concrete Example 2 includes markdown table rows with empty first column cells (\"|  | ... |\"); this is likely to render inconsistently across markdown engines",
+          "## Concrete Example 2 \"Measured outputs\" includes sub-bullets without concrete numeric thresholds or units (e.g., \"contract-test failures introduced\"), reducing checkability"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.08444285043122256,
+        "passed": false,
+        "similarity_max": 0.752227266448898
+      },
+      "iteration": 416,
+      "timestamp": "2026-02-23T11:35:19Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.27586206896551724,
+        "drift_score": 0.08444285043122256
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.92,
+        "decision": "refine",
+        "drift_score": 0.17,
+        "example_density": 0.87,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": [
+          "## System Breakdown contains a sentence over 28 words: \"A diagram helps here because the distinction (model vs harness) changes how evidence moves between steps.\"",
+          "## System Breakdown contains a sentence over 28 words: \"The goal is to make trace capture and evaluation gates explicit so attribution is a concrete step, not a guess.\"",
+          "## System Breakdown contains a sentence over 28 words: \"When you read it, focus on (a) where the trace is recorded and (b) where the trace is consumed to decide what to change next.\"",
+          "## System Breakdown contains a sentence over 28 words: \"Takeaway: if you cannot produce a trace, attribution is guesswork.\"",
+          "## Concrete Example 2 \"Measured outputs\" includes an explicit time-to-green target (\u2264 30 minutes) but does not specify whether this target is illustrative or a required gate, which may reduce checkability across different team contexts"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.04624575136471318,
+        "passed": false,
+        "similarity_max": 0.7561634507680717
+      },
+      "iteration": 417,
+      "timestamp": "2026-02-23T11:35:19Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.15343915343915343,
+        "drift_score": 0.04624575136471318
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.93,
+        "decision": "approve",
+        "drift_score": 0.16,
+        "example_density": 0.87,
+        "failure_modes_present": true,
+        "structure_score": 0.94,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.028574020319303336,
+        "passed": false,
+        "similarity_max": 0.7531420412694478
+      },
+      "iteration": 418,
+      "timestamp": "2026-02-23T11:35:19Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.05263157894736842,
+        "drift_score": 0.028574020319303336
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.93,
+        "decision": "refine",
+        "drift_score": 0.06,
+        "example_density": 0.87,
+        "failure_modes_present": true,
+        "structure_score": 0.94,
+        "tradeoff_presence": true,
+        "violations": [
+          "In ## System Breakdown Mermaid diagram, the node label (Trace) contains parentheses but is not wrapped in double quotes: `TR[(Trace)]`.",
+          "In ## Failure Modes, the sentence beginning \"Use the attribution checklist above to bucket each failure\" is likely over the 28-word sentence-length limit in evals/style-guard.yaml."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.07914918739519694,
+        "passed": false,
+        "similarity_max": 0.7486096123922333
+      },
+      "iteration": 419,
+      "timestamp": "2026-02-23T12:00:24Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.3842364532019704,
+        "drift_score": 0.07914918739519694
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.93,
+        "decision": "approve",
+        "drift_score": 0.06,
+        "example_density": 0.87,
+        "failure_modes_present": true,
+        "structure_score": 0.94,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.07912807997736405,
+        "passed": false,
+        "similarity_max": 0.7490491012346612
+      },
+      "iteration": 420,
+      "timestamp": "2026-02-23T12:01:10Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.018433179723502304,
+        "drift_score": 0.07912807997736405
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.93,
+        "decision": "refine",
+        "drift_score": 0.06,
+        "example_density": 0.87,
+        "failure_modes_present": true,
+        "structure_score": 0.94,
+        "tradeoff_presence": true,
+        "violations": [
+          "In ## Failure Modes, the sentence starting \"Use the attribution checklist above to bucket each failure\" likely exceeds the 28-word max due to the parenthetical bucket list."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.07912807997736405,
+        "passed": false,
+        "similarity_max": 0.7490491012346612
+      },
+      "iteration": 421,
+      "timestamp": "2026-02-23T12:01:59Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.07912807997736405
+      }
+    }
+  ]
+}

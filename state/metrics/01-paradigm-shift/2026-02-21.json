@@ -1,0 +1,90 @@
+{
+  "chapter_id": "01-paradigm-shift",
+  "date": "2026-02-21",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.0,
+        "decision": "refine",
+        "drift_score": 0.0,
+        "example_density": 0.0,
+        "failure_modes_present": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false,
+        "violations": [
+          "TEMPLATE: replace with concrete violations"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0,
+        "passed": true,
+        "similarity_max": 0.609577106460783
+      },
+      "iteration": 2,
+      "timestamp": "2026-02-21T15:34:35Z"
+    },
+    {
+      "critic": {
+        "clarity_score": 0.0,
+        "decision": "refine",
+        "drift_score": 1.0,
+        "example_density": 0.0,
+        "failure_modes_present": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false,
+        "violations": [
+          "MOCK: not a real evaluation"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0,
+        "passed": true,
+        "similarity_max": 0.609577106460783
+      },
+      "iteration": 3,
+      "timestamp": "2026-02-21T15:41:04Z"
+    },
+    {
+      "critic": {
+        "clarity_score": 0.0,
+        "decision": "refine",
+        "drift_score": 1.0,
+        "example_density": 0.0,
+        "failure_modes_present": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false,
+        "violations": [
+          "MOCK: not a real evaluation"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0,
+        "passed": true,
+        "similarity_max": 0.609577106460783
+      },
+      "iteration": 4,
+      "timestamp": "2026-02-21T15:41:04Z"
+    },
+    {
+      "critic": {
+        "clarity_score": 0.0,
+        "decision": "refine",
+        "drift_score": 1.0,
+        "example_density": 0.0,
+        "failure_modes_present": false,
+        "structure_score": 0.0,
+        "tradeoff_presence": false,
+        "violations": [
+          "MOCK: not a real evaluation"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0,
+        "passed": true,
+        "similarity_max": 0.609577106460783
+      },
+      "iteration": 5,
+      "timestamp": "2026-02-21T15:41:04Z"
+    }
+  ]
+}

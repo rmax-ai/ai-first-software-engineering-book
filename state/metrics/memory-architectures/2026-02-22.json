@@ -1,0 +1,89 @@
+{
+  "chapter_id": "memory-architectures",
+  "date": "2026-02-22",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.86,
+        "decision": "refine",
+        "drift_score": 0.18,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.88,
+        "tradeoff_presence": true,
+        "violations": [
+          "Style guard risk: multiple sentences likely exceed 28 words (e.g., in ## Context definitions and in ## Solution diagram introduction) and should be split.",
+          "System breakdown rubric risk: the four layers are listed and diagrammed, but the chapter does not explicitly state how a reader should implement boundaries (inputs/outputs) between layers beyond \u201cwrite rules.\u201d",
+          ">=2_examples rubric risk: there is one extended walkthrough plus short per-layer examples; the chapter would be clearer if a second distinct example scenario (non-bugfix) were included, but heading allowlist may constrain this in the next pass.",
+          "Mermaid diagram label issue: node A text appears to have an unmatched bracket/quote (\"scope: one run\" line lacks a closing bracket/quote symmetry compared to other nodes)."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.30733357279693485,
+        "passed": false,
+        "similarity_max": 0.7042513696778295
+      },
+      "iteration": 1,
+      "timestamp": "2026-02-22T21:52:15Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.8469387755102041,
+        "drift_score": 0.30733357279693485
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.89,
+        "decision": "refine",
+        "drift_score": 0.16,
+        "example_density": 0.86,
+        "failure_modes_present": true,
+        "structure_score": 0.91,
+        "tradeoff_presence": true,
+        "violations": [
+          "Style guard risk: the sentence \u201cThe takeaway: make \u201cwhat the agent knows\u201d a controlled blend of (1) volatile scratch, (2) explicit task state, (3) verified durable facts, and (4) derived retrieval\u2014each with different write permissions.\u201d likely exceeds 28 words and should be split.",
+          "Measurability gap: the second scenario (non-bugfix) does not state a checkable verification outcome (e.g., a named drill/test run ID or pass/fail criterion) beyond \u201csuccessful drill.\u201d"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.3066374078890334,
+        "passed": false,
+        "similarity_max": 0.6989735935183695
+      },
+      "iteration": 2,
+      "timestamp": "2026-02-22T21:53:00Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.2155688622754491,
+        "drift_score": 0.3066374078890334
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.91,
+        "decision": "approve",
+        "drift_score": 0.15,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.30656906906906906,
+        "passed": false,
+        "similarity_max": 0.70387671391313
+      },
+      "iteration": 3,
+      "timestamp": "2026-02-22T21:53:39Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.022099447513812154,
+        "drift_score": 0.30656906906906906
+      }
+    }
+  ]
+}

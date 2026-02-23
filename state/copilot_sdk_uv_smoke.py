@@ -55,7 +55,8 @@ class MetricsHistoryEntryPayload(BaseModel):
 
 
 class MetricsChapterPayload(BaseModel):
-    history: list[MetricsHistoryEntryPayload]
+    latest: MetricsHistoryEntryPayload | None = None
+    history: list[MetricsHistoryEntryPayload] = []
 
 
 class MetricsPayload(BaseModel):
@@ -87,7 +88,7 @@ class PhaseTracePayload(BaseModel):
     phase: str
     status: str
     duration_ms: int
-    budget_signal: str
+    budget_signal: dict[str, Any] | str
 
 
 class KernelFixtureLedgerChapterPayload(BaseModel):
@@ -543,17 +544,15 @@ def _build_trace_summary_fixture(
     metrics_payload = {
         "chapters": {
             chapter_id: {
-                "history": [
-                    {
-                        "iteration": 1,
-                        "trace_summary": {
-                            "decision": "accept",
-                            "drift_score": 0.0,
-                            "diff_ratio": 0.0,
-                            "deterministic_pass": True,
-                        },
-                    }
-                ]
+                "latest": {
+                    "iteration": 1,
+                    "trace_summary": {
+                        "decision": "accept",
+                        "drift_score": 0.0,
+                        "diff_ratio": 0.0,
+                        "deterministic_pass": True,
+                    },
+                }
             }
         }
     }
@@ -586,6 +585,10 @@ def _build_trace_summary_kernel_fixture(chapter_id: str, fixture_root: Path) -> 
 
     (fixture_repo_root / "state").mkdir(parents=True, exist_ok=True)
     shutil.copy2(REPO_ROOT / "state" / "kernel.py", fixture_repo_root / "state" / "kernel.py")
+    shutil.copy2(
+        REPO_ROOT / "state" / "ledger_log_store.py",
+        fixture_repo_root / "state" / "ledger_log_store.py",
+    )
     shutil.copy2(REPO_ROOT / "state" / "llm_client.py", fixture_repo_root / "state" / "llm_client.py")
     shutil.copytree(REPO_ROOT / "evals", fixture_repo_root / "evals")
     shutil.copytree(REPO_ROOT / "prompts", fixture_repo_root / "prompts")
@@ -730,11 +733,16 @@ async def run_trace_summary_mode(
 
         metrics_transit = _load_metrics(metrics_path_for_trace)
         chapter_metrics = metrics_transit.payload.chapters.get(chapter_id)
-        if chapter_metrics is None or not chapter_metrics.history:
-            print(f"FAIL: no metrics history for chapter {chapter_id}")
+        if chapter_metrics is None:
+            print(f"FAIL: no metrics chapter bucket for {chapter_id}")
             return 1
 
-        latest_entry = chapter_metrics.history[-1]
+        latest_entry = chapter_metrics.latest
+        if latest_entry is None and chapter_metrics.history:
+            latest_entry = chapter_metrics.history[-1]
+        if latest_entry is None:
+            print(f"FAIL: no latest metrics for chapter {chapter_id}")
+            return 1
         latest = MetricsHistoryTransit(iteration=latest_entry.iteration, trace_summary=latest_entry.trace_summary)
         trace_summary = TraceSummaryTransit.from_payload(latest.trace_summary).to_mapping()
 

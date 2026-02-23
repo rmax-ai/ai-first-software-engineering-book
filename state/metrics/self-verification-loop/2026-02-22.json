@@ -1,0 +1,63 @@
+{
+  "chapter_id": "self-verification-loop",
+  "date": "2026-02-22",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.86,
+        "decision": "refine",
+        "drift_score": 0.18,
+        "example_density": 0.45,
+        "failure_modes_present": true,
+        "structure_score": 0.8,
+        "tradeoff_presence": false,
+        "violations": [
+          "Required section 'system_breakdown' is missing: the chapter describes a loop but does not break down roles/components (e.g., work phase vs verification phase vs gate vs reporting) as a named subsystem.",
+          "Required criterion '>=2_examples' is not met: only one explicit example appears under '### Concrete example'.",
+          "Required criterion 'tradeoffs_discussed' is not met: no trade-offs section exists and trade-offs are not discussed explicitly beyond brief mentions in '## Forces'.",
+          "Style guard risk: the sentence starting 'A simple diagram helps here because the failure modes are usually procedural...' likely exceeds 28 words."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0046992481203007525,
+        "passed": false,
+        "similarity_max": 0.6990473280549699
+      },
+      "iteration": 1,
+      "timestamp": "2026-02-22T21:57:49Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.45918367346938777,
+        "drift_score": 0.0046992481203007525
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.88,
+        "decision": "approve",
+        "drift_score": 0.12,
+        "example_density": 0.7,
+        "failure_modes_present": true,
+        "structure_score": 0.89,
+        "tradeoff_presence": true,
+        "violations": [
+          "The revised chapter markdown includes a trailing '<reminder> ... </reminder>' block, which is non-chapter content and should not appear in book/chapters/*.md."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.006435716387172698,
+        "passed": false,
+        "similarity_max": 0.7062919830704945
+      },
+      "iteration": 2,
+      "timestamp": "2026-02-22T21:58:49Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.32116788321167883,
+        "drift_score": 0.006435716387172698
+      }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "chapter_id": "06-agent-governance",
+  "date": "2026-02-23",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.94,
+        "decision": "approve",
+        "drift_score": 0.22,
+        "example_density": 0.86,
+        "failure_modes_present": true,
+        "structure_score": 0.95,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.08145295715520438,
+        "passed": false,
+        "similarity_max": 0.7095882976872651
+      },
+      "iteration": 374,
+      "timestamp": "2026-02-23T12:18:06Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0670391061452514,
+        "drift_score": 0.08145295715520438
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.84,
+        "decision": "refine",
+        "drift_score": 0.12,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": [
+          "## Thesis contains a 30-word sentence (\"The \u201coperating envelope\u201d is the set of actions...\") exceeding the style-guard max_words limit of 28."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.06143643950783958,
+        "passed": false,
+        "similarity_max": 0.7089984254034841
+      },
+      "iteration": 375,
+      "timestamp": "2026-02-23T12:19:03Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.055248618784530384,
+        "drift_score": 0.06143643950783958
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "approve",
+        "drift_score": 0.11,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.061416870789957126,
+        "passed": false,
+        "similarity_max": 0.7083845038991508
+      },
+      "iteration": 376,
+      "timestamp": "2026-02-23T12:19:43Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.022099447513812154,
+        "drift_score": 0.061416870789957126
+      }
+    }
+  ]
+}
