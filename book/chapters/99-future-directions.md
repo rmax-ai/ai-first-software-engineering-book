@@ -11,11 +11,11 @@ Concretely, invest in artifacts that scale across teams and models.
 - structured memory
 - governance primitives
 
-Interfaces are artifacts that let components interoperate. These artifacts make runs portable. Examples include a tool-call schema that two runtimes both validate. Another example is a trace format that two analysis tools both parse. A third example is an eval definition that two teams can both reproduce.
+Interfaces are artifacts that let components interoperate. They make runs portable. Example: a tool-call schema that two runtimes both validate. Example: a trace format that two analysis tools both parse. Example: an eval definition that two teams can both reproduce.
 
 “Verification” means methods that detect incorrect behavior reliably. In practice, verification makes runs auditable. It lets you show that a tool call matched a contract. It also lets you show that a replay stayed within a declared nondeterminism boundary. Finally, it lets you show that a reported score came from a pinned dataset and scoring implementation.
 
-Hypothesis: the main frontier is not larger models; it is better system-level interfaces. That includes verifiable tool contracts, stronger evaluations, and memory/governance primitives that scale. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.
+Hypothesis: the main frontier is not larger models. It is better system-level interfaces. This includes verifiable tool contracts and stronger evaluations. It also includes memory and governance primitives that scale. Takeaway: progress comes from portable, checkable runs across models, tools, and teams.
 
 ## Why This Matters
 
@@ -33,10 +33,14 @@ The diagram below is useful because it makes the dependency shape explicit. Focu
 
 ```mermaid
 flowchart TB
-  I["Interoperability<br/>trace formats · tool schemas · eval definitions"] --> V["Verification<br/>contract tests · replay checks · property checks"]
-  V --> G["Governance at scale<br/>policy registry · audit workflow · incident runbook"]
-  I --> R["Ecosystem risks<br/>supply chain · dependency security · model updates"]
-  R --> V
+  I["Interoperability<br/>traces·schemas·evals"]
+  V["Verification<br/>contract-tests·replay·properties"]
+  G["Governance<br/>policy-registry·audit·runbook"]
+  R["Ecosystem-risk<br/>supply-chain·deps·model-updates"]
+  I-->V
+  V-->G
+  I-->R
+  R-->V
 ```
 
 Takeaway: you can improve one pillar in isolation, but cross-model portability depends on the whole chain. Interoperability defines what can be exchanged, and verification defines what can be trusted when it is exchanged.
@@ -45,6 +49,8 @@ Takeaway: you can improve one pillar in isolation, but cross-model portability d
 - **Verification**: stronger correctness checks, property-based testing, contract enforcement.
 - **Governance at scale**: org-level policies, audit workflows, incident response.
 - **Ecosystem risks**: prompt/tool supply chain, dependency security, model updates.
+
+Note: structured memory fits here as a versioned interface artifact. Treat memory schemas and retention/redaction rules as contracts.
 
 **Artifact map (concrete deliverables):**
 
@@ -108,24 +114,34 @@ Standardized trace interchange.
 **Goal**
 Enable independent auditing and regression analysis by exporting traces from one agent runtime and replaying/analyzing them in another tool.
 
-A diagram helps here because trace interchange is a pipeline with explicit checkpoints. As you read it, track where validation occurs. Then track which fields get exported. Finally, track what the divergence check is allowed to claim as “verified.”
+A diagram helps here because trace interchange is a pipeline. It has explicit checkpoints. As you read it, track where validation occurs. Then track which fields get exported. Finally, track what the divergence check is allowed to claim as “verified.”
 
 ```mermaid
 flowchart LR
-  A["Generate run"] --> B["Validate tool contracts"]
-  B --> C["Emit trace<br/>schema_version, run_id, eval_id, model_id"]
-  C --> D["Export trace"]
-  D --> E["Replay harness"]
-  E --> F{"Divergence check"}
-  F -->|Matches constraints| G["Audit / regression analysis"]
-  F -->|Diverges| H["Flag portability failure"]
+A["Generate-run"]
+B["Validate-contracts"]
+C["Emit-trace"]
+C1["Fields<br/>schema_version·run_id·eval_id·model_id"]
+D["Export-trace"]
+E["Replay-harness"]
+F{"Divergence?"}
+G["Audit/regression"]
+H["Flag-failure"]
+A-->B
+B-->C
+C-->C1
+C1-->D
+D-->E
+E-->F
+F-->|Matches|G
+F-->|Diverges|H
 ```
 
 Legend: “Validate tool contracts” means schema-checking arguments/results at runtime. This includes negative cases. Validate before the call enters the trace.
 
-“Divergence check” means comparing the replayed run to declared constraints. It does not require byte-for-byte identity. This applies when nondeterminism is allowed.
+“Divergence check” means comparing the replayed run to declared constraints. It does not require byte-for-byte identity. Use it when nondeterminism is allowed.
 
-The point is not to standardize everything. It is to standardize the minimum needed so two independent tools can agree on what happened, and can detect when a run is not reproducible under stated constraints.
+The point is not to standardize everything. Standardize the minimum needed for agreement. Two independent tools should agree on what happened. They should also detect when a run is not reproducible under stated constraints.
 
 **Minimal trace interchange contract (required fields)**
 
@@ -140,13 +156,22 @@ The point is not to standardize everything. It is to standardize the minimum nee
 **Event schema**
 
 - `events[]`: ordered list of events.
-  - `event_id`, `type`, `timestamp`, `parent_event_id` (when applicable)
+  - `event_id`
+  - `type`
+  - `timestamp`
+  - `parent_event_id` (when applicable)
   - Assistant/user text:
-    - content plus redaction markers (when redacted)
+    - `content`
+    - redaction markers (when redacted)
   - Tool calls:
-    - `tool_name`, validated `arguments`, `result` or structured error, `duration_ms`
+    - `tool_name`
+    - validated `arguments`
+    - `result` or structured error
+    - `duration_ms`
   - Policy gates:
-    - decision, rule id/version, rationale category (not freeform prose)
+    - decision
+    - rule id/version
+    - rationale category (not freeform prose)
 
 **Versioning rule**
 
@@ -156,15 +181,13 @@ The point is not to standardize everything. It is to standardize the minimum nee
 
 **Replay validity check (what must match)**
 
-- Under deterministic conditions, the tool-call sequence must match.
-  Match means tool name plus validated arguments.
-- For deterministic, versioned tools, outcomes must also match.
-- When nondeterminism exists (timeouts, stochastic tools, external APIs):
-  - record the boundary
-  - record what the replay is allowed to vary within
-  Examples: tool snapshot id, cached response id, or allowed outcome set.
-  Replay is valid only if outcomes stay within that boundary.
-- If replay diverges in tool-call sequence under deterministic conditions, flag a portability failure.
+- Deterministic runs: tool-call sequence must match.
+- Match means: tool name + validated arguments.
+- Deterministic, versioned tools: outcomes must match.
+- Nondeterministic components: record the boundary.
+- Record what replay is allowed to vary within.
+- Replay is valid only within that boundary.
+- If sequence diverges under deterministic conditions, flag a portability failure.
 
 ## Trade-offs
 

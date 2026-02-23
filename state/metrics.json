@@ -83797,6 +83797,86 @@
             "diff_ratio": 0.046948356807511735,
             "drift_score": 0.006822612085769981
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.94,
+            "decision": "refine",
+            "drift_score": 0.01,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.97,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard risk: the Mermaid diagram under ## System Breakdown may be tokenized as a single long sentence (the line containing I[\"Interoperability...\"], V[\"Verification...\"], G[\"Governance at scale...\"], R[\"Ecosystem risks...\"]) and exceed the 40-word hard-fail limit when newlines are normalized.",
+              "Style-guard risk: the Mermaid diagram under ## Concrete Example 2 may be tokenized as a single long sentence (the sequence A[\"Generate run\"] --> ... --> H[\"Flag portability failure\"]) and exceed the 40-word hard-fail limit when newlines are normalized."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.05832784207710292,
+            "passed": false,
+            "similarity_max": 0.7697172118074901
+          },
+          "iteration": 384,
+          "timestamp": "2026-02-23T12:23:20Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.22580645161290322,
+            "drift_score": 0.05832784207710292
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.94,
+            "decision": "refine",
+            "drift_score": 0.01,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.97,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard: in ## Thesis, the sentence starting with \u201cHypothesis: the main frontier is not larger models.\u201d continues through \u201cteams.\u201d and exceeds the 28-word maximum (approximately 39 words)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.1102405192230175,
+            "passed": false,
+            "similarity_max": 0.7729918578503238
+          },
+          "iteration": 385,
+          "timestamp": "2026-02-23T12:24:43Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.15789473684210525,
+            "drift_score": 0.1102405192230175
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.95,
+            "decision": "approve",
+            "drift_score": 0.01,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.98,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.11023441368016147,
+            "passed": false,
+            "similarity_max": 0.7737587100828398
+          },
+          "iteration": 386,
+          "timestamp": "2026-02-23T12:25:24Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.008264462809917356,
+            "drift_score": 0.11023441368016147
+          }
         }
       ]
     },
