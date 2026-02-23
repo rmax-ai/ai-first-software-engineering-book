@@ -37,10 +37,10 @@ A diagram helps because the key idea is the *relationship* between layers. Focus
 
 ```mermaid
 flowchart LR
-  A["Layer 1: Run-local scratch\n(write: overwrite OK)\n(scope: one run)"] -->|summaries, hypotheses| M["Model context"]
-  B["Layer 2: Session task state\n(write: update each step; clear on close)\n(scope: task)"] -->|checklists, next steps| M
-  C["Layer 3: Project durable facts\n(write: only after verification + sources)\n(scope: long-lived)"] -->|contracts, ADRs, runbooks| M
-  D["Layer 4: Retrieval index (derived)\n(write: rebuildable; not source of truth)\n(scope: long-lived)"] -->|top-k excerpts| M
+   A["Layer 1: Run-local scratch<br/>(write: overwrite OK)<br/>(scope: one run)"] -->|summaries, hypotheses| M["Model context"]
+   B["Layer 2: Session task state<br/>(write: update each step; clear on close)<br/>(scope: task)"] -->|checklists, next steps| M
+   C["Layer 3: Project durable facts<br/>(write: only after verification + sources)<br/>(scope: long-lived)"] -->|contracts, ADRs, runbooks| M
+   D["Layer 4: Retrieval index (derived)<br/>(write: rebuildable; not source of truth)<br/>(scope: long-lived)"] -->|top-k excerpts| M
   C -->|index/build| D
 ```
 

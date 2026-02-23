@@ -20,9 +20,31 @@ nav:
       - Memory Architectures: book/patterns/memory-architectures.md
       - Minimal Agent Loop: book/patterns/minimal-agent-loop.md
       - Self-Verification Loop: book/patterns/self-verification-loop.md
+      - Risk-Shaped Autonomy Tiers: book/patterns/risk-shaped-autonomy-tiers.md
+      - Diff-to-Gates Router: book/patterns/diff-to-gates-router.md
+      - Scout-Then-Execute (Two-Phase Runs): book/patterns/scout-then-execute-two-phase-runs.md
+      - Patch Locality Budget: book/patterns/patch-locality-budget.md
+      - Waiver Ledger (Exceptions Are Data): book/patterns/waiver-ledger-exceptions-are-data.md
+      - Evidence Bundle Standard (One Artifact, Always): book/patterns/evidence-bundle-standard.md
+      - Failure-Signature Index: book/patterns/failure-signature-index.md
+      - Golden-Task Canary Suite: book/patterns/golden-task-canary-suite.md
+      - Replayable Trace Runs: book/patterns/replayable-trace-runs.md
+      - Memory Write Barrier (Verified-Only Durable Memory): book/patterns/memory-write-barrier.md
 theme:
   name: material
   custom_dir: overrides
+
+repo_name: rmax-ai/ai-first-software-engineering-book
+repo_url: https://github.com/rmax-ai/ai-first-software-engineering-book
+
+extra:
+  social:
+    - icon: fontawesome/solid/globe
+      link: https://rmax.ai
+      name: rmax.ai
+    - icon: fontawesome/brands/github
+      link: https://github.com/rmax-ai/ai-first-software-engineering-book
+      name: GitHub Repository
 plugins:
   - search
   - mermaid2

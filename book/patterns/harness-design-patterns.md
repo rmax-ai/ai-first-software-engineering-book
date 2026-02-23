@@ -153,16 +153,16 @@ A diagram helps here because the harness is mostly about *boundaries* (who can d
 
 ```mermaid
 flowchart TB
-  K["Kernel\n(step loop + budgets)"] --> C["Context builder\n(select + summarize)"]
-  C --> M["Model\n(decide next action)"]
-  M --> TR["Tool router\n(allowlist + schema validate)"]
-  TR --> SE["Side effects\n(files / network / system)"]
+  K["Kernel<br/>(step loop + budgets)"] --> C["Context builder<br/>(select + summarize)"]
+  C --> M["Model<br/>(decide next action)"]
+  M --> TR["Tool router<br/>(allowlist + schema validate)"]
+  TR --> SE["Side effects<br/>(files / network / system)"]
 
-  G["Governance layer\n(approvals + audit)"] -. "approval gate (dashed)" .-> TR
-  V["Verifier\n(tests/evals + capture)"] --> SE
+  G["Governance layer<br/>(approvals + audit)"] -. "approval gate (dashed)" .-> TR
+  V["Verifier<br/>(tests/evals + capture)"] --> SE
   V --> K
 
-  K -. "trace append (dashed)" .-> T["Trace store\n(events + artifacts)"]
+  K -. "trace append (dashed)" .-> T["Trace store<br/>(events + artifacts)"]
   TR -. "tool result (dashed)" .-> T
   V -. "verification bundle (dashed)" .-> T
   SE -. "outputs/logs (dashed)" .-> T
