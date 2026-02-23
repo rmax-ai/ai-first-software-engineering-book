@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block copyright %}
+  {{ super() }}
+  <div class="build-timestamp" style="margin-top: 0.5em; font-size: 0.8em;">
+    Last built: {{ build_date_utc.strftime('%Y-%m-%d %H:%M:%S UTC') }}
+  </div>
+{% endblock %}

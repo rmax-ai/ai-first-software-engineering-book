@@ -22,6 +22,7 @@ nav:
       - Self-Verification Loop: book/patterns/self-verification-loop.md
 theme:
   name: material
+  custom_dir: overrides
 plugins:
   - search
   - mermaid2
