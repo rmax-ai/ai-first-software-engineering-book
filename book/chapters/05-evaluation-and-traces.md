@@ -64,26 +64,26 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
   - quality: lint, type checks, formatting, doc checks.
   - performance: benchmarks, latency/cost budgets.
 - **Gating model**: which evaluations are required for which action classes.
-  
+
   A gating model is only useful if the trace explains the choice.
   A reviewer should be able to see why a gate passed, failed, or was skipped.
 
-  A diagram helps here because the logic is a decision flow.
-  Focus on the first safety decision and the first failing gate.
+  This is easiest to audit as a decision flow.
+  In the diagram below, focus on the first safety decision (permission / protected paths / secret scan) and the first failing gate.
 
 ```mermaid
 flowchart TB
-  A[Action class selected] --> B[Safety gate(s)\n(permission / protected-path / secret scan)]
-  B -->|fail| S1[STOP\nstop_reason set\nrecord: failure_signature + touched_paths]
-  B -->|pass| C[Required evaluations\nquality + correctness + performance]
-  C --> D{Any required eval missing?}
-  D -->|yes| S2[STOP\nstop_reason set\nrecord: skipped_reason + selection_reason]
-  D -->|no| E{Any eval failed?}
-  E -->|yes| S3[STOP\nstop_reason set\nrecord: command + exit_status + failure_signature]
-  E -->|no| F[CONTINUE / COMPLETE\nrecord: evaluation_results + budgets\nstop_reason=completed]
+  A[Action class selected] --> B["Safety gate(s)<br/>(permission / protected-path / secret scan)"]
+  B -->|fail| S1["STOP<br/>stop_reason set<br/>record: failure_signature + touched_paths"]
+  B -->|pass| C["Required evaluations<br/>quality + correctness + performance"]
+  C --> D{"Any required eval missing?"}
+  D -->|yes| S2["STOP<br/>stop_reason set<br/>record: skipped_reason + selection_reason"]
+  D -->|no| E{"Any eval failed?"}
+  E -->|yes| S3["STOP<br/>stop_reason set<br/>record: command + exit_status + failure_signature"]
+  E -->|no| F["CONTINUE / COMPLETE<br/>record: evaluation_results + budgets<br/>stop_reason=completed"]
 ```
 
-  After you review the flow, the key takeaway is this: every STOP is a first-class outcome.
+  Use this flow as the reference when reading the gating matrix below: every STOP is a first-class outcome.
   The trace must record enough to explain the stop and replay the same checks.
 
   Legend:
@@ -247,6 +247,7 @@ Query step using structured fields (one possible workflow):
   - common_missing_patch_pattern: diffs do not include any files under `src/auth/__init__.py` or `src/auth/*` besides `client.py`
 
 Decision rule using the query result:
+
 - If `last_success_repo_sha` matches the current `repo_sha`:
   - If only `client.py` was changed, expand patch scope to import sites.
   - Update `src/auth/__init__.py` exports and import usages.
