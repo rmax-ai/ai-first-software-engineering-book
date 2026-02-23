@@ -633,21 +633,31 @@
 <p>More concretely, how do you get repeatable outcomes from bounded iteration? How do you get explainable outcomes from traces and errors? How do you get safe outcomes from tool gating and verification, while keeping enough capability for real repo tasks?</p>
 <h2 id="forces">Forces</h2>
 <ul>
-<li><strong>Constraints vs. coverage</strong>: adding constraints improves safety but can reduce task coverage.</li>
+<li><strong>Constraints vs. coverage</strong>: adding constraints improves safety but can reduce task coverage.<ul>
 <li>Mitigation: enforce constraints in the kernel/router (budgets, tool allowlists). Do not rely on prompt-only rules.</li>
 <li>Over-optimizing risk: narrow allowlists and strict stop gates can force manual “escape hatches.” That reduces auditability.</li>
-<li><strong>Tools vs. surface area</strong>: more tools increase capability but enlarge the debug and governance surface.</li>
+</ul>
+</li>
+<li><strong>Tools vs. surface area</strong>: more tools increase capability but enlarge the debug and governance surface.<ul>
 <li>Mitigation: prefer a small set of composable, typed tools. Keep a consistent error model and idempotency.</li>
 <li>Over-optimizing risk: tool sprawl creates overlapping affordances (“edit_file” vs “apply_patch” vs “write_file”). Traces become harder to interpret.</li>
-<li><strong>Memory vs. drift/privacy</strong>: continuity improves with memory, but so do drift and data handling risks.</li>
+</ul>
+</li>
+<li><strong>Memory vs. drift/privacy</strong>: continuity improves with memory, but so do drift and data handling risks.<ul>
 <li>Mitigation: narrow context construction with explicit selection limits. Treat summaries as <em>derived</em> artifacts, not source of truth.</li>
 <li>Over-optimizing risk: long-term memory can preserve outdated assumptions. It also increases retention and redaction obligations.</li>
-<li><strong>Automation vs. blast radius</strong>: stronger automation improves throughput but increases the impact of failures.</li>
+</ul>
+</li>
+<li><strong>Automation vs. blast radius</strong>: stronger automation improves throughput but increases the impact of failures.<ul>
 <li>Mitigation: separate plan/execute/verify duties. Add governance gates for high-risk tools or wide-scope edits.</li>
 <li>Over-optimizing risk: automatic execution without approvals or rollback can amplify a single bad decision. The impact can be repo-wide.</li>
-<li><strong>Observability vs. cost</strong>: better tracing and verification cost time and compute.</li>
+</ul>
+</li>
+<li><strong>Observability vs. cost</strong>: better tracing and verification cost time and compute.<ul>
 <li>Mitigation: require a minimal, standardized verification bundle. Record commands, exit codes, diffs, and checksums.</li>
 <li>Over-optimizing risk: heavyweight evals and extensive instrumentation can consume the budget. Little time remains to fix what the eval found.</li>
+</ul>
+</li>
 </ul>
 <h2 id="solution">Solution</h2>
 <p>Use a small set of recurring harness patterns that are easy to audit and compose.</p>
@@ -751,24 +761,36 @@ stop_gate:
 </ul>
 <h2 id="failure-modes">Failure modes</h2>
 <ul>
-<li><strong>Tool sprawl</strong>: too many overlapping tools; selection becomes inconsistent and hard to audit.</li>
+<li><strong>Tool sprawl</strong>: too many overlapping tools; selection becomes inconsistent and hard to audit.<ul>
 <li>Typical symptom: similar tasks produce different tool sequences, making runs hard to compare.</li>
 <li>Mitigation: Pattern 1 (Typed Tool Boundary) with a small, composable tool set and consistent return types.</li>
-<li><strong>Hidden side effects</strong>: tools mutate state without reporting it; traces become misleading.</li>
+</ul>
+</li>
+<li><strong>Hidden side effects</strong>: tools mutate state without reporting it; traces become misleading.<ul>
 <li>Typical symptom: verification fails but there is no record of what changed.</li>
 <li>Mitigation: Pattern 1 (typed results + checksums) plus Pattern 3 (evidence bundle includes “what changed”).</li>
-<li><strong>Context bloat</strong>: prompts include too much content; constraints and acceptance criteria are diluted.</li>
+</ul>
+</li>
+<li><strong>Context bloat</strong>: prompts include too much content; constraints and acceptance criteria are diluted.<ul>
 <li>Typical symptom: the agent “forgets” budgets or acceptance criteria because they are drowned out by irrelevant text.</li>
 <li>Mitigation: Pattern 4 (Narrow Context Construction) with explicit file limits and rolling summaries.</li>
-<li><strong>Policy bypass</strong>: weak allowlists or validation enable unintended actions.</li>
+</ul>
+</li>
+<li><strong>Policy bypass</strong>: weak allowlists or validation enable unintended actions.<ul>
 <li>Typical symptom: the agent discovers an unreviewed capability via a permissive tool surface (“run_shell” becomes a universal escape hatch).</li>
 <li>Mitigation: Pattern 1 (tool allowlists + schema validation) and Pattern 5 (phase constraints that prevent execution-time policy edits).</li>
-<li><strong>Unmeasured changes</strong>: no evals/verification; regressions ship silently.</li>
+</ul>
+</li>
+<li><strong>Unmeasured changes</strong>: no evals/verification; regressions ship silently.<ul>
 <li>Typical symptom: “looks good” completions that fail when rerun or merged.</li>
 <li>Mitigation: Pattern 3 (Evidence-First Completion) with a stop gate that requires recorded verification.</li>
-<li><strong>Over-coupling</strong>: harness depends on brittle prompt wording instead of enforceable kernel/router constraints.</li>
+</ul>
+</li>
+<li><strong>Over-coupling</strong>: harness depends on brittle prompt wording instead of enforceable kernel/router constraints.<ul>
 <li>Typical symptom: small wording changes in system prompts shift behavior dramatically.</li>
 <li>Mitigation: Pattern 2 (Budgeted Control) and Pattern 1 (enforced tool boundary) so critical constraints are not prompt-dependent.</li>
+</ul>
+</li>
 </ul>
 <h2 id="when-not-to-use">When not to use</h2>
 <ul>

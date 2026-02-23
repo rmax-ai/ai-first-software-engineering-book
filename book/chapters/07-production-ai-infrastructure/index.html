@@ -595,24 +595,30 @@
 <ul>
 <li>Trigger: a proposed patch (diff) plus a task spec (e.g., “fix failing test X”). Include the target branch SHA and a pinned environment (container image + lockfile).</li>
 <li>Sandbox: start an isolated runner with no ambient credentials. Mount the repo read-write and restrict filesystem + network egress to an allowlist.</li>
-<li>Tool calls:</li>
+<li>Tool calls:<ul>
 <li>Run a fixed sequence (format/lint → unit tests → build).</li>
 <li>Enforce step timeouts (e.g., 5m/unit, 15m/build) and bounded retries for flaky steps (e.g., 2 retries with exponential backoff).</li>
-<li>Artifact bundle (stored per run id):</li>
+</ul>
+</li>
+<li>Artifact bundle (stored per run id):<ul>
 <li>Persist the patch and tool call transcripts (commands, versions, exit codes).</li>
 <li>Persist logs, test reports (JUnit/JSON), build outputs, and a replay manifest for the same inputs.</li>
-<li>Evaluation gate:</li>
+</ul>
+</li>
+<li>Evaluation gate:<ul>
 <li>Promote only if required checks pass (e.g., all tests green, no new lints, diff applies cleanly).</li>
 <li>Require reproducibility: either a replay succeeds at least once, or the environment hash matches a known-good cache entry.</li>
 <li>On failure, generate a human-facing summary with: run id link, failed step, and top error class.</li>
 <li>Include a short “what to try next” hint (e.g., rerun without cache, or inspect a specific log).</li>
+</ul>
+</li>
 </ul>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Cost-aware autonomy for a batch of maintenance tasks.</p>
 <ul>
 <li>Budget: per-task token/cost ceilings (e.g., $0.50 and 20k tokens) plus a batch budget (e.g., $50/day), enforced by the orchestrator.</li>
 <li>Strategy: fail fast on low-signal tasks (small, repetitive, or high-latency tool loops) and escalate to human review when confidence is low or blast radius is high.</li>
-<li>Decision policy:</li>
+<li>Decision policy:<ul>
 <li>Treat a task as “low-signal” when:<ul>
 <li>(a) there is no progress after N tool steps (e.g., 6),</li>
 <li>(b) the same error repeats (e.g., the same stack trace twice), or</li>
@@ -627,6 +633,8 @@
 <li>escalate for human review.</li>
 </ul>
 </li>
+</ul>
+</li>
 <li>Measure (throughput): cost per successful task and time-to-merge.</li>
 <li>Measure (quality): regression rate (e.g., rollback or test failures within 24h) and “wasted spend” (tokens spent on tasks that are abandoned or escalated).</li>
 </ul>
@@ -638,15 +646,21 @@
 </ul>
 <h2 id="failure-modes">Failure Modes</h2>
 <ul>
-<li><strong>Non-reproducible runs</strong>: environment drift makes traces hard to replay.</li>
+<li><strong>Non-reproducible runs</strong>: environment drift makes traces hard to replay.<ul>
 <li>Detection: replay fails with different dependency resolutions; tool versions differ from the recorded manifest; repeated “works on runner A but not runner B” incidents.</li>
 <li>Mitigation: pin images and dependencies; record tool versions and hashes in the replay manifest; run periodic “replay audits” that re-execute a sample of recent runs.</li>
-<li><strong>Leaky permissions</strong>: tool plane has broader access than intended.</li>
+</ul>
+</li>
+<li><strong>Leaky permissions</strong>: tool plane has broader access than intended.<ul>
 <li>Detection: outbound network calls to unexpected domains; tools reading/writing outside approved paths; secrets appearing in logs or artifacts.</li>
 <li>Mitigation: enforce network egress allowlists; run tools with least-privilege credentials scoped to a repo/task; add secret redaction and artifact scanning before persistence.</li>
-<li><strong>Noisy observability</strong>: too much unstructured logging reduces signal.</li>
+</ul>
+</li>
+<li><strong>Noisy observability</strong>: too much unstructured logging reduces signal.<ul>
 <li>Detection: high log volume with low queryability; incident timelines require manual grepping; key metrics (duration, retries, error class) missing from dashboards.</li>
 <li>Mitigation: emit structured events for each tool call; standardize error classes and outcome codes; sample verbose logs while keeping full traces for failed runs only.</li>
+</ul>
+</li>
 </ul>
 <h2 id="research-directions">Research Directions</h2>
 <ul>

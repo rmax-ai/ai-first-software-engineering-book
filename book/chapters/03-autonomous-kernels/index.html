@@ -550,32 +550,34 @@
 <p>The loop stages are the execution path. Budgets, permissions, and evaluation gates are the controls that constrain what can happen at each stage and what evidence is required to stop.</p>
 <p>Treat each loop step as a checkpoint with two requirements: (1) what must be recorded, and (2) what stop condition must be evaluated.</p>
 <ol>
-<li><strong>Intent</strong>: state the task class and the success condition.</li>
+<li>
+<p><strong>Intent</strong>: state the task class and the success condition.</p>
+<ul>
 <li>Must record: intent string.</li>
 <li>Must record: success criteria (e.g., “repro no longer fails”).</li>
-<li>
-<p>Stop condition: if success criteria are ambiguous, stop and request clarification.</p>
+<li>Stop condition: if success criteria are ambiguous, stop and request clarification.</li>
+</ul>
 </li>
 <li>
 <p><strong>Plan</strong>: enumerate the next 1–3 actions only, each tied to a gate and a budget slice.</p>
-</li>
+<ul>
 <li>Must record: planned steps.</li>
 <li>Must record: named gates.</li>
 <li>Must record: allocated budget slice.</li>
-<li>
-<p>Stop condition: if the plan requires tools/paths outside permissions, stop and request escalation.</p>
+<li>Stop condition: if the plan requires tools/paths outside permissions, stop and request escalation.</li>
+</ul>
 </li>
 <li>
 <p><strong>Act</strong>: perform the minimal change that tests the current hypothesis.</p>
-</li>
+<ul>
 <li>Must record: files touched.</li>
 <li>Must record: diff stats (and any migration steps taken).</li>
-<li>
-<p>Stop condition: if diff budget or file-touch budget is exceeded, stop and escalate.</p>
+<li>Stop condition: if diff budget or file-touch budget is exceeded, stop and escalate.</li>
+</ul>
 </li>
 <li>
 <p><strong>Verify</strong>: run the smallest evaluation that is credible for the task class.</p>
-</li>
+<ul>
 <li>Must record: exact command(s).</li>
 <li>Must record: exit codes.</li>
 <li>Must record: summary lines (or pointers/hashes to full logs).</li>
@@ -588,28 +590,30 @@
 <li>the waiver decision and its rationale</li>
 </ul>
 </li>
-<li>
-<p>A waiver is not a “pass”; it is a recorded exception.</p>
+<li>A waiver is not a “pass”; it is a recorded exception.</li>
+</ul>
 </li>
 <li>
 <p><strong>Record trace</strong>: persist replayable evidence for what happened and why.</p>
-</li>
+<ul>
 <li>Must record: commands executed.</li>
 <li>Must record: outputs (or pointers).</li>
 <li>Must record: budgets consumed.</li>
 <li>Must record: permissions exercised.</li>
-<li>
-<p>Stop condition: if persistence fails (cannot write trace), stop; do not continue “blind.”</p>
+<li>Stop condition: if persistence fails (cannot write trace), stop; do not continue “blind.”</li>
+</ul>
 </li>
 <li>
 <p><strong>Stop/iterate</strong>: decide based on evidence and remaining budget.</p>
-</li>
+<ul>
 <li>Must record: decision.</li>
 <li>Must record: rationale.</li>
 <li>Must record: the next action (either “done” or “what to try next”).</li>
 <li>Stop condition: stop on success.</li>
 <li>Stop condition: stop when a budget is exhausted.</li>
 <li>Stop condition: stop when permissions/scope are insufficient.</li>
+</ul>
+</li>
 </ol>
 <p>A diagram is useful here because the kernel has a fixed stage order, while budgets, permissions, and gates constrain stages from the side.
 Read solid arrows as the stage sequence. Read dotted arrows as constraints and required checks.
@@ -696,7 +700,7 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Bug-fix kernel for a CLI tool.</p>
 <ul>
-<li>Input:</li>
+<li>Input:<ul>
 <li>failing test case: <code>tests/test_parse.py::test_rejects_empty_input</code></li>
 <li>repro command: <code>python -m mycli parse ""</code></li>
 <li>observed: exit code <code>0</code></li>
@@ -714,9 +718,13 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <p>Mini-runbook (a single bounded kernel run):</p>
 <ol>
-<li>Localize failure (evidence-first)</li>
+<li>
+<p>Localize failure (evidence-first)</p>
+<ul>
 <li>Action: reproduce with the smallest credible check.<ul>
 <li>Command: <code>pytest -k rejects_empty_input</code></li>
 </ul>
@@ -726,18 +734,20 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <li>Record:<ul>
 <li>command: <code>pytest -k rejects_empty_input</code></li>
 <li>exit code: <code>1</code></li>
-<li>failing excerpt (example):</li>
+<li>failing excerpt (example):<ul>
 <li><code>&gt;       assert parse("") != 0</code></li>
 <li><code>E       AssertionError: assert 0 != 0</code></li>
+</ul>
+</li>
 <li>test summary line (example): <code>1 failed, 42 deselected in 0.31s</code></li>
 </ul>
 </li>
-<li>
-<p>Stop rule: if the failure does not reproduce, stop and return a “cannot reproduce” trace (no edits).</p>
+<li>Stop rule: if the failure does not reproduce, stop and return a “cannot reproduce” trace (no edits).</li>
+</ul>
 </li>
 <li>
 <p>Patch minimal surface (hypothesis-driven)</p>
-</li>
+<ul>
 <li>Action: implement the smallest boundary check consistent with the hypothesis.</li>
 <li>Hypothesis: empty string is being treated as a valid token stream in <code>src/parser.py</code>.</li>
 <li>Change: reject empty input at the parse entrypoint.</li>
@@ -749,12 +759,12 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <li>diff stats (example): <code>src/parser.py | 7 ++++++-</code></li>
 </ul>
 </li>
-<li>
-<p>Stop rule: if a second file is required, stop and escalate (“write scope too narrow”).</p>
+<li>Stop rule: if a second file is required, stop and escalate (“write scope too narrow”).</li>
+</ul>
 </li>
 <li>
 <p>Run verification gate (tight but credible)</p>
-</li>
+<ul>
 <li>Action: rerun the failing test.<ul>
 <li>Command: <code>pytest -k rejects_empty_input</code></li>
 <li>Expected summary (example): <code>1 passed, 42 deselected in 0.28s</code></li>
@@ -774,28 +784,30 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <li>summary 2 (example): <code>12 passed, 0 failed, 31 deselected in 1.07s</code></li>
 </ul>
 </li>
-<li>
-<p>Stop rule: if Gate 1 passes but Gate 2 fails, treat as “not fixed” and iterate (the patch likely broke a nearby invariant).</p>
+<li>Stop rule: if Gate 1 passes but Gate 2 fails, treat as “not fixed” and iterate (the patch likely broke a nearby invariant).</li>
+</ul>
 </li>
 <li>
 <p>Record trace (auditable, replayable)</p>
-</li>
+<ul>
 <li>Action: persist a kernel trace and a ledger entry.</li>
 <li>Record (minimum):<ul>
 <li>budgets consumed: <code>iterations=1/3</code></li>
 <li>budgets consumed: <code>tool_calls=3/10</code></li>
 <li>budgets consumed: <code>diff_lines=7/40</code></li>
 <li>commands executed + exit codes</li>
-<li>final test summary lines:</li>
+<li>final test summary lines:<ul>
 <li><code>12 passed, 0 failed, 31 deselected in 1.07s</code></li>
 </ul>
 </li>
-<li>
-<p>Stop rule: if trace persistence fails, stop; do not continue with further edits.</p>
+</ul>
+</li>
+<li>Stop rule: if trace persistence fails, stop; do not continue with further edits.</li>
+</ul>
 </li>
 <li>
 <p>Stop criteria (explicit)</p>
-</li>
+<ul>
 <li>Stop success: Gate 1 and Gate 2 pass within budget.</li>
 <li>Stop failure: tool-call budget exhausted.</li>
 <li>Stop failure: diff budget exceeded.</li>
@@ -805,12 +817,14 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <li>Example: “requires editing <code>src/lexer.py</code>, outside current write scope.”</li>
 </ul>
 </li>
+</ul>
+</li>
 </ol>
 <p>This stays stable and debuggable because the kernel cannot declare success without passing named gates, and each iteration is bounded by explicit budgets.</p>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Dependency upgrade kernel.</p>
 <ul>
-<li>Input:</li>
+<li>Input:<ul>
 <li>target version: <code>libX 4.2.0 → 4.3.0</code></li>
 <li>constraints:<ul>
 <li>Python <code>&gt;=3.10</code></li>
@@ -836,9 +850,13 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <p>Kernel steps with an explicit remediation branch:</p>
 <ol>
-<li>Update manifest (narrow scope)</li>
+<li>
+<p>Update manifest (narrow scope)</p>
+<ul>
 <li>Action: bump version constraint in <code>pyproject.toml</code>.</li>
 <li>Record:<ul>
 <li>old constraint (example): <code>libX&gt;=4.2,&lt;4.3</code></li>
@@ -846,75 +864,91 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <li>diff stats for manifest only (example): <code>pyproject.toml | 1 +-</code></li>
 </ul>
 </li>
-<li>
-<p>Stop/iterate rule:</p>
-<ul>
+<li>Stop/iterate rule:<ul>
 <li>If the dependency resolver cannot produce a consistent lock, stop with resolver output.</li>
 <li>Do not attempt ad-hoc pinning unless that is explicitly in scope.</li>
 </ul>
 </li>
+</ul>
+</li>
 <li>
 <p>Run a fast build/type gate before full tests</p>
-</li>
+<ul>
 <li>Gate A (fast): import/type/compile smoke check.<ul>
 <li>Command: <code>python -m compileall src</code></li>
 </ul>
 </li>
 <li>Record:<ul>
 <li>exit code</li>
-<li>compile summary lines (example):</li>
+<li>compile summary lines (example):<ul>
 <li><code>Listing 'src'...</code></li>
 <li><code>Compiling 'src/app.py'...</code></li>
 <li><code>compileall: success</code></li>
 </ul>
 </li>
-<li>
-<p>Interpretation:</p>
-<ul>
+</ul>
+</li>
+<li>Interpretation:<ul>
 <li>If Gate A fails, it is often a missing symbol or incompatible API.</li>
 <li>Remediate before running the full suite.</li>
 </ul>
 </li>
-<li>
-<p>Remediation branch (compile errors vs failing tests)</p>
+</ul>
 </li>
 <li>
-<p>If <strong>compile/import fails</strong>:</p>
+<p>Remediation branch (compile errors vs failing tests)</p>
 <ul>
-<li>Localize:</li>
+<li>If <strong>compile/import fails</strong>:<ul>
+<li>Localize:<ul>
 <li>Capture the first error site (file + symbol) from the compile output.</li>
 <li>Example line: <code>***   File "src/integrations/libx.py", line 12</code></li>
 <li>Example line: <code>ImportError: cannot import name 'OldClient' from 'libx'</code></li>
-<li>Patch:</li>
+</ul>
+</li>
+<li>Patch:<ul>
 <li>Apply the minimal mechanical fix in the smallest set of files.</li>
 <li>Example: rename <code>OldClient</code> to <code>Client</code>.</li>
-<li>Verify:</li>
+</ul>
+</li>
+<li>Verify:<ul>
 <li>Rerun Gate A only.</li>
 <li>Proceed only when it returns exit code <code>0</code>.</li>
-<li>Budget guard:</li>
+</ul>
+</li>
+<li>Budget guard:<ul>
 <li>If more than 5 files are touched, stop and escalate (“requires broader refactor”).</li>
 <li>If cumulative diff exceeds 120 lines, stop and escalate (“exceeds change budget for this kernel”).</li>
 </ul>
 </li>
-<li>
-<p>If <strong>compile passes but tests fail</strong>:</p>
+</ul>
+</li>
+</ul>
 <ul>
-<li>Localize:</li>
+<li>If <strong>compile passes but tests fail</strong>:<ul>
+<li>Localize:<ul>
 <li>Run the smallest failing unit (single file or single test) based on the first failure.</li>
 <li>Example command: <code>pytest tests/test_libx_integration.py -q</code></li>
 <li>Example summary: <code>1 failed, 18 passed in 4.92s</code></li>
-<li>Patch:</li>
+</ul>
+</li>
+<li>Patch:<ul>
 <li>Address the behavioral change with a targeted adjustment.</li>
 <li>Record the reason.</li>
 <li>Example: “libX now defaults timeout=None; set explicit timeout=5.0 in wrapper”.</li>
-<li>Verify:</li>
+</ul>
+</li>
+<li>Verify:<ul>
 <li>Rerun the failing tests.</li>
 <li>Proceed to the full suite gate only after the localized failure is cleared.</li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
 <li>
 <p>Run full verification gate (credibility gate)</p>
-</li>
+<ul>
 <li>Gate B (full): run the test suite (or the project’s standard verification command).<ul>
 <li>Command: <code>pytest</code></li>
 </ul>
@@ -924,9 +958,7 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <li>test summary line (example): <code>219 passed, 0 failed in 38.41s</code></li>
 </ul>
 </li>
-<li>
-<p>Verification risk handling:</p>
-<ul>
+<li>Verification risk handling:<ul>
 <li>A narrowed verification set is acceptable only as an explicit gate waiver.</li>
 <li>Record why the full gate is unavailable.</li>
 <li>Record what alternative gate was run.</li>
@@ -934,21 +966,31 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <li>Do not label a waiver as “green”; label it as “waived.”</li>
 </ul>
 </li>
+</ul>
+</li>
 <li>
 <p>Stop criteria and outputs</p>
-</li>
+<ul>
 <li>Stop success: Gate A and Gate B pass within budget.</li>
 <li>Stop failure: repeated failures indicate the upgrade exceeds current permission/scope (e.g., requires API redesign), or budgets are exhausted.</li>
 <li>Required outputs on stop:<ul>
-<li>change summary:</li>
+<li>change summary:<ul>
 <li>files touched</li>
 <li>primary reason</li>
-<li>verification summary:</li>
+</ul>
+</li>
+<li>verification summary:<ul>
 <li>Gate A command + result (include summary lines)</li>
 <li>Gate B command + result (include summary lines)</li>
-<li>rollback plan:</li>
+</ul>
+</li>
+<li>rollback plan:<ul>
 <li>“revert manifest bump and lockfile” (or equivalent)</li>
 <li>exact files to revert</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ol>
@@ -957,21 +999,25 @@ Takeaway: “done” is a verification outcome, and trace artifacts are explicit
 <ul>
 <li>
 <p>Smaller kernels reduce risk but may require orchestration for multi-step projects.</p>
+<ul>
+<li>Mitigation: use staged kernels (e.g., “diagnose-only” kernel → “patch” kernel → “refactor” kernel), each with separate budgets and permissions.</li>
+</ul>
 </li>
-<li>
-<p>Mitigation: use staged kernels (e.g., “diagnose-only” kernel → “patch” kernel → “refactor” kernel), each with separate budgets and permissions.</p>
-</li>
+</ul>
+<ul>
 <li>
 <p>Strict permissions reduce blast radius but can prevent necessary refactors.</p>
+<ul>
+<li>Mitigation: use permission escalation as an explicit step with a justification and a widened verification gate (e.g., requiring a broader test suite when write scope expands).</li>
+</ul>
 </li>
-<li>
-<p>Mitigation: use permission escalation as an explicit step with a justification and a widened verification gate (e.g., requiring a broader test suite when write scope expands).</p>
-</li>
+</ul>
+<ul>
 <li>
 <p>Heavier tracing improves auditability but adds operational overhead.</p>
-</li>
-<li>
-<p>Mitigation: record a minimum viable trace by default (commands, diffs, gate results), and sample/expand traces only on failures or high-risk task classes.</p>
+<ul>
+<li>Mitigation: record a minimum viable trace by default (commands, diffs, gate results), and sample/expand traces only on failures or high-risk task classes.</li>
+</ul>
 </li>
 </ul>
 <h2 id="failure-modes">Failure Modes</h2>
