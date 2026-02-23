@@ -4,7 +4,7 @@
 
 AI-first software engineering is an architectural inversion. Machine reasoning becomes a primary execution substrate. The harness—tools, constraints, evaluation, and traceability—becomes the primary design surface.
 
-This inversion is practical. Reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable loop.
+This inversion is practical: reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable loop.
 
 A concrete, testable implication (holding the model constant):
 
@@ -36,18 +36,18 @@ This chapter’s claim is a hypothesis: some observed “capability” gains in 
   - The system can attribute regressions to a layer (prompt, tool, code, eval).
   - Autonomy is gated by evaluations and budgets.
 
-A diagram helps here because the distinction (model vs harness) changes how evidence moves. The diagram makes the handoffs explicit. It also shows where trace capture happens. Focus on two points. First: where the trace is recorded. Second: where the trace is used for attribution and the next plan.
+A diagram helps here because the model vs harness distinction changes how evidence moves through the loop. Focus on two points: where the trace is recorded, and where it is used to decide the next plan.
 
 ```mermaid
 flowchart TB
-  P[Plan\n(spec + intent)]
-  A[Act\n(propose patch)]
-  T[Tools\n(apply + run)]
-  V[Verify\n(evals/CI)]
-  D{Checks pass?}
-  S[Stop\nship/merge]
-  X[Attribute\nroot cause]
-  TR[(Trace)]
+  P["Plan<br/>(spec + intent)"]
+  A["Act<br/>(propose patch)"]
+  T["Tools<br/>(apply + run)"]
+  V["Verify<br/>(evals/CI)"]
+  D{"Checks pass?"}
+  S["Stop<br/>(ship/merge)"]
+  X["Attribute<br/>(root cause)"]
+  TR[("Trace (record)")]
 
   P --> A
   A --> T
@@ -68,7 +68,7 @@ Legend:
 - **Solid arrows** are the operational loop (plan → act → verify).
 - **Dashed arrows** are trace capture and trace usage.
 
-Takeaway: without a trace, attribution is guesswork. You will not know if the fix is spec/prompt, tool/runtime, code, or eval/CI. The same three measurable signals below should show up consistently in how you run (and later audit) the loop.
+Takeaway: without a trace, attribution is guesswork. You will not know whether the next action is to clarify the spec, fix a tool issue, change product code, or correct an evaluation.
 
 - **Measurable signals** (to separate model vs harness effects):
   - *Iterations-to-pass*: number of propose→verify cycles until all required checks pass.
@@ -77,18 +77,20 @@ Takeaway: without a trace, attribution is guesswork. You will not know if the fi
     - Bucket: prompt/spec vs tool/runtime vs code vs eval.
 - **Attribution checklist** (what evidence makes a failure “belong” to a layer):
   - **Spec/prompt**:
-    - Requirement is ambiguous or contradictory.
-    - Reasonable interpretations change expected output.
-    - Clarifying text resolves the failure without code changes.
+    - The requirement is ambiguous, contradictory, or incomplete.
+    - Two reasonable interpretations produce different expected outputs.
+    - Clarifying text changes the expected outcome without any code changes.
   - **Tool/runtime**:
-    - Tool errors, timeouts, missing permissions, or flaky environment.
-    - Identical reruns yield different results.
+    - Tool errors, timeouts, missing permissions, or a flaky environment.
+    - Reruns on the same commit produce different outcomes.
+    - The failure depends on machine state (filesystem, network, credentials, resources).
   - **Code**:
     - Deterministic failing tests or typechecks tied to a specific diff.
     - Reverting the diff restores the previous behavior.
+    - The failure reproduces across environments given the same inputs.
   - **Eval/CI**:
-    - What is asserted does not match what is intended.
-    - Tests are incorrect, overly strict, or missing a required case.
+    - The asserted behavior does not match the intended behavior.
+    - The check is incorrect, overly strict, or missing a required case.
     - Fixing the test changes outcomes without changing product behavior.
 
 ## Concrete Example 1
@@ -100,16 +102,25 @@ Refactor a small library function using an agent loop.
 
 - Minimal trace record (copyable):
 
+  Inputs:
+
   | Field | Value |
   | --- | --- |
   | Spec note path | `docs/specs/parse-date.md` (example) |
   | Failing test | `tests/test_parse_date.py::test_rejects_empty` |
-  | Commands (in order) | `pytest -q` |
-  | Commands (in order) | `ruff check .` (example) |
+
+  Run evidence:
+
+  | Field | Value |
+  | --- | --- |
+  | Commands (in order) | `pytest -q`<br/>`ruff check .` (example) |
   | Diff identifier | commit SHA or patch ID (e.g., `abc1234`) |
-  | Evaluation outputs | failing test names |
-  | Evaluation outputs | exit codes |
-  | Evaluation outputs | first failing assertion (or minimal log excerpt) |
+  | Evaluation outputs | failing test names<br/>exit codes<br/>first failing assertion (or minimal log excerpt) |
+
+  Attribution:
+
+  | Field | Value |
+  | --- | --- |
   | Attribution decision | one of `{spec/prompt, tool/runtime, code, eval/CI}` |
   | Evidence | 1–2 sentences tied to the outputs above |
 
@@ -139,21 +150,22 @@ Ship a minor API change in a production service.
 
 - Minimal trace report (copyable):
 
+  Contract + constraints:
+
   | Field | Value |
   | --- | --- |
   | Contract/version | `openapi.yaml` (example) |
   | Compatibility window | “compatible within v1.x” |
-  | Backward-compat constraints | “no required fields added” |
-  | Backward-compat constraints | “no behavior change on existing endpoints” |
+  | Backward-compat constraints | “no required fields added”<br/>“no behavior change on existing endpoints” |
   | Staging target | `staging-us-east-1` (example) |
-  | Commands (in order) | `make contract-test` |
-  | Commands (in order) | `npm run lint` |
-  | Commands (in order) | `npm run typecheck` |
-  | Commands (in order) | `./scripts/staging-smoke.sh` |
+
+  Evidence + outputs:
+
+  | Field | Value |
+  | --- | --- |
+  | Commands (in order) | `make contract-test`<br/>`npm run lint`<br/>`npm run typecheck`<br/>`./scripts/staging-smoke.sh` |
   | Diff identifier | PR number + commit SHA (e.g., `PR #482`, `def5678`) |
-  | Evaluation outputs | failing checks |
-  | Evaluation outputs | log paths/links |
-  | Evaluation outputs | timestamps (supports time-to-green) |
+  | Evaluation outputs | failing checks<br/>log paths/links<br/>timestamps (supports time-to-green) |
   | Attribution decisions | per failure: `{spec/prompt, tool/runtime, code, eval/CI}` + evidence |
 
   Example attribution:
@@ -194,7 +206,9 @@ Ship a minor API change in a production service.
 - **Unbounded autonomy**: loops run without budgets, causing tool thrash and unclear outcomes.
 - **Non-attributable failures**: missing traces make regressions un-debuggable.
 
-Synthesis: treat machine reasoning as an execution substrate, and treat the harness as the primary lever for reliability. Track *iterations-to-pass*, *time-to-green*, and *attribution rate* to separate harness effects from model effects and to make failures actionable.
+Use the attribution checklist above to bucket each failure (spec/prompt vs tool/runtime vs code vs eval/CI) before you change the system. Otherwise the “fix” is likely to target the wrong layer.
+
+Synthesis: treat machine reasoning as an execution substrate, and treat the harness as the primary lever for reliability. Track the loop metrics above to separate harness effects from model effects and to make failures actionable.
 
 ## Research Directions
 

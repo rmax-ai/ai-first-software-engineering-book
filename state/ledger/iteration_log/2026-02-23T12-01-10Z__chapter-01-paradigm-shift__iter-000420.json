@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.9133333333333334,
+  "diff_size": 0.018433179723502304,
+  "drift_score": 0.07912807997736405,
+  "iteration": 420,
+  "planner_focus": [
+    "Fix Mermaid label quoting compliance in ## System Breakdown (quote labels that contain parentheses, including Trace)",
+    "Shorten the long sentence in ## Failure Modes to comply with the 28-word sentence-length limit",
+    "Preserve the model-vs-harness framing while keeping edits minimal and localized"
+  ],
+  "timestamp": "2026-02-23T12:01:10Z"
+}
