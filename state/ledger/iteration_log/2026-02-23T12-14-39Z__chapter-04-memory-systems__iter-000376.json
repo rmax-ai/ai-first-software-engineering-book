@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.9533333333333333,
+  "diff_size": 0.020942408376963352,
+  "drift_score": 0.318970189701897,
+  "iteration": 376,
+  "planner_focus": [
+    "clarify in ## System Breakdown that the diagram\u2019s Schema subgraph is a minimum viable baseline, not an exhaustive or universal schema requirement",
+    "reduce misreading risk in ## System Breakdown by explicitly stating that additional fields are allowed but must not weaken provenance/correction/expiry semantics"
+  ],
+  "timestamp": "2026-02-23T12:14:39Z"
+}

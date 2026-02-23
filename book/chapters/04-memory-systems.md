@@ -6,7 +6,7 @@ Memory is an engineered data store for work artifacts, not a raw log of prior me
 
 - **Structured**: stored as records with explicit fields (not free-form chat logs), so constraints, sources, and updates are representable.
 - **Queryable**: retrievable by filters (task, file, timeframe, decision id), with ranking that prefers fresh, high-provenance entries.
-- **Governed**: subject to retention, redaction, and correction rules, so stale or wrong entries can be superseded, expired entries can be hidden by default, and sensitive traces can be minimized.
+- **Governed**: subject to retention, redaction, and correction rules; these controls solve different problems and should not be conflated.
   - **Correction**: add a new record that `supersedes` a prior id (no silent edits).
   - **Redaction**: remove or mask sensitive content while preserving minimal provenance where policy allows.
   - **Retention**: apply expiry and access rules over time (e.g., via `valid_through` or class-specific TTLs).
@@ -28,37 +28,35 @@ Hypothesis: uncurated memory increases confidence without increasing correctness
 
 ## System Breakdown
 
-A diagram helps here because memory systems fail at the *interfaces* (write → retrieve → act), not inside a single component. As you read it, focus on two gates: (1) retrieval is bounded and ranked, and (2) action is gated by provenance and freshness checks.
+Memory systems fail at the *interfaces* (write → retrieve → act), not inside a single component. The flow below makes those interfaces explicit. As you read it, focus on two gates: (1) retrieval is bounded and ranked, and (2) action is gated by provenance and freshness checks.
 
-```mermaid
-flowchart TB
-  W["Write event<br>(policy: when/what to store)"] --> R["Record<br>(min schema fields)"]
-  R --> I["Index + Rank<br>(Read policy)"]
-  I --> V{"Verify before acting<br>(provenance + freshness)"}
-  V -->|pass| A["Apply next step<br>(change, fix, decision)"]
-  V -->|fail| Q[Refine query<br>or re-run tests]
-  R --> G["Govern<br>(retention/redaction/correction)"]
-  G --> R
+End-to-end flow (top to bottom, then loop back through governance):
 
-  subgraph Schema[Minimum schema fields]
-    ID[id]
-    TS[timestamp / valid_through]
-    TY[type]
-    SO[source pointer]
-    CF[confidence]
-    SU[supersedes]
-  end
-```
+1. **Write event (Write policy)**: decide *when* to store, and enforce required fields.
+2. **Record (minimum schema fields)**: create an append-only record with explicit provenance and (optional) expiry.
+3. **Index + Rank (Read policy)**: retrieve with bounded filters, then rank by explicit rules (including hiding expired entries by default).
+4. **Verify before acting**: check provenance and freshness, then re-check against current reality (often: rerun tests).
+5. **Apply next step**: only after verification passes (change, fix, decision).
+6. **Govern (Governance)**: apply retention/redaction, and correct via explicit superseding; governance feeds back into ranking.
 
-The Schema subgraph is a minimum viable baseline for this chapter (intentionally incomplete); implementations can add fields as needed without changing the write/read/governance gates.
+Minimum schema fields (and exactly what they power):
+
+These fields are a minimum viable baseline for this chapter (intentionally incomplete); implementations can add fields as needed without changing the Write/Read/Governance gates.
+
+- `id`: stable reference used by later work and by corrections (`supersedes` targets this).
+- `timestamp` / `valid_through`: freshness and expiry controls for ranking and default visibility (expired `valid_through` entries should be hidden unless explicitly requested).
+- `type`: bounded retrieval (e.g., only `decision` records when asking “what did we decide?”).
+- `source` (pointer): provenance gate; “can I open the diff / log / doc this came from?”
+- `confidence`: ranking signal tied to evidence quality (tests, review, reproducibility).
+- `supersedes`: correction link; older records should be down-ranked/hidden by default when superseded.
 
 Legend (one-line per gate):
 
 - **Write**: decide *when* to store and enforce minimum fields (especially `source`, `confidence`, and optional `valid_through`).
-- **Index + Rank**: retrieve with bounded filters, then sort with explicit rules (freshness, confidence, not-superseded).
+- **Index + Rank**: retrieve with bounded filters, then sort with explicit rules (freshness, confidence, not-superseded); hide expired `valid_through` by default.
 - **Verify**: before acting, check provenance and freshness; if checks fail, refine the query or re-run tests.
 - **Govern**: apply retention/redaction/correction; corrections create new records that update ranking via `supersedes`.
-- Schema extensions are fine, but ranking and governance still hinge on provenance, freshness/expiry, and explicit superseding.
+- Schema extensions are fine, but they must not weaken provenance, freshness/expiry, or explicit superseding: ranking and governance should still hinge on those fields.
 
 Takeaway: the record schema makes policies enforceable. Write policy populates fields with provenance. Read policy uses those fields for bounded retrieval and ranking. Governance updates them to correct and expire entries.
 
@@ -98,7 +96,8 @@ Decision memory for an architecture choice.
 
 Write event (what triggers storage):
 
-- After selecting an approach in a design discussion or PR, store a decision record as part of the change (or alongside it) before implementation diverges.
+- After selecting an approach in a design discussion or PR, store a decision record as part of the change (or alongside it).
+- Store it before implementation diverges from what was agreed.
 
 Stored record (template; identifiers are illustrative).
 
@@ -123,6 +122,11 @@ Decision-specific fields:
 | `constraints` | “Must support redaction; must record provenance pointers; must allow correction.” |
 | `rationale` | “Editable pages hide drift; append-only preserves history and enables explicit correction.” |
 
+Operational rule (how confidence should change over time):
+
+- Keep `confidence` at `medium` until the decision is exercised under realistic load or rollback conditions.
+- Raise to `high` only after the chosen approach is validated by evidence (e.g., load test results linked in `source`, or a production rollout with monitored error budgets).
+
 Enforcement rule (how future work must behave):
 
 - Any change that contradicts the decision must reference `dec-2026-02-22-memory-store-backend` and justify why it still holds, **or** create a new decision record.
@@ -137,23 +141,23 @@ Trace-indexed memory stores enough episodic detail to support “find similar fa
 
 Capture → index → retrieve → verify:
 
-1. **Capture**: store reproducible evidence for the iteration.
+1. **Capture**: store evidence that another engineer (or agent) can reproduce.
    - Test command and a short failing stack trace snippet.
    - Files changed plus a diff hash.
    - Environment notes that affect reproducibility (OS, dependency lockfile hash).
 
-2. **Index**: attach keys that support bounded queries later.
+2. **Index**: attach keys that make later retrieval bounded.
    - `task_id`, `iteration`, `files_touched`.
    - `error_signature` (e.g., exception type + top frame).
-   - `timestamp` and `source` pointers.
+   - `timestamp` and resolvable `source` pointers.
 
-3. **Retrieve**: query with tight filters, then rank for usefulness.
+3. **Retrieve**: filter tightly, then rank for usefulness.
    - Example query: “Show traces where `error_signature` matches ‘KeyError: CONFIG’ and `files_touched` includes `settings.py` from the last 30 days.”
-   - Ranking rule: prefer freshest `timestamp` (and not-expired `valid_through` when present), then higher `confidence` (e.g., traces tied to commits that later passed CI), and prefer “not superseded.”
+   - Ranking rule: prefer freshest `timestamp` (and hide expired `valid_through` by default), then higher `confidence`, and prefer “not superseded.”
 
 4. **Verify (provenance + freshness)**: gate action on checks from **Read policy**.
-   - Does the trace point to exact tool output and a commit hash (`source`)?
-   - Is the trace superseded by a newer trace for the same signature (`supersedes`)?
+   - Can you open the exact tool output and commit hash from `source`?
+   - Is the trace superseded by a newer trace for the same signature?
    - Do current tests reproduce the signature, or has the failure mode changed?
 
 Expected outcome (measurable):
@@ -172,12 +176,15 @@ This flow turns memory into a debugging aid rather than a replay of stale contex
 - Governance often trades **cost of being wrong** (acting on stale memory, causing regressions) against **cost of being slow** (extra steps to write, verify, and supersede records).
 - Practical target: minimize the **cost of being wrong** under bounded retrieval and explicit correction, even if it adds a small constant overhead to each iteration.
 
+Treat “wrong actions” as more expensive than “extra verification steps” when choosing where to spend effort.
+
 ## Failure Modes
 
 - **Stale retrieval dominance**: old assumptions override new evidence. Primary control: **Read policy**. Detection/mitigation: include freshness signals in **Read policy** (time windows, “prefer not-superseded”), and require verification against current tests before applying a past fix.
 - **Summarization loss**: key constraints disappear in compression. Primary control: **Write policy**. Detection/mitigation: enforce **Write policy** that decision/semantic records keep explicit constraint fields, and link summaries back to their `source` pointers so missing details are recoverable.
 - **Memory poisoning**: incorrect conclusions become “facts” through repetition. Primary control: **Governance** (correction) plus **Read policy** (ranking). Detection/mitigation: require corrections via **Governance** using `supersedes` (no silent edits), and down-rank low-provenance entries in **Read policy** so repetition does not outweigh evidence.
 - Control map (scan aid): stale retrieval dominance → **Read policy**; summarization loss → **Write policy**; memory poisoning → **Governance** + **Read policy**.
+- Policy map (quick scan): stale retrieval dominance → **Read policy** (freshness + verification); summarization loss → **Write policy** (required fields + `source`); memory poisoning → **Governance** (`supersedes`) + **Read policy** (ranking).
 
 ## Research Directions
 
