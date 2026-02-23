@@ -527,9 +527,9 @@
 <li>structured memory</li>
 <li>governance primitives</li>
 </ul>
-<p>Interfaces are artifacts that let components interoperate. These artifacts make runs portable. Examples include a tool-call schema that two runtimes both validate. Another example is a trace format that two analysis tools both parse. A third example is an eval definition that two teams can both reproduce.</p>
+<p>Interfaces are artifacts that let components interoperate. They make runs portable. Example: a tool-call schema that two runtimes both validate. Example: a trace format that two analysis tools both parse. Example: an eval definition that two teams can both reproduce.</p>
 <p>“Verification” means methods that detect incorrect behavior reliably. In practice, verification makes runs auditable. It lets you show that a tool call matched a contract. It also lets you show that a replay stayed within a declared nondeterminism boundary. Finally, it lets you show that a reported score came from a pinned dataset and scoring implementation.</p>
-<p>Hypothesis: the main frontier is not larger models; it is better system-level interfaces. That includes verifiable tool contracts, stronger evaluations, and memory/governance primitives that scale. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.</p>
+<p>Hypothesis: the main frontier is not larger models. It is better system-level interfaces. This includes verifiable tool contracts and stronger evaluations. It also includes memory and governance primitives that scale. Takeaway: progress comes from portable, checkable runs across models, tools, and teams.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
 <li>Teams will operate heterogeneous models and tools; interoperability becomes a reliability constraint.</li>
@@ -540,19 +540,27 @@
 <h2 id="system-breakdown">System Breakdown</h2>
 <p>These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve.</p>
 <p>The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows. They show what must be versioned and validated before you can compare runs across teams or models.</p>
-<div class="mermaid">flowchart TB
-  I["Interoperability&lt;br/&gt;trace formats · tool schemas · eval definitions"] --&gt; V["Verification&lt;br/&gt;contract tests · replay checks · property checks"]
-  V --&gt; G["Governance at scale&lt;br/&gt;policy registry · audit workflow · incident runbook"]
-  I --&gt; R["Ecosystem risks&lt;br/&gt;supply chain · dependency security · model updates"]
-  R --&gt; V
-</div>
+<p>Diagram: the dependency chain across the four pillars.</p>
+<pre class="mermaid">
+flowchart TB
+  I["Interoperability"]
+  V["Verification"]
+  G["Governance"]
+  R["Ecosystem risk"]
+
+  I --&gt;|Contracts| V
+  V --&gt;|Audit claims| G
+  I --&gt;|Surface area| R
+  R --&gt;|Pressure| V
+</pre>
 <p>Takeaway: you can improve one pillar in isolation, but cross-model portability depends on the whole chain. Interoperability defines what can be exchanged, and verification defines what can be trusted when it is exchanged.</p>
 <ul>
-<li><strong>Interoperability</strong>: shared trace formats, tool schemas, evaluation definitions.</li>
-<li><strong>Verification</strong>: stronger correctness checks, property-based testing, contract enforcement.</li>
-<li><strong>Governance at scale</strong>: org-level policies, audit workflows, incident response.</li>
-<li><strong>Ecosystem risks</strong>: prompt/tool supply chain, dependency security, model updates.</li>
+<li><strong>Interoperability</strong>: shared trace formats, tool schemas, evaluation definitions (traces·schemas·evals).</li>
+<li><strong>Verification</strong>: stronger correctness checks, property-based testing, contract enforcement (contract-tests·replay·properties).</li>
+<li><strong>Governance at scale</strong>: org-level policies, audit workflows, incident response (policy-registry·audit·runbook).</li>
+<li><strong>Ecosystem risks</strong>: prompt/tool supply chain, dependency security, model updates (supply-chain·deps·model-updates).</li>
 </ul>
+<p>Note: structured memory fits here as a versioned interface artifact. Treat memory schemas and retention/redaction rules as contracts.</p>
 <p><strong>Artifact map (concrete deliverables):</strong></p>
 <ul>
 <li><strong>Interoperability</strong><ul>
@@ -622,19 +630,30 @@
 <p>Standardized trace interchange.</p>
 <p><strong>Goal</strong>
 Enable independent auditing and regression analysis by exporting traces from one agent runtime and replaying/analyzing them in another tool.</p>
-<p>A diagram helps here because trace interchange is a pipeline with explicit checkpoints. As you read it, track where validation occurs. Then track which fields get exported. Finally, track what the divergence check is allowed to claim as “verified.”</p>
-<div class="mermaid">flowchart LR
-  A["Generate run"] --&gt; B["Validate tool contracts"]
-  B --&gt; C["Emit trace&lt;br/&gt;schema_version, run_id, eval_id, model_id"]
-  C --&gt; D["Export trace"]
-  D --&gt; E["Replay harness"]
-  E --&gt; F{"Divergence check"}
-  F --&gt;|Matches constraints| G["Audit / regression analysis"]
-  F --&gt;|Diverges| H["Flag portability failure"]
-</div>
-<p>Legend: “Validate tool contracts” means schema-checking arguments/results at runtime. This includes negative cases. Validate before the call enters the trace.</p>
-<p>“Divergence check” means comparing the replayed run to declared constraints. It does not require byte-for-byte identity. This applies when nondeterminism is allowed.</p>
-<p>The point is not to standardize everything. It is to standardize the minimum needed so two independent tools can agree on what happened, and can detect when a run is not reproducible under stated constraints.</p>
+<p>A diagram helps here because trace interchange is a pipeline with explicit checkpoints. Track where validation occurs, where trace export happens, and what the divergence check is allowed to claim as “verified.”</p>
+<pre class="mermaid">
+flowchart LR
+  A["Generate"]
+  B["Validate"]
+  C["Emit trace"]
+  D["Export"]
+  E["Replay"]
+  F{"Divergence check"}
+  G["Audit"]
+  H["Flag failure"]
+
+  A --&gt; B
+  B --&gt; C
+  C --&gt; D
+  D --&gt; E
+  E --&gt; F
+  F --&gt;|Matches| G
+  F --&gt;|Diverges| H
+</pre>
+<p>Legend: the “Validate” step is runtime schema-checking for tool arguments/results (including negative cases) before the call enters the trace.</p>
+<p>Takeaway: validate and record tool contracts before export; replay checks divergence against declared constraints before audit conclusions.</p>
+<p>“Divergence check” means comparing the replayed run to declared constraints. It does not require byte-for-byte identity. Use it when nondeterminism is allowed.</p>
+<p>The point is not to standardize everything. Standardize the minimum needed for agreement. Two independent tools should agree on what happened. They should also detect when a run is not reproducible under stated constraints.</p>
 <p><strong>Minimal trace interchange contract (required fields)</strong></p>
 <p><strong>Run metadata</strong></p>
 <ul>
@@ -647,17 +666,26 @@ Enable independent auditing and regression analysis by exporting traces from one
 <p><strong>Event schema</strong></p>
 <ul>
 <li><code>events[]</code>: ordered list of events.<ul>
-<li><code>event_id</code>, <code>type</code>, <code>timestamp</code>, <code>parent_event_id</code> (when applicable)</li>
+<li><code>event_id</code></li>
+<li><code>type</code></li>
+<li><code>timestamp</code></li>
+<li><code>parent_event_id</code> (when applicable)</li>
 <li>Assistant/user text:<ul>
-<li>content plus redaction markers (when redacted)</li>
+<li><code>content</code></li>
+<li>redaction markers (when redacted)</li>
 </ul>
 </li>
 <li>Tool calls:<ul>
-<li><code>tool_name</code>, validated <code>arguments</code>, <code>result</code> or structured error, <code>duration_ms</code></li>
+<li><code>tool_name</code></li>
+<li>validated <code>arguments</code></li>
+<li><code>result</code> or structured error</li>
+<li><code>duration_ms</code></li>
 </ul>
 </li>
 <li>Policy gates:<ul>
-<li>decision, rule id/version, rationale category (not freeform prose)</li>
+<li>decision</li>
+<li>rule id/version</li>
+<li>rationale category (not freeform prose)</li>
 </ul>
 </li>
 </ul>
@@ -671,17 +699,13 @@ Enable independent auditing and regression analysis by exporting traces from one
 </ul>
 <p><strong>Replay validity check (what must match)</strong></p>
 <ul>
-<li>Under deterministic conditions, the tool-call sequence must match.
-  Match means tool name plus validated arguments.</li>
-<li>For deterministic, versioned tools, outcomes must also match.</li>
-<li>When nondeterminism exists (timeouts, stochastic tools, external APIs):<ul>
-<li>record the boundary</li>
-<li>record what the replay is allowed to vary within
-Examples: tool snapshot id, cached response id, or allowed outcome set.
-Replay is valid only if outcomes stay within that boundary.</li>
-</ul>
-</li>
-<li>If replay diverges in tool-call sequence under deterministic conditions, flag a portability failure.</li>
+<li>Deterministic runs: tool-call sequence must match.</li>
+<li>Match means: tool name + validated arguments.</li>
+<li>Deterministic, versioned tools: outcomes must match.</li>
+<li>Nondeterministic components: record the boundary.</li>
+<li>Record what replay is allowed to vary within.</li>
+<li>Replay is valid only within that boundary.</li>
+<li>If sequence diverges under deterministic conditions, flag a portability failure.</li>
 </ul>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
@@ -757,6 +781,5 @@ Replay is valid only if outcomes stay within that boundary.</li>
 </div>
 <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
 <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
-mermaid.initialize({});</script></body>
+</body>
 </html>

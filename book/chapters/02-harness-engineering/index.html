@@ -629,11 +629,11 @@
 </tr>
 </tbody>
 </table>
-<p>The “minimal contract surface” is the smallest set of stable interfaces required for the loop to be repeatable, bounded, and verifiable. It includes tool schemas (including error codes), patch discipline, and evaluation semantics.</p>
+<p>The “minimal contract surface” is the smallest set of stable interfaces required for repeatability, boundedness, and verifiability. It includes tool schemas (and error codes), patch discipline, and evaluation semantics.</p>
 <p>Boundary:</p>
 <ul>
-<li>In scope: tool schemas, patch discipline, and gate semantics (including what evidence is recorded).</li>
-<li>Out of scope: standardizing runtime infrastructure details, as long as the gate semantics stay consistent.</li>
+<li>In scope: tool schemas, patch discipline, and gate semantics, including what evidence is recorded.</li>
+<li>Out of scope: runtime infrastructure details. Those can vary, as long as gate semantics and recorded artifacts stay consistent.</li>
 </ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Design a tool contract for “apply patch” operations.</p>
