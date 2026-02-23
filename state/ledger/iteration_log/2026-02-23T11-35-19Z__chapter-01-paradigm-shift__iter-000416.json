@@ -1,0 +1,13 @@
+{
+  "critic_score": 0.8933333333333334,
+  "diff_size": 0.27586206896551724,
+  "drift_score": 0.08444285043122256,
+  "iteration": 416,
+  "planner_focus": [
+    "Fix sentence-length violations in ## System Breakdown and both ## Concrete Example sections by splitting multi-clause bullets into shorter lines",
+    "Reduce repetition between ## Concrete Example 1 and ## Concrete Example 2 (especially the duplicated stop/escalation wording) while keeping the same operational meaning",
+    "Tighten the throughline from ## Thesis \u2192 ## System Breakdown \u2192 Synthesis by explicitly reusing the same terms (model capability vs harness capability, attribution rate) in each section",
+    "Keep the mermaid diagram intentional and readable by simplifying labels so the diagram supports (not replaces) the attribution explanation"
+  ],
+  "timestamp": "2026-02-23T11:35:19Z"
+}

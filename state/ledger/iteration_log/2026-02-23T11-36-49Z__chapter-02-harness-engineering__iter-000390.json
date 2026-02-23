@@ -1,0 +1,13 @@
+{
+  "critic_score": 0.8933333333333334,
+  "diff_size": 0.09895833333333333,
+  "drift_score": 0.2779249586223873,
+  "iteration": 390,
+  "planner_focus": [
+    "Reduce drift by tying every mention of \u201cmodel\u201d and \u201cagent\u201d back to the chapter hypothesis in ## Thesis and ## Why This Matters",
+    "Fix style-guard sentence-length violations by reflowing table and list content inside ## System Breakdown, ## Concrete Example 1, and ## Concrete Example 2 (shorter lines, more explicit paragraph breaks)",
+    "Make evaluation gating more scannable by adding a single visual representation of the loop in ## Concrete Example 2 and explicitly labeling decision points",
+    "Tighten the \u201cminimal contract surface\u201d explanation by adding one crisp definition + boundary statement under ## System Breakdown to prevent scope creep into runtime/infra topics"
+  ],
+  "timestamp": "2026-02-23T11:36:49Z"
+}

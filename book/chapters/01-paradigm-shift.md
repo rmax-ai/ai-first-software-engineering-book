@@ -40,14 +40,14 @@ A diagram helps here because the distinction (model vs harness) changes how evid
 
 ```mermaid
 flowchart TB
-  P["Plan<br>(spec + intent)"]
-  A["Act<br>(propose patch)"]
-  T["Tools<br>(apply + run)"]
-  V["Verify<br>(evals/CI)"]
+  P[Plan\n(spec + intent)]
+  A[Act\n(propose patch)]
+  T[Tools\n(apply + run)]
+  V[Verify\n(evals/CI)]
   D{Checks pass?}
-  S[Stop<br>ship/merge]
-  X[Attribute<br>root cause]
-  TR["(Trace)"]
+  S[Stop\nship/merge]
+  X[Attribute\nroot cause]
+  TR[(Trace)]
 
   P --> A
   A --> T

@@ -11239,6 +11239,92 @@
             "diff_ratio": 0.05263157894736842,
             "drift_score": 0.1981187612926157
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.2,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Thesis contains a sentence likely over 28 words: \"In this framing, attribution rate is a harness outcome: it depends on what evidence you capture and which evaluation gates you run, not just on how fluent the model is.\"",
+              "## Concrete Example 1 includes markdown table rows with empty first column cells (\"|  | ... |\"); this is likely to render inconsistently across markdown engines",
+              "## Concrete Example 2 includes markdown table rows with empty first column cells (\"|  | ... |\"); this is likely to render inconsistently across markdown engines",
+              "## Concrete Example 2 \"Measured outputs\" includes sub-bullets without concrete numeric thresholds or units (e.g., \"contract-test failures introduced\"), reducing checkability"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.08444285043122256,
+            "passed": false,
+            "similarity_max": 0.752227266448898
+          },
+          "iteration": 416,
+          "timestamp": "2026-02-23T11:35:19Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.27586206896551724,
+            "drift_score": 0.08444285043122256
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.92,
+            "decision": "refine",
+            "drift_score": 0.17,
+            "example_density": 0.87,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "## System Breakdown contains a sentence over 28 words: \"A diagram helps here because the distinction (model vs harness) changes how evidence moves between steps.\"",
+              "## System Breakdown contains a sentence over 28 words: \"The goal is to make trace capture and evaluation gates explicit so attribution is a concrete step, not a guess.\"",
+              "## System Breakdown contains a sentence over 28 words: \"When you read it, focus on (a) where the trace is recorded and (b) where the trace is consumed to decide what to change next.\"",
+              "## System Breakdown contains a sentence over 28 words: \"Takeaway: if you cannot produce a trace, attribution is guesswork.\"",
+              "## Concrete Example 2 \"Measured outputs\" includes an explicit time-to-green target (\u2264 30 minutes) but does not specify whether this target is illustrative or a required gate, which may reduce checkability across different team contexts"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.04624575136471318,
+            "passed": false,
+            "similarity_max": 0.7561634507680717
+          },
+          "iteration": 417,
+          "timestamp": "2026-02-23T11:35:19Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.15343915343915343,
+            "drift_score": 0.04624575136471318
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.93,
+            "decision": "approve",
+            "drift_score": 0.16,
+            "example_density": 0.87,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": []
+          },
+          "deterministic": {
+            "drift_score": 0.028574020319303336,
+            "passed": false,
+            "similarity_max": 0.7531420412694478
+          },
+          "iteration": 418,
+          "timestamp": "2026-02-23T11:35:19Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.05263157894736842,
+            "drift_score": 0.028574020319303336
+          }
         }
       ]
     },
@@ -21797,6 +21883,33 @@
             "deterministic_pass": false,
             "diff_ratio": 0.0,
             "drift_score": 0.30565915078523287
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.24,
+            "example_density": 0.85,
+            "failure_modes_present": true,
+            "structure_score": 0.93,
+            "tradeoff_presence": true,
+            "violations": [
+              "Style-guard: the sentence beginning with \"Boundary: the minimal contract surface is about what the harness and tools promise to each other\" exceeds 40 words (hard_fail_over)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.2779249586223873,
+            "passed": false,
+            "similarity_max": 0.6722669903968488
+          },
+          "iteration": 390,
+          "timestamp": "2026-02-23T11:36:49Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.09895833333333333,
+            "drift_score": 0.2779249586223873
           }
         }
       ]
@@ -83040,6 +83153,92 @@
             "deterministic_pass": false,
             "diff_ratio": 0.0,
             "drift_score": 0.06324163314922654
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.93,
+            "decision": "refine",
+            "drift_score": 0.06,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.96,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Concrete Example 2 contains a 41+ word sentence in the Legend paragraph (should be split to satisfy style-guard hard_fail_over=40).",
+              "## Thesis includes a 28+ word sentence: \u201cHere, \u201cinterfaces\u201d means the concrete artifacts that let components interoperate.\u201d (consider splitting to stay under max_words=28).",
+              "## Concrete Example 2 \u201cReplay validity check\u201d subsection has a bullet line that likely exceeds 28 words: \u201cWhen nondeterminism exists (timeouts, stochastic tools, external APIs), record the boundary.\u201d"
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.006862745098039215,
+            "passed": false,
+            "similarity_max": 0.7719333155618433
+          },
+          "iteration": 381,
+          "timestamp": "2026-02-23T11:41:14Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.11057692307692307,
+            "drift_score": 0.006862745098039215
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.94,
+            "decision": "refine",
+            "drift_score": 0.06,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.96,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Concrete Example 2 Legend paragraph still contains a 40+ word sentence: \u201cLegend: \u201cValidate tool contracts\u201d means schema-checking arguments/results at runtime. This includes negative cases, before the call enters the trace. \u201cDivergence check\u201d means comparing the replayed run to declared constraints.\u201d",
+              "## Concrete Example 2 \u201cReplay validity check\u201d contains a sentence likely over 28 words: \u201cWhen nondeterminism exists (timeouts, stochastic tools, external APIs), record the boundary. Record what the replay is allowed to vary within.\u201d",
+              "## Thesis sentence \u201cHere, \u201cinterfaces\u201d means concrete artifacts that let components interoperate.\u201d may still exceed 28 words depending on tokenization; keep it under the max_words=28 limit."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.00682660425199922,
+            "passed": false,
+            "similarity_max": 0.7718953075698886
+          },
+          "iteration": 382,
+          "timestamp": "2026-02-23T11:41:54Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.028169014084507043,
+            "drift_score": 0.00682660425199922
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.95,
+            "decision": "refine",
+            "drift_score": 0.06,
+            "example_density": 0.9,
+            "failure_modes_present": true,
+            "structure_score": 0.97,
+            "tradeoff_presence": true,
+            "violations": [
+              "## Concrete Example 2 \u201cReplay validity check\u201d has a bullet line that likely exceeds 28 words: \u201cUnder deterministic conditions, the tool-call sequence must match.\u201d + the following \u201cMatch means\u2026\u201d line may be treated as a single sentence by the evaluator.",
+              "## Thesis paragraph contains a sentence that may exceed 28 words: \u201cExamples include a tool-call schema that two runtimes both validate.\u201d (depends on tokenization rules)."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.006822612085769981,
+            "passed": false,
+            "similarity_max": 0.7723740227671225
+          },
+          "iteration": 383,
+          "timestamp": "2026-02-23T11:42:34Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.046948356807511735,
+            "drift_score": 0.006822612085769981
           }
         }
       ]

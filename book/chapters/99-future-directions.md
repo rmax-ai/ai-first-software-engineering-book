@@ -4,16 +4,16 @@
 
 The frontier is not larger models. It is system-level interfaces and verification.
 
-Concretely, invest in artifacts that scale across teams and models:
+Concretely, invest in artifacts that scale across teams and models.
 
 - stronger tool contracts
 - better evaluations
 - structured memory
 - governance primitives
 
-Here, “interfaces” means the concrete artifacts that let components interoperate. In practice, interfaces are what make runs portable. Examples include a tool-call schema that two runtimes both validate. Another example is a trace format that two analysis tools both parse. A third example is an eval definition that two teams can both reproduce.
+Interfaces are artifacts that let components interoperate. These artifacts make runs portable. Examples include a tool-call schema that two runtimes both validate. Another example is a trace format that two analysis tools both parse. A third example is an eval definition that two teams can both reproduce.
 
-“Verification” means methods that detect incorrect behavior reliably. In practice, verification is what makes runs auditable. It lets you show that a tool call matched a contract. It also lets you show that a replay stayed within a declared nondeterminism boundary. Finally, it lets you show that a reported score came from a pinned dataset and scoring implementation.
+“Verification” means methods that detect incorrect behavior reliably. In practice, verification makes runs auditable. It lets you show that a tool call matched a contract. It also lets you show that a replay stayed within a declared nondeterminism boundary. Finally, it lets you show that a reported score came from a pinned dataset and scoring implementation.
 
 Hypothesis: the main frontier is not larger models; it is better system-level interfaces. That includes verifiable tool contracts, stronger evaluations, and memory/governance primitives that scale. Takeaway: progress comes from making runs portable and checkable across models, tools, and teams.
 
@@ -27,7 +27,9 @@ So what changes for teams? Treat tool schemas, trace formats, and eval definitio
 
 ## System Breakdown
 
-These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve. The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows. They show what must be versioned and validated before you can compare runs across teams or models.
+These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve.
+
+The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows. They show what must be versioned and validated before you can compare runs across teams or models.
 
 ```mermaid
 flowchart TB
@@ -106,7 +108,7 @@ Standardized trace interchange.
 **Goal**
 Enable independent auditing and regression analysis by exporting traces from one agent runtime and replaying/analyzing them in another tool.
 
-A diagram helps here because trace interchange is a pipeline with explicit checkpoints. As you read it, track three things: where validation occurs, which fields get exported, and what the divergence check is allowed to claim as “verified.”
+A diagram helps here because trace interchange is a pipeline with explicit checkpoints. As you read it, track where validation occurs. Then track which fields get exported. Finally, track what the divergence check is allowed to claim as “verified.”
 
 ```mermaid
 flowchart LR
@@ -119,7 +121,9 @@ flowchart LR
   F -->|Diverges| H["Flag portability failure"]
 ```
 
-Legend: “Validate tool contracts” means schema-checking arguments/results (and negative cases) at runtime before they enter the trace. “Divergence check” means comparing the replayed run to declared constraints. It does not force byte-for-byte identity when nondeterminism is allowed.
+Legend: “Validate tool contracts” means schema-checking arguments/results at runtime. This includes negative cases. Validate before the call enters the trace.
+
+“Divergence check” means comparing the replayed run to declared constraints. It does not require byte-for-byte identity. This applies when nondeterminism is allowed.
 
 The point is not to standardize everything. It is to standardize the minimum needed so two independent tools can agree on what happened, and can detect when a run is not reproducible under stated constraints.
 
@@ -137,9 +141,12 @@ The point is not to standardize everything. It is to standardize the minimum nee
 
 - `events[]`: ordered list of events.
   - `event_id`, `type`, `timestamp`, `parent_event_id` (when applicable)
-  - Assistant/user text: content plus redaction markers (when redacted)
-  - Tool calls: `tool_name`, validated `arguments`, `result` or structured error, `duration_ms`
-  - Policy gates: decision, rule id/version, rationale category (not freeform prose)
+  - Assistant/user text:
+    - content plus redaction markers (when redacted)
+  - Tool calls:
+    - `tool_name`, validated `arguments`, `result` or structured error, `duration_ms`
+  - Policy gates:
+    - decision, rule id/version, rationale category (not freeform prose)
 
 **Versioning rule**
 
@@ -152,7 +159,9 @@ The point is not to standardize everything. It is to standardize the minimum nee
 - Under deterministic conditions, the tool-call sequence must match.
   Match means tool name plus validated arguments.
 - For deterministic, versioned tools, outcomes must also match.
-- When nondeterminism exists (timeouts, stochastic tools, external APIs), record the boundary.
+- When nondeterminism exists (timeouts, stochastic tools, external APIs):
+  - record the boundary
+  - record what the replay is allowed to vary within
   Examples: tool snapshot id, cached response id, or allowed outcome set.
   Replay is valid only if outcomes stay within that boundary.
 - If replay diverges in tool-call sequence under deterministic conditions, flag a portability failure.

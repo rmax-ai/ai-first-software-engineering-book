@@ -10,6 +10,8 @@ In this chapter, “predictable” means three things:
 2. **Boundedness**: the system’s allowed changes are limited by explicit constraints.
 3. **Verifiability**: outputs can be accepted or rejected by checks, not judgment calls.
 
+When this chapter says “agent,” it means a model operating inside a harnessed loop: tool calls + budgets + gates + logging. The hypothesis is about that loop. The model is treated as an input you hold constant while you change harness strictness.
+
 Hypothesis (falsifiable): for a fixed set of tasks and repositories, tightening the harness reduces regression rate and rework more than swapping between models of similar capability.
 
 This is not a model-selection argument. The claim is that, when you hold the model and task conditions constant, harness design is the primary lever that changes reliability outcomes.
@@ -25,8 +27,9 @@ To test that hypothesis, hold these constant:
 - The same model can behave reliably or unreliably depending on tool schemas, budgets, and verification.
 - Teams can standardize harness practices even when models change.
 - Production safety and auditability primarily live in the harness layer.
+- If you change the model while changing the harness, you lose the ability to attribute improvements to harness design.
 
-If you want evidence for the hypothesis, your experiments should explicitly keep the model constant (or compare models in the same capability band) and vary only harness strictness. Otherwise, it becomes difficult to attribute changes in regression rate and rework to harness design versus model behavior.
+If you want evidence for the hypothesis, keep the model constant (or compare models in the same capability band) and vary only harness strictness. Otherwise, changes in regression rate and rework can be explained by model behavior instead of harness design, and the experiment stops being diagnostic.
 
 ## System Breakdown
 
@@ -64,6 +67,8 @@ Read the diagram as a loop with three distinct roles:
 - **Evidence** is produced by the tool and evaluation planes (outputs + pass/fail).
 - **Replay** depends on the state plane capturing enough artifacts to reproduce decisions.
 
+A practical mapping is: the control plane defines what is allowed, the tool/evaluation planes generate the proof, and the state plane makes that proof re-runnable. If you cannot point to those three responsibilities in your implementation, your harness will drift toward “best effort” instead of predictable behavior.
+
 Takeaway: predictability comes from making the loop explicit. The control plane must be able to stop based on evaluation, and the state plane must capture enough evidence to reproduce the decision.
 
 A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track:
@@ -82,7 +87,7 @@ A useful way to operationalize the planes is to name what each plane consumes, w
       <td>Control plane</td>
       <td>Decide what the agent is allowed to do and when to stop</td>
       <td>
-        <div><strong>Inputs</strong>: task brief; policy; iteration/time budget</div>
+        <div><strong>Inputs</strong>: task brief; policy; time/iteration budget</div>
         <div><strong>Outputs</strong>: chosen strategy; stop reason</div>
       </td>
       <td>Iterations to first passing gate</td>
@@ -117,7 +122,7 @@ A useful way to operationalize the planes is to name what each plane consumes, w
   </tbody>
 </table>
 
-The “minimal contract surface” is the set of interfaces that must be stable for predictability. It includes tool schemas (including error codes), patch discipline, and evaluation semantics.
+The “minimal contract surface” is the smallest set of stable interfaces required for the loop to be repeatable, bounded, and verifiable. It includes tool schemas (including error codes), patch discipline, and evaluation semantics.
 
 Boundary:
 
@@ -129,6 +134,12 @@ Boundary:
 Design a tool contract for “apply patch” operations.
 
 A minimal schema sketch can be made scannable by treating it like an interface spec. One goal is to make failures recoverable without expanding scope.
+
+**Schema (what to enforce, not just what to accept):**
+
+- Identify exactly one target file (`path`).
+- Anchor the edit with an exact, unique match (`old_str`).
+- Bound the change with explicit budgets (files/lines/time).
 
 Schema (fields + constraints to keep edits local and reviewable):
 
@@ -193,6 +204,12 @@ Schema (fields + constraints to keep edits local and reviewable):
     </tr>
   </tbody>
 </table>
+
+**Error contract (how the harness makes failures recoverable):**
+
+- Return a stable error code.
+- Return the minimum context needed to retry safely (snippets/ranges/limits).
+- Do not “auto-expand” scope to make the error go away.
 
 Error contract (examples):
 
@@ -263,7 +280,7 @@ Evaluation: measure whether the tool contract is improving outcomes with two tas
 
 Add an evaluation gate to an agent loop.
 
-A diagram helps here because “attempt → gate → log → decide” is simple to say, but easy to implement incorrectly. Focus on the two decision points: whether the gate passed, and whether another iteration is allowed under budgets.
+A diagram helps here because “attempt → gate → log → decide” is simple to say, but easy to implement incorrectly. Focus on the two decision points in the loop: whether the gate passed, and whether another iteration is allowed under budgets.
 
 ```mermaid
 flowchart TB
@@ -311,10 +328,13 @@ Fallback gate policy when tests are missing:
 - If unit tests are absent or non-runnable, the harness should not silently accept “looks good.”
 - Use a compact decision rule:
 
-1. If the repo’s documented test command exists and runs in this environment, use `full_gate`.
-2. If tests cannot be invoked here (missing command, missing dependency, or failures that prevent tests from running), try to fix within budget.
-3. If you cannot make tests runnable within budget, switch to `fallback_gate` and tighten patch budgets.
-4. Record which gate was used (`full_gate` vs `fallback_gate`) so metrics remain comparable.
+1. Can the repo’s documented test command run successfully in this environment?
+   - If yes: use `full_gate`.
+2. If not, can you make tests runnable within the configured budget?
+   - If yes: fix within budget, then use `full_gate`.
+3. If you cannot make tests runnable within budget:
+   - Use `fallback_gate` and tighten patch budgets.
+   - Record which gate was used (`full_gate` vs `fallback_gate`) and why.
 
 - A minimal `fallback_gate` is narrower and stricter:
   - typecheck/lint/build must pass (whatever subset is available), and

@@ -1,0 +1,100 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.05; drift_score=0.03"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-23T11:35:19Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.019593613933236574
+      },
+      "timestamp": "2026-02-23T11:35:19Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.05861070911722142,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "```mermaid flowchart TB P[Plan\\n(spec + intent)] A[Act\\n(propose patch)] T[Tools\\n(apply + run)] V[Verify\\n(evals/CI)] D{Checks pass?} S[Stop\\nship/merge] X[Attribute\\nroot cause] TR[(Trace)] P --> A ",
+          "words": 53
+        },
+        {
+          "sentence": "- Minimal trace record (copyable): | Field | Value | | --- | --- | | Spec note path | `docs/specs/parse-date.md` (example) | | Failing test | `tests/test_parse_date.py::test_rejects_empty` | | Command",
+          "words": 96
+        },
+        {
+          "sentence": "- If you hit a fixed budget (N iterations or T minutes), stop and hand off: - the trace record - the smallest reproducible failing case ## Concrete Example 2 Ship a minor API change in a production se",
+          "words": 35
+        },
+        {
+          "sentence": "- Minimal trace report (copyable): | Field | Value | | --- | --- | | Contract/version | `openapi.yaml` (example) | | Compatibility window | \u201ccompatible within v1.x\u201d | | Backward-compat constraints | \u201c",
+          "words": 124
+        },
+        {
+          "sentence": "- Backward-compat outcomes: - contract-test failures introduced (required gate: 0 new failures in required checks) - rollback verification in staging (required gate: exercise rollback successfully at ",
+          "words": 65
+        },
+        {
+          "sentence": "- If you hit a fixed budget (N iterations or T minutes), pause the rollout and escalate with: - the trace report - the smallest reproducible failing case - If any guardrail is violated (protected file",
+          "words": 44
+        }
+      ],
+      "timestamp": "2026-02-23T11:35:19Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/01-paradigm-shift.md",
+      "state/ledger/iteration_log/2026-02-23T11-35-19Z__chapter-01-paradigm-shift__iter-000418.json",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 418 for 01-paradigm-shift"
+  },
+  "iteration": 3076,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 0,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 0
+  },
+  "scope": {
+    "chapters_modified": [
+      "01-paradigm-shift"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-23T11:35:19Z"
+}
