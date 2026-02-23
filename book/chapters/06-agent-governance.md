@@ -2,7 +2,9 @@
 
 ## Thesis
 
-Governance defines the safe operating envelope for autonomy. It is not optional once agents can change code, invoke tools, or affect production systems. The “operating envelope” defines what an agent is allowed to do. It also defines when those actions are allowed and what evidence must exist afterward to support review and rollback.
+Governance defines the safe operating envelope for agents. It is not optional once agents can change code, invoke tools, or affect production systems.
+
+The “operating envelope” defines what an agent is allowed to do. It defines when those actions are allowed. It defines what evidence must exist afterward to support review and rollback.
 
 Hypothesis: autonomy without enforceable governance increases throughput in the short term. Over time, defect rate and operational risk rise. Changes can outpace review, exceed intended access scopes, or ship without traceable accountability.
 
@@ -20,7 +22,7 @@ What governance is / is not:
 
 ## System Breakdown
 
-- **Policy artifacts**: constitution (principles), agent rules (operational constraints), CI policies (enforcement).
+- **Policy artifacts**: constitution, agent rules, CI policies.
   - Enforceable rules:
     - “No writes to protected paths without approval token.”
     - “All tool calls must declare intent and target files.”
@@ -70,7 +72,7 @@ Governance loop (artifacts in parentheses):
 4. Review routing and approvals (risk classification / CODEOWNERS / mandatory checkpoints)
 5. Policy update after incidents or near-misses (rule changes + new tests/evals)
 
-A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on (a) where enforcement blocks unsafe actions and (b) where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.
+A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on two things: where enforcement blocks unsafe actions, and where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.
 
 <pre class="mermaid">
 flowchart TB

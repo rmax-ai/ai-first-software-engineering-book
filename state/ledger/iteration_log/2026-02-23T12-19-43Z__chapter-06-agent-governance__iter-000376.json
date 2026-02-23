@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8566666666666668,
+  "diff_size": 0.022099447513812154,
+  "drift_score": 0.061416870789957126,
+  "iteration": 376,
+  "planner_focus": [
+    "## Thesis: split the long \u201coperating envelope\u201d definition into two shorter sentences to satisfy the 28-word sentence-length limit while preserving the \u201csafe operating envelope\u201d and \u201cnot optional\u201d framing",
+    "## System Breakdown: quick scan for any other >28-word sentences created by parentheticals; prefer breaking into two sentences or moving qualifiers to separate bullets",
+    "## System Breakdown: keep the governance-loop diagram introduction and takeaway tight and concrete to avoid tone drift while maintaining the current diagram placement"
+  ],
+  "timestamp": "2026-02-23T12:19:43Z"
+}

@@ -1,0 +1,108 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.02; drift_score=0.06"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-23T12:19:43Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.060869565217391286,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.006338028169014085
+      },
+      "timestamp": "2026-02-23T12:19:43Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.06601123595505617,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "- Enforceable rules: - \u201cNo writes to protected paths without approval token.\u201d - \u201cAll tool calls must declare intent and target files.\u201d - Enforcement: - Pre-commit or tool-layer policy checks reject di",
+          "words": 30
+        },
+        {
+          "sentence": "- Enforceable rules: - \u201cAll tool executions emit structured logs.\u201d - \u201cEach patch links to an agent run id and input prompt.\u201d - Enforcement: - Log collection in CI artifacts or a central store.",
+          "words": 29
+        },
+        {
+          "sentence": "Enforcement point (tool layer + CI): - Tool layer: rejects any patch touching a protected path unless an approval token is present in the task context (e.g., `APPROVAL=SECURITY-1234`) and the approver",
+          "words": 35
+        },
+        {
+          "sentence": "Provide approval token + approver identity, or move the change to an approved human-owned PR.\u201d Remediation path (approval and artifacts produced): - Human reviewer evaluates the intent, then supplies ",
+          "words": 33
+        },
+        {
+          "sentence": "Trace queries (audit-driven investigation): - Use the audit trail to answer: which tools were invoked, which files were changed, which tests were executed, and whether any approvals were used.",
+          "words": 29
+        },
+        {
+          "sentence": "Root-cause classification (review-driven): - Classify the incident into a governance-relevant bucket, for example: - Missing gate: the regression would have been caught by a specific test that did not",
+          "words": 31
+        },
+        {
+          "sentence": "Policy change (closing the gap): - Update agent rules/CI policy to prevent recurrence, e.g., \u201cChanges touching `config/prod/` must run `smoke-prod` suite,\u201d or \u201cAny change to deployment steps requires ",
+          "words": 54
+        },
+        {
+          "sentence": "Operational metrics to make these trade-offs visible: - Friction cost: median time-to-approval for high-risk changes; escalation rate (% of tasks requiring human intervention); rework rate after polic",
+          "words": 30
+        }
+      ],
+      "timestamp": "2026-02-23T12:19:43Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/06-agent-governance.md",
+      "state/ledger/iteration_log/2026-02-23T12-19-43Z__chapter-06-agent-governance__iter-000376.json",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 376 for 06-agent-governance"
+  },
+  "iteration": 3098,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 10273,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 76066
+  },
+  "scope": {
+    "chapters_modified": [
+      "06-agent-governance"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-23T12:19:43Z"
+}
