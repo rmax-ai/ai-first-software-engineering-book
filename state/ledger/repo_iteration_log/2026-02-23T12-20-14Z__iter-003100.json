@@ -1,0 +1,92 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.00; drift_score=0.05"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-23T12:20:14Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.05128205128205132
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.001567398119122257
+      },
+      "timestamp": "2026-02-23T12:20:14Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.084375,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "Example targets and alerts (illustrative, not mandates): | Metric | Signal to watch | Illustrative alert | | --- | --- | --- | | Tool-failure rate | Tool exits non-zero or returns invalid output | Ale",
+          "words": 149
+        },
+        {
+          "sentence": "```mermaid flowchart LR M[Model prompt] --> O[Orchestration<br/>Queues \u2022 Concurrency \u2022 Retries \u2022 Idempotency] O --> E[Execution<br/>Sandbox \u2022 Pinned deps \u2022 Timeouts] E --> T[Tool services<br/>Tests \u2022 ",
+          "words": 60
+        },
+        {
+          "sentence": "- Decision policy: - Treat a task as \u201clow-signal\u201d when: - (a) there is no progress after N tool steps (e.g., 6), - (b) the same error repeats (e.g., the same stack trace twice), or - (c) predicted cos",
+          "words": 42
+        },
+        {
+          "sentence": "- If per-task or batch budget is exceeded: - stop further tool calls, - write a short spend-and-status summary (last step, last error, run id), - escalate for human review.",
+          "words": 29
+        }
+      ],
+      "timestamp": "2026-02-23T12:20:14Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/07-production-ai-infrastructure.md",
+      "state/ledger/iteration_log/2026-02-23T12-20-14Z__chapter-07-production-ai-infrastructure__iter-000377.json",
+      "state/ledger.json",
+      "state/metrics.json"
+    ],
+    "notes": "Kernel refinement iteration 377 for 07-production-ai-infrastructure"
+  },
+  "iteration": 3100,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 0,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 0
+  },
+  "scope": {
+    "chapters_modified": [
+      "07-production-ai-infrastructure"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-23T12:20:14Z"
+}

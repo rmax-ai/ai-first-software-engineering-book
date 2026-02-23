@@ -1,13 +1,12 @@
+<!-- markdownlint-disable MD022 MD032 -->
 # Chapter 07 — Production AI Infrastructure
 
 ## Thesis
-
 Production AI-first systems are distributed systems: they require orchestration, isolation, observability, caching, cost control, and reproducible environments.
 
 Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. The tool/runtime plane is the execution and control surface around the model. It includes sandboxed execution environments, tool adapters (test runner, browser, repo API), and orchestration policies (queueing, concurrency limits, retries, idempotency). It also includes observability and artifacts for replay and audit. Restated: if you can reliably run tools and record what happened, you can reproduce runs and improve outcomes even when model behavior varies.
 
 ## Why This Matters
-
 - Without isolation, tool execution becomes a security and reliability risk.
 - Without observability, failures cannot be attributed or fixed systematically.
 - Without cost controls, autonomy can become economically unstable.
@@ -24,7 +23,6 @@ Example targets and alerts (illustrative, not mandates):
 | Spend per successful task | Cost-to-merge and wasted tokens trend upward | Alert if median cost-to-merge exceeds a cap; or wasted spend exceeds a daily share |
 
 ## System Breakdown
-
 A diagram helps here because the tool/runtime plane has coupled components. It is not a single service. Focus on the contracts between boxes. Each box should emit stable, versioned signals for replay and debugging.
 
 ```mermaid
@@ -53,9 +51,7 @@ Takeaway: reliability comes from strict contracts at each boundary. Record the e
 - **Security**: secrets handling, network egress controls, least privilege. Contract: allowlists cover tools, filesystem paths, and network egress; secrets are injected only at execution time and never written to artifacts.
 
 ## Concrete Example 1
-
 Sandboxed tool execution for code changes.
-
 - Trigger: a proposed patch (diff) plus a task spec (e.g., “fix failing test X”). Include the target branch SHA and a pinned environment (container image + lockfile).
 - Sandbox: start an isolated runner with no ambient credentials. Mount the repo read-write and restrict filesystem + network egress to an allowlist.
 - Tool calls:
@@ -71,9 +67,7 @@ Sandboxed tool execution for code changes.
   - Include a short “what to try next” hint (e.g., rerun without cache, or inspect a specific log).
 
 ## Concrete Example 2
-
 Cost-aware autonomy for a batch of maintenance tasks.
-
 - Budget: per-task token/cost ceilings (e.g., $0.50 and 20k tokens) plus a batch budget (e.g., $50/day), enforced by the orchestrator.
 - Strategy: fail fast on low-signal tasks (small, repetitive, or high-latency tool loops) and escalate to human review when confidence is low or blast radius is high.
 - Decision policy:
@@ -91,13 +85,11 @@ Cost-aware autonomy for a batch of maintenance tasks.
 - Measure (quality): regression rate (e.g., rollback or test failures within 24h) and “wasted spend” (tokens spent on tasks that are abandoned or escalated).
 
 ## Trade-offs
-
 - Isolation increases safety but adds operational complexity. Default: start with containerized execution + allowlists; revisit if tool latency dominates (e.g., repeated cold starts) and you can prove tighter scoping by repo/path.
 - Strong observability increases insight but raises data retention requirements. Default: use structured logs + traces with short retention for raw logs and longer retention for summaries; revisit if incident analysis regularly needs deeper raw context.
 - Caching and replay improve speed but can mask nondeterminism if misused. Default: cache only deterministic steps (dependency installs keyed by lockfile, build outputs keyed by inputs). Periodically force no-cache replays; revisit if you observe drift or flaky tests that caching hides.
 
 ## Failure Modes
-
 - **Non-reproducible runs**: environment drift makes traces hard to replay.
   - Detection: replay fails with different dependency resolutions; tool versions differ from the recorded manifest; repeated “works on runner A but not runner B” incidents.
   - Mitigation: pin images and dependencies; record tool versions and hashes in the replay manifest; run periodic “replay audits” that re-execute a sample of recent runs.
@@ -109,7 +101,4 @@ Cost-aware autonomy for a batch of maintenance tasks.
   - Mitigation: emit structured events for each tool call; standardize error classes and outcome codes; sample verbose logs while keeping full traces for failed runs only.
 
 ## Research Directions
-
-- Standardized replay bundles for agent runs.
-- Cost/performance models that predict optimal evaluation depth.
-- Secure-by-default tool runtime primitives for autonomy.
+<!-- markdownlint-enable MD022 MD032 -->
