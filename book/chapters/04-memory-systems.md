@@ -30,14 +30,14 @@ Hypothesis: uncurated memory increases confidence without increasing correctness
 
 A diagram helps here because memory systems fail at the *interfaces* (write → retrieve → act), not inside a single component. As you read it, focus on two gates: (1) retrieval is bounded and ranked, and (2) action is gated by provenance and freshness checks.
 
-<div class="mermaid">
+```mermaid
 flowchart TB
-  W[Write event\n(policy: when/what to store)] --> R[Record\n(min schema fields)]
-  R --> I[Index + Rank\n(Read policy)]
-  I --> V{Verify before acting\n(provenance + freshness)}
-  V -->|pass| A[Apply next step\n(change, fix, decision)]
-  V -->|fail| Q[Refine query\nor re-run tests]
-  R --> G[Govern\n(retention/redaction/correction)]
+  W["Write event<br>(policy: when/what to store)"] --> R["Record<br>(min schema fields)"]
+  R --> I["Index + Rank<br>(Read policy)"]
+  I --> V{"Verify before acting<br>(provenance + freshness)"}
+  V -->|pass| A["Apply next step<br>(change, fix, decision)"]
+  V -->|fail| Q[Refine query<br>or re-run tests]
+  R --> G["Govern<br>(retention/redaction/correction)"]
   G --> R
 
   subgraph Schema[Minimum schema fields]
@@ -48,7 +48,7 @@ flowchart TB
     CF[confidence]
     SU[supersedes]
   end
-</div>
+```
 
 The Schema subgraph is a minimum viable baseline for this chapter (intentionally incomplete); implementations can add fields as needed without changing the write/read/governance gates.
 
