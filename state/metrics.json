@@ -52871,6 +52871,88 @@
             "diff_ratio": 0.0,
             "drift_score": 0.35567083490425444
           }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.9,
+            "decision": "refine",
+            "drift_score": 0.28,
+            "example_density": 0.95,
+            "failure_modes_present": true,
+            "structure_score": 0.94,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md.",
+              "Mermaid diagram is not in standard fenced ```mermaid form; it is embedded as an HTML <pre class=\"mermaid\"> block, which may not be recognized by the toolchain as a Mermaid diagram."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.10204177817568043,
+            "passed": false,
+            "similarity_max": 0.6908868309220902
+          },
+          "iteration": 377,
+          "timestamp": "2026-02-23T12:15:16Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.654320987654321,
+            "drift_score": 0.10204177817568043
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.91,
+            "decision": "refine",
+            "drift_score": 0.27,
+            "example_density": 0.95,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.10214970814369101,
+            "passed": false,
+            "similarity_max": 0.690887443442141
+          },
+          "iteration": 378,
+          "timestamp": "2026-02-23T12:15:16Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.06493506493506493,
+            "drift_score": 0.10214970814369101
+          }
+        },
+        {
+          "critic": {
+            "clarity_score": 0.91,
+            "decision": "refine",
+            "drift_score": 0.27,
+            "example_density": 0.95,
+            "failure_modes_present": true,
+            "structure_score": 0.95,
+            "tradeoff_presence": true,
+            "violations": [
+              "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md."
+            ]
+          },
+          "deterministic": {
+            "drift_score": 0.10214970814369101,
+            "passed": false,
+            "similarity_max": 0.690887443442141
+          },
+          "iteration": 379,
+          "timestamp": "2026-02-23T12:15:16Z",
+          "trace_summary": {
+            "decision": "refine",
+            "deterministic_pass": false,
+            "diff_ratio": 0.0,
+            "drift_score": 0.10214970814369101
+          }
         }
       ]
     },

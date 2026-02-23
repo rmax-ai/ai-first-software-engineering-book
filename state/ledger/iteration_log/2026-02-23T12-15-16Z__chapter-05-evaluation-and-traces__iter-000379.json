@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.9366666666666665,
+  "diff_size": 0.0,
+  "drift_score": 0.10214970814369101,
+  "iteration": 379,
+  "planner_focus": [
+    "Fix chapter-only boundary by ensuring the chapter source contains no trailing <reminder> block after ## Research Directions",
+    "Keep changes restricted to ## Research Directions to satisfy the allowlist while removing non-chapter content"
+  ],
+  "timestamp": "2026-02-23T12:15:16Z"
+}

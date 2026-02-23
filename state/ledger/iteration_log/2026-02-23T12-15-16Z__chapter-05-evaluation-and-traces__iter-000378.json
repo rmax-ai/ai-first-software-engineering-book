@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.9366666666666665,
+  "diff_size": 0.06493506493506493,
+  "drift_score": 0.10214970814369101,
+  "iteration": 378,
+  "planner_focus": [
+    "Fix chapter boundary by removing any trailing non-chapter <reminder> block after ## Research Directions",
+    "Restore Mermaid compatibility in ## System Breakdown by replacing the HTML <pre class=\"mermaid\"> wrapper with a standard fenced mermaid block",
+    "Keep edits localized to ## System Breakdown and ## Research Directions while preserving the existing diagram introduction and takeaway sentences"
+  ],
+  "timestamp": "2026-02-23T12:15:16Z"
+}

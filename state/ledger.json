@@ -781,25 +781,67 @@
       "status": "hold"
     },
     "05-evaluation-and-traces": {
-      "current_iteration": 376,
+      "current_iteration": 379,
       "drift_history": [],
       "human_validation": {
         "approved": false,
         "approved_at": null,
         "approved_by": ""
       },
+      "iteration_log_files": [
+        "state/ledger/iteration_log/2026-02-23T12-15-16Z__chapter-05-evaluation-and-traces__iter-000377.json",
+        "state/ledger/iteration_log/2026-02-23T12-15-16Z__chapter-05-evaluation-and-traces__iter-000378.json",
+        "state/ledger/iteration_log/2026-02-23T12-15-16Z__chapter-05-evaluation-and-traces__iter-000379.json"
+      ],
+      "iteration_log_tail": [
+        {
+          "critic_score": 0.93,
+          "diff_size": 0.654320987654321,
+          "drift_score": 0.10204177817568043,
+          "iteration": 377,
+          "planner_focus": [
+            "Reduce sentence-length violations in ## System Breakdown by splitting long rule bullets into shorter lines and sub-bullets",
+            "Remove non-chapter trailing content after ## Research Directions to restore chapter-only boundary",
+            "Make the gating rules in ## System Breakdown more scannable by grouping by action class and extracting stack-detection into a clearly labeled mini-section",
+            "Shorten and tighten list-heavy prose in ## Concrete Example 1 and ## Concrete Example 2 (keep examples, reduce run-on bullets)"
+          ],
+          "timestamp": "2026-02-23T12:15:16Z"
+        },
+        {
+          "critic_score": 0.9366666666666665,
+          "diff_size": 0.06493506493506493,
+          "drift_score": 0.10214970814369101,
+          "iteration": 378,
+          "planner_focus": [
+            "Fix chapter boundary by removing any trailing non-chapter <reminder> block after ## Research Directions",
+            "Restore Mermaid compatibility in ## System Breakdown by replacing the HTML <pre class=\"mermaid\"> wrapper with a standard fenced mermaid block",
+            "Keep edits localized to ## System Breakdown and ## Research Directions while preserving the existing diagram introduction and takeaway sentences"
+          ],
+          "timestamp": "2026-02-23T12:15:16Z"
+        },
+        {
+          "critic_score": 0.9366666666666665,
+          "diff_size": 0.0,
+          "drift_score": 0.10214970814369101,
+          "iteration": 379,
+          "planner_focus": [
+            "Fix chapter-only boundary by ensuring the chapter source contains no trailing <reminder> block after ## Research Directions",
+            "Keep changes restricted to ## Research Directions to satisfy the allowlist while removing non-chapter content"
+          ],
+          "timestamp": "2026-02-23T12:15:16Z"
+        }
+      ],
       "last_eval": {
         "critic": {
-          "clarity_score": 0.93,
+          "clarity_score": 0.91,
           "decision": "refine",
-          "drift_score": 0.21,
-          "example_density": 0.9,
+          "drift_score": 0.27,
+          "example_density": 0.95,
           "failure_modes_present": true,
           "structure_score": 0.95,
           "tradeoff_presence": true,
           "violations": [
-            "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md.",
-            "Style-guard sentence length is still likely violated in ## System Breakdown where some bullets include multiple clauses and exceed 28 words, e.g., the Node candidate line under stack detection and some deploy/release sub-bullets."
+            "Trailing non-chapter content remains: the chapter ends with a <reminder>...</reminder> block, which violates the expected chapter-only boundary for book/chapters/*.md."
           ]
         },
         "deterministic": {
@@ -814,77 +856,73 @@
               "thesis_clarity": 1.0,
               "tradeoffs": 1.0
             },
-            "timestamp": "2026-02-22T20:31:11Z",
+            "timestamp": "2026-02-23T12:15:16Z",
             "total": 1.0
           },
           "drift_detection": {
             "drift_metrics": {
               "anchor_deltas": {
                 "agent": 0.0,
-                "harness": 0.28125,
-                "model": 0.18181818181818177
+                "harness": 0.0,
+                "model": 0.0
               },
               "cross_chapter_similarity_hits": []
             },
             "hype_hits": [],
-            "pass": false,
+            "pass": true,
             "repetition_metrics": {
-              "duplicate_sentence_ratio": 0.0196078431372549,
-              "near_duplicate_ngram_ratio": 0.04033149171270718
+              "duplicate_sentence_ratio": 0.017241379310344827,
+              "near_duplicate_ngram_ratio": 0.0441834451901566
             },
-            "timestamp": "2026-02-22T20:31:11Z"
+            "timestamp": "2026-02-23T12:15:16Z"
           },
-          "drift_score": 0.34278034418187164,
+          "drift_score": 0.10214970814369101,
           "passed": false,
-          "similarity_max": 0.7011406758535231,
+          "similarity_max": 0.690887443442141,
           "style_guard": {
-            "adjective_density": 0.047409040793825796,
+            "adjective_density": 0.05189732142857143,
             "forbidden_hits": [],
             "pass": false,
             "sentence_length_violations": [
               {
-                "sentence": "## System Breakdown - **Trace schema** (minimum viable): - task id - plan (the intended steps and stop conditions) - tool calls (tool name, arguments, start/end timestamps, exit status) - tool outputs",
-                "words": 156
+                "sentence": "## System Breakdown - **Trace schema** (minimum viable): - task id - plan - intended steps - stop conditions - tool calls - tool name - arguments - start/end timestamps - exit status - tool outputs - ",
+                "words": 147
               },
               {
                 "sentence": "```mermaid flowchart TB A[Action class selected] --> B[Safety gate(s)\\n(permission / protected-path / secret scan)] B -->|fail| S1[STOP\\nstop_reason set\\nrecord: failure_signature + touched_paths] B -",
-                "words": 81
+                "words": 92
               },
               {
-                "sentence": "- Minimal gating matrix (example, stated as rules): - read-only (grep/view/list): - safety: required permission check for the accessed path(s) - quality: skipped; record `skipped_reason: \"read_only_ac",
-                "words": 471
+                "sentence": "- Minimal gating matrix (example, stated as rules): - read-only (grep/view/list): - safety: require permission check for accessed path(s) - quality: skip; record `skipped_reason: \"read_only_action\"` -",
+                "words": 476
               },
               {
-                "sentence": "Pseudo-trace excerpt (illustrative): - task_id: `refactor-auth-2026-02-22-001` - environment: - repo_sha: `a1b2c3d` - tool_versions: `{ \"pytest\": \"8.1.1\", \"python\": \"3.12.1\" }` - plan: - \u201crename `Auth",
-                "words": 176
+                "sentence": "Pseudo-trace excerpt (illustrative): task_id: refactor-auth-2026-02-22-001 environment: repo_sha: a1b2c3d tool_versions: pytest: 8.1.1 python: 3.12.1 plan: - rename AuthClient -> CopilotClient - updat",
+                "words": 175
               },
               {
                 "sentence": "- A \u201cgolden task\u201d should include: - fixed input prompt and any fixed attachments - fixed repo state (commit SHA) or a pinned fixture repository - expected outcome constraints (e.g., \u201ctouch only `src/f",
-                "words": 64
+                "words": 61
               },
               {
-                "sentence": "- Define a baseline as a pinned reference run-set, such as \u201cthe last green run-set on release tag `vX.Y`\u201d for the same golden task and the same repo_sha (or the same pinned fixture).",
-                "words": 35
-              },
-              {
-                "sentence": "- Example drift signals with thresholds (current window vs baseline window): - iteration drift: median loop iterations in the most recent 50 runs increases by \u2265 30% compared to the baseline\u2019s 50-run m",
-                "words": 93
+                "sentence": "- iteration drift: - median loop iterations in the most recent 50 runs increases by \u2265 30% - compare against the baseline\u2019s 50-run median - regression rate: - correctness-gate failure rate in the most ",
+                "words": 81
               },
               {
                 "sentence": "- Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.",
                 "words": 31
               }
             ],
-            "timestamp": "2026-02-22T20:31:11Z"
+            "timestamp": "2026-02-23T12:15:16Z"
           }
         }
       },
       "lifecycle": "draft",
       "path": "book/chapters/05-evaluation-and-traces.md",
       "quality_metrics": {
-        "clarity_score": 0.93,
-        "drift_score": 0.34278034418187164,
-        "example_density": 0.9,
+        "clarity_score": 0.91,
+        "drift_score": 0.10214970814369101,
+        "example_density": 0.95,
         "failure_mode_presence": true,
         "structure_score": 0.95,
         "tradeoff_presence": true
@@ -894,11 +932,11 @@
         "hypothesis": "",
         "validation_status": "untested"
       },
-      "revision_count": 376,
+      "revision_count": 379,
       "stability": {
         "consecutive_passes": 0,
         "frozen_candidate": false,
-        "last_modified_iteration": 376
+        "last_modified_iteration": 379
       },
       "status": "hold"
     },
@@ -2265,7 +2303,7 @@
     },
     "timestamp": "ISO-8601 string"
   },
-  "repo_iteration_counter": 3092,
+  "repo_iteration_counter": 3095,
   "repo_iteration_log_files": [
     "state/ledger/repo_iteration_log/2026-02-22T21-49-53Z__iter-003060.json",
     "state/ledger/repo_iteration_log/2026-02-22T21-50-37Z__iter-003061.json",
@@ -2299,7 +2337,10 @@
     "state/ledger/repo_iteration_log/2026-02-23T12-10-07Z__iter-003089.json",
     "state/ledger/repo_iteration_log/2026-02-23T12-12-44Z__iter-003090.json",
     "state/ledger/repo_iteration_log/2026-02-23T12-13-41Z__iter-003091.json",
-    "state/ledger/repo_iteration_log/2026-02-23T12-14-39Z__iter-003092.json"
+    "state/ledger/repo_iteration_log/2026-02-23T12-14-39Z__iter-003092.json",
+    "state/ledger/repo_iteration_log/2026-02-23T12-15-16Z__iter-003093.json",
+    "state/ledger/repo_iteration_log/2026-02-23T12-15-16Z__iter-003094.json",
+    "state/ledger/repo_iteration_log/2026-02-23T12-15-16Z__iter-003095.json"
   ],
   "repo_iteration_log_tail": [
     {
@@ -5924,6 +5965,318 @@
         "patterns_modified": []
       },
       "timestamp": "2026-02-23T12:14:39Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.65; drift_score=0.10"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-23T12:15:16Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.017241379310344827,
+            "near_duplicate_ngram_ratio": 0.044109436069235064
+          },
+          "timestamp": "2026-02-23T12:15:16Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.05181058495821727,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "## System Breakdown - **Trace schema** (minimum viable): - task id - plan - intended steps - stop conditions - tool calls - tool name - arguments - start/end timestamps - exit status - tool outputs - ",
+              "words": 147
+            },
+            {
+              "sentence": "<pre class=\"mermaid\">flowchart TB A[Action class selected] --> B[Safety gate(s)\\n(permission / protected-path / secret scan)] B -->|fail| S1[STOP\\nstop_reason set\\nrecord: failure_signature + touched_",
+              "words": 95
+            },
+            {
+              "sentence": "- Minimal gating matrix (example, stated as rules): - read-only (grep/view/list): - safety: require permission check for accessed path(s) - quality: skip; record `skipped_reason: \"read_only_action\"` -",
+              "words": 476
+            },
+            {
+              "sentence": "Pseudo-trace excerpt (illustrative): task_id: refactor-auth-2026-02-22-001 environment: repo_sha: a1b2c3d tool_versions: pytest: 8.1.1 python: 3.12.1 plan: - rename AuthClient -> CopilotClient - updat",
+              "words": 175
+            },
+            {
+              "sentence": "- A \u201cgolden task\u201d should include: - fixed input prompt and any fixed attachments - fixed repo state (commit SHA) or a pinned fixture repository - expected outcome constraints (e.g., \u201ctouch only `src/f",
+              "words": 61
+            },
+            {
+              "sentence": "- iteration drift: - median loop iterations in the most recent 50 runs increases by \u2265 30% - compare against the baseline\u2019s 50-run median - regression rate: - correctness-gate failure rate in the most ",
+              "words": 81
+            },
+            {
+              "sentence": "- Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.",
+              "words": 31
+            }
+          ],
+          "timestamp": "2026-02-23T12:15:16Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/05-evaluation-and-traces.md",
+          "state/ledger/iteration_log/2026-02-23T12-15-16Z__chapter-05-evaluation-and-traces__iter-000377.json",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 377 for 05-evaluation-and-traces"
+      },
+      "iteration": 3093,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "05-evaluation-and-traces"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-23T12:15:16Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.06; drift_score=0.10"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-23T12:15:16Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.017241379310344827,
+            "near_duplicate_ngram_ratio": 0.0441834451901566
+          },
+          "timestamp": "2026-02-23T12:15:16Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.05189732142857143,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "## System Breakdown - **Trace schema** (minimum viable): - task id - plan - intended steps - stop conditions - tool calls - tool name - arguments - start/end timestamps - exit status - tool outputs - ",
+              "words": 147
+            },
+            {
+              "sentence": "```mermaid flowchart TB A[Action class selected] --> B[Safety gate(s)\\n(permission / protected-path / secret scan)] B -->|fail| S1[STOP\\nstop_reason set\\nrecord: failure_signature + touched_paths] B -",
+              "words": 92
+            },
+            {
+              "sentence": "- Minimal gating matrix (example, stated as rules): - read-only (grep/view/list): - safety: require permission check for accessed path(s) - quality: skip; record `skipped_reason: \"read_only_action\"` -",
+              "words": 476
+            },
+            {
+              "sentence": "Pseudo-trace excerpt (illustrative): task_id: refactor-auth-2026-02-22-001 environment: repo_sha: a1b2c3d tool_versions: pytest: 8.1.1 python: 3.12.1 plan: - rename AuthClient -> CopilotClient - updat",
+              "words": 175
+            },
+            {
+              "sentence": "- A \u201cgolden task\u201d should include: - fixed input prompt and any fixed attachments - fixed repo state (commit SHA) or a pinned fixture repository - expected outcome constraints (e.g., \u201ctouch only `src/f",
+              "words": 61
+            },
+            {
+              "sentence": "- iteration drift: - median loop iterations in the most recent 50 runs increases by \u2265 30% - compare against the baseline\u2019s 50-run median - regression rate: - correctness-gate failure rate in the most ",
+              "words": 81
+            },
+            {
+              "sentence": "- Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.",
+              "words": 31
+            }
+          ],
+          "timestamp": "2026-02-23T12:15:16Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/05-evaluation-and-traces.md",
+          "state/ledger/iteration_log/2026-02-23T12-15-16Z__chapter-05-evaluation-and-traces__iter-000378.json",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 378 for 05-evaluation-and-traces"
+      },
+      "iteration": 3094,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "05-evaluation-and-traces"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-23T12:15:16Z"
+    },
+    {
+      "agent_task": "kernel_refine",
+      "artifacts": {
+        "commit_hash": null,
+        "diff_summary": "diff_ratio=0.00; drift_score=0.10"
+      },
+      "evals": {
+        "chapter_quality": {
+          "forbidden_hits": [],
+          "pass": true,
+          "required_missing": [],
+          "scores": {
+            "examples_count": 1.0,
+            "failure_modes": 1.0,
+            "system_breakdown": 1.0,
+            "thesis_clarity": 1.0,
+            "tradeoffs": 1.0
+          },
+          "timestamp": "2026-02-23T12:15:16Z",
+          "total": 1.0
+        },
+        "drift_detection": {
+          "drift_metrics": {
+            "anchor_deltas": {
+              "agent": 0.0,
+              "harness": 0.0,
+              "model": 0.0
+            },
+            "cross_chapter_similarity_hits": []
+          },
+          "hype_hits": [],
+          "pass": true,
+          "repetition_metrics": {
+            "duplicate_sentence_ratio": 0.017241379310344827,
+            "near_duplicate_ngram_ratio": 0.0441834451901566
+          },
+          "timestamp": "2026-02-23T12:15:16Z"
+        },
+        "style_guard": {
+          "adjective_density": 0.05189732142857143,
+          "forbidden_hits": [],
+          "pass": false,
+          "sentence_length_violations": [
+            {
+              "sentence": "## System Breakdown - **Trace schema** (minimum viable): - task id - plan - intended steps - stop conditions - tool calls - tool name - arguments - start/end timestamps - exit status - tool outputs - ",
+              "words": 147
+            },
+            {
+              "sentence": "```mermaid flowchart TB A[Action class selected] --> B[Safety gate(s)\\n(permission / protected-path / secret scan)] B -->|fail| S1[STOP\\nstop_reason set\\nrecord: failure_signature + touched_paths] B -",
+              "words": 92
+            },
+            {
+              "sentence": "- Minimal gating matrix (example, stated as rules): - read-only (grep/view/list): - safety: require permission check for accessed path(s) - quality: skip; record `skipped_reason: \"read_only_action\"` -",
+              "words": 476
+            },
+            {
+              "sentence": "Pseudo-trace excerpt (illustrative): task_id: refactor-auth-2026-02-22-001 environment: repo_sha: a1b2c3d tool_versions: pytest: 8.1.1 python: 3.12.1 plan: - rename AuthClient -> CopilotClient - updat",
+              "words": 175
+            },
+            {
+              "sentence": "- A \u201cgolden task\u201d should include: - fixed input prompt and any fixed attachments - fixed repo state (commit SHA) or a pinned fixture repository - expected outcome constraints (e.g., \u201ctouch only `src/f",
+              "words": 61
+            },
+            {
+              "sentence": "- iteration drift: - median loop iterations in the most recent 50 runs increases by \u2265 30% - compare against the baseline\u2019s 50-run median - regression rate: - correctness-gate failure rate in the most ",
+              "words": 81
+            },
+            {
+              "sentence": "- Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.",
+              "words": 31
+            }
+          ],
+          "timestamp": "2026-02-23T12:15:16Z"
+        }
+      },
+      "inputs": {
+        "changed_files": [
+          "book/chapters/05-evaluation-and-traces.md",
+          "state/ledger/iteration_log/2026-02-23T12-15-16Z__chapter-05-evaluation-and-traces__iter-000379.json",
+          "state/ledger.json",
+          "state/metrics.json"
+        ],
+        "notes": "Kernel refinement iteration 379 for 05-evaluation-and-traces"
+      },
+      "iteration": 3095,
+      "outcome": {
+        "decision": "refine",
+        "rationale": "Deterministic eval + critic decision gating.",
+        "status": "refine"
+      },
+      "resource_usage": {
+        "completion_tokens": 0,
+        "eval_runtime_ms": 0,
+        "prompt_tokens": 0
+      },
+      "scope": {
+        "chapters_modified": [
+          "05-evaluation-and-traces"
+        ],
+        "governance_modified": false,
+        "patterns_modified": []
+      },
+      "timestamp": "2026-02-23T12:15:16Z"
     }
   ],
   "version": 2
