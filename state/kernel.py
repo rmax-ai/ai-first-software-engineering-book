@@ -111,7 +111,7 @@ class KernelCLIArgsPayload(BaseModel):
     llm_timeout_s: int
 
     adhoc_instructions: str | None = None
-    adhoc_instructions_file: Path | None = None
+    adhoc_instructions_file: list[Path] | None = None
 
 
 @dataclass(frozen=True)
@@ -140,9 +140,7 @@ class KernelCLIArgsTransit:
                     "llm_timeout_s": int(args.llm_timeout_s),
 
                     "adhoc_instructions": str(args.adhoc_instructions) if getattr(args, "adhoc_instructions", None) else None,
-                    "adhoc_instructions_file": Path(args.adhoc_instructions_file)
-                    if getattr(args, "adhoc_instructions_file", None)
-                    else None,
+                    "adhoc_instructions_file": _normalize_adhoc_paths(getattr(args, "adhoc_instructions_file", None)),
                 }
             )
         )
@@ -839,16 +837,32 @@ def _read_prompt(path: Path) -> str:
     return _load_prompt_text(path).to_prompt()
 
 
-def _load_adhoc_instructions(*, text: str | None, path: Path | None) -> str | None:
+def _load_adhoc_instructions(*, text: str | None, path: list[Path] | None) -> str | None:
     if (text is None or not text.strip()) and path is None:
         return None
     parts: list[str] = []
     if path is not None:
-        parts.append(_read_text(path).strip())
+        for item in path:
+            parts.append(_read_text(item).strip())
     if text is not None and text.strip():
         parts.append(text.strip())
     merged = "\n\n".join([p for p in parts if p])
     return merged.strip() if merged.strip() else None
+
+
+def _normalize_adhoc_paths(value: Any | None) -> list[Path] | None:
+    if value is None:
+        return None
+    if isinstance(value, list):
+        return [Path(item) for item in value if item is not None]
+    if isinstance(value, Path):
+        return [value]
+    if isinstance(value, str):
+        if os.pathsep in value:
+            parts = [p for p in value.split(os.pathsep) if p]
+            return [Path(p) for p in parts]
+        return [Path(value)]
+    return None
 
 
 def _apply_adhoc_instructions(contract: str, adhoc_instructions: str | None) -> str:
@@ -2309,8 +2323,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--adhoc-instructions-file",
         type=Path,
+        action="append",
         default=os.environ.get("KERNEL_ADHOC_INSTRUCTIONS_FILE", None),
-        help="Path to a file containing extra run-specific instructions (default: env KERNEL_ADHOC_INSTRUCTIONS_FILE).",
+        help=(
+            "Path to a file containing extra run-specific instructions. Repeatable. "
+            "(default: env KERNEL_ADHOC_INSTRUCTIONS_FILE; use path separators to pass multiple)"
+        ),
     )
 
     args = parser.parse_args(argv)
