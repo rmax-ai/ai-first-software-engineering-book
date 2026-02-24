@@ -1,0 +1,87 @@
+{
+  "chapter_id": "06-agent-governance",
+  "date": "2026-02-24",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "approve",
+        "drift_score": 0.11,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.009242957746478873,
+        "passed": false,
+        "similarity_max": 0.7083845038991508
+      },
+      "iteration": 377,
+      "timestamp": "2026-02-24T21:33:57Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.009242957746478873
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "refine",
+        "drift_score": 0.11,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": [
+          "Mermaid diagram is embedded as `<pre class=\"mermaid\">...</pre>` instead of a fenced ```mermaid code block, violating the diagram formatting rules.",
+          "Chapter includes a trailing `<reminder>...</reminder>` block that is not part of the chapter content and should be removed from the final markdown."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.009242957746478873,
+        "passed": false,
+        "similarity_max": 0.7083845038991508
+      },
+      "iteration": 378,
+      "timestamp": "2026-02-24T21:34:49Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.009242957746478873
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "refine",
+        "drift_score": 0.11,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.92,
+        "tradeoff_presence": true,
+        "violations": [
+          "Writer output includes a Mermaid fenced code block despite the run-level instruction 'No code fences'.",
+          "Writer output still contains a trailing `<reminder>...</reminder>` block after ## Research Directions; the chapter should end at the last bullet in that section."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.009262526464361327,
+        "passed": false,
+        "similarity_max": 0.7089984254034841
+      },
+      "iteration": 379,
+      "timestamp": "2026-02-24T21:36:01Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.022099447513812154,
+        "drift_score": 0.009262526464361327
+      }
+    }
+  ]
+}

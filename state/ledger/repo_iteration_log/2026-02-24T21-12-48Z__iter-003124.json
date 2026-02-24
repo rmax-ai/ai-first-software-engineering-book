@@ -1,0 +1,117 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.61; drift_score=0.09"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-24T21:12:48Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.08974358974358976,
+          "harness": 0.08407079646017701,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.008928571428571428
+      },
+      "timestamp": "2026-02-24T21:12:48Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.0562015503875969,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "```mermaid flowchart TB TB[Task brief<br/>+ repo state] C[Control plane<br/>policies<br/>budgets<br/>stop conditions] T[Tool plane<br/>patches<br/>commands<br/>structured errors] E[Evaluation plane<br",
+          "words": 96
+        },
+        {
+          "sentence": "A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track: | Plane | Responsibilities | Key artifacts (inputs/outputs) | One measura",
+          "words": 160
+        },
+        {
+          "sentence": "| Category | Field / rule | Purpose | Example failure mode | | --- | --- | --- | --- | | Required fields | `path` | Identify the target file | Wrong path \u2192 cannot apply patch | | Required fields | `ol",
+          "words": 120
+        },
+        {
+          "sentence": "| Error code | Meaning | What the harness should return | | --- | --- | --- | | `NOT_FOUND` | `path` does not exist and `create` is false | A clear message plus allowed path roots (if any) | | `NON_UN",
+          "words": 83
+        },
+        {
+          "sentence": "**Mini-example (connecting the contract to measurable outcomes):** - Task: \u201cUpdate `timeout_ms` default from 5000 to 8000.\u201d - Without a strict contract: the agent might run a broad search/replace and ",
+          "words": 37
+        },
+        {
+          "sentence": "- Your tracked metrics should shift: **diff locality** stays low (1 file, a few lines), and **revert rate** should drop because the change is less likely to introduce incidental regressions.",
+          "words": 29
+        },
+        {
+          "sentence": "```mermaid flowchart TB A[Attempt<br/>smallest plausible change] G[Gate<br/>tests + static checks] P{Gate passes?} L[Log<br/>diff id + outputs + exit codes] B{Budget remains<br/>and failure actionable",
+          "words": 65
+        },
+        {
+          "sentence": "A minimal `fallback_gate` is narrower and stricter: - typecheck/lint/build must pass (whatever subset is available), and - a targeted command or script (documented in the repo) must run successfully, ",
+          "words": 42
+        },
+        {
+          "sentence": "- How you notice: many files touched per task, drift into unrelated directories, and regressions discovered after \u201ccompletion.\u201d - Harness fix: enforce patch locality budgets, add path allowlists/denyl",
+          "words": 35
+        },
+        {
+          "sentence": "- Harness fix: make gates non-optional for PR-ready output (policy), require artifacts (logs, diff id, check results) attached to the task, and surface \u201cstop reason\u201d when evidence is missing.",
+          "words": 30
+        }
+      ],
+      "timestamp": "2026-02-24T21:12:48Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/02-harness-engineering.md",
+      "state/ledger/iteration_log/2026-02-24T21-12-48Z__chapter-02-harness-engineering__iter-000394.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/02-harness-engineering/2026-02-24.json"
+    ],
+    "notes": "Kernel refinement iteration 394 for 02-harness-engineering"
+  },
+  "iteration": 3124,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 13315,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 170417
+  },
+  "scope": {
+    "chapters_modified": [
+      "02-harness-engineering"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-24T21:12:48Z"
+}

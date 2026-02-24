@@ -1,0 +1,89 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.03; drift_score=0.31"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-24T21:37:52Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.49090909090909096
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": false,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.00510204081632653
+      },
+      "timestamp": "2026-02-24T21:37:52Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.08139534883720931,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "Example targets and alerts (illustrative, not mandates): | Metric | Signal to watch | Illustrative alert | | --- | --- | --- | | Tool-failure rate | Tool exits non-zero or returns invalid output | Ale",
+          "words": 142
+        },
+        {
+          "sentence": "In practice, reliability tends to hinge on three contracts: (1) run id propagation across every step, (2) versioned, structured tool outputs, and (3) a replay bundle that is complete enough to reprodu",
+          "words": 33
+        },
+        {
+          "sentence": "```mermaid flowchart LR M[Model prompt] --> O[Orchestration<br/>Queues \u2022 Concurrency \u2022 Retries \u2022 Idempotency] O --> E[Execution<br/>Sandbox \u2022 Pinned deps \u2022 Timeouts] E --> T[Tool services<br/>Tests \u2022 ",
+          "words": 60
+        }
+      ],
+      "timestamp": "2026-02-24T21:37:52Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/07-production-ai-infrastructure.md",
+      "state/ledger/iteration_log/2026-02-24T21-37-52Z__chapter-07-production-ai-infrastructure__iter-000380.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/07-production-ai-infrastructure/2026-02-24.json"
+    ],
+    "notes": "Kernel refinement iteration 380 for 07-production-ai-infrastructure"
+  },
+  "iteration": 3142,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 15844,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 440129
+  },
+  "scope": {
+    "chapters_modified": [
+      "07-production-ai-infrastructure"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-24T21:37:52Z"
+}

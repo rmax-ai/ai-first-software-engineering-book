@@ -1,0 +1,89 @@
+{
+  "chapter_id": "03-autonomous-kernels",
+  "date": "2026-02-24",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.84,
+        "decision": "refine",
+        "drift_score": 0.03,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Chapter does not end immediately after the last bullet in ## Research Directions; a trailing <reminder>...</reminder> block remains.",
+          "In ## System Breakdown, the sentence \"The loop stages are the execution path. Budgets, permissions, and evaluation gates are controls that constrain what can happen at each stage and what evidence is required before stopping.\" exceeds the 28-word sentence-length limit.",
+          "In ## System Breakdown, the sentence \"Treat each loop step as a checkpoint. Each checkpoint has three parts: what must be recorded, what would force a stop, and what requires escalation or an explicit waiver.\" exceeds the 28-word sentence-length limit."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.023227866264887355,
+        "passed": false,
+        "similarity_max": 0.7515758720851197
+      },
+      "iteration": 385,
+      "timestamp": "2026-02-24T21:16:58Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.5386740331491713,
+        "drift_score": 0.023227866264887355
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.85,
+        "decision": "refine",
+        "drift_score": 0.03,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Chapter does not end immediately after the last bullet in ## Research Directions; a trailing <reminder>...</reminder> block remains."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0227765726681128,
+        "passed": false,
+        "similarity_max": 0.749832442201424
+      },
+      "iteration": 386,
+      "timestamp": "2026-02-24T21:18:04Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.02056555269922879,
+        "drift_score": 0.0227765726681128
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.85,
+        "decision": "refine",
+        "drift_score": 0.03,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Chapter does not end immediately after the last bullet in ## Research Directions; a trailing <reminder>...</reminder> block remains."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0227765726681128,
+        "passed": false,
+        "similarity_max": 0.749832442201424
+      },
+      "iteration": 387,
+      "timestamp": "2026-02-24T21:18:58Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.0227765726681128
+      }
+    }
+  ]
+}

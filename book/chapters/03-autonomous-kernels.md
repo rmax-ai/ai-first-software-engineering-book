@@ -32,34 +32,38 @@ Hypothesis: small, well-governed autonomous kernels (tight loops with explicit b
 - **Verification**: mandatory checks per action class (e.g., tests for code changes).
 - **Persistence**: ledger entries, trace logs, artifacts.
 
-The loop stages are the execution path. Budgets, permissions, and evaluation gates are the controls that constrain what can happen at each stage and what evidence is required to stop.
+The loop stages are the execution path. Budgets, permissions, and evaluation gates constrain each stage. They also define what evidence is required before stopping.
 
-Treat each loop step as a checkpoint:
-
-- what must be recorded
-- what stop condition must be evaluated
+Treat each loop step as a checkpoint. Each checkpoint has three parts. Record requirements, stop conditions, and escalation or waiver rules.
 
 1. **Intent**: state the task class and the success condition.
    - **Must record:**
      - intent string
      - success criteria (e.g., “repro no longer fails”)
    - **Stop condition:**
-     - if success criteria are ambiguous, stop and request clarification
+     - stop if success criteria are ambiguous
+   - **Escalate / waive:**
+     - request clarification; do not proceed with edits
 
 2. **Plan**: enumerate the next 1–3 actions only, each tied to a gate and a budget slice.
    - **Must record:**
-     - planned steps
-     - named gates
-     - allocated budget slice
+     - planned steps (1–3)
+     - named gates for each step
+     - budget slice per step
    - **Stop condition:**
-     - if the plan requires tools/paths outside permissions, stop and request escalation
+     - stop if the plan requires out-of-scope tools or paths
+   - **Escalate / waive:**
+     - request permission escalation before acting
 
 3. **Act**: perform the minimal change that tests the current hypothesis.
    - **Must record:**
      - files touched
      - diff stats (and any migration steps taken)
    - **Stop condition:**
-     - if diff budget or file-touch budget is exceeded, stop and escalate
+     - stop if diff budget is exceeded
+     - stop if file-touch budget is exceeded
+   - **Escalate / waive:**
+     - request wider write scope, or narrow the plan
 
 4. **Verify**: run the smallest evaluation that is credible for the task class.
    - **Must record:**
@@ -68,12 +72,13 @@ Treat each loop step as a checkpoint:
      - summary lines (or pointers/hashes to full logs)
    - **Stop condition:**
      - if a gate fails, iterate
-     - if no credible gate exists, stop and escalate
-   - **Waiver (only if explicitly recorded):**
-     - why the gate is not runnable
-     - what alternative check was run
-     - what risk remains
-     - the waiver decision and its rationale
+     - if no credible gate exists, stop
+   - **Escalate / waive:**
+     - **Waive only if explicitly recorded:**
+       - why the gate is not runnable
+       - what alternative check was run
+       - what risk remains
+       - the waiver decision and rationale
      - A waiver is not a “pass”; it is a recorded exception.
 
 5. **Record trace**: persist replayable evidence for what happened and why.
@@ -83,21 +88,23 @@ Treat each loop step as a checkpoint:
      - budgets consumed
      - permissions exercised
    - **Stop condition:**
-     - if persistence fails (cannot write trace), stop; do not continue “blind”
+     - stop if persistence fails (cannot write trace)
+   - **Escalate / waive:**
+     - do not continue “blind”; fix persistence or stop
 
 6. **Stop/iterate**: decide based on evidence and remaining budget.
    - **Must record:**
-     - decision
-     - rationale
-     - the next action (either “done” or “what to try next”)
+     - decision (stop vs iterate)
+     - rationale tied to gate results and budgets
+     - next action (“done” or the next bounded attempt)
    - **Stop condition:**
-     - stop on success
+     - stop on success (named gates satisfied)
      - stop when a budget is exhausted
      - stop when permissions/scope are insufficient
+   - **Escalate / waive:**
+     - output a handoff note (what evidence exists, what to try next)
 
-A diagram is useful here because the stage order is fixed. Budgets, permissions, and gates constrain stages from the side. Focus on (1) the linear stage flow and (2) the constraints that must be satisfied before “stop” is allowed.
-
-Mermaid mapping of stages to controls and outputs.
+A diagram is useful here because the stage order is fixed. Focus on the linear flow. Also note the side-constraints required before “stop” is allowed.
 
 ```mermaid
 flowchart LR
@@ -142,12 +149,12 @@ Bug-fix kernel for a CLI tool.
 - Input:
   - failing test case: `tests/test_parse.py::test_rejects_empty_input`
   - repro command: `python -m mycli parse ""`
-  - observed: exit code `0`
+  - observed exit code: `0`
   - expected: non-zero exit code
   - budgets:
-    - max 3 iterations
-    - max 10 tool calls
-    - max 40 lines changed
+    - iterations: max `3`
+    - tool calls: max `10`
+    - lines changed: max `40`
   - permissions:
     - read: `src/`
     - write: `src/parser.py`
@@ -156,23 +163,27 @@ Bug-fix kernel for a CLI tool.
 Mini-runbook (a single bounded kernel run):
 
 1. Localize failure (evidence-first)
-   - Action: reproduce with the smallest credible check.
-     - Command: `pytest -k rejects_empty_input`
+   - Action:
+     - reproduce with the smallest credible check
+     - command: `pytest -k rejects_empty_input`
    - Gate:
      - the reproduction must fail in a controlled way
-     - the failure should match the same assertion and code path
+     - the failure should hit the same assertion and code path
    - Record:
      - command: `pytest -k rejects_empty_input`
      - exit code: `1`
      - failing excerpt (example):
        - `>       assert parse("") != 0`
        - `E       AssertionError: assert 0 != 0`
-     - test summary line (example): `1 failed, 42 deselected in 0.31s`
-   - Stop rule: if the failure does not reproduce, stop and return a “cannot reproduce” trace (no edits).
+     - summary line (example): `1 failed, 42 deselected in 0.31s`
+   - Stop rule:
+     - if the failure does not reproduce, stop and return a “cannot reproduce” trace (no edits)
 
 2. Patch minimal surface (hypothesis-driven)
-   - Action: implement the smallest boundary check consistent with the hypothesis.
-   - Hypothesis: empty string is being treated as a valid token stream in `src/parser.py`.
+   - Hypothesis:
+     - empty string is being treated as a valid token stream in `src/parser.py`
+   - Action:
+     - implement the smallest boundary check consistent with the hypothesis
    - Change:
      - reject empty input at the parse entrypoint
      - avoid touching downstream call sites
@@ -182,15 +193,18 @@ Mini-runbook (a single bounded kernel run):
    - Record:
      - files touched: `src/parser.py`
      - diff stats (example): `src/parser.py | 7 ++++++-`
-   - Stop rule: if a second file is required, stop and escalate (“write scope too narrow”).
+   - Stop rule:
+     - if a second file is required, stop and escalate (“write scope too narrow”)
 
 3. Run verification gate (tight but credible)
-   - Action: rerun the failing test.
-     - Command: `pytest -k rejects_empty_input`
-     - Expected summary (example): `1 passed, 42 deselected in 0.28s`
-   - Action: run a small related slice.
-     - Command: `pytest -k parse`
-     - Expected summary (example): `12 passed, 0 failed, 31 deselected in 1.07s`
+   - Action:
+     - rerun the failing test
+     - command: `pytest -k rejects_empty_input`
+     - expected summary (example): `1 passed, 42 deselected in 0.28s`
+   - Action:
+     - run a small related slice
+     - command: `pytest -k parse`
+     - expected summary (example): `12 passed, 0 failed, 31 deselected in 1.07s`
    - Record:
      - command 1: `pytest -k rejects_empty_input`
      - exit code 1: `0`
@@ -198,27 +212,34 @@ Mini-runbook (a single bounded kernel run):
      - command 2: `pytest -k parse`
      - exit code 2: `0`
      - summary 2 (example): `12 passed, 0 failed, 31 deselected in 1.07s`
-   - Stop rule: if Gate 1 passes but Gate 2 fails, treat as “not fixed” and iterate (the patch likely broke a nearby invariant).
+   - Stop rule:
+     - if Gate 1 passes but Gate 2 fails, treat as “not fixed” and iterate
+     - the likely cause is a nearby invariant break
 
 4. Record trace (auditable, replayable)
-   - Action: persist a kernel trace and a ledger entry.
+   - Action:
+     - persist a kernel trace and a ledger entry
    - Record (minimum):
      - budgets consumed: `iterations=1/3`
      - budgets consumed: `tool_calls=3/10`
      - budgets consumed: `diff_lines=7/40`
      - commands executed + exit codes
-     - final test summary lines:
+     - final test summary line:
        - `12 passed, 0 failed, 31 deselected in 1.07s`
-   - Stop rule: if trace persistence fails, stop; do not continue with further edits.
+   - Stop rule:
+     - if trace persistence fails, stop; do not continue with further edits
 
 5. Stop criteria (explicit)
-   - Stop success: Gate 1 and Gate 2 pass within budget.
-   - Stop failure: tool-call budget exhausted.
-   - Stop failure: diff budget exceeded.
-   - Stop failure: verification indicates a broader refactor is required.
-   - Stop escalation output: include the next action for a human.
-     - Example: “tokenization treats whitespace-only as empty.”
-     - Example: “requires editing `src/lexer.py`, outside current write scope.”
+   - Stop success:
+     - Gate 1 and Gate 2 pass within budget
+   - Stop failure:
+     - tool-call budget exhausted
+     - diff budget exceeded
+     - verification indicates a broader refactor is required
+   - Stop escalation output:
+     - include the next action for a human
+     - example: “tokenization treats whitespace-only as empty.”
+     - example: “requires editing `src/lexer.py`, outside current write scope.”
 
 This stays stable and debuggable because the kernel cannot declare success without passing named gates, and each iteration is bounded by explicit budgets.
 
@@ -229,15 +250,15 @@ Dependency upgrade kernel.
 - Input:
   - target version: `libX 4.2.0 → 4.3.0`
   - constraints:
-    - Python `>=3.10`
-    - cannot change public API
-    - CI must stay green
+    - Python: `>=3.10`
+    - public API: must not change
+    - CI: must stay green
   - upgrade guide note:
-    - breaking rename `OldClient` → `Client`
+    - rename: `OldClient` → `Client`
   - budgets:
-    - max 4 iterations
-    - max 15 tool calls
-    - max 120 lines changed
+    - iterations: max `4`
+    - tool calls: max `15`
+    - lines changed: max `120`
   - permissions:
     - write: `pyproject.toml`
     - write: `src/`
@@ -247,18 +268,20 @@ Dependency upgrade kernel.
 Kernel steps with an explicit remediation branch:
 
 1. Update manifest (narrow scope)
-   - Action: bump version constraint in `pyproject.toml`.
+   - Action:
+     - bump the version constraint in `pyproject.toml`
    - Record:
      - old constraint (example): `libX>=4.2,<4.3`
      - new constraint (example): `libX>=4.3,<4.4`
-     - diff stats for manifest only (example): `pyproject.toml | 1 +-`
+     - diff stats (example): `pyproject.toml | 1 +-`
    - Stop/iterate rule:
-     - If the dependency resolver cannot produce a consistent lock, stop with resolver output.
-     - Do not attempt ad-hoc pinning unless that is explicitly in scope.
+     - if the resolver cannot produce a consistent lock, stop with resolver output
+     - do not attempt ad-hoc pinning unless it is explicitly in scope
 
 2. Run a fast build/type gate before full tests
-   - Gate A (fast): import/type/compile smoke check.
-     - Command: `python -m compileall src`
+   - Gate A (fast):
+     - import/type/compile smoke check
+     - command: `python -m compileall src`
    - Record:
      - exit code
      - compile summary lines (example):
@@ -266,41 +289,42 @@ Kernel steps with an explicit remediation branch:
        - `Compiling 'src/app.py'...`
        - `compileall: success`
    - Interpretation:
-     - If Gate A fails, it is often a missing symbol or incompatible API.
-     - Remediate before running the full suite.
+     - if Gate A fails, it is often a missing symbol or incompatible API
+     - remediate before running the full suite
 
 3. Remediation branch (compile errors vs failing tests)
    - If **compile/import fails**:
      - Localize:
-       - capture the first error site (file + symbol) from the compile output
-       - example line: `***   File "src/integrations/libx.py", line 12`
-       - example line: `ImportError: cannot import name 'OldClient' from 'libx'`
+       - capture the first error site (file + symbol)
+       - example: `***   File "src/integrations/libx.py", line 12`
+       - example: `ImportError: cannot import name 'OldClient' from 'libx'`
      - Patch:
        - apply the minimal mechanical fix in the smallest set of files
        - example: rename `OldClient` to `Client`
      - Verify:
        - rerun Gate A only
-       - proceed only when it returns exit code `0`
+       - proceed only if it returns exit code `0`
      - Budget guard:
        - if more than 5 files are touched, stop and escalate (“requires broader refactor”)
        - if cumulative diff exceeds 120 lines, stop and escalate (“exceeds change budget for this kernel”)
 
    - If **compile passes but tests fail**:
      - Localize:
-       - run the smallest failing unit (single file or single test) based on the first failure
+       - run the smallest failing unit based on the first failure
        - example command: `pytest tests/test_libx_integration.py -q`
        - example summary: `1 failed, 18 passed in 4.92s`
      - Patch:
        - address the behavioral change with a targeted adjustment
-       - record the reason
+       - record the reason for the change
        - example: “libX now defaults timeout=None; set explicit timeout=5.0 in wrapper”
      - Verify:
        - rerun the failing tests
-       - proceed to the full suite gate only after the localized failure is cleared
+       - proceed only after the localized failure is cleared
 
 4. Run full verification gate (credibility gate)
-   - Gate B (full): run the test suite (or the project’s standard verification command).
-     - Command: `pytest`
+   - Gate B (full):
+     - run the test suite (or the project’s standard verification command)
+     - command: `pytest`
    - Record:
      - exit code
      - test summary line (example): `219 passed, 0 failed in 38.41s`
@@ -312,8 +336,11 @@ Kernel steps with an explicit remediation branch:
      - do not label a waiver as “green”; label it as “waived”
 
 5. Stop criteria and outputs
-   - Stop success: Gate A and Gate B pass within budget.
-   - Stop failure: repeated failures indicate the upgrade exceeds current permission/scope (e.g., requires API redesign), or budgets are exhausted.
+   - Stop success:
+     - Gate A and Gate B pass within budget
+   - Stop failure:
+     - repeated failures indicate the upgrade exceeds current scope
+     - budgets are exhausted before gates pass
    - Required outputs on stop:
      - change summary:
        - files touched

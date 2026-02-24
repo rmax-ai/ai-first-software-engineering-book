@@ -1,0 +1,115 @@
+{
+  "chapter_id": "99-future-directions",
+  "date": "2026-02-24",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "approve",
+        "drift_score": 0.11,
+        "example_density": 0.74,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.005162241887905605,
+        "passed": false,
+        "similarity_max": 0.7806843593330046
+      },
+      "iteration": 403,
+      "timestamp": "2026-02-24T21:39:52Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.03278688524590164,
+        "drift_score": 0.005162241887905605
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.87,
+        "decision": "refine",
+        "drift_score": 0.11,
+        "example_density": 0.74,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": [
+          "Chapter includes fenced code blocks (```mermaid) despite the 'No code fences' constraint."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.005162241887905605,
+        "passed": false,
+        "similarity_max": 0.7806843593330046
+      },
+      "iteration": 404,
+      "timestamp": "2026-02-24T21:41:34Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.005162241887905605
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.83,
+        "decision": "refine",
+        "drift_score": 0.08,
+        "example_density": 0.75,
+        "failure_modes_present": true,
+        "structure_score": 0.86,
+        "tradeoff_presence": true,
+        "violations": [
+          "## System Breakdown says \u201cThe diagram below\u2026\u201d and \u201cDiagram: the dependency chain\u2026\u201d but no diagram is present in the section body.",
+          "## Concrete Example 2 says \u201cA diagram helps here\u2026\u201d but no diagram is present in the section body.",
+          "## Concrete Example 2 includes \u201cTrace interchange pipeline (textual form)\u201d while retaining legend/takeaway language that specifically references the Validate step \u201cbefore the call enters the trace,\u201d creating a mismatch between referenced diagram semantics and the provided content."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.0988071929701886,
+        "passed": false,
+        "similarity_max": 0.7875839487893108
+      },
+      "iteration": 405,
+      "timestamp": "2026-02-24T21:43:53Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.3155737704918033,
+        "drift_score": 0.0988071929701886
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.86,
+        "decision": "refine",
+        "drift_score": 0.06,
+        "example_density": 0.75,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "## Concrete Example 2 still says \u201cA diagram helps here\u2026\u201d but there is no Mermaid diagram present in the section.",
+          "Revised chapter includes a \u201c<reminder> \u2026 </reminder>\u201d block at the end that is not part of the chapter content and would violate a plain-markdown chapter format if this file is intended to be published as-is."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.09878635152357784,
+        "passed": false,
+        "similarity_max": 0.7836592308685602
+      },
+      "iteration": 406,
+      "timestamp": "2026-02-24T21:44:52Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.08764940239043825,
+        "drift_score": 0.09878635152357784
+      }
+    }
+  ]
+}

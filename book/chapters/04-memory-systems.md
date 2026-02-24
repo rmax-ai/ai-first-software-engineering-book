@@ -2,7 +2,8 @@
 
 ## Thesis
 
-Memory is an engineered data store for work artifacts, not a raw log of prior messages. It must be **structured**, **queryable**, and **governed** (with provenance) to improve long-horizon work.
+Memory is an engineered data store for work artifacts, not a raw log of prior messages.
+It must be **structured**, **queryable**, and **governed** (with provenance) to improve long-horizon work.
 
 - **Structured**: stored as records with explicit fields (not free-form chat logs), so constraints, sources, and updates are representable.
 - **Queryable**: retrievable by filters (task, file, timeframe, decision id), with ranking that prefers fresh, high-provenance entries.
@@ -14,7 +15,7 @@ Memory is an engineered data store for work artifacts, not a raw log of prior me
 Definition of done for “good memory”:
 
 - **Structure**: every entry has an id, timestamp, type, and source.
-- **Query**: a future agent can retrieve the right entry with a bounded filter (“show decisions for X” / “show traces for regression Y”).
+- **Query**: a future engineer can retrieve the right entry with a bounded filter (“show decisions for X” / “show traces for regression Y”).
 - **Governance**: entries can be corrected (superseded) and expire or be redacted under policy.
 
 Hypothesis: uncurated memory increases confidence without increasing correctness, by amplifying earlier mistakes.
@@ -28,7 +29,24 @@ Hypothesis: uncurated memory increases confidence without increasing correctness
 
 ## System Breakdown
 
-Memory systems fail at the *interfaces* (write → retrieve → act), not inside a single component. The flow below makes those interfaces explicit. As you read it, focus on two gates: (1) retrieval is bounded and ranked, and (2) action is gated by provenance and freshness checks.
+Memory systems fail at the *interfaces* (write → retrieve → act).
+Many failures show up *between* steps, not inside a single component.
+A diagram makes those boundaries explicit.
+
+As you read the diagram, focus on two gates:
+
+- **Retrieval** is bounded and ranked.
+- **Action** is gated by provenance and freshness checks.
+
+```mermaid
+flowchart TB
+  W["Write event (Write policy)<br/>When to store + required fields"] --> R["Record (minimum schema)<br/>Append-only + provenance + expiry"]
+  R --> I["Index + Rank (Read policy)<br/>Bounded filters + explicit ranking"]
+  I --> V["Verify before acting<br/>Provenance + freshness + re-check reality"]
+  V --> A["Apply next step<br/>Change / fix / decision"]
+  A --> G["Govern (Governance)<br/>Retention / redaction / correction"]
+  G --> I
+```
 
 End-to-end flow (top to bottom, then loop back through governance):
 
@@ -41,10 +59,12 @@ End-to-end flow (top to bottom, then loop back through governance):
 
 Minimum schema fields (and exactly what they power):
 
-These fields are a minimum viable baseline for this chapter (intentionally incomplete); implementations can add fields as needed without changing the Write/Read/Governance gates.
+These fields are a minimum viable baseline for this chapter (intentionally incomplete).
+Implementations can add fields as needed without changing the Write/Read/Governance gates.
 
 - `id`: stable reference used by later work and by corrections (`supersedes` targets this).
-- `timestamp` / `valid_through`: freshness and expiry controls for ranking and default visibility (expired `valid_through` entries should be hidden unless explicitly requested).
+- `timestamp` / `valid_through`: freshness and expiry controls for ranking and default visibility.
+  Expired `valid_through` entries should be hidden unless explicitly requested.
 - `type`: bounded retrieval (e.g., only `decision` records when asking “what did we decide?”).
 - `source` (pointer): provenance gate; “can I open the diff / log / doc this came from?”
 - `confidence`: ranking signal tied to evidence quality (tests, review, reproducibility).
@@ -53,12 +73,20 @@ These fields are a minimum viable baseline for this chapter (intentionally incom
 Legend (one-line per gate):
 
 - **Write**: decide *when* to store and enforce minimum fields (especially `source`, `confidence`, and optional `valid_through`).
-- **Index + Rank**: retrieve with bounded filters, then sort with explicit rules (freshness, confidence, not-superseded); hide expired `valid_through` by default.
-- **Verify**: before acting, check provenance and freshness; if checks fail, refine the query or re-run tests.
-- **Govern**: apply retention/redaction/correction; corrections create new records that update ranking via `supersedes`.
-- Schema extensions are fine, but they must not weaken provenance, freshness/expiry, or explicit superseding: ranking and governance should still hinge on those fields.
+- **Index + Rank**: retrieve with bounded filters, then sort with explicit rules (freshness, confidence, not-superseded).
+  Hide expired `valid_through` by default.
+- **Verify**: before acting, check provenance and freshness.
+  If checks fail, refine the query or re-run tests.
+- **Govern**: apply retention/redaction/correction.
+  Corrections create new records that update ranking via `supersedes`.
+- Schema extensions are fine, but they must not weaken provenance, freshness/expiry, or explicit superseding.
+  Ranking and governance should still hinge on those fields.
 
-Takeaway: the record schema makes policies enforceable. Write policy populates fields with provenance. Read policy uses those fields for bounded retrieval and ranking. Governance updates them to correct and expire entries.
+Takeaway: the diagram makes the loop explicit.
+Write policy populates fields with provenance.
+Read policy uses those fields for bounded retrieval and ranking.
+Governance updates them to correct and expire entries.
+That changes what Read returns next time.
 
 Rule-of-thumb for write policy (“store” vs “don’t store”):
 
@@ -129,9 +157,11 @@ Operational rule (how confidence should change over time):
 
 Enforcement rule (how future work must behave):
 
-- Any change that contradicts the decision must reference `dec-2026-02-22-memory-store-backend` and justify why it still holds, **or** create a new decision record.
+- If a change contradicts the decision, reference `dec-2026-02-22-memory-store-backend` and justify why it still holds.
+- Otherwise, create a new decision record that supersedes it.
 - The new record must include `supersedes: ["dec-2026-02-22-memory-store-backend"]`.
-- This prevents silent divergence where repeated but incorrect summaries turn into “facts” (see **Memory poisoning** in ## Failure Modes).
+
+This prevents silent divergence where repeated but incorrect summaries turn into “facts” (see **Memory poisoning** in ## Failure Modes).
 
 ## Concrete Example 2
 
@@ -141,7 +171,7 @@ Trace-indexed memory stores enough episodic detail to support “find similar fa
 
 Capture → index → retrieve → verify:
 
-1. **Capture**: store evidence that another engineer (or agent) can reproduce.
+1. **Capture**: store evidence that another engineer can reproduce.
    - Test command and a short failing stack trace snippet.
    - Files changed plus a diff hash.
    - Environment notes that affect reproducibility (OS, dependency lockfile hash).
@@ -153,7 +183,9 @@ Capture → index → retrieve → verify:
 
 3. **Retrieve**: filter tightly, then rank for usefulness.
    - Example query: “Show traces where `error_signature` matches ‘KeyError: CONFIG’ and `files_touched` includes `settings.py` from the last 30 days.”
-   - Ranking rule: prefer freshest `timestamp` (and hide expired `valid_through` by default), then higher `confidence`, and prefer “not superseded.”
+   - Ranking rule: prefer freshest `timestamp`, then higher `confidence`.
+   - Default visibility: hide expired `valid_through` entries unless explicitly requested.
+   - Prefer “not superseded”: down-rank or hide traces that are superseded by newer records.
 
 4. **Verify (provenance + freshness)**: gate action on checks from **Read policy**.
    - Can you open the exact tool output and commit hash from `source`?
@@ -190,4 +222,5 @@ Treat “wrong actions” as more expensive than “extra verification steps” 
 
 - Memory scoring with automated freshness and provenance signals.
 - Mechanisms for correcting memory (retractions, superseding records).
-- Evaluations for memory usefulness (measuring reduced iterations without increased regressions), e.g., for trace-indexed debugging: reduce median “iterations-to-fix” for recurring `error_signature`s while holding the post-fix regression rate constant (or lower) across subsequent CI runs.
+- Evaluations for memory usefulness (measuring reduced iterations without increased regressions).
+  For trace-indexed debugging: reduce median “iterations-to-fix” for recurring `error_signature`s while holding the post-fix regression rate constant (or lower) across subsequent CI runs.

@@ -74,7 +74,7 @@ Governance loop (artifacts in parentheses):
 
 A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on two things: where enforcement blocks unsafe actions, and where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.
 
-<pre class="mermaid">
+```mermaid
 flowchart TB
   A["1. Policy definition<br/>(constitution / agent rules / CI policies)"]
   B["2. Enforcement<br/>(tool allowlists / protected paths / CI gates)"]
@@ -83,7 +83,7 @@ flowchart TB
   E["5. Policy update<br/>(incidents / near-misses / new evals)"]
 
   A --> B --> C --> D --> E --> A
-</pre>
+```
 
 Takeaway: steps 2 and 3 are the “hard” parts of governance. Step 2 controls what can happen. Step 3 determines what proof exists afterward, so steps 4 and 5 can block unsafe merges and tighten policy based on observed failures.
 

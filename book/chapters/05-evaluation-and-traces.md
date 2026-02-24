@@ -83,8 +83,10 @@ flowchart TB
   E -->|no| F["CONTINUE / COMPLETE<br/>record: evaluation_results + budgets<br/>stop_reason=completed"]
 ```
 
+  The operational rule is simple: the first failing required gate stops the run, and that STOP is a first-class outcome.
+  The trace must record enough structured fields to explain the stop and replay the same checks.
+
   Use this flow as the reference when reading the gating matrix below: every STOP is a first-class outcome.
-  The trace must record enough to explain the stop and replay the same checks.
 
   Legend:
   - Diamonds are harness decision points.
@@ -157,7 +159,6 @@ flowchart TB
         - require secret scan of the diff and updated lockfile(s)
         - record scan tool name
         - record any hit signatures
-      - safety:
         - require protected-path check for touched files
         - if blocked, stop with `stop_reason: "permission_denied"`
       - quality:
@@ -176,7 +177,6 @@ flowchart TB
       - safety:
         - require explicit permission grant
         - record grant artifact (id or prompt) in the trace
-      - safety:
         - require secret scan
         - stop on any forbidden hit
         - record hit signatures
@@ -195,67 +195,67 @@ flowchart TB
 Tracing a refactor.
 
 - Record each patch, each test run, and each failure signature.
-- Also record the environment fingerprint and exact tool invocations.
-- That combination lets a reviewer replay the same sequence.
+- Record the environment fingerprint and exact tool invocations so a reviewer can replay the same sequence.
 
 Pseudo-trace excerpt (illustrative):
 
-    task_id: refactor-auth-2026-02-22-001
+```yaml
+task_id: refactor-auth-2026-02-22-001
 
-    environment:
-      repo_sha: a1b2c3d
-      tool_versions:
-        pytest: 8.1.1
-        python: 3.12.1
+environment:
+  repo_sha: a1b2c3d
+  tool_versions:
+    pytest: 8.1.1
+    python: 3.12.1
 
-    plan:
-      - rename AuthClient -> CopilotClient
-      - update imports
-      - run targeted tests
-      - stop if tests fail
+plan:
+  - rename AuthClient -> CopilotClient
+  - update imports
+  - run targeted tests
+  - stop if tests fail
 
-    tool_calls:
-      - tool: apply_patch
-        files:
-          - src/auth/client.py
-        exit_status: 0
-      - tool: bash
-        cmd: pytest -q tests/test_auth_client.py::test_retry
-        exit_status: 1
-        failure_signature: ImportError: cannot import name 'AuthClient'
+tool_calls:
+  - tool: apply_patch
+    files:
+      - src/auth/client.py
+    exit_status: 0
+  - tool: bash
+    cmd: pytest -q tests/test_auth_client.py::test_retry
+    exit_status: 1
+    failure_signature: ImportError: cannot import name 'AuthClient'
 
-    diffs:
-      - path: src/auth/client.py
-        summary: renamed symbol
-      - path: tests/test_auth_client.py
-        summary: unchanged
+diffs:
+  - path: src/auth/client.py
+    summary: renamed symbol
+  - path: tests/test_auth_client.py
+    summary: unchanged
 
-    evaluation_results:
-      correctness:
-        cmd: pytest -q tests/test_auth_client.py::test_retry
-        outcome: FAIL
-        signature: ImportError
+evaluation_results:
+  correctness:
+    cmd: pytest -q tests/test_auth_client.py::test_retry
+    outcome: FAIL
+    signature: ImportError
 
-    stop_reason: blocked_by_correctness_gate
+stop_reason: blocked_by_correctness_gate
+```
 
 Query step using structured fields (one possible workflow):
-- Query: `repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"`
-- Result (summary):
-  - matching_tasks: 3
-  - last_success_task_id: `refactor-auth-2026-02-20-007`
-  - last_success_repo_sha: `a1b2c3d`
-  - common_missing_patch_pattern: diffs do not include any files under `src/auth/__init__.py` or `src/auth/*` besides `client.py`
+1) Query: `repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"`
+2) Result (summary):
+   - matching_tasks: 3
+   - last_success_task_id: `refactor-auth-2026-02-20-007`
+   - last_success_repo_sha: `a1b2c3d`
+   - common_missing_patch_pattern: diffs do not include any files under `src/auth/__init__.py` or `src/auth/*` besides `client.py`
 
 Decision rule using the query result:
-
-- If `last_success_repo_sha` matches the current `repo_sha`:
-  - If only `client.py` was changed, expand patch scope to import sites.
-  - Update `src/auth/__init__.py` exports and import usages.
-  - Rerun `pytest -q tests/test_auth_client.py::test_retry`.
-- If `last_success_repo_sha` differs:
-  - Rebase/reset to the pinned `repo_sha` first.
-  - Apply the expanded patch.
-  - Rerun `pytest -q tests/test_auth_client.py::test_retry`.
+1) If `last_success_repo_sha` matches the current `repo_sha`:
+   - If only `client.py` was changed, expand patch scope to import sites.
+   - Update `src/auth/__init__.py` exports and import usages.
+   - Rerun `pytest -q tests/test_auth_client.py::test_retry`.
+2) If `last_success_repo_sha` differs:
+   - Rebase/reset to the pinned `repo_sha` first.
+   - Apply the expanded patch.
+   - Rerun `pytest -q tests/test_auth_client.py::test_retry`.
 
 Attribution using the trace:
 - Model vs tool is not ambiguous here.
@@ -278,15 +278,12 @@ Drift detection for an agent loop.
   - Keep repo_sha and harness version pinned for the baseline.
 
 - Detect changes in iteration counts, regression rate, and stop reasons over time.
-  - iteration drift:
-    - median loop iterations in the most recent 50 runs increases by ≥ 30%
-    - compare against the baseline’s 50-run median
-  - regression rate:
-    - correctness-gate failure rate in the most recent 50 runs increases by ≥ 5 percentage points
-    - compare against the baseline’s 50-run rate
-  - stop-reason shift:
-    - in the most recent 50 runs, “budget exceeded” becomes the most frequent stop_reason
-    - baseline window had “completed” as the most frequent stop_reason
+
+| Metric | Drift threshold | Comparison window |
+| --- | --- | --- |
+| iteration drift | median loop iterations in the most recent 50 runs increases by ≥ 30% | compare against the baseline’s 50-run median |
+| regression rate | correctness-gate failure rate in the most recent 50 runs increases by ≥ 5 percentage points | compare against the baseline’s 50-run rate |
+| stop-reason shift | in the most recent 50 runs, “budget exceeded” becomes the most frequent stop_reason | baseline window had “completed” as the most frequent stop_reason |
 
 The point is not to predict every future failure. The point is to detect that something changed (model, tool, harness, or repo) and to have enough trace evidence to localize the change.
 
@@ -297,13 +294,19 @@ The point is not to predict every future failure. The point is to detect that so
 
 ## Failure Modes
 - **Eval gaming**: optimizing for metrics while harming real-world quality.
-  - Detect: compare “passes gates” with downstream signals in traces (reverts, follow-up bugfix tasks, repeated failures on adjacent golden tasks); watch for large diffs with minimal test coverage.
+  - Detect:
+    - Compare “passes gates” with downstream trace signals: reverts, follow-up bugfix tasks, repeated failures on adjacent golden tasks.
+    - Watch for large diffs with minimal test coverage.
   - Respond: add adversarial or regression tests, strengthen gate definitions (e.g., require touched-module tests), and record coverage/selection rationale in the trace.
 - **Blind spots**: evaluations do not cover critical behaviors.
-  - Detect: incidents where traces show “all gates passed” but production-like behavior fails; repeated similar failures without corresponding eval signatures.
+  - Detect:
+    - Incidents where traces show “all gates passed” but production-like behavior fails.
+    - Repeated similar failures without corresponding eval signatures.
   - Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.
 - **Un-actionable traces**: logs exist but lack structure, making search and attribution hard.
-  - Detect: inability to answer basic questions (“what changed?”, “what ran?”, “why did it stop?”) without reading raw logs; missing environment fingerprint or missing diff records.
+  - Detect:
+    - Inability to answer basic questions (“what changed?”, “what ran?”, “why did it stop?”) without reading raw logs.
+    - Missing environment fingerprint or missing diff records.
   - Respond: enforce a minimal trace schema, store normalized fields for queries, and treat “missing trace fields” as an evaluation failure for non-trivial action classes.
 
 ## Research Directions

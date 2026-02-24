@@ -6,6 +6,8 @@ AI-first software engineering is an architectural inversion. Machine reasoning b
 
 This inversion is practical: reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable loop.
 
+Model capability is what the model can do given fixed tools and gates; harness capability is what the system can reliably produce given a fixed model.
+
 A concrete, testable implication (holding the model constant):
 
 1. A stronger harness should reduce *iterations-to-pass*.
@@ -36,7 +38,7 @@ This chapter’s claim is a hypothesis: some observed “capability” gains in 
   - The system can attribute regressions to a layer (prompt, tool, code, eval).
   - Autonomy is gated by evaluations and budgets.
 
-A diagram helps here because the model vs harness distinction changes how evidence moves through the loop. Focus on two points: where the trace is recorded, and where it is used to decide the next plan.
+A diagram makes the evidence path explicit. Focus on where the trace is recorded. Focus on where the trace is used to decide the next plan.
 
 ```mermaid
 flowchart TB
@@ -68,13 +70,15 @@ Legend:
 - **Solid arrows** are the operational loop (plan → act → verify).
 - **Dashed arrows** are trace capture and trace usage.
 
+What to look at: trace is recorded during act/tools/verify. It is then used during attribution to decide the next plan.
+
 Takeaway: without a trace, attribution is guesswork. You will not know whether the next action is to clarify the spec, fix a tool issue, change product code, or correct an evaluation.
 
 - **Measurable signals** (to separate model vs harness effects):
-  - *Iterations-to-pass*: number of propose→verify cycles until all required checks pass.
-  - *Time-to-green*: wall-clock time from first attempt to passing evaluation gates.
-  - *Attribution rate*: fraction of failures with a clear primary cause.
-    - Bucket: prompt/spec vs tool/runtime vs code vs eval.
+  - *Iterations-to-pass* is the number of propose→verify cycles until all required checks pass.
+  - *Time-to-green* is the wall-clock time from the first attempt to passing all evaluation gates.
+  - *Attribution rate* is the fraction of failures with a clear primary cause you can act on.
+    - Bucket: spec/prompt vs tool/runtime vs code vs eval/CI.
 - **Attribution checklist** (what evidence makes a failure “belong” to a layer):
   - **Spec/prompt**:
     - The requirement is ambiguous, contradictory, or incomplete.
@@ -100,32 +104,33 @@ Refactor a small library function using an agent loop.
 - Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).
 - Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.
 
-- Minimal trace record (copyable):
+Minimal trace record (copyable):
 
-  Inputs:
+Inputs:
 
-  | Field | Value |
-  | --- | --- |
-  | Spec note path | `docs/specs/parse-date.md` (example) |
-  | Failing test | `tests/test_parse_date.py::test_rejects_empty` |
+| Field | Value |
+| --- | --- |
+| Spec note path | `docs/specs/parse-date.md` (example) |
+| Failing test | `tests/test_parse_date.py::test_rejects_empty` |
 
-  Run evidence:
+Run evidence:
 
-  | Field | Value |
-  | --- | --- |
-  | Commands (in order) | `pytest -q`<br/>`ruff check .` (example) |
-  | Diff identifier | commit SHA or patch ID (e.g., `abc1234`) |
-  | Evaluation outputs | failing test names<br/>exit codes<br/>first failing assertion (or minimal log excerpt) |
+| Field | Value |
+| --- | --- |
+| Commands (in order) | `pytest -q`<br/>`ruff check .` (example) |
+| Diff identifier | commit SHA or patch ID (e.g., `abc1234`) |
+| Evaluation outputs | failing test names<br/>exit codes<br/>first failing assertion (or minimal log excerpt) |
 
-  Attribution:
+Attribution:
 
-  | Field | Value |
-  | --- | --- |
-  | Attribution decision | one of `{spec/prompt, tool/runtime, code, eval/CI}` |
-  | Evidence | 1–2 sentences tied to the outputs above |
+| Field | Value |
+| --- | --- |
+| Attribution decision | one of `{spec/prompt, tool/runtime, code, eval/CI}` |
+| Evidence | 1–2 sentences tied to the outputs above |
 
-  Example attribution:
-  - **code** — the same test fails deterministically after the diff; reverting the diff restores pass.
+Example attribution:
+
+- **code** — the same test fails deterministically after the diff; reverting the diff restores pass.
 
 - Measured outputs:
   - Iterations-to-pass.
@@ -148,28 +153,29 @@ Ship a minor API change in a production service.
 - Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.
 - Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.
 
-- Minimal trace report (copyable):
+Minimal trace report (copyable):
 
-  Contract + constraints:
+**Contract + constraints:**
 
-  | Field | Value |
-  | --- | --- |
-  | Contract/version | `openapi.yaml` (example) |
-  | Compatibility window | “compatible within v1.x” |
-  | Backward-compat constraints | “no required fields added”<br/>“no behavior change on existing endpoints” |
-  | Staging target | `staging-us-east-1` (example) |
+| Field | Value |
+| --- | --- |
+| Contract/version | `openapi.yaml` (example) |
+| Compatibility window | “compatible within v1.x” |
+| Backward-compat constraints | “no required fields added”<br/>“no behavior change on existing endpoints” |
+| Staging target | `staging-us-east-1` (example) |
 
-  Evidence + outputs:
+**Evidence + outputs:**
 
-  | Field | Value |
-  | --- | --- |
-  | Commands (in order) | `make contract-test`<br/>`npm run lint`<br/>`npm run typecheck`<br/>`./scripts/staging-smoke.sh` |
-  | Diff identifier | PR number + commit SHA (e.g., `PR #482`, `def5678`) |
-  | Evaluation outputs | failing checks<br/>log paths/links<br/>timestamps (supports time-to-green) |
-  | Attribution decisions | per failure: `{spec/prompt, tool/runtime, code, eval/CI}` + evidence |
+| Field | Value |
+| --- | --- |
+| Commands (in order) | `make contract-test`<br/>`npm run lint`<br/>`npm run typecheck`<br/>`./scripts/staging-smoke.sh` |
+| Diff identifier | PR number + commit SHA (e.g., `PR #482`, `def5678`) |
+| Evaluation outputs | failing checks<br/>log paths/links<br/>timestamps (supports time-to-green) |
+| Attribution decisions | per failure: `{spec/prompt, tool/runtime, code, eval/CI}` + evidence |
 
-  Example attribution:
-  - **eval/CI** — contract test rejects an allowed optional field; fixing the assertion changes outcomes without changing API behavior.
+Example attribution:
+
+- **eval/CI** — contract test rejects an allowed optional field; fixing the assertion changes outcomes without changing API behavior.
 
 - Measured outputs:
   - Iterations-to-pass and time-to-green (from first migration-plan draft to all required checks passing in staging).
@@ -206,7 +212,7 @@ Ship a minor API change in a production service.
 - **Unbounded autonomy**: loops run without budgets, causing tool thrash and unclear outcomes.
 - **Non-attributable failures**: missing traces make regressions un-debuggable.
 
-Use the attribution checklist above to bucket each failure (spec/prompt vs tool/runtime vs code vs eval/CI) before you change the system. Otherwise the “fix” is likely to target the wrong layer.
+Use the attribution checklist above to bucket each failure before you change the system. If you skip bucketing, you will often “fix” the wrong layer.
 
 Synthesis: treat machine reasoning as an execution substrate, and treat the harness as the primary lever for reliability. Track the loop metrics above to separate harness effects from model effects and to make failures actionable.
 

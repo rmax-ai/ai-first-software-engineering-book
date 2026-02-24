@@ -4,13 +4,13 @@
 ## Thesis
 Production AI-first systems are distributed systems: they require orchestration, isolation, observability, caching, cost control, and reproducible environments.
 
-Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. The tool/runtime plane is the execution and control surface around the model. It includes sandboxed execution environments, tool adapters (test runner, browser, repo API), and orchestration policies (queueing, concurrency limits, retries, idempotency). It also includes observability and artifacts for replay and audit. Restated: if you can reliably run tools and record what happened, you can reproduce runs and improve outcomes even when model behavior varies.
+Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. If you can reliably run tools and record what happened, you can reproduce runs and improve outcomes even when model behavior varies.
 
 ## Why This Matters
 - Without isolation, tool execution becomes a security and reliability risk.
 - Without observability, failures cannot be attributed or fixed systematically.
 - Without cost controls, autonomy can become economically unstable.
-- Operational signals: tool-failure rate, replay success rate, mean tool latency, retry rate, and spend per successful task.
+- Operational signals include: tool-failure rate, replay success rate, mean tool latency, retry rate, and spend per successful task.
 
 Example targets and alerts (illustrative, not mandates):
 
@@ -24,6 +24,11 @@ Example targets and alerts (illustrative, not mandates):
 
 ## System Breakdown
 A diagram helps here because the tool/runtime plane has coupled components. It is not a single service. Focus on the contracts between boxes. Each box should emit stable, versioned signals for replay and debugging.
+
+The point of the diagram is the boundaries. In practice, reliability tends to hinge on three contracts:
+(1) run id propagation across every step,
+(2) versioned, structured tool outputs, and
+(3) a replay bundle that is complete enough to reproduce failures.
 
 ```mermaid
 flowchart LR
@@ -62,25 +67,24 @@ Sandboxed tool execution for code changes.
   - Persist logs, test reports (JUnit/JSON), build outputs, and a replay manifest for the same inputs.
 - Evaluation gate:
   - Promote only if required checks pass (e.g., all tests green, no new lints, diff applies cleanly).
-  - Require reproducibility: either a replay succeeds at least once, or the environment hash matches a known-good cache entry.
+  - Require reproducibility.
+    - A replay succeeds at least once, or the environment hash matches a known-good cache entry.
   - On failure, generate a human-facing summary with: run id link, failed step, and top error class.
   - Include a short “what to try next” hint (e.g., rerun without cache, or inspect a specific log).
 
 ## Concrete Example 2
 Cost-aware autonomy for a batch of maintenance tasks.
 - Budget: per-task token/cost ceilings (e.g., $0.50 and 20k tokens) plus a batch budget (e.g., $50/day), enforced by the orchestrator.
-- Strategy: fail fast on low-signal tasks (small, repetitive, or high-latency tool loops) and escalate to human review when confidence is low or blast radius is high.
+- Strategy: fail fast on low-signal tasks and escalate to human review when confidence is low or blast radius is high.
 - Decision policy:
-  - Treat a task as “low-signal” when:
-    - (a) there is no progress after N tool steps (e.g., 6),
-    - (b) the same error repeats (e.g., the same stack trace twice), or
-    - (c) predicted cost-to-complete exceeds remaining budget.
-  - Escalate when the change touches production config or security-sensitive files.
-  - Escalate when the diff exceeds a size threshold (e.g., >200 lines changed).
-  - If per-task or batch budget is exceeded:
-    - stop further tool calls,
-    - write a short spend-and-status summary (last step, last error, run id),
-    - escalate for human review.
+  1. Treat a task as “low-signal” when there is no progress after N tool steps (e.g., 6).
+  2. Treat a task as “low-signal” when the same error repeats (e.g., the same stack trace twice).
+  3. Treat a task as “low-signal” when predicted cost-to-complete exceeds remaining budget.
+  4. Escalate when the change touches production config, security-sensitive files, or the diff exceeds a size threshold (e.g., >200 lines changed).
+- If the per-task or batch budget is exceeded:
+  - Stop further tool calls.
+  - Write a short spend-and-status summary (last step, last error, run id).
+  - Escalate for human review.
 - Measure (throughput): cost per successful task and time-to-merge.
 - Measure (quality): regression rate (e.g., rollback or test failures within 24h) and “wasted spend” (tokens spent on tasks that are abandoned or escalated).
 
@@ -101,4 +105,9 @@ Cost-aware autonomy for a batch of maintenance tasks.
   - Mitigation: emit structured events for each tool call; standardize error classes and outcome codes; sample verbose logs while keeping full traces for failed runs only.
 
 ## Research Directions
+- **Deterministic replay scoring**: define a replay score per run (e.g., environment match, tool-version match, output match) and track it over time.
+- **Replay audit sampling**: pick a weekly sample of “green” runs, replay them with no cache, and record the delta (time, outputs, flake rate).
+- **Artifact bundle correctness**: treat missing inputs (patch, lockfiles, tool versions, command lines) as a build-breaking error for the infrastructure.
+- **Redaction guarantees**: measure secret leakage rates by scanning logs and artifacts before persistence, then track false positives/negatives of redaction.
+- **Cost-to-quality controllers**: test policies that trade off retries, model choice, and tool parallelism against regression rate and cost-to-merge.
 <!-- markdownlint-enable MD022 MD032 -->

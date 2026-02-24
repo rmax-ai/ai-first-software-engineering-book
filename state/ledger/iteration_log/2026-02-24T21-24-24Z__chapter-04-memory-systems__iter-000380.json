@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8566666666666668,
+  "diff_size": 0.02654867256637168,
+  "drift_score": 0.016623488773747842,
+  "iteration": 380,
+  "planner_focus": [
+    "Stabilize phrasing in ## System Breakdown to avoid churn after approval",
+    "Keep sentence lengths under the style limit in ## System Breakdown (prefer single-clause sentences and short bullets)",
+    "Avoid introducing new terminology in ## System Breakdown that could increase cross-chapter conceptual drift"
+  ],
+  "timestamp": "2026-02-24T21:24:24Z"
+}

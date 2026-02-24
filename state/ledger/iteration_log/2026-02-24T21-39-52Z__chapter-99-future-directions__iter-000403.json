@@ -1,0 +1,13 @@
+{
+  "critic_score": 0.8466666666666667,
+  "diff_size": 0.03278688524590164,
+  "drift_score": 0.005162241887905605,
+  "iteration": 403,
+  "planner_focus": [
+    "Restore Mermaid fenced blocks under ## System Breakdown (replace <pre class=\"mermaid\"> wrappers)",
+    "Restore Mermaid fenced blocks under ## Concrete Example 2 (replace <pre class=\"mermaid\"> wrappers)",
+    "Ensure Mermaid blocks are standalone with blank lines before/after to avoid prose merging and sentence-length violations",
+    "Standardize decision-node syntax and quoting in Mermaid (e.g., F{\"Divergence check\"})"
+  ],
+  "timestamp": "2026-02-24T21:39:52Z"
+}

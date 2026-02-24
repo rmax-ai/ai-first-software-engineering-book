@@ -42,7 +42,9 @@ If you want evidence for the hypothesis, keep the model constant (or compare mod
   - Patch discipline (diff-only, small changes).
   - Evaluation API (what constitutes pass/fail).
 
-A diagram helps here because the planes are easy to list but hard to reason about as a system. Focus on where constraints enter (control plane), where evidence is produced (tool/evaluation planes), and what gets recorded for replay (state plane).
+A diagram helps here because the planes are easy to list, but hard to reason about as a system.
+Focus on where constraints enter (control plane).
+Then track where evidence is produced (tool/evaluation planes) and what gets recorded for replay (state plane).
 
 ```mermaid
 flowchart TB
@@ -54,9 +56,11 @@ flowchart TB
   S[State plane<br/>ledger<br/>trace<br/>artifacts]
 
   TB --> C
+
   C -->|typed tool calls| T
-  T -->|check inputs| E
+  T -->|outputs + structured errors| E
   E -->|pass/fail + evidence| C
+
   T -->|events + diffs + outputs| S
   E -->|gate results| S
 ```
@@ -67,60 +71,18 @@ Read the diagram as a loop with three distinct roles:
 - **Evidence** is produced by the tool and evaluation planes (outputs + pass/fail).
 - **Replay** depends on the state plane capturing enough artifacts to reproduce decisions.
 
-A practical mapping is: the control plane defines what is allowed, the tool/evaluation planes generate the proof, and the state plane makes that proof re-runnable. If you cannot point to those three responsibilities in your implementation, your harness will drift toward “best effort” instead of predictable behavior.
-
-Takeaway: predictability comes from making the loop explicit. The control plane must be able to stop based on evaluation, and the state plane must capture enough evidence to reproduce the decision.
+A practical mapping is: the control plane defines constraints.
+The tool/evaluation planes produce evidence, and the state plane records it for replay.
+If you cannot point to those responsibilities in your implementation, your harness will drift toward “best effort” instead of predictable behavior.
 
 A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track:
 
-<table>
-  <thead>
-    <tr>
-      <th>Plane</th>
-      <th>Responsibilities</th>
-      <th>Key artifacts (inputs/outputs)</th>
-      <th>One measurable metric</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Control plane</td>
-      <td>Decide what the agent is allowed to do and when to stop</td>
-      <td>
-        <div><strong>Inputs</strong>: task brief; policy; time/iteration budget</div>
-        <div><strong>Outputs</strong>: chosen strategy; stop reason</div>
-      </td>
-      <td>Iterations to first passing gate</td>
-    </tr>
-    <tr>
-      <td>Tool plane</td>
-      <td>Perform actions with bounded, typed interfaces</td>
-      <td>
-        <div><strong>Inputs</strong>: validated tool calls</div>
-        <div><strong>Outputs</strong>: patches; command outputs; structured errors</div>
-      </td>
-      <td>Patch locality (files/lines per task)</td>
-    </tr>
-    <tr>
-      <td>Evaluation plane</td>
-      <td>Decide if work is acceptable based on checks</td>
-      <td>
-        <div><strong>Inputs</strong>: test/lint/typecheck/build results; rubrics</div>
-        <div><strong>Outputs</strong>: pass/fail + evidence</div>
-      </td>
-      <td>Gate pass rate (per iteration)</td>
-    </tr>
-    <tr>
-      <td>State plane</td>
-      <td>Record what happened and enable recovery</td>
-      <td>
-        <div><strong>Inputs</strong>: events; diffs; tool outputs</div>
-        <div><strong>Outputs</strong>: trace; ledger; artifacts for replay</div>
-      </td>
-      <td>Reproducibility rate (same pass/fail on rerun)</td>
-    </tr>
-  </tbody>
-</table>
+| Plane | Responsibilities | Key artifacts (inputs/outputs) | One measurable metric |
+| --- | --- | --- | --- |
+| Control plane | Decide what the agent is allowed to do and when to stop | **Inputs**: task brief; policy; time/iteration budget<br/>**Outputs**: chosen strategy; stop reason | Iterations to first passing gate |
+| Tool plane | Perform actions with bounded, typed interfaces | **Inputs**: validated tool calls<br/>**Outputs**: patches; command outputs; structured errors | Patch locality (files/lines per task) |
+| Evaluation plane | Decide if work is acceptable based on checks | **Inputs**: test/lint/typecheck/build results; rubrics<br/>**Outputs**: pass/fail + evidence | Gate pass rate (per iteration) |
+| State plane | Record what happened and enable recovery | **Inputs**: events; diffs; tool outputs<br/>**Outputs**: trace; ledger; artifacts for replay | Reproducibility rate (same pass/fail on rerun) |
 
 The “minimal contract surface” is the smallest set of stable interfaces required for repeatability, boundedness, and verifiability. It includes tool schemas (and error codes), patch discipline, and evaluation semantics.
 
@@ -133,7 +95,7 @@ Boundary:
 
 Design a tool contract for “apply patch” operations.
 
-A minimal schema sketch can be made scannable by treating it like an interface spec. One goal is to make failures recoverable without expanding scope.
+A minimal schema sketch can be made scannable by treating it like an interface spec.
 
 **Schema (what to enforce, not just what to accept):**
 
@@ -141,7 +103,7 @@ A minimal schema sketch can be made scannable by treating it like an interface s
 - Anchor the edit with an exact, unique match (`old_str`).
 - Bound the change with explicit budgets (files/lines/time).
 
-Schema (fields + constraints to keep edits local and reviewable):
+**Fields + constraints (to keep edits local and reviewable):**
 
 - Required fields: `path`, `old_str`, `new_str`.
 - Optional field: `context` (only for disambiguation).
@@ -150,60 +112,15 @@ Schema (fields + constraints to keep edits local and reviewable):
   - No implicit multi-file edits per call.
   - Size budget (for example: max files changed; max lines changed).
 
-<table>
-  <thead>
-    <tr>
-      <th>Category</th>
-      <th>Field / rule</th>
-      <th>Purpose</th>
-      <th>Example failure mode</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Required fields</td>
-      <td><code>path</code></td>
-      <td>Identify the target file</td>
-      <td>Wrong path → cannot apply patch</td>
-    </tr>
-    <tr>
-      <td>Required fields</td>
-      <td><code>old_str</code></td>
-      <td>Provide an exact, unique match anchor</td>
-      <td>Stale context → no match</td>
-    </tr>
-    <tr>
-      <td>Required fields</td>
-      <td><code>new_str</code></td>
-      <td>Provide the replacement text</td>
-      <td>N/A (validated as string)</td>
-    </tr>
-    <tr>
-      <td>Optional fields</td>
-      <td><code>context</code></td>
-      <td>Disambiguate or narrow a match</td>
-      <td>Without it, match may be non-unique</td>
-    </tr>
-    <tr>
-      <td>Constraints</td>
-      <td>No unrelated whitespace changes outside <code>old_str</code></td>
-      <td>Preserve locality and reviewability</td>
-      <td>“Formatting spill” across file</td>
-    </tr>
-    <tr>
-      <td>Constraints</td>
-      <td>No implicit multi-file edits</td>
-      <td>Bound scope per call</td>
-      <td>Patch tool touches multiple files</td>
-    </tr>
-    <tr>
-      <td>Constraints</td>
-      <td>Size budget (e.g., max changed lines per call)</td>
-      <td>Prevent runaway diffs</td>
-      <td>Large diff for small task</td>
-    </tr>
-  </tbody>
-</table>
+| Category | Field / rule | Purpose | Example failure mode |
+| --- | --- | --- | --- |
+| Required fields | `path` | Identify the target file | Wrong path → cannot apply patch |
+| Required fields | `old_str` | Provide an exact, unique match anchor | Stale context → no match |
+| Required fields | `new_str` | Provide the replacement text | N/A (validated as string) |
+| Optional fields | `context` | Disambiguate or narrow a match | Without it, match may be non-unique |
+| Constraints | No unrelated whitespace changes outside `old_str` | Preserve locality and reviewability | “Formatting spill” across file |
+| Constraints | No implicit multi-file edits | Bound scope per call | Patch tool touches multiple files |
+| Constraints | Size budget (e.g., max changed lines per call) | Prevent runaway diffs | Large diff for small task |
 
 **Error contract (how the harness makes failures recoverable):**
 
@@ -211,58 +128,27 @@ Schema (fields + constraints to keep edits local and reviewable):
 - Return the minimum context needed to retry safely (snippets/ranges/limits).
 - Do not “auto-expand” scope to make the error go away.
 
-Error contract (examples):
+| Error code | Meaning | What the harness should return |
+| --- | --- | --- |
+| `NOT_FOUND` | `path` does not exist and `create` is false | A clear message plus allowed path roots (if any) |
+| `NON_UNIQUE_MATCH` | `old_str` matches multiple locations | Candidate ranges or small snippets for each match |
+| `NO_MATCH` | `old_str` matches zero locations | A “fresh context” snippet around the closest match |
+| `BUDGET_EXCEEDED` | Change size violates configured limits | The computed line/file counts and configured limits |
+| `POLICY_VIOLATION` | Edit touches forbidden paths or patterns | The specific policy rule that triggered |
 
-<table>
-  <thead>
-    <tr>
-      <th>Error code</th>
-      <th>Meaning</th>
-      <th>What the harness should return</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>NOT_FOUND</code></td>
-      <td><code>path</code> does not exist and <code>create</code> is false</td>
-      <td>A clear message plus allowed path roots (if any)</td>
-    </tr>
-    <tr>
-      <td><code>NON_UNIQUE_MATCH</code></td>
-      <td><code>old_str</code> matches multiple locations</td>
-      <td>Candidate ranges or small snippets for each match</td>
-    </tr>
-    <tr>
-      <td><code>NO_MATCH</code></td>
-      <td><code>old_str</code> matches zero locations</td>
-      <td>A “fresh context” snippet around the closest match</td>
-    </tr>
-    <tr>
-      <td><code>BUDGET_EXCEEDED</code></td>
-      <td>Change size violates configured limits</td>
-      <td>The computed line/file counts and configured limits</td>
-    </tr>
-    <tr>
-      <td><code>POLICY_VIOLATION</code></td>
-      <td>Edit touches forbidden paths or patterns</td>
-      <td>The specific policy rule that triggered</td>
-    </tr>
-  </tbody>
-</table>
-
-Happy path flow:
+**Happy path flow:**
 
 1. Agent proposes a patch using a unique `old_str` block with minimal scope.
 2. Harness validates: file exists, match is unique, diff stays within budgets.
 3. Tool applies the patch and returns a structured result: changed line counts, a before/after snippet, and a stable identifier for the diff.
 
-Conflict recovery (when the patch fails with `NO_MATCH` or `NON_UNIQUE_MATCH`):
+**Conflict recovery (when the patch fails with `NO_MATCH` or `NON_UNIQUE_MATCH`):**
 
 1. The harness returns the error code plus a short “fresh context” snippet around the closest match (or a list of candidate match ranges).
 2. The agent re-reads the relevant portion of the file and regenerates a smaller, more specific `old_str` (or narrows by adding `context`).
 3. If the second attempt fails, the harness forces a stop condition (“needs human review”) rather than allowing a whole-file overwrite.
 
-Mini-example (connecting the contract to measurable outcomes):
+**Mini-example (connecting the contract to measurable outcomes):**
 
 - Task: “Update `timeout_ms` default from 5000 to 8000.”
 - Without a strict contract: the agent might run a broad search/replace and touch 6 files, including docs and unrelated constants.
@@ -271,7 +157,7 @@ Mini-example (connecting the contract to measurable outcomes):
   - The harness rejects the attempt if it exceeds, for example, 1 file and 20 changed lines.
   - Your tracked metrics should shift: **diff locality** stays low (1 file, a few lines), and **revert rate** should drop because the change is less likely to introduce incidental regressions.
 
-Evaluation: measure whether the tool contract is improving outcomes with two task-level metrics:
+**Evaluation (task-level metrics to track):**
 
 - **Revert rate**: fraction of tasks where the patch is reverted in the next N commits/PR updates.
 - **Diff locality**: median number of files touched and lines changed per task, with an alert threshold for outliers.
@@ -280,15 +166,18 @@ Evaluation: measure whether the tool contract is improving outcomes with two tas
 
 Add an evaluation gate to an agent loop.
 
-A diagram helps here because “attempt → gate → log → decide” is simple to say, but easy to implement incorrectly. Focus on the two decision points in the loop: whether the gate passed, and whether another iteration is allowed under budgets.
+A diagram helps here because “attempt → gate → log → decide” is simple to say, but easy to implement incorrectly.
+Focus on two decision points: whether the gate passed, and whether another iteration is allowed under budgets.
 
 ```mermaid
 flowchart TB
   A[Attempt<br/>smallest plausible change]
   G[Gate<br/>tests + static checks]
   P{Gate passes?}
+
   L[Log<br/>diff id + outputs + exit codes]
   B{Budget remains<br/>and failure actionable?}
+
   R[PR-ready output]
   S[Stop<br/>failure summary + evidence]
 
@@ -299,47 +188,32 @@ flowchart TB
   B -- no --> S
 ```
 
-Takeaway: the harness should only permit another attempt when (a) budgets remain and (b) the failure is actionable. Otherwise, it should stop with evidence, not a guess.
+Decision checklist (minimal, explicit):
 
-A minimal loop in prose looks like: attempt → gate → log → decide.
+1. **Pass/fail semantics**
+   - Pass = all configured checks return success (exit code 0), and no policy violations were triggered.
+   - Fail = any check fails, any policy violation occurs, or budgets are exceeded.
+2. **Retry eligibility**
+   - Retry only when budgets remain and the failure is actionable.
+   - Otherwise, stop and return a failure summary plus evidence.
+3. **Gate configuration (minimal defaults)**
+   1. Define the full gate: a fixed set of commands, in order (for example: unit tests, then lint/typecheck, then build).
+   2. Define time and iteration budgets: max gate time per iteration and max iterations per task.
+   3. Define evidence requirements: always store exit codes, stdout/stderr (or paths to logs), and the diff identifier.
+4. **Fallback gate policy when tests are missing**
+   1. Can the repo’s documented test command run successfully in this environment?
+      - If yes: use `full_gate`.
+   2. If not, can you make tests runnable within the configured budget?
+      - If yes: fix within budget, then use `full_gate`.
+   3. If you cannot make tests runnable within budget:
+      - Use `fallback_gate` and tighten patch budgets.
+      - Record which gate was used (`full_gate` vs `fallback_gate`) and why.
 
-1. **Attempt**: the agent makes the smallest change it believes will satisfy the task.
-2. **Gate**: the harness runs required checks (e.g., unit tests + static checks).
-3. **Log**: record the tool outputs, the diff identifier, and the gate result in the task ledger.
-4. **Decide**:
-   - If gate passes: allow “PR-ready” output.
-   - If gate fails: allow another iteration only if budgets remain and the failure is actionable.
-   - If repeated failures occur: stop with a concrete failure summary and evidence.
+A minimal `fallback_gate` is narrower and stricter:
 
-Gate configuration checklist (minimal defaults):
-
-1. **Define the full gate**: a fixed set of commands, in order (for example: unit tests, then lint/typecheck, then build).
-2. **Define time and iteration budgets**: max gate time per iteration and max iterations per task.
-3. **Define evidence requirements**: always store exit codes, stdout/stderr (or paths to logs), and the diff identifier.
-4. **Define fallback eligibility**: when tests are missing or non-runnable, use a narrower fallback gate and tighten patch budgets.
-
-Pass/fail criteria should be explicit:
-
-- Pass = all configured checks return success (exit code 0) and no policy violations were triggered.
-- Fail = any check fails, any policy violation occurs, or budgets are exceeded.
-
-Fallback gate policy when tests are missing:
-
-- If unit tests are absent or non-runnable, the harness should not silently accept “looks good.”
-- Use a compact decision rule:
-
-1. Can the repo’s documented test command run successfully in this environment?
-   - If yes: use `full_gate`.
-2. If not, can you make tests runnable within the configured budget?
-   - If yes: fix within budget, then use `full_gate`.
-3. If you cannot make tests runnable within budget:
-   - Use `fallback_gate` and tighten patch budgets.
-   - Record which gate was used (`full_gate` vs `fallback_gate`) and why.
-
-- A minimal `fallback_gate` is narrower and stricter:
-  - typecheck/lint/build must pass (whatever subset is available), and
-  - a targeted command or script (documented in the repo) must run successfully, and
-  - the change must be limited by stricter patch budgets (smaller allowed diffs).
+- typecheck/lint/build must pass (whatever subset is available), and
+- a targeted command or script (documented in the repo) must run successfully, and
+- the change must be limited by stricter patch budgets (smaller allowed diffs).
 
 Mini-example (gate policy with metrics):
 

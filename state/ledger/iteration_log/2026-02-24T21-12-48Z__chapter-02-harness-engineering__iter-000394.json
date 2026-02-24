@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.91,
+  "diff_size": 0.6138613861386139,
+  "drift_score": 0.08994391025641026,
+  "iteration": 394,
+  "planner_focus": [
+    "Reduce style-guard sentence length violations caused by inline HTML tables and long Mermaid lines",
+    "Increase scanability of the two concrete examples by tightening sub-structure and removing repeated phrasing",
+    "Clarify the minimal pass/fail + fallback gate policy so the decision rule is unmistakable at a glance"
+  ],
+  "timestamp": "2026-02-24T21:12:48Z"
+}

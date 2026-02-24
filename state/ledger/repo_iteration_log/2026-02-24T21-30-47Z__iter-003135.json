@@ -1,0 +1,105 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.41; drift_score=0.11"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-24T21:30:47Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.016666666666666666,
+        "near_duplicate_ngram_ratio": 0.05051047823750672
+      },
+      "timestamp": "2026-02-24T21:30:47Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.04932975871313673,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "## System Breakdown - **Trace schema** (minimum viable): - task id - plan - intended steps - stop conditions - tool calls - tool name - arguments - start/end timestamps - exit status - tool outputs - ",
+          "words": 147
+        },
+        {
+          "sentence": "```mermaid flowchart TB A[Action class selected] --> B[\"Safety gate(s)<br/>(permission / protected-path / secret scan)\"] B -->|fail| S1[\"STOP<br/>stop_reason set<br/>record: failure_signature + touche",
+          "words": 105
+        },
+        {
+          "sentence": "- Minimal gating matrix (example, stated as rules): - read-only (grep/view/list): - safety: require permission check for accessed path(s) - quality: skip; record `skipped_reason: \"read_only_action\"` -",
+          "words": 474
+        },
+        {
+          "sentence": "Pseudo-trace excerpt (illustrative): ```yaml task_id: refactor-auth-2026-02-22-001 environment: repo_sha: a1b2c3d tool_versions: pytest: 8.1.1 python: 3.12.1 plan: - rename AuthClient -> CopilotClient",
+          "words": 179
+        },
+        {
+          "sentence": "- A \u201cgolden task\u201d should include: - fixed input prompt and any fixed attachments - fixed repo state (commit SHA) or a pinned fixture repository - expected outcome constraints (e.g., \u201ctouch only `src/f",
+          "words": 61
+        },
+        {
+          "sentence": "| Metric | Drift threshold | Comparison window | | --- | --- | --- | | iteration drift | median loop iterations in the most recent 50 runs increases by \u2265 30% | compare against the baseline\u2019s 50-run me",
+          "words": 86
+        },
+        {
+          "sentence": "- Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.",
+          "words": 31
+        }
+      ],
+      "timestamp": "2026-02-24T21:30:47Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/05-evaluation-and-traces.md",
+      "state/ledger/iteration_log/2026-02-24T21-30-47Z__chapter-05-evaluation-and-traces__iter-000380.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/05-evaluation-and-traces/2026-02-24.json"
+    ],
+    "notes": "Kernel refinement iteration 380 for 05-evaluation-and-traces"
+  },
+  "iteration": 3135,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 10417,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 70760
+  },
+  "scope": {
+    "chapters_modified": [
+      "05-evaluation-and-traces"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-24T21:30:47Z"
+}

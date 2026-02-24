@@ -15,7 +15,14 @@ Interfaces are artifacts that let components interoperate. They make runs portab
 
 “Verification” means methods that detect incorrect behavior reliably. In practice, verification makes runs auditable. It lets you show that a tool call matched a contract. It also lets you show that a replay stayed within a declared nondeterminism boundary. Finally, it lets you show that a reported score came from a pinned dataset and scoring implementation.
 
-Hypothesis: the main frontier is not larger models. It is better system-level interfaces. This includes verifiable tool contracts and stronger evaluations. It also includes memory and governance primitives that scale. Takeaway: progress comes from portable, checkable runs across models, tools, and teams.
+Key terms (used consistently in this chapter):
+
+- **Interoperability**: shared formats and schemas that make runs exportable across tools and teams.
+- **Verification**: checks that make claims about a run defensible (contract validation, replay validity, invariant checks).
+- **Governance**: versioning, ownership, and rollout rules for shared artifacts.
+- **Nondeterminism boundary**: the explicitly declared set of run aspects allowed to vary without invalidating a replay.
+
+Takeaway: progress comes from portable, checkable runs across models, tools, and teams.
 
 ## Why This Matters
 
@@ -29,22 +36,16 @@ So what changes for teams? Treat tool schemas, trace formats, and eval definitio
 
 These four areas are coupled. Interfaces create portability, and verification enables auditability. Governance sets the rules for how shared artifacts evolve.
 
-The diagram below is useful because it makes the dependency shape explicit. Focus on the arrows. They show what must be versioned and validated before you can compare runs across teams or models.
+The dependency chain below makes the coupling explicit. Focus on the arrows. They show what must be versioned and validated before you can compare runs across teams or models.
 
-Diagram: the dependency chain across the four pillars.
+Dependency chain:
 
-<pre class="mermaid">
-flowchart TB
-  I["Interoperability"]
-  V["Verification"]
-  G["Governance"]
-  R["Ecosystem risk"]
+- **Interoperability** → **Verification** (contracts define what can be checked).
+- **Verification** → **Governance** (audit claims determine what shared policies must enforce).
+- **Interoperability** → **Ecosystem risk** (the surface area you expose becomes your supply-chain and update risk).
+- **Ecosystem risk** → **Verification** (risk pressure raises the bar for checks and replayability).
 
-  I -->|Contracts| V
-  V -->|Audit claims| G
-  I -->|Surface area| R
-  R -->|Pressure| V
-</pre>
+This is the system-level reason “bigger models” is not the whole story: portable, checkable runs depend on what interfaces you standardize and what verification you can actually enforce.
 
 Takeaway: you can improve one pillar in isolation, but cross-model portability depends on the whole chain. Interoperability defines what can be exchanged, and verification defines what can be trusted when it is exchanged.
 
@@ -53,7 +54,7 @@ Takeaway: you can improve one pillar in isolation, but cross-model portability d
 - **Governance at scale**: org-level policies, audit workflows, incident response (policy-registry·audit·runbook).
 - **Ecosystem risks**: prompt/tool supply chain, dependency security, model updates (supply-chain·deps·model-updates).
 
-Note: structured memory fits here as a versioned interface artifact. Treat memory schemas and retention/redaction rules as contracts.
+Note: structured memory fits here as a versioned interface artifact. Treat memory schemas and retention/redaction rules as contracts. Concretely: version the memory record schema, validate writes/reads against it, record memory operations in traces, and enforce retention/redaction as policy gates that are auditable and replay-checkable.
 
 **Artifact map (concrete deliverables):**
 
@@ -100,6 +101,18 @@ Cross-model portability experiment.
   - Harness/tool coupling (e.g., a tool contract ambiguity that different models interpret differently).
   - Model behavior (e.g., consistent violation of a particular tool precondition).
 
+Results template (example skeleton):
+
+- Model
+- Tasks
+- Trials (N)
+- Success rate
+- Tool error rate
+- Median tool calls
+- Median turns
+- Timeout/budget-hit rate
+- Top failure signature
+
 **Interpreting disagreements**
 
 - If multiple models fail in the same way on the same tasks, prioritize harness-level fixes (tool contract clarity, validation, better stop conditions).
@@ -117,33 +130,17 @@ Standardized trace interchange.
 **Goal**
 Enable independent auditing and regression analysis by exporting traces from one agent runtime and replaying/analyzing them in another tool.
 
-A diagram helps here because trace interchange is a pipeline with explicit checkpoints. Track where validation occurs, where trace export happens, and what the divergence check is allowed to claim as “verified.”
+Trace interchange works best when treated as a checklist of explicit checkpoints. Track where validation occurs, where trace export happens, and what the divergence check is allowed to claim as “verified.”
 
-<pre class="mermaid">
-flowchart LR
-  A["Generate"]
-  B["Validate"]
-  C["Emit trace"]
-  D["Export"]
-  E["Replay"]
-  F{"Divergence check"}
-  G["Audit"]
-  H["Flag failure"]
+Trace interchange pipeline:
 
-  A --> B
-  B --> C
-  C --> D
-  D --> E
-  E --> F
-  F -->|Matches| G
-  F -->|Diverges| H
-</pre>
-
-Legend: the “Validate” step is runtime schema-checking for tool arguments/results (including negative cases) before the call enters the trace.
-
-Takeaway: validate and record tool contracts before export; replay checks divergence against declared constraints before audit conclusions.
+Generate → Validate → Emit trace → Export → Replay → Divergence check → (Audit | Flag failure)
 
 “Divergence check” means comparing the replayed run to declared constraints. It does not require byte-for-byte identity. Use it when nondeterminism is allowed.
+
+Validate checkpoint: runtime schema-check tool arguments/results (including negative cases) and record the validation outcome in the trace before export.
+
+Takeaway: validate contracts before Export, then use Replay + Divergence check against declared constraints before drawing audit conclusions.
 
 The point is not to standardize everything. Standardize the minimum needed for agreement. Two independent tools should agree on what happened. They should also detect when a run is not reproducible under stated constraints.
 
@@ -191,6 +188,10 @@ The point is not to standardize everything. Standardize the minimum needed for a
 - Nondeterministic components: record the boundary.
 - Record what replay is allowed to vary within.
 - Replay is valid only within that boundary.
+- Examples of declared nondeterminism boundaries:
+  - Time-based tools: allow timestamps to vary within an explicit tolerance window, but require the same tool-call sequence and arguments.
+  - Network variability: allow specified transient error classes (e.g., retryable 5xx) within declared retry semantics; treat unexpected error types as divergence.
+  - Sampling or randomized components: require a declared RNG source/seed policy; if seeds are not fixed, declare which outputs may vary and which invariants must still hold.
 - If sequence diverges under deterministic conditions, flag a portability failure.
 
 ## Trade-offs
@@ -209,18 +210,21 @@ The point is not to standardize everything. Standardize the minimum needed for a
 - Delay standardization when the interface changes weekly and only one team uses it.
 - Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint.
 - In that case, require semantic versioning, a contract test suite, and a changelog entry for every interface change.
+- Assign an explicit owner for each shared interface artifact (tool schema, trace spec, eval definition), with a documented escalation path for breaking changes.
 
 **Verify**
 
 - Use tests/contracts when failures are frequent, expensive, or safety-critical.
 - Prefer lighter checks for experimental, low-impact components.
 - Still enforce schema validation and basic budgets.
+- Treat contract violations as an operational metric (example target): fewer than 1 contract violation per 1,000 tool calls on shared production tools; exceeding it triggers a rollout pause and an incident review.
 
 **Govern**
 
 - Escalate governance when changes affect shared tool contracts, trace schemas, or eval definitions.
 - Keep governance minimal for isolated experiments that do not affect shared artifacts.
 - Set thresholds explicitly: acceptable tool error rate, maximum budget hits per run, and the severity that triggers an incident workflow.
+- Require that breaking changes to shared interfaces include: a MAJOR version bump, a migration note, and a compatibility window (example): support N and N-1 MAJOR versions for core trace tooling for a fixed period before deprecation.
 
 ## Failure Modes
 
@@ -242,3 +246,10 @@ The point is not to standardize everything. Standardize the minimum needed for a
 - Org-scale governance patterns and “policy drift” detection.
   Research question: what signals in traces reliably indicate policy drift (changes in decision boundaries or rule application) before incidents occur?
   Success signal: drift detectors with low false positives that catch policy regressions in canaries and prevent broad rollouts.
+
+What teams should do next (near-term, within this chapter’s scope):
+
+- Pick one shared artifact (a tool contract, trace spec, or eval definition) and put it under semantic versioning with an owner.
+- Add runtime schema validation for every tool call and record validation results in the trace (including negative cases).
+- Define the nondeterminism boundary for your top tools/components and implement replay validity checks against that boundary.
+- Run a small cross-model portability experiment on a pinned eval suite and publish a “signature diff” report as a recurring regression artifact.

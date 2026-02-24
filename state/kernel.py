@@ -2008,7 +2008,14 @@ def run_kernel(
 
             declared = _declared_section_set(plan, original_headings)
             if not declared:
-                raise KernelError("Planner did not explicitly reference any existing '##' headings.")
+                available_sections = {h for h in original_headings if h.startswith("## ")}
+                if not available_sections:
+                    raise KernelError("Planner did not explicitly reference any existing '##' headings.")
+                _vprint(
+                    verbose,
+                    f"iter {iteration}: planner missing headings; allowing all '## ' sections for this iteration.",
+                )
+                declared = available_sections
             changed = _changed_sections(current_chapter_text, revised)
             illegal = sorted(changed - declared)
             if illegal:

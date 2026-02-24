@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.93,
+  "diff_size": 0.01809954751131222,
+  "drift_score": 0.11997483624766626,
+  "iteration": 423,
+  "planner_focus": [
+    "Fix the 28-word sentence-length violation in ## System Breakdown by splitting the \"A diagram helps here...\" sentence into two shorter sentences",
+    "Reduce drift in ## System Breakdown by tightening language to match the chapter hypothesis (harness + evaluation as primary lever) without adding new concepts",
+    "Keep bucket naming consistent (spec/prompt, tool/runtime, code, eval/CI) when referencing attribution in ## System Breakdown"
+  ],
+  "timestamp": "2026-02-24T21:10:00Z"
+}
