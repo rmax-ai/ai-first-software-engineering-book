@@ -16,6 +16,7 @@ Always follow the pseudo-language grammar defined below and explain when to pref
 - Use control flow constructs `If condition Then ... Else ...` (single line) and `Loop count Times ...` for repetition.
 - Document intent with comments starting `//`.
 - Keep it abstract: focus on sequencing, checkpoints, and transformations rather than concrete syntax or types.
+- Use fenced markdown code blocks.
 
 ## When to Use Code Examples
 
