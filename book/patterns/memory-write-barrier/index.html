@@ -7,11 +7,10 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="Technical book on AI-first software engineering governance and execution" name="description"/>
 <meta content="Autonomous Authors" name="author"/>
-<link href="../harness-design-patterns/" rel="prev"/>
-<link href="../minimal-agent-loop/" rel="next"/>
+<link href="../replayable-trace-runs/" rel="prev"/>
 <link href="../../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
-<title>Memory Architectures - AI-First Software Engineering</title>
+<title>Memory Write Barrier (Verified-Only Durable Memory) - AI-First Software Engineering</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
@@ -23,7 +22,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#memory-architectures">
+<a class="md-skip" href="#memory-write-barrier-verified-only-durable-memory">
           Skip to content
         </a>
 </div>
@@ -47,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Memory Architectures
+              Memory Write Barrier (Verified-Only Durable Memory)
             
           </span>
 </div>
@@ -313,20 +312,8 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    Memory Architectures
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../memory-architectures/">
 <span class="md-ellipsis">
     
   
@@ -336,170 +323,6 @@
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#context">
-<span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#problem">
-<span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#forces">
-<span class="md-ellipsis">
-      
-        Forces
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#solution">
-<span class="md-ellipsis">
-      
-        Solution
-      
-    </span>
-</a>
-<nav aria-label="Solution" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#layer-1-run-local-working-memory-scratch">
-<span class="md-ellipsis">
-      
-        Layer 1: Run-local working memory (scratch)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#layer-2-session-memory-task-state">
-<span class="md-ellipsis">
-      
-        Layer 2: Session memory (task state)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#layer-3-project-memory-durable-facts">
-<span class="md-ellipsis">
-      
-        Layer 3: Project memory (durable facts)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#layer-4-retrieval-index-searchable-corpus">
-<span class="md-ellipsis">
-      
-        Layer 4: Retrieval index (searchable corpus)
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#implementation-sketch">
-<span class="md-ellipsis">
-      
-        Implementation sketch
-      
-    </span>
-</a>
-<nav aria-label="Implementation sketch" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#concrete-example">
-<span class="md-ellipsis">
-      
-        Concrete example
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#failure-modes">
-<span class="md-ellipsis">
-      
-        Failure modes
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#operational-checklists">
-<span class="md-ellipsis">
-      
-        Operational checklists
-      
-    </span>
-</a>
-<nav aria-label="Operational checklists" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#write-gate-what-is-allowed-to-persist">
-<span class="md-ellipsis">
-      
-        Write gate (what is allowed to persist)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#read-gate-what-is-allowed-to-influence-action">
-<span class="md-ellipsis">
-      
-        Read gate (what is allowed to influence action)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#governance-ops-correction-retention-redaction">
-<span class="md-ellipsis">
-      
-        Governance ops (correction, retention, redaction)
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#when-not-to-use">
-<span class="md-ellipsis">
-      
-        When not to use
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../minimal-agent-loop/">
@@ -633,8 +456,20 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../memory-write-barrier/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Memory Write Barrier (Verified-Only Durable Memory)
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -644,6 +479,139 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#context">
+<span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forces">
+<span class="md-ellipsis">
+      
+        Forces
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solution">
+<span class="md-ellipsis">
+      
+        Solution
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
+      
+        Implementation sketch
+      
+    </span>
+</a>
+<nav aria-label="Implementation sketch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-model-conceptual">
+<span class="md-ellipsis">
+      
+        Data model (conceptual)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#write-barrier-algorithm-conceptual">
+<span class="md-ellipsis">
+      
+        Write barrier algorithm (conceptual)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#read-path-rule">
+<span class="md-ellipsis">
+      
+        Read path rule
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-examples">
+<span class="md-ellipsis">
+      
+        Concrete Examples
+      
+    </span>
+</a>
+<nav aria-label="Concrete Examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-codebase-agent-writes-durable-facts-only-after-tests-pass">
+<span class="md-ellipsis">
+      
+        Example 1: Codebase agent writes “durable facts” only after tests pass
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-incident-response-agent-updates-a-rollback-procedure-via-a-drill-gate">
+<span class="md-ellipsis">
+      
+        Example 2: Incident-response agent updates a rollback procedure via a drill gate
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
+      
+        When not to use
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -697,46 +665,6 @@
       
     </span>
 </a>
-<nav aria-label="Solution" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#layer-1-run-local-working-memory-scratch">
-<span class="md-ellipsis">
-      
-        Layer 1: Run-local working memory (scratch)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#layer-2-session-memory-task-state">
-<span class="md-ellipsis">
-      
-        Layer 2: Session memory (task state)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#layer-3-project-memory-durable-facts">
-<span class="md-ellipsis">
-      
-        Layer 3: Project memory (durable facts)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#layer-4-retrieval-index-searchable-corpus">
-<span class="md-ellipsis">
-      
-        Layer 4: Retrieval index (searchable corpus)
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#implementation-sketch">
@@ -749,10 +677,59 @@
 <nav aria-label="Implementation sketch" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#concrete-example">
+<a class="md-nav__link" href="#data-model-conceptual">
 <span class="md-ellipsis">
       
-        Concrete example
+        Data model (conceptual)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#write-barrier-algorithm-conceptual">
+<span class="md-ellipsis">
+      
+        Write barrier algorithm (conceptual)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#read-path-rule">
+<span class="md-ellipsis">
+      
+        Read path rule
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-examples">
+<span class="md-ellipsis">
+      
+        Concrete Examples
+      
+    </span>
+</a>
+<nav aria-label="Concrete Examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-codebase-agent-writes-durable-facts-only-after-tests-pass">
+<span class="md-ellipsis">
+      
+        Example 1: Codebase agent writes “durable facts” only after tests pass
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-incident-response-agent-updates-a-rollback-procedure-via-a-drill-gate">
+<span class="md-ellipsis">
+      
+        Example 2: Incident-response agent updates a rollback procedure via a drill gate
       
     </span>
 </a>
@@ -770,46 +747,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#operational-checklists">
-<span class="md-ellipsis">
-      
-        Operational checklists
-      
-    </span>
-</a>
-<nav aria-label="Operational checklists" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#write-gate-what-is-allowed-to-persist">
-<span class="md-ellipsis">
-      
-        Write gate (what is allowed to persist)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#read-gate-what-is-allowed-to-influence-action">
-<span class="md-ellipsis">
-      
-        Read gate (what is allowed to influence action)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#governance-ops-correction-retention-redaction">
-<span class="md-ellipsis">
-      
-        Governance ops (correction, retention, redaction)
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="#when-not-to-use">
 <span class="md-ellipsis">
       
@@ -825,182 +762,230 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="memory-architectures">Memory Architectures</h1>
+<h1 id="memory-write-barrier-verified-only-durable-memory">Memory Write Barrier (Verified-Only Durable Memory)</h1>
 <h2 id="context">Context</h2>
-<p>Agents are limited by context window, variability across runs, and the need to operate over long-lived projects. Memory mechanisms can improve continuity, but they also introduce drift, privacy risk, and debugging complexity.</p>
-<p>In this chapter, “memory” means persisted or semi-persisted information that can influence a later run. “State” is the structured record of the current task’s progress. It answers: what’s done, what’s next, and what’s blocked. “Retrieval” selects candidate information from a larger corpus and brings it into the current context. Retrieval results are suggestions, not authoritative facts.</p>
+<p>Agents benefit from memory: durable records can prevent repeated mistakes, preserve decisions, and speed up multi-day work. But “memory” is a side-effect: once it persists, it can bias future runs, expand retention obligations, and become a hidden dependency.</p>
+<p>In most real systems, the dangerous failure mode is not <em>lack of memory</em> but <em>incorrect memory with authority</em>. A single unverified entry (“the API supports X”, “this command is safe”) can propagate into future runs as a false constraint or a false fact.</p>
+<p>This pattern is also called <strong>Memory Write Gate</strong> or <strong>Verified-Only Durable Memory</strong>.</p>
 <h2 id="problem">Problem</h2>
-<p>How do you add memory so the system remains reproducible and governable?</p>
-<p>A useful answer must preserve two properties:</p>
+<p>How do you let an agent benefit from durable memory without letting unverified guesses, hallucinations, or transient hypotheses become long-lived “facts”?</p>
+<p>More concretely:</p>
 <ul>
-<li><strong>Reproducibility</strong>: given the same code and inputs, you can explain which memories were consulted and why they mattered.</li>
-<li><strong>Governability</strong>: you can audit, version, and delete memory items by rule (scope, source, and time), without relying on implicit behavior.</li>
+<li>How do you prevent durable memory from being updated during uncertain, mid-investigation steps?</li>
+<li>How do you ensure durable entries are traceable to sources and verification evidence?</li>
+<li>How do you support deletion, redaction, and correction without rewriting history?</li>
 </ul>
 <h2 id="forces">Forces</h2>
 <ul>
-<li><strong>Recall vs. precision</strong>: retrieving more increases coverage but adds noise.</li>
-<li><strong>Freshness vs. stability</strong>: updating memory improves relevance but can rewrite history.</li>
-<li><strong>Privacy vs. utility</strong>: storing more can leak sensitive data and expand retention obligations.</li>
-<li><strong>Debuggability</strong>: implicit retrieval is harder to reason about than explicit records.</li>
-<li><strong>Versioning</strong>: memory must evolve with code; unversioned memory becomes a hidden dependency.</li>
-</ul>
-<p>How to choose (practical heuristics):</p>
-<ul>
-<li>If mistakes are costly, bias toward <strong>precision over recall</strong>: retrieve fewer items, require source confirmation, and prefer explicit pointers (file paths, trace IDs) over paraphrased “facts.”</li>
-<li>If work spans days/weeks, bias toward <strong>stability over freshness</strong> for durable memory: append new entries rather than mutating old ones; treat “updates” as new, versioned records.</li>
-<li>If data sensitivity is unclear, bias toward <strong>utility via derived retrieval</strong>: store less durable content; keep indexes rebuildable; rely on short-lived state plus links to existing sources.</li>
+<li><strong>Usefulness vs. safety</strong>: writing more memory improves continuity but increases the chance of storing wrong or sensitive information.</li>
+<li><strong>Speed vs. verification</strong>: waiting for checks slows throughput; skipping checks increases drift.</li>
+<li><strong>Precision vs. recall</strong>: strict gates may reject valuable but partially verified information; loose gates store noise.</li>
+<li><strong>Authority leakage</strong>: retrieval systems often surface durable memory with high confidence (“we decided…”) even when it was only a hypothesis.</li>
+<li><strong>Governance requirements</strong>: audit, retention, and redaction become harder when memory is mutable or lacks provenance.</li>
+<li><strong>System coupling</strong>: if memory depends on the current code shape, refactors can invalidate it.</li>
 </ul>
 <h2 id="solution">Solution</h2>
-<p>Prefer layered, explicit memory with clear scopes, schemas, and write rules.</p>
-<p>A diagram helps because the key idea is the <em>relationship</em> between layers. Focus on the arrows (what feeds the model) and the “write rule” labels (what is allowed to persist). The goal is to make persistence explicit and reviewable.</p>
-<div class="mermaid">flowchart LR
-   A["Layer 1: Run-local scratch&lt;br/&gt;(write: overwrite OK)&lt;br/&gt;(scope: one run)"] --&gt;|summaries, hypotheses| M["Model context"]
-   B["Layer 2: Session task state&lt;br/&gt;(write: update each step; clear on close)&lt;br/&gt;(scope: task)"] --&gt;|checklists, next steps| M
-   C["Layer 3: Project durable facts&lt;br/&gt;(write: only after verification + sources)&lt;br/&gt;(scope: long-lived)"] --&gt;|contracts, ADRs, runbooks| M
-   D["Layer 4: Retrieval index (derived)&lt;br/&gt;(write: rebuildable; not source of truth)&lt;br/&gt;(scope: long-lived)"] --&gt;|top-k excerpts| M
-  C --&gt;|index/build| D
+<p>Introduce a <strong>write barrier</strong> between the agent’s proposed memory updates and the durable memory store.</p>
+<ul>
+<li>The agent may write freely to <strong>scratch</strong> and <strong>task state</strong>.</li>
+<li>Durable memory is written only through a <strong>gate</strong> that requires:<ul>
+<li><strong>verification evidence</strong> (tests/evals/checks or a domain-appropriate validation),</li>
+<li><strong>provenance</strong> (source pointers like file paths, trace IDs, commit hashes, URLs), and</li>
+<li><strong>a schema</strong> that separates facts/decisions from hypotheses and open questions.</li>
+</ul>
+</li>
+</ul>
+<p>A short diagram helps because the pattern is mostly about <em>where writes are allowed</em> and <em>what must happen before persistence</em>.</p>
+<div class="mermaid">flowchart TB
+  M["Model / Agent&lt;br/&gt;(propose memory updates)"] --&gt; S["Staging buffer&lt;br/&gt;(candidate memory writes)"]
+
+  S --&gt; V{Verification passed?}
+  V -- "No" --&gt; R["Reject or downgrade&lt;br/&gt;(store as scratch/open question)"]
+  V -- "Yes" --&gt; G["Governance checks&lt;br/&gt;(schema + provenance + policy)"]
+
+  G --&gt;|"approved"| D["Durable memory store&lt;br/&gt;(append-only records)"]
+  G --&gt;|"rejected"| R
+
+  D --&gt; I["Derived index&lt;br/&gt;(embeddings / search)"]
+  I --&gt; C["Context builder&lt;br/&gt;(retrieve top-k)"]
+  D --&gt; C
+
+  C --&gt; M
 </div>
-<p>Layer boundaries (inputs, outputs, authority):</p>
+<p>Key invariants:</p>
 <ul>
-<li><strong>Layer 1 (scratch)</strong>: input is the current prompt + tool outputs; output is short notes and summaries; not authoritative.</li>
-<li><strong>Layer 2 (session state)</strong>: input is task steps and decisions; output is a checklist and verification status; authoritative for <em>task progress</em> only.</li>
-<li><strong>Layer 3 (durable facts)</strong>: input is verified outcomes plus sources; output is reviewable records with provenance; authoritative when sources are valid.</li>
-<li><strong>Layer 4 (retrieval index)</strong>: input is documents/issues/traces; output is ranked pointers/excerpts; derived and never authoritative.</li>
-</ul>
-<p>The takeaway: make “what the agent knows” a controlled blend of volatile scratch, explicit task state, verified durable facts, and derived retrieval. Each layer has different write permissions.</p>
-<h3 id="layer-1-run-local-working-memory-scratch">Layer 1: Run-local working memory (scratch)</h3>
-<ul>
-<li><strong>What</strong>: transient notes, intermediate calculations, short summaries.</li>
-<li><strong>Scope</strong>: one run.</li>
-<li><strong>Write rule</strong>: always safe to overwrite; never treated as durable truth.</li>
-<li><strong>Example</strong>: “Files touched: A, B. Hypothesis: failing test caused by null handling.”</li>
-</ul>
-<h3 id="layer-2-session-memory-task-state">Layer 2: Session memory (task state)</h3>
-<ul>
-<li><strong>What</strong>: structured state for a multi-step task (checklists, open questions, next steps).</li>
-<li><strong>Scope</strong>: until task completion.</li>
-<li><strong>Write rule</strong>: update on each step; clear on task close.</li>
-<li><strong>Example</strong>: a JSON task record containing acceptance criteria and verification status.</li>
-</ul>
-<h3 id="layer-3-project-memory-durable-facts">Layer 3: Project memory (durable facts)</h3>
-<ul>
-<li><strong>What</strong>: stable, reviewable records: architecture decisions, interface contracts, runbooks.</li>
-<li><strong>Scope</strong>: long-lived.</li>
-<li><strong>Write rule</strong>: write only after verification passes and with a source-of-truth reference.</li>
-<li><strong>Example</strong>: ADR-style entries with links to code and traces.</li>
-</ul>
-<h3 id="layer-4-retrieval-index-searchable-corpus">Layer 4: Retrieval index (searchable corpus)</h3>
-<ul>
-<li><strong>What</strong>: embeddings or keyword index over docs/issues/traces.</li>
-<li><strong>Scope</strong>: long-lived, but treated as <em>derived</em> data.</li>
-<li><strong>Write rule</strong>: rebuildable; never the only place a critical fact exists.</li>
-<li><strong>Example</strong>: “retrieve top 5 related incidents” feeding short excerpts into context.</li>
+<li><strong>No direct writes to durable memory from the model</strong>.</li>
+<li><strong>Durable memory is append-only</strong>, with explicit “supersedes” links for corrections.</li>
+<li><strong>Every durable record has provenance and verification evidence</strong>.</li>
+<li><strong>Retrieval treats memory as a hint unless it is source-linked</strong> (and “critical” claims require source confirmation).</li>
 </ul>
 <h2 id="implementation-sketch">Implementation sketch</h2>
-<p>Write rules that keep memory auditable and safe:</p>
-<p>Write gates:</p>
+<p>A practical implementation has three stores with different write rules:</p>
 <ul>
-<li>Only write durable memory after verification passes.</li>
-<li>Treat retrieval as a <em>hint</em>; require confirmation against sources for critical claims.</li>
+<li><strong>Scratch (run-local)</strong>: overwrite is allowed; no long-lived authority.</li>
+<li><strong>Task state (session-local)</strong>: updated throughout the task; cleared on completion.</li>
+<li><strong>Durable memory (project-local)</strong>: append-only; written only through the barrier.</li>
 </ul>
-<p>Provenance &amp; schemas:</p>
+<h3 id="data-model-conceptual">Data model (conceptual)</h3>
+<p>Use a schema that makes authority explicit:</p>
 <ul>
-<li>Store sources (file paths, URLs, trace IDs, commit hashes) with each memory item.</li>
-<li>Separate schemas for different types of memory: facts, decisions, preferences, open questions.</li>
-<li>Version memory alongside the system (or tie it to a release identifier).</li>
+<li><code>kind</code>: <code>fact | decision | procedure | risk | preference | open_question</code></li>
+<li><code>confidence</code>: <code>low | medium | high</code></li>
+<li><code>scope</code>: <code>repo | service | team | user</code></li>
+<li><code>sources</code>: list of pointers (file paths, URLs, trace IDs, commit hashes)</li>
+<li><code>evidence</code>: what verification ran and its outcome</li>
+<li><code>supersedes</code>: list of record IDs (optional)</li>
+<li><code>valid_through</code>: optional expiry for volatile procedures</li>
 </ul>
-<p>Retention &amp; redaction:</p>
-<ul>
-<li>Support redaction and retention policies (delete by scope, delete by source, delete by time).</li>
-</ul>
-<p>Example durable-memory record schema (conceptual):</p>
+<p>A minimal record shape (conceptual):</p>
 <pre><code class="language-json">{
-  "type": "decision",
-  "title": "Prefer golden tests for CLI help output",
-  "status": "accepted",
-  "sources": ["docs/cli.md", "trace:2026-02-18T10:14Z"],
-  "rationale": "Help output is user-facing and easy to regress",
-  "verified_by": ["npm test", "snapshot update reviewed"],
-  "created_at": "2026-02-18"
+  "id": "mem_2026-02-23T11:24:00Z_9b2f",
+  "kind": "decision",
+  "title": "Treat retrieval hits as leads, not truth",
+  "body": "Durable memory entries must cite sources and verification. Retrieval results require source confirmation for critical claims.",
+  "scope": "repo",
+  "confidence": "high",
+  "sources": ["book/patterns/memory-architectures.md"],
+  "evidence": {
+    "type": "check",
+    "name": "docs build",
+    "command": "uv run mkdocs build",
+    "exit_code": 0
+  },
+  "created_at": "2026-02-23T11:24:00Z"
 }
 </code></pre>
-<h3 id="concrete-example">Concrete example</h3>
-<p>Bugfix agent memory layout:</p>
+<h3 id="write-barrier-algorithm-conceptual">Write barrier algorithm (conceptual)</h3>
+<ol>
+<li>
+<p><strong>Collect candidate writes</strong></p>
 <ul>
-<li><strong>Run-local</strong>: stack trace notes and hypotheses.</li>
-<li><strong>Session</strong>: checklist of reproduction steps + test plan + files changed.</li>
-<li><strong>Project</strong>: “Root cause and fix” note linked to the failing test and the patch.</li>
-<li><strong>Retrieval</strong>: search prior traces for similar failure signatures.</li>
+<li>The model emits <code>CandidateMemoryWrite</code> objects into a staging buffer.</li>
+<li>Each candidate includes an intended <code>kind</code>, <code>scope</code>, and a list of <code>sources</code>.</li>
 </ul>
-<p>End-to-end walkthrough (one bugfix, four layers):</p>
-<p>1) <strong>Retrieval index (Layer 4) proposes candidates</strong>
-   The agent runs “retrieve top 5 related incidents” using the failing test name and a short error signature (e.g., <code>TypeError: cannot read property 'id' of null</code>). It gets excerpts like:
-   - an incident note mentioning “null user during CLI parsing”
-   - a PR discussion that links to <code>src/parse.ts</code>
-   These excerpts are treated as leads. The agent follows the links and re-checks the current sources.</p>
-<p>2) <strong>Run-local scratch (Layer 1) captures hypotheses, not conclusions</strong>
-   The agent writes volatile notes such as:
-   - “Hypothesis A: null handling in parse.ts”
-   - “Hypothesis B: fixture missing <code>id</code> field”
-   - “Next checks: reproduce with <code>npm test -t parse</code>”
-   If the hypothesis changes after inspecting sources, the scratch note is overwritten.</p>
-<p>3) <strong>Session task state (Layer 2) makes progress and verification explicit</strong>
-   The agent maintains a task record (checklist-style) like:
-   - Repro step captured: <code>npm test -t "parse handles null user"</code> ✅
-   - Minimal failing input recorded (fixture path) ✅
-   - Fix implemented in <code>src/parse.ts</code> ⬜
-   - Regression test added/updated ⬜
-   - Verification rerun (tests/lint) ⬜
-   This is the place to see what was done and what remains. It is cleared when the task closes.</p>
-<p>4) <strong>Project durable facts (Layer 3) is written only after verification</strong>
-   After tests pass, the agent writes a durable note (ADR/runbook/“root cause” entry) that includes:
-   - the root cause (“parser assumed non-null user; null can occur when flag X is omitted”)
-   - the fix (“guard + explicit error message”)
-   - sources (commit hash, file paths, failing test name, trace ID)
-   This is what makes future runs governable. The durable entry points back to artifacts that can be re-checked.</p>
-<p>Operationally, this keeps reproducibility. You can replay the run by inspecting the sources, seeing which retrieval hits were used, and verifying that durable memory was gated on passing checks.</p>
-<p>Second scenario (non-bugfix): onboarding and runbook lookup:</p>
+</li>
+<li>
+<p><strong>Run verification</strong></p>
 <ul>
-<li><strong>Retrieval (Layer 4)</strong>: query “deploy rollback steps” and “service X runbook” and pull top-k links only.</li>
-<li><strong>Scratch (Layer 1)</strong>: jot “candidate runbooks: docs/runbooks/rollback.md, incident-2025-11-03” and open questions.</li>
-<li><strong>Session state (Layer 2)</strong>: track “confirmed steps in staging” and “who reviewed,” plus exact commands run.</li>
-<li><strong>Durable facts (Layer 3)</strong>: after a staging drill passes, record an updated runbook entry with sources (PR link and command transcript). Include a drill run ID (e.g., <code>DRILL-2026-02-22</code>) and a pass criterion (e.g., rollback script exits 0).</li>
+<li>Execute checks appropriate to the action class (tests, lint, build, evals).</li>
+<li>Capture: command, exit code, duration, and a bounded log excerpt.</li>
 </ul>
+</li>
+<li>
+<p><strong>Enforce governance rules</strong></p>
+<ul>
+<li>Reject if <code>sources</code> are empty for <code>fact/decision/procedure</code>.</li>
+<li>Reject if verification is missing or failed.</li>
+<li>Reject if content violates policy (sensitive data classes, retention rules, protected scopes).</li>
+<li>Optionally require human approval for specific <code>scope</code> (e.g., org-wide runbooks).</li>
+</ul>
+</li>
+<li>
+<p><strong>Commit</strong></p>
+<ul>
+<li>Persist approved candidates as append-only records.</li>
+<li>If replacing an old entry, write a <em>new</em> record with <code>supersedes</code> instead of mutating.</li>
+</ul>
+</li>
+<li>
+<p><strong>Index (derived)</strong></p>
+<ul>
+<li>Update or rebuild embeddings/search index from the durable store.</li>
+<li>Treat indexes as derived: deletions/redactions are enforceable by rebuild.</li>
+</ul>
+</li>
+</ol>
+<h3 id="read-path-rule">Read path rule</h3>
+<p>Even with a strong write barrier, keep the read side honest:</p>
+<ul>
+<li>Retrieve top-k memory entries into context with their <strong>sources</strong> and <strong>evidence</strong>.</li>
+<li>For any claim that would change code or policy, require a <strong>confirmation step</strong> against the current source of truth (files/tests/traces).</li>
+</ul>
+<h2 id="concrete-examples">Concrete Examples</h2>
+<h3 id="example-1-codebase-agent-writes-durable-facts-only-after-tests-pass">Example 1: Codebase agent writes “durable facts” only after tests pass</h3>
+<p>Scenario: An agent fixes a bug and wants to store a durable note for future runs.</p>
+<ul>
+<li>During investigation, it writes hypotheses to scratch:<ul>
+<li>“Maybe null <code>user</code> reaches parser when <code>--anonymous</code> flag is set.”</li>
+</ul>
+</li>
+<li>It updates task state with a checklist:<ul>
+<li>reproduce failure ✅</li>
+<li>implement fix ⬜</li>
+<li>run targeted tests ⬜</li>
+</ul>
+</li>
+</ul>
+<p>The agent proposes a candidate durable entry:</p>
+<ul>
+<li><code>kind: fact</code></li>
+<li>“Root cause: parser assumed non-null user; null allowed when flag omitted.”</li>
+<li><code>sources: [path to failing test, path to fix]</code></li>
+</ul>
+<p>Write barrier behavior:</p>
+<ul>
+<li>If <code>pytest -q</code> (or the repo’s relevant test command) fails, the candidate is rejected or downgraded to <code>open_question</code> in task state.</li>
+<li>When tests pass, the barrier commits the record with evidence (command + exit code) and sources (files + commit hash).</li>
+</ul>
+<p>Outcome: future runs can retrieve the entry, see exactly which artifacts support it, and re-check the claim after refactors.</p>
+<h3 id="example-2-incident-response-agent-updates-a-rollback-procedure-via-a-drill-gate">Example 2: Incident-response agent updates a rollback procedure via a drill gate</h3>
+<p>Scenario: An agent suggests updating a rollback runbook.</p>
+<p>Candidate durable entry:</p>
+<ul>
+<li><code>kind: procedure</code></li>
+<li>“Rollback service X by running <code>./scripts/rollback.sh --to &lt;tag&gt;</code> then verifying health endpoint.”</li>
+<li><code>scope: service</code></li>
+<li><code>sources: [runbook file, drill trace ID, CI job URL]</code></li>
+</ul>
+<p>Write barrier behavior:</p>
+<ul>
+<li>Verification requirement is a <strong>drill</strong> (or staging deployment) rather than unit tests:<ul>
+<li>staging rollback executed</li>
+<li>health checks passed</li>
+<li>on-call reviewer acknowledged</li>
+</ul>
+</li>
+</ul>
+<p>If the drill is not performed, the barrier rejects the durable update and stores it as a suggestion in task state:</p>
+<ul>
+<li><code>kind: open_question</code></li>
+<li>“Proposed rollback steps need staging confirmation.”</li>
+</ul>
+<p>Outcome: the system avoids institutionalizing an untested operational procedure.</p>
 <h2 id="failure-modes">Failure modes</h2>
 <ul>
-<li><strong>Stale memory</strong>: outdated assumptions persist after refactors; fixes target the wrong code. Mitigation: store <strong>sources and version identifiers</strong> with durable entries, and treat retrieval as a hint that must be confirmed against current files/traces.</li>
-<li><strong>Memory poisoning</strong>: incorrect entries are stored as facts and bias future actions. Mitigation: apply a <strong>write gate</strong> (only after verification) and use <strong>separate schemas</strong> so “open questions” and “hypotheses” do not masquerade as facts.</li>
-<li><strong>Over-retrieval</strong>: too many irrelevant items drown the signal and dilute constraints. Mitigation: keep retrieval <strong>top-k and source-linked</strong>, and require confirmation against sources for critical claims rather than pasting large context blobs.</li>
-<li><strong>Silent mutation</strong>: memory is updated without review; history is effectively rewritten. Mitigation: prefer <strong>append-only, versioned durable records</strong> tied to releases/commits instead of in-place edits.</li>
-<li><strong>Unversioned dependency</strong>: behavior depends on memory that is not tied to code/version. Mitigation: <strong>version memory alongside the system</strong> (or bind to release identifiers) so the dependency is explicit and reviewable.</li>
-<li><strong>Privacy leakage</strong>: sensitive content is stored, retrieved, or logged without appropriate handling. Mitigation: enforce <strong>retention/redaction policies</strong> (delete by scope/source/time) and keep derived indexes rebuildable so deletion is enforceable.</li>
+<li><strong>Verification that doesn’t prove the claim</strong>: tests pass but do not exercise the relevant behavior.<ul>
+<li>Mitigation: require <em>targeted</em> evidence (specific test name, repro steps, or a drill ID) for certain <code>kind</code> values.</li>
 </ul>
-<h2 id="operational-checklists">Operational checklists</h2>
-<h3 id="write-gate-what-is-allowed-to-persist">Write gate (what is allowed to persist)</h3>
-<ul>
-<li>Store durable facts only when they have <strong>provenance</strong> (a source pointer) and are backed by <strong>verification evidence</strong>.</li>
-<li>Store decisions as append-only records; corrections should create a new record that <strong>supersedes</strong> the old id (no silent edits).</li>
-<li>Set <code>valid_through</code> for entries that are known to go stale (runbooks, “current procedure” notes) so retrieval can hide expired items by default.</li>
+</li>
+<li><strong>Barrier bypass</strong>: a code path allows durable writes without the gate.<ul>
+<li>Mitigation: enforce write access at the storage API level (capability token / allowlist), not in prompts.</li>
 </ul>
-<h3 id="read-gate-what-is-allowed-to-influence-action">Read gate (what is allowed to influence action)</h3>
-<ul>
-<li>Treat retrieved items as <strong>leads</strong>, not truth; confirm against current sources (files, traces, tests).</li>
-<li>Prefer items that are: (1) not expired (<code>valid_through</code>), (2) not superseded, (3) high-confidence, (4) source-linked.</li>
-<li>If a retrieved claim would change code or policy, require a verification step before acting (rerun the relevant check or reproduce the failure signature).</li>
+</li>
+<li><strong>Over-rejection</strong>: the barrier is too strict and prevents useful learning.<ul>
+<li>Mitigation: provide a safe alternative store (<code>open_question</code> / <code>hypothesis</code>) that is visible but non-authoritative.</li>
 </ul>
-<h3 id="governance-ops-correction-retention-redaction">Governance ops (correction, retention, redaction)</h3>
-<ul>
-<li><strong>Correction</strong>: create a new record with <code>supersedes: [old_id]</code> and a source pointer to the evidence that invalidated the old record.</li>
-<li><strong>Retention</strong>: enforce TTLs by record type (episodic traces often shorter-lived than decisions) and make expiry a default visibility rule.</li>
-<li><strong>Redaction</strong>: remove or hash sensitive fields while preserving minimal provenance where policy permits; ensure derived indexes remain rebuildable.</li>
+</li>
+<li><strong>Authority confusion</strong>: consumers treat any retrieved record as truth.<ul>
+<li>Mitigation: include <code>kind</code>, <code>confidence</code>, <code>sources</code>, and <code>evidence</code> in retrieval output; require explicit source confirmation for critical actions.</li>
+</ul>
+</li>
+<li><strong>Stale durable procedures</strong>: operational steps become invalid after infra changes.<ul>
+<li>Mitigation: add <code>valid_through</code> (or review cadence) and prefer append-only superseding records.</li>
+</ul>
+</li>
+<li><strong>Privacy leakage</strong>: candidates include sensitive data and pass through accidentally.<ul>
+<li>Mitigation: apply redaction/classification checks before commit; make indexes rebuildable so deletions propagate.</li>
+</ul>
+</li>
 </ul>
 <h2 id="when-not-to-use">When not to use</h2>
 <ul>
-<li>Short-lived tasks where the context window is sufficient.</li>
-<li>High-sensitivity domains without a clear retention/redaction policy.</li>
-<li>Systems that require strict reproducibility but cannot version memory with code.</li>
+<li>You cannot run meaningful verification (no tests, no drills, no trusted checks) and would be gating on weak signals.</li>
+<li>The task is short-lived and scratch + task state are sufficient.</li>
+<li>The domain is too time-critical for gating (e.g., emergency response where the immediate goal is triage), and you accept that durable updates happen later via a post-incident review.</li>
+<li>Your memory store is not governable (no deletion/redaction, no audit logs, no provenance fields). In that case, durable writes are higher risk than the value they provide.</li>
 </ul>
-<p>Fallback for strict reproducibility: rely on explicit logs + artifacts (commands, traces, patches, test reports) and keep “memory” limited to pointers into those sources.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

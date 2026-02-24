@@ -7,23 +7,23 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="Technical book on AI-first software engineering governance and execution" name="description"/>
 <meta content="Autonomous Authors" name="author"/>
-<link href="../.." rel="prev"/>
-<link href="../chapters/01-paradigm-shift/" rel="next"/>
-<link href="../../assets/images/favicon.png" rel="icon"/>
+<link href="../golden-task-canary-suite/" rel="prev"/>
+<link href="../memory-write-barrier/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
-<title>Preface - AI-First Software Engineering</title>
-<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<title>Replayable Trace Runs - AI-First Software Engineering</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
 <body dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#preface">
+<a class="md-skip" href="#replayable-trace-runs">
           Skip to content
         </a>
 </div>
@@ -31,7 +31,7 @@
 </div>
 <header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="AI-First Software Engineering" class="md-header__button md-logo" data-md-component="logo" href="../.." title="AI-First Software Engineering">
+<a aria-label="AI-First Software Engineering" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
@@ -47,7 +47,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Preface
+              Replayable Trace Runs
             
           </span>
 </div>
@@ -104,7 +104,7 @@
 <div class="md-sidebar__inner">
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
-<a aria-label="AI-First Software Engineering" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="AI-First Software Engineering">
+<a aria-label="AI-First Software Engineering" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="AI-First Software Engineering">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
     AI-First Software Engineering
@@ -121,7 +121,7 @@
 </div>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../..">
+<a class="md-nav__link" href="../../..">
 <span class="md-ellipsis">
     
   
@@ -132,20 +132,8 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    Preface
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../preface/">
 <span class="md-ellipsis">
     
   
@@ -155,50 +143,6 @@
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#scope">
-<span class="md-ellipsis">
-      
-        Scope
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#key-distinction-model-vs-harness">
-<span class="md-ellipsis">
-      
-        Key distinction: model vs harness
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#what-the-repository-demonstrates">
-<span class="md-ellipsis">
-      
-        What the repository demonstrates
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#how-to-read">
-<span class="md-ellipsis">
-      
-        How to read
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
@@ -224,7 +168,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/01-paradigm-shift/">
+<a class="md-nav__link" href="../../chapters/01-paradigm-shift/">
 <span class="md-ellipsis">
     
   
@@ -236,7 +180,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/02-harness-engineering/">
+<a class="md-nav__link" href="../../chapters/02-harness-engineering/">
 <span class="md-ellipsis">
     
   
@@ -248,7 +192,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/03-autonomous-kernels/">
+<a class="md-nav__link" href="../../chapters/03-autonomous-kernels/">
 <span class="md-ellipsis">
     
   
@@ -260,7 +204,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/04-memory-systems/">
+<a class="md-nav__link" href="../../chapters/04-memory-systems/">
 <span class="md-ellipsis">
     
   
@@ -272,7 +216,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/05-evaluation-and-traces/">
+<a class="md-nav__link" href="../../chapters/05-evaluation-and-traces/">
 <span class="md-ellipsis">
     
   
@@ -284,7 +228,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/06-agent-governance/">
+<a class="md-nav__link" href="../../chapters/06-agent-governance/">
 <span class="md-ellipsis">
     
   
@@ -296,7 +240,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/07-production-ai-infrastructure/">
+<a class="md-nav__link" href="../../chapters/07-production-ai-infrastructure/">
 <span class="md-ellipsis">
     
   
@@ -308,7 +252,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../chapters/99-future-directions/">
+<a class="md-nav__link" href="../../chapters/99-future-directions/">
 <span class="md-ellipsis">
     
   
@@ -323,7 +267,7 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../glossary/">
+<a class="md-nav__link" href="../../glossary/">
 <span class="md-ellipsis">
     
   
@@ -334,8 +278,8 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
 <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
 <span class="md-ellipsis">
     
@@ -347,7 +291,7 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
             
@@ -358,7 +302,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/harness-design-patterns/">
+<a class="md-nav__link" href="../harness-design-patterns/">
 <span class="md-ellipsis">
     
   
@@ -370,7 +314,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/memory-architectures/">
+<a class="md-nav__link" href="../memory-architectures/">
 <span class="md-ellipsis">
     
   
@@ -382,7 +326,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/minimal-agent-loop/">
+<a class="md-nav__link" href="../minimal-agent-loop/">
 <span class="md-ellipsis">
     
   
@@ -394,7 +338,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/self-verification-loop/">
+<a class="md-nav__link" href="../self-verification-loop/">
 <span class="md-ellipsis">
     
   
@@ -406,7 +350,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/risk-shaped-autonomy-tiers/">
+<a class="md-nav__link" href="../risk-shaped-autonomy-tiers/">
 <span class="md-ellipsis">
     
   
@@ -418,7 +362,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/diff-to-gates-router/">
+<a class="md-nav__link" href="../diff-to-gates-router/">
 <span class="md-ellipsis">
     
   
@@ -430,7 +374,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/scout-then-execute-two-phase-runs/">
+<a class="md-nav__link" href="../scout-then-execute-two-phase-runs/">
 <span class="md-ellipsis">
     
   
@@ -442,7 +386,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/patch-locality-budget/">
+<a class="md-nav__link" href="../patch-locality-budget/">
 <span class="md-ellipsis">
     
   
@@ -454,7 +398,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/waiver-ledger-exceptions-are-data/">
+<a class="md-nav__link" href="../waiver-ledger-exceptions-are-data/">
 <span class="md-ellipsis">
     
   
@@ -466,7 +410,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/evidence-bundle-standard/">
+<a class="md-nav__link" href="../evidence-bundle-standard/">
 <span class="md-ellipsis">
     
   
@@ -478,7 +422,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/failure-signature-index/">
+<a class="md-nav__link" href="../failure-signature-index/">
 <span class="md-ellipsis">
     
   
@@ -490,7 +434,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/golden-task-canary-suite/">
+<a class="md-nav__link" href="../golden-task-canary-suite/">
 <span class="md-ellipsis">
     
   
@@ -501,8 +445,20 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/replayable-trace-runs/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Replayable Trace Runs
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -512,9 +468,111 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#context">
+<span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/memory-write-barrier/">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forces">
+<span class="md-ellipsis">
+      
+        Forces
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solution">
+<span class="md-ellipsis">
+      
+        Solution
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
+      
+        Implementation sketch
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-examples">
+<span class="md-ellipsis">
+      
+        Concrete examples
+      
+    </span>
+</a>
+<nav aria-label="Concrete examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-incident-reproduction-for-a-flaky-check">
+<span class="md-ellipsis">
+      
+        Example 1: Incident reproduction for a flaky check
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-regression-test-for-a-past-bugfix-workflow">
+<span class="md-ellipsis">
+      
+        Example 2: Regression test for a past bugfix workflow
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
+      
+        When not to use
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../memory-write-barrier/">
 <span class="md-ellipsis">
     
   
@@ -543,37 +601,95 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#scope">
+<a class="md-nav__link" href="#context">
 <span class="md-ellipsis">
       
-        Scope
+        Context
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#key-distinction-model-vs-harness">
+<a class="md-nav__link" href="#problem">
 <span class="md-ellipsis">
       
-        Key distinction: model vs harness
+        Problem
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#what-the-repository-demonstrates">
+<a class="md-nav__link" href="#forces">
 <span class="md-ellipsis">
       
-        What the repository demonstrates
+        Forces
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#how-to-read">
+<a class="md-nav__link" href="#solution">
 <span class="md-ellipsis">
       
-        How to read
+        Solution
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-sketch">
+<span class="md-ellipsis">
+      
+        Implementation sketch
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concrete-examples">
+<span class="md-ellipsis">
+      
+        Concrete examples
+      
+    </span>
+</a>
+<nav aria-label="Concrete examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-incident-reproduction-for-a-flaky-check">
+<span class="md-ellipsis">
+      
+        Example 1: Incident reproduction for a flaky check
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-regression-test-for-a-past-bugfix-workflow">
+<span class="md-ellipsis">
+      
+        Example 2: Regression test for a past bugfix workflow
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#failure-modes">
+<span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
+      
+        When not to use
       
     </span>
 </a>
@@ -585,119 +701,121 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="preface">Preface</h1>
-<p>This book treats AI-first software engineering as an engineering discipline rather than a product feature.</p>
-<h2 id="scope">Scope</h2>
-<p>This book focuses on <em>system design for AI-assisted and agentic development</em>:</p>
+<h1 id="replayable-trace-runs">Replayable Trace Runs</h1>
+<h2 id="context">Context</h2>
+<p>Traces are most valuable when they are not just “what happened,” but also “something you can replay.” In autonomous-kernel systems, runs often fail in ways that are hard to reproduce: nondeterministic tool outputs, shifting dependencies, or missing context about what the model saw.</p>
+<p>Replayable trace runs extend the evaluation-and-traces discipline: a trace is treated as an executable record. Given a trace and a pinned environment, you can rerun the same sequence of steps (or a safe approximation) and verify that outcomes match.</p>
+<h2 id="problem">Problem</h2>
+<p>How do you make debugging and drift analysis reliable when a run’s behavior depends on many moving parts (repo state, tools, prompts, budgets, and external systems)?</p>
+<p>Without replay:</p>
 <ul>
-<li>Harness design: tool contracts, constraints, budgets, evaluation gates, and traces.</li>
-<li>Operational reliability: reproducibility, attribution, rollback, and incident response.</li>
-<li>Governance: permissions, protected surfaces, and enforcement via tooling/CI.</li>
-<li>Memory as an engineered subsystem: provenance, retention, correction, and drift control.</li>
+<li>Incident review is guesswork.</li>
+<li>Regression testing for the harness is weak because you cannot deterministically re-execute past failures.</li>
+<li>“It worked yesterday” is not actionable.</li>
 </ul>
-<p>Concrete boundaries:</p>
+<h2 id="forces">Forces</h2>
 <ul>
-<li><strong>In scope:</strong> a PR review agent that must cite file paths, run linters/tests, and attach logs before approval.</li>
-<li><strong>In scope:</strong> a code-change workflow that requires a reproducible “plan → change → evaluate → record” trace for each iteration.</li>
-<li><strong>Out of scope:</strong> model training/fine-tuning, or discussions of model internals beyond what is needed to reason about behavior and failure modes.</li>
+<li><strong>Determinism vs. reality</strong>: real runs include nondeterministic elements; replay wants determinism.</li>
+<li><strong>Side effects</strong>: replaying a run must not re-trigger unsafe mutations.</li>
+<li><strong>Completeness vs. size</strong>: capturing everything makes traces huge; capturing too little makes replay impossible.</li>
+<li><strong>Version drift</strong>: tools and policies change; replay must record versions or provide compatibility shims.</li>
+<li><strong>Privacy</strong>: traces can contain sensitive outputs; replay storage must support redaction.</li>
 </ul>
-<p>What you’ll be able to do after this book:</p>
+<h2 id="solution">Solution</h2>
+<p>Treat a trace as a sequence of typed events with enough information to support a “replay mode.” In replay mode:</p>
 <ul>
-<li>Specify tool contracts and evaluation gates so “done” is defined by evidence (tests, builds, checks), not plausibility.</li>
-<li>Design governance boundaries (permissions, protected surfaces) that limit blast radius while keeping workflows productive.</li>
-<li>Make agent loops reproducible and auditable via traces, state, and rollback-friendly change management.</li>
+<li>Tool calls are stubbed from recorded results (safe and deterministic).</li>
+<li>Verification commands can be rerun in a pinned environment (where possible).</li>
+<li>Outcomes are compared against recorded evidence (diff hashes, exit codes, normalized errors).</li>
 </ul>
-<p>Trade-offs are part of the scope. Stronger gates increase confidence, but they also add latency and maintenance cost. The goal is to make these costs explicit and tunable.</p>
-<p>This book does <strong>not</strong> attempt to:</p>
-<ul>
-<li>Train foundation models or discuss model internals beyond what is necessary to reason about system behavior.</li>
-<li>Provide a survey of all agent frameworks; patterns are described in terms of interfaces and invariants.</li>
-<li>Substitute evaluation with plausibility; “done” requires evidence.</li>
-</ul>
-<h2 id="key-distinction-model-vs-harness">Key distinction: model vs harness</h2>
-<ul>
-<li><strong>Model</strong>: the reasoning component that proposes plans and edits.</li>
-<li><strong>Harness</strong>: the execution and control environment (tools, policies, evaluation, tracing, state).</li>
-</ul>
-<p>The harness turns suggestions into an engineering workflow.
-It enforces a small set of invariants:</p>
-<ul>
-<li>Tool access: what tools may be called, with what inputs/outputs (schemas, allowlists, budgets).</li>
-<li>Evidence: what checks must pass before accepting a change (tests, builds, linters, targeted checks).</li>
-<li>Record: what must be stored for audit and rollback (diffs, command output, artifacts, approvals).</li>
-</ul>
-<p>Minimal system breakdown (components and interactions):</p>
-<ul>
-<li><strong>Inputs</strong>: user request, repository state, policy config.</li>
-<li><strong>Planner</strong>: produces a plan with bounded scope and acceptance criteria.</li>
-<li><strong>Changer</strong>: proposes a minimal diff that targets the plan.</li>
-<li><strong>Evaluator</strong>: runs specified commands and collects results as artifacts.</li>
-<li><strong>Recorder</strong>: writes a trace (plan, diff, commands, outputs, decision).</li>
-</ul>
-<p>The diagram below is a literal control flow for request, verification, and recording.</p>
-<div class="mermaid">sequenceDiagram
-  participant U as User
-  participant M as Model
-  participant H as Harness
-  participant T as Tools/CI
-  U-&gt;&gt;H: request
-  H-&gt;&gt;M: plan (constraints, budgets)
-  M-&gt;&gt;H: proposed edits
-  H-&gt;&gt;T: run checks (tests/lint/build)
-  T--&gt;&gt;H: outputs (exit codes, logs)
-  H--&gt;&gt;U: record (diff + artifacts) + decision
+<p>A diagram helps because it distinguishes a live run (real tool router) from replay (stubbed tool router) while sharing the same kernel logic.</p>
+<div class="mermaid">flowchart LR
+  K["Kernel loop"] --&gt; TR["Trace writer"]
+  K --&gt; R1["Live tool router"]
+  R1 --&gt; SE["Side effects"]
+  TR --&gt; TS["Trace store"]
+
+  TS --&gt; RR["Replay runner"]
+  RR --&gt; K2["Kernel loop"]
+  K2 --&gt; R2["Stubbed tool router"]
+  R2 --&gt; CMP["Compare outputs&lt;br/&gt;hashes, exit codes, signatures"]
 </div>
-<p>Mini-example: two systems use the same model to “fix failing tests.”
-In System A, the model edits files and declares success.
-Failures can be missed until later.</p>
-<p>In System B, the harness requires three artifacts before “done”:</p>
-<ol>
-<li>A minimal diff that names the files changed.</li>
-<li>A test command with exit code 0 (for example: <code>pytest -q tests/test_auth.py::test_login</code>).</li>
-<li>Attached output (command stdout/stderr) linked to the diff.</li>
-</ol>
-<p>Acceptance is a gate with an exit code.
-If the command is not run, or exits non-zero, the change is rejected.
-Acceptance criterion: detection occurs within the same iteration (≤ 1 loop).</p>
-<p>Second mini-example: PR review gating.
-A review agent may propose “approve.”
-Approval is only allowed if:</p>
+<h2 id="implementation-sketch">Implementation sketch</h2>
+<p>Trace event requirements:</p>
 <ul>
-<li>The review comment cites at least 3 concrete file paths it inspected.</li>
-<li>The harness runs <code>ruff check .</code> and <code>pytest -q</code> and records exit code 0 for both.</li>
-<li>The harness attaches the command outputs to the review record.</li>
-<li>If either command is skipped or fails, approval is blocked.</li>
+<li><code>event_id</code>, <code>step</code>, <code>timestamp</code></li>
+<li><code>action</code>: typed tool call or stop, including tool name and args</li>
+<li><code>result</code>: tool exit status, normalized error, and bounded outputs</li>
+<li><code>side_effect_summary</code>: changed files, created ids/urls, or “none”</li>
+<li><code>environment</code>: repo SHA, harness version, tool versions</li>
 </ul>
-<p>Failure modes still exist, and the harness should surface them explicitly.
-Flaky tests can block merges and inflate reruns.
-Missing tool coverage can create blind spots for certain file types.
-Log omission can hide the true failure cause.
-Permission misconfiguration can allow unsafe writes.
-In each case, the harness should fail closed and record why.</p>
-<p>A recurring hypothesis in the chapters is that many reliability gains are harness-induced. Schema design, verification discipline, and traceability matter even when the model is unchanged.</p>
-<h2 id="what-the-repository-demonstrates">What the repository demonstrates</h2>
-<p>The repository is structured to make book development itself a reproducible agent loop:</p>
+<p>Example event (conceptual):</p>
+<pre><code class="language-json">{
+  "step": 4,
+  "action": {"type": "tool", "tool": "run_tests", "args": {"command": "pytest -q"}},
+  "result": {"exit_code": 1, "stderr_excerpt": "E AssertionError: ..."},
+  "normalized_error": {"kind": "validation", "signature_id": "sha256:..."},
+  "environment": {"repo_sha": "...", "python": "3.12.2"}
+}
+</code></pre>
+<p>Replay modes (practical):</p>
 <ul>
-<li>Governance is defined in <code>CONSTITUTION.md</code> and <code>AGENTS.md</code>.</li>
-<li>Chapter quality, drift signals, and style guardrails are declared in <code>evals/</code>.</li>
-<li>Iteration state is recorded in <code>state/</code>.</li>
+<li><strong>Strict replay (stub tools)</strong>: tools return recorded outputs; the kernel must produce the same next actions and stop reason.</li>
+<li><strong>Hybrid replay (rerun verifiers)</strong>: rerun verification commands in a pinned environment, but keep side-effectful tools stubbed.</li>
+<li><strong>Dry-run replay</strong>: do not apply patches; verify that the trace is internally consistent and the evidence bundle can be reconstructed.</li>
 </ul>
-<p>At a high level, each iteration is meant to be verifiable: plan → change → evaluate → record.</p>
-<p>Practically, “record” means the repository keeps enough evidence to audit decisions:</p>
+<p>Core comparisons that make replay useful:</p>
 <ul>
-<li>The plan that bounded the edit.</li>
-<li>The minimal diff that implemented it.</li>
-<li>The exact commands executed (including versions and working directory assumptions).</li>
-<li>The outputs needed to verify the result (exit codes, logs, reports).</li>
+<li>Patch identity: compare diff hash (or file checksums).</li>
+<li>Verification: compare exit codes and normalized failure signatures.</li>
+<li>Control flow: compare step count and stop reason distribution.</li>
 </ul>
-<p>The intention is to make each chapter a testable unit: clear thesis, system breakdown, concrete examples, trade-offs, failure modes, and research directions.</p>
-<h2 id="how-to-read">How to read</h2>
-<ol>
-<li>Start with the chapter that matches your immediate constraint (evaluation, governance, infra).</li>
-<li>Use <code>book/glossary.md</code> to disambiguate terms.</li>
-<li>Treat pattern documents in <code>book/patterns/</code> as reusable design primitives.</li>
-<li>If you’re new: read Preface → <code>book/glossary.md</code> → one document in <code>book/patterns/</code>.</li>
-</ol>
+<h2 id="concrete-examples">Concrete examples</h2>
+<h3 id="example-1-incident-reproduction-for-a-flaky-check">Example 1: Incident reproduction for a flaky check</h3>
+<p>A nightly job started failing intermittently. The trace shows a timeout in <code>mkdocs build</code>.</p>
+<p>Replay approach:</p>
+<ul>
+<li>Strict replay stubs tool outputs to confirm the kernel behavior (it correctly classifies the error as <code>timeout</code> and stops “blocked” with repro steps).</li>
+<li>Hybrid replay reruns <code>uv run mkdocs build</code> in a pinned environment to see whether the timeout reproduces.</li>
+</ul>
+<p>Outcome: you can distinguish “harness misclassified” from “real tool flakiness” without re-triggering unrelated mutations.</p>
+<h3 id="example-2-regression-test-for-a-past-bugfix-workflow">Example 2: Regression test for a past bugfix workflow</h3>
+<p>A bugfix run from last month succeeded after three steps. A new harness release claims to reduce steps.</p>
+<p>Replay approach:</p>
+<ul>
+<li>Run strict replay on the historical trace to ensure the harness still reaches <code>verified</code> with the same diff hash.</li>
+<li>Compare metrics (steps, gate failures) across harness versions.</li>
+</ul>
+<p>Outcome: the trace becomes a reusable unit test for harness changes.</p>
+<h2 id="failure-modes">Failure modes</h2>
+<ul>
+<li><strong>Insufficient capture</strong>: the trace omits tool args or outputs; replay cannot stub deterministically.<ul>
+<li>Mitigation: define a minimum replay contract per tool.</li>
+</ul>
+</li>
+<li><strong>Unsafe replay</strong>: replay triggers real side effects (publishes, ticket creation).<ul>
+<li>Mitigation: default replay to stub side-effect tools; require explicit opt-in to “live” mode.</li>
+</ul>
+</li>
+<li><strong>Environment mismatch</strong>: repo/tool versions differ; hybrid replay diverges.<ul>
+<li>Mitigation: record versions and provide a container/lockfile-based pinned environment.</li>
+</ul>
+</li>
+<li><strong>Replay brittleness</strong>: minor log differences cause false mismatches.<ul>
+<li>Mitigation: compare normalized outputs (hashes, signatures) rather than raw logs.</li>
+</ul>
+</li>
+<li><strong>Privacy leakage</strong>: traces contain sensitive stdout/stderr.<ul>
+<li>Mitigation: redaction and bounded capture, same as evidence bundles.</li>
+</ul>
+</li>
+</ul>
+<h2 id="when-not-to-use">When not to use</h2>
+<ul>
+<li>Tasks dominated by external, non-stubbable systems (payments, production deploys) where safe replay is not feasible.</li>
+<li>Extremely lightweight workflows where trace capture cost exceeds the value.</li>
+<li>Teams without artifact retention discipline; replay depends on keeping traces and bundles available.</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -714,7 +832,7 @@ In each case, the harness should fail closed and record why.</p>
       Material for MkDocs
     </a>
 <div class="build-timestamp" style="margin-top: 0.5em; font-size: 0.8em;">
-    Last built: 2026-02-24 20:25:10 UTC
+    Last built: 2026-02-24 20:25:11 UTC
   </div>
 </div>
 <div class="md-social">
@@ -732,8 +850,8 @@ In each case, the harness should fail closed and record why.</p>
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
 <script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
 mermaid.initialize({});</script></body>
 </html>

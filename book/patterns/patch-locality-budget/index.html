@@ -13,23 +13,25 @@
       
       
       
+        <link rel="prev" href="../scout-then-execute-two-phase-runs/">
       
-        <link rel="next" href="book/preface/">
+      
+        <link rel="next" href="../waiver-ledger-exceptions-are-data/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
-        <title>AI-First Software Engineering</title>
+        <title>Patch Locality Budget - AI-First Software Engineering</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
       
 
@@ -48,7 +50,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -66,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ai-first-software-engineering" class="md-skip">
+        <a href="#patch-locality-budget-blast-radius-caps" class="md-skip">
           Skip to content
         </a>
       
@@ -82,7 +84,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="AI-First Software Engineering" class="md-header__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
+    <a href="../../.." title="AI-First Software Engineering" class="md-header__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Patch Locality Budget
             
           </span>
         </div>
@@ -192,7 +194,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="AI-First Software Engineering" class="md-nav__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
+    <a href="../../.." title="AI-First Software Engineering" class="md-nav__button md-logo" aria-label="AI-First Software Engineering" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -219,37 +221,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -265,70 +240,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#contents" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Contents
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#publishing-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Publishing workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-tree" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Project tree
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -340,7 +251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/preface/" class="md-nav__link">
+      <a href="../../preface/" class="md-nav__link">
         
   
   
@@ -414,7 +325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/chapters/01-paradigm-shift/" class="md-nav__link">
+      <a href="../../chapters/01-paradigm-shift/" class="md-nav__link">
         
   
   
@@ -442,7 +353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/chapters/02-harness-engineering/" class="md-nav__link">
+      <a href="../../chapters/02-harness-engineering/" class="md-nav__link">
         
   
   
@@ -470,7 +381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/chapters/03-autonomous-kernels/" class="md-nav__link">
+      <a href="../../chapters/03-autonomous-kernels/" class="md-nav__link">
         
   
   
@@ -498,7 +409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/chapters/04-memory-systems/" class="md-nav__link">
+      <a href="../../chapters/04-memory-systems/" class="md-nav__link">
         
   
   
@@ -526,7 +437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/chapters/05-evaluation-and-traces/" class="md-nav__link">
+      <a href="../../chapters/05-evaluation-and-traces/" class="md-nav__link">
         
   
   
@@ -554,7 +465,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/chapters/06-agent-governance/" class="md-nav__link">
+      <a href="../../chapters/06-agent-governance/" class="md-nav__link">
         
   
   
@@ -582,7 +493,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/chapters/07-production-ai-infrastructure/" class="md-nav__link">
+      <a href="../../chapters/07-production-ai-infrastructure/" class="md-nav__link">
         
   
   
@@ -610,7 +521,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/chapters/99-future-directions/" class="md-nav__link">
+      <a href="../../chapters/99-future-directions/" class="md-nav__link">
         
   
   
@@ -645,7 +556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/glossary/" class="md-nav__link">
+      <a href="../../glossary/" class="md-nav__link">
         
   
   
@@ -669,18 +580,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -701,7 +614,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -719,7 +632,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/harness-design-patterns/" class="md-nav__link">
+      <a href="../harness-design-patterns/" class="md-nav__link">
         
   
   
@@ -747,7 +660,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/memory-architectures/" class="md-nav__link">
+      <a href="../memory-architectures/" class="md-nav__link">
         
   
   
@@ -775,7 +688,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/minimal-agent-loop/" class="md-nav__link">
+      <a href="../minimal-agent-loop/" class="md-nav__link">
         
   
   
@@ -803,7 +716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/self-verification-loop/" class="md-nav__link">
+      <a href="../self-verification-loop/" class="md-nav__link">
         
   
   
@@ -831,7 +744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/risk-shaped-autonomy-tiers/" class="md-nav__link">
+      <a href="../risk-shaped-autonomy-tiers/" class="md-nav__link">
         
   
   
@@ -859,7 +772,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/diff-to-gates-router/" class="md-nav__link">
+      <a href="../diff-to-gates-router/" class="md-nav__link">
         
   
   
@@ -887,7 +800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/scout-then-execute-two-phase-runs/" class="md-nav__link">
+      <a href="../scout-then-execute-two-phase-runs/" class="md-nav__link">
         
   
   
@@ -912,10 +825,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="book/patterns/patch-locality-budget/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patch Locality Budget
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -931,6 +871,181 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-sketch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation sketch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation sketch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#locality-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Locality metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chunking-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chunking strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concrete-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concrete examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-constrain-a-refactor-to-a-safe-blast-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Constrain a refactor to a safe blast radius
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-prevent-accidental-repo-wide-churn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Prevent accidental repo-wide churn
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-not-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When not to use
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -943,7 +1058,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/waiver-ledger-exceptions-are-data/" class="md-nav__link">
+      <a href="../waiver-ledger-exceptions-are-data/" class="md-nav__link">
         
   
   
@@ -971,7 +1086,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/evidence-bundle-standard/" class="md-nav__link">
+      <a href="../evidence-bundle-standard/" class="md-nav__link">
         
   
   
@@ -999,7 +1114,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/failure-signature-index/" class="md-nav__link">
+      <a href="../failure-signature-index/" class="md-nav__link">
         
   
   
@@ -1027,7 +1142,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/golden-task-canary-suite/" class="md-nav__link">
+      <a href="../golden-task-canary-suite/" class="md-nav__link">
         
   
   
@@ -1055,7 +1170,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/replayable-trace-runs/" class="md-nav__link">
+      <a href="../replayable-trace-runs/" class="md-nav__link">
         
   
   
@@ -1083,7 +1198,7 @@
   
   
     <li class="md-nav__item">
-      <a href="book/patterns/memory-write-barrier/" class="md-nav__link">
+      <a href="../memory-write-barrier/" class="md-nav__link">
         
   
   
@@ -1138,10 +1253,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#contents" class="md-nav__link">
+  <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Contents
+        Context
       
     </span>
   </a>
@@ -1149,10 +1264,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#publishing-workflow" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Publishing workflow
+        Problem
       
     </span>
   </a>
@@ -1160,10 +1275,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-commands" class="md-nav__link">
+  <a href="#forces" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick commands
+        Forces
       
     </span>
   </a>
@@ -1171,10 +1286,121 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-tree" class="md-nav__link">
+  <a href="#solution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project tree
+        Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-sketch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation sketch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation sketch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#locality-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Locality metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chunking-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chunking strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concrete-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concrete examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-constrain-a-refactor-to-a-safe-blast-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Constrain a refactor to a safe blast radius
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-prevent-accidental-repo-wide-churn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Prevent accidental repo-wide churn
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-not-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When not to use
       
     </span>
   </a>
@@ -1201,36 +1427,130 @@
   
 
 
-<h1 id="ai-first-software-engineering">AI-First Software Engineering</h1>
-<p>Welcome to the public documentation for the AI-first software engineering book. This site publishes the current working drafts, glossaries, patterns, and operational governance that power the book’s ongoing iteration loop.</p>
-<h2 id="contents">Contents</h2>
+<h1 id="patch-locality-budget-blast-radius-caps">Patch Locality Budget (Blast-Radius Caps)</h1>
+<h2 id="context">Context</h2>
+<p>Autonomous edits fail in two common ways:</p>
 <ul>
-<li><strong>Preface</strong> – foundational motivation and thesis for the AI-first engineering approach.</li>
-<li><strong>Chapters</strong> – structured research chapters covering paradigm shifts, harness engineering, autonomous kernels, memory systems, evaluation, governance, and production infrastructure.</li>
-<li><strong>Patterns</strong> – reusable engineering patterns curated from the repository.</li>
-<li><strong>Glossary</strong> – operational definitions and terminology used throughout the book.</li>
+<li>They are <em>too small</em>: a partial fix that compiles locally but breaks a contract elsewhere.</li>
+<li>They are <em>too large</em>: a sweeping patch that touches many files, makes review hard, and amplifies mistakes.</li>
 </ul>
-<h2 id="publishing-workflow">Publishing workflow</h2>
-<ol>
-<li>Chapters are drafted in <code>book/chapters/</code> with deterministic loops enforced by <code>state/kernel.py</code>.</li>
-<li>The MkDocs configuration references the book files directly so every build reflects the latest chapter revisions.</li>
-<li>Use <code>mkdocs build</code> to produce the static site or <code>mkdocs serve</code> for a preview server before deployment.</li>
-<li>Keep governance documents (<code>CONSTITUTION.md</code>, <code>AGENTS.md</code>) and evaluation rules (<code>evals/</code>) aligned with the book’s stated principles.</li>
-</ol>
-<h2 id="quick-commands">Quick commands</h2>
-<pre><code class="language-bash">mkdocs build          # Generate the static site
-mkdocs serve          # Start a local preview server
-mkdocs gh-deploy      # Publish to GitHub Pages (configure remote)
+<p>A harness can reduce incident risk by bounding how far a single patch is allowed to reach.</p>
+<h2 id="problem">Problem</h2>
+<p>How do you keep autonomous patches reviewable and safe by limiting their blast radius, without preventing legitimate multi-file changes?</p>
+<p>You want a control that is objective, enforceable, and traceable.</p>
+<h2 id="forces">Forces</h2>
+<ul>
+<li><strong>Completeness vs. locality</strong>: some changes are inherently cross-cutting.</li>
+<li><strong>Reviewability</strong>: smaller diffs are easier to audit; larger diffs hide mistakes.</li>
+<li><strong>Intermediate states</strong>: forcing small patches can create temporary breakage unless verification is staged.</li>
+<li><strong>Budget interactions</strong>: patch caps interact with step budgets; too tight means budget exhaustion.</li>
+<li><strong>Protected surfaces</strong>: locality alone is not enough; some paths must be gated regardless of size.</li>
+</ul>
+<h2 id="solution">Solution</h2>
+<p>Introduce a <strong>patch locality budget</strong> enforced by the harness:</p>
+<ul>
+<li>Cap the number of files changed per patch.</li>
+<li>Cap total lines changed (and optionally per file).</li>
+<li>Cap the allowed path scope (a working set).</li>
+<li>Require staged verification per patch or per group of patches.</li>
+</ul>
+<p>Locality caps convert “don’t be risky” into a measurable, enforceable constraint. When a task truly requires a wider blast radius, the harness forces an explicit escalation: higher tier, stronger gates, or an approval.</p>
+<h2 id="implementation-sketch">Implementation sketch</h2>
+<h3 id="locality-metrics">Locality metrics</h3>
+<p>Track locality per patch and cumulatively per run:</p>
+<ul>
+<li><code>files_changed</code></li>
+<li><code>lines_added</code>, <code>lines_removed</code>, <code>lines_changed</code></li>
+<li><code>path_scopes</code> (for example, <code>book/</code>, <code>src/</code>, <code>.github/</code>)</li>
+<li><code>protected_paths_touched</code> (boolean)</li>
+</ul>
+<h3 id="enforcement">Enforcement</h3>
+<p>A simple enforcement policy:</p>
+<ul>
+<li>Reject patches that exceed <code>max_files_changed</code> or <code>max_lines_changed</code> for the current autonomy tier.</li>
+<li>Reject patches that touch files outside the scoped working set.</li>
+<li>If a patch touches a protected path, route to approval + stronger gates regardless of size.</li>
+</ul>
+<p>Example tier-locality configuration (conceptual):</p>
+<pre><code class="language-yaml">locality_budgets:
+  T1:
+    max_files_changed: 3
+    max_lines_changed: 200
+    allowed_scopes: [&quot;book/&quot;, &quot;docs/&quot;]
+  T2:
+    max_files_changed: 10
+    max_lines_changed: 800
+    allowed_scopes: [&quot;book/&quot;, &quot;docs/&quot;, &quot;src/&quot;]
+  T3:
+    max_files_changed: 20
+    max_lines_changed: 1200
+    allowed_scopes: [&quot;*&quot;]
+    requires_approval_on_protected_paths: true
 </code></pre>
-<h2 id="project-tree">Project tree</h2>
-<pre><code>mkdocs.yml                    # Site configuration for the book
-docs/index.md                 # Site homepage (this file)
-book/chapters/*.md           # Chapter drafts consumed by MkDocs navigation
-book/patterns/               # Referenced pattern library
-book/glossary.md             # Detailed glossary definitions
-CONSTITUTION.md, AGENTS.md    # Governance that shapes the book process
-evals/*.yaml                 # Evaluation contracts enforced via state/kernel.py
-</code></pre>
+<h3 id="chunking-strategy">Chunking strategy</h3>
+<p>When a patch exceeds the budget, split work into a small number of coherent chunks:</p>
+<ul>
+<li>Establish a <em>working set</em> in a Scout phase.</li>
+<li>Apply one patch chunk.</li>
+<li>Run the minimum gates that prove that chunk is safe.</li>
+<li>Repeat until completion.</li>
+</ul>
+<p>The key: the harness enforces chunk boundaries; the model does not “promise” to keep the diff small.</p>
+<h2 id="concrete-examples">Concrete examples</h2>
+<h3 id="example-1-constrain-a-refactor-to-a-safe-blast-radius">Example 1: Constrain a refactor to a safe blast radius</h3>
+<p>Task: “Rename a function and update call sites.”</p>
+<p>Locality budget:</p>
+<ul>
+<li>3 files max per patch, 200 lines max.</li>
+</ul>
+<p>Execution:</p>
+<ul>
+<li>Patch 1: rename in definition file + update the closest call sites.</li>
+<li>Verify: run targeted unit tests for the changed module.</li>
+<li>Patch 2: update remaining call sites.</li>
+<li>Verify again.</li>
+</ul>
+<p>Result: reviewable diffs and faster debugging when something breaks.</p>
+<h3 id="example-2-prevent-accidental-repo-wide-churn">Example 2: Prevent accidental repo-wide churn</h3>
+<p>Task: “Update formatting across the repository.”</p>
+<p>Locality budget:</p>
+<ul>
+<li>Tier 1 rejects the patch because it changes too many files.</li>
+</ul>
+<p>Outcome:</p>
+<ul>
+<li>The harness forces a deliberate escalation to a higher tier with explicit approval and an agreed verification plan, or it blocks the task as out-of-policy.</li>
+</ul>
+<p>Result: formatting churn doesn’t slip through as “just a small fix.”</p>
+<h2 id="failure-modes">Failure modes</h2>
+<ul>
+<li><strong>Fragmentation</strong>: too-small budgets force many patches and consume iteration budgets.<ul>
+<li>Mitigation: calibrate budgets per repo; allow Tier 2 for legitimate multi-file work.</li>
+</ul>
+</li>
+<li><strong>Broken intermediate states</strong>: chunking introduces temporary breakage.<ul>
+<li>Mitigation: require staged gates; keep each chunk internally consistent.</li>
+</ul>
+</li>
+<li><strong>Scope mismatch</strong>: locality caps prevent necessary cross-cutting updates.<ul>
+<li>Mitigation: use Scout to establish the working set and escalate tier when justified.</li>
+</ul>
+</li>
+<li><strong>False safety</strong>: a small patch can still be high-risk (for example, auth config).<ul>
+<li>Mitigation: combine locality with protected-path routing and approvals.</li>
+</ul>
+</li>
+<li><strong>Gaming by repetition</strong>: many small patches to the same sensitive surface.<ul>
+<li>Mitigation: enforce cumulative locality budgets and protected-surface thresholds per run.</li>
+</ul>
+</li>
+</ul>
+<h2 id="when-not-to-use">When not to use</h2>
+<ul>
+<li>Very small repos where reviewability is not a limiting factor and the overhead is unnecessary.</li>
+<li>Teams that require large, mechanically-generated changes regularly (unless you can safely escalate with approvals and strong gates).</li>
+<li>Situations where the primary risk is semantic (business logic, compliance) and locality caps do not correlate with safety.</li>
+</ul>
 
 
 
@@ -1266,7 +1586,7 @@ evals/*.yaml                 # Evaluation contracts enforced via state/kernel.py
     </a>
   
   <div class="build-timestamp" style="margin-top: 0.5em; font-size: 0.8em;">
-    Last built: 2026-02-24 20:25:10 UTC
+    Last built: 2026-02-24 20:25:11 UTC
   </div>
 </div>
       
@@ -1304,10 +1624,10 @@ evals/*.yaml                 # Evaluation contracts enforced via state/kernel.py
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": [], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
