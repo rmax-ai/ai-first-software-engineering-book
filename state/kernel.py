@@ -411,8 +411,8 @@ class PlannerPlanPayload(BaseModel):
     @field_validator("target_word_delta")
     @classmethod
     def _validate_target_word_delta(cls, value: str) -> str:
-        if not re.match(r"^[+-]\d+$", value.strip()):
-            raise ValueError("must look like '+400' or '-100'")
+        if not re.match(r"^[+-]?\d+$", value.strip()):
+            raise ValueError("must look like '+400', '-100', or '0'")
         return value.strip()
 
 
@@ -1892,6 +1892,7 @@ def run_kernel(
                 current_chapter_text_for_constraints = chapter_text_for_writer
 
                 writer_violation_note: str | None = None
+                writer_diff_ratio: float | None = None
                 max_writer_retries = 2
                 retries_used = 0
 
@@ -1928,6 +1929,13 @@ def run_kernel(
                             )
                         else:
                             writer_violation_note = None
+                            diff_ratio_violation = _diff_size_ratio(current_chapter_text_for_constraints, revised_md)
+                            writer_diff_ratio = diff_ratio_violation
+                            if diff_ratio_violation > max_diff_ratio:
+                                writer_violation_note = (
+                                    "Writer diff size too large; keep edits smaller. "
+                                    f"diff_ratio={diff_ratio_violation:.2f} limit={max_diff_ratio:.2f}"
+                                )
 
                     if writer_violation_note is None:
                         break
@@ -1989,7 +1997,11 @@ def run_kernel(
                 raise KernelError("Writer changed headings; this is forbidden.")
 
             current_chapter_text = _load_chapter_text(chapter_file).to_text()
-            diff_ratio = _diff_size_ratio(current_chapter_text, revised)
+            diff_ratio = (
+                writer_diff_ratio
+                if writer_diff_ratio is not None
+                else _diff_size_ratio(current_chapter_text, revised)
+            )
             _vprint(verbose, f"iter {iteration}: diff_ratio={diff_ratio:.2f} (limit {max_diff_ratio:.2f})")
             if diff_ratio > max_diff_ratio:
                 raise KernelError(f"Writer diff size too large ({diff_ratio:.2f} > {max_diff_ratio:.2f}).")
