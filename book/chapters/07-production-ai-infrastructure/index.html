@@ -661,15 +661,22 @@
 <h1 id="chapter-07-production-ai-infrastructure">Chapter 07 — Production AI Infrastructure</h1>
 <h2 id="thesis">Thesis</h2>
 <p>Production AI-first systems are distributed systems: they require orchestration, isolation, observability, caching, cost control, and reproducible environments.</p>
-<p>Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. The tool/runtime plane is the execution and control surface around the model. It includes sandboxed execution environments, tool adapters (test runner, browser, repo API), and orchestration policies (queueing, concurrency limits, retries, idempotency). It also includes observability and artifacts for replay and audit. Restated: if you can reliably run tools and record what happened, you can reproduce runs and improve outcomes even when model behavior varies.</p>
+<p>Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. If you can reliably run tools and record what happened, you can reproduce runs. That lets you improve outcomes even when model behavior varies.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
 <ul>
 <li>Without isolation, tool execution becomes a security and reliability risk.</li>
 <li>Without observability, failures cannot be attributed or fixed systematically.</li>
 <li>Without cost controls, autonomy can become economically unstable.</li>
-<li>Operational signals: tool-failure rate, replay success rate, mean tool latency, retry rate, and spend per successful task.</li>
+<li>Operational signals include:<ul>
+<li>tool-failure rate</li>
+<li>replay success rate</li>
+<li>mean tool latency</li>
+<li>retry rate</li>
+<li>spend per successful task</li>
 </ul>
-<p>Example targets and alerts (illustrative, not mandates):</p>
+</li>
+</ul>
+<p>Example targets and alerts (illustrative, not mandates). Use them to seed dashboards and error budgets.</p>
 <table>
 <thead>
 <tr>
@@ -708,6 +715,11 @@
 </table>
 <h2 id="system-breakdown">System Breakdown</h2>
 <p>A diagram helps here because the tool/runtime plane has coupled components. It is not a single service. Focus on the contracts between boxes. Each box should emit stable, versioned signals for replay and debugging.</p>
+<p>The point of the diagram is the boundaries. In practice, reliability tends to hinge on three contracts:
+- run id propagation across every step
+- versioned, structured tool outputs
+- a replay bundle that is complete enough to reproduce failures</p>
+<p>Legend: solid arrows show work/data flow between planes; dotted arrows show governance or metadata (policy, tagging, and run id storage).</p>
 <div class="mermaid">flowchart LR
   M[Model prompt] --&gt; O[Orchestration&lt;br/&gt;Queues • Concurrency • Retries • Idempotency]
   O --&gt; E[Execution&lt;br/&gt;Sandbox • Pinned deps • Timeouts]
@@ -723,13 +735,37 @@
   O -. stores run id .-&gt; A
 </div>
 <p>Takeaway: reliability comes from strict contracts at each boundary. Record the environment and tool versions, constrain execution, and connect every step to a run id. Then you can replay, attribute failures, and control spend.</p>
+<p>Minimum replay bundle (per run id):
+- run id (and attempt number)
+- environment identity (image hash + lockfile)
+- tool name + tool version + output schema version
+- commands and working directory per tool call
+- structured outcomes + pointers to logs and artifacts</p>
 <ul>
-<li><strong>Execution</strong>: sandboxes/containers, dependency pinning, deterministic runners. Contract: identical inputs produce the same tool environment (image hash + lockfile), with a hard wall-clock timeout per step.</li>
-<li><strong>Tool services</strong>: test runners, build systems, browsers, repo APIs. Contract: every tool call is versioned and returns structured output (exit code, stdout/stderr, and a machine-readable summary).</li>
-<li><strong>Orchestration</strong>: queues, concurrency limits, backpressure. Contract: max concurrency is enforced (per repo/org), retries are bounded (count + backoff), and each task carries an idempotency key.</li>
-<li><strong>Observability</strong>: traces, metrics, logs; correlation ids. Contract: every task/run has a run id and spans for each tool call, with outcome and duration recorded.</li>
-<li><strong>Artifacts</strong>: build outputs, diffs, evaluation reports, replay bundles. Contract: store a bundle per run (inputs, tool versions, command lines, logs, diffs, and evaluation result) with a retention policy.</li>
-<li><strong>Security</strong>: secrets handling, network egress controls, least privilege. Contract: allowlists cover tools, filesystem paths, and network egress; secrets are injected only at execution time and never written to artifacts.</li>
+<li><strong>Execution</strong>: sandboxes/containers, dependency pinning, deterministic runners. Contract: identical inputs produce the same tool environment (image hash + lockfile), with a hard wall-clock timeout per step.<ul>
+<li>Checklist: image hash, lockfile hash, timeout, runner version.</li>
+</ul>
+</li>
+<li><strong>Tool services</strong>: test runners, build systems, browsers, repo APIs. Contract: every tool call is versioned and returns structured output (exit code, stdout/stderr, and a machine-readable summary).<ul>
+<li>Checklist: tool version, schema version, exit code, error class.</li>
+</ul>
+</li>
+<li><strong>Orchestration</strong>: queues, concurrency limits, backpressure. Contract: max concurrency is enforced (per repo/org), retries are bounded (count + backoff), and each task carries an idempotency key.<ul>
+<li>Checklist: run id propagation, idempotency key, retry policy, concurrency cap.</li>
+</ul>
+</li>
+<li><strong>Observability</strong>: traces, metrics, logs; correlation ids. Contract: every task/run has a run id and spans for each tool call, with outcome and duration recorded.<ul>
+<li>Checklist: trace id, span per tool call, duration, outcome.</li>
+</ul>
+</li>
+<li><strong>Artifacts</strong>: build outputs, diffs, evaluation reports, replay bundles. Contract: store a bundle per run (inputs, tool versions, command lines, logs, diffs, and evaluation result) with a retention policy.<ul>
+<li>Checklist: replay manifest, checksums, retention policy, access controls.</li>
+</ul>
+</li>
+<li><strong>Security</strong>: secrets handling, network egress controls, least privilege. Contract: allowlists cover tools, filesystem paths, and network egress; secrets are injected only at execution time and never written to artifacts.<ul>
+<li>Checklist: tool/path/egress allowlists, credential scope, redaction scan.</li>
+</ul>
+</li>
 </ul>
 <h2 id="concrete-example-1">Concrete Example 1</h2>
 <p>Sandboxed tool execution for code changes.
@@ -743,26 +779,53 @@
   - Persist logs, test reports (JUnit/JSON), build outputs, and a replay manifest for the same inputs.
 - Evaluation gate:
   - Promote only if required checks pass (e.g., all tests green, no new lints, diff applies cleanly).
-  - Require reproducibility: either a replay succeeds at least once, or the environment hash matches a known-good cache entry.
+  - Require reproducibility.
+    - A replay succeeds at least once, or the environment hash matches a known-good cache entry.
   - On failure, generate a human-facing summary with: run id link, failed step, and top error class.
   - Include a short “what to try next” hint (e.g., rerun without cache, or inspect a specific log).</p>
 <h2 id="concrete-example-2">Concrete Example 2</h2>
 <p>Cost-aware autonomy for a batch of maintenance tasks.
 - Budget: per-task token/cost ceilings (e.g., $0.50 and 20k tokens) plus a batch budget (e.g., $50/day), enforced by the orchestrator.
-- Strategy: fail fast on low-signal tasks (small, repetitive, or high-latency tool loops) and escalate to human review when confidence is low or blast radius is high.
+- Strategy: fail fast on low-signal tasks and escalate to human review when confidence is low or blast radius is high.
 - Decision policy:
-  - Treat a task as “low-signal” when:
-    - (a) there is no progress after N tool steps (e.g., 6),
-    - (b) the same error repeats (e.g., the same stack trace twice), or
-    - (c) predicted cost-to-complete exceeds remaining budget.
-  - Escalate when the change touches production config or security-sensitive files.
-  - Escalate when the diff exceeds a size threshold (e.g., &gt;200 lines changed).
-  - If per-task or batch budget is exceeded:
-    - stop further tool calls,
-    - write a short spend-and-status summary (last step, last error, run id),
-    - escalate for human review.
-- Measure (throughput): cost per successful task and time-to-merge.
-- Measure (quality): regression rate (e.g., rollback or test failures within 24h) and “wasted spend” (tokens spent on tasks that are abandoned or escalated).</p>
+  1. Treat a task as “low-signal” when there is no progress after N tool steps (e.g., 6).
+  2. Treat a task as “low-signal” when the same error repeats (e.g., the same stack trace twice).
+  3. Treat a task as “low-signal” when predicted cost-to-complete exceeds remaining budget.
+  4. Escalate when the change touches production config, security-sensitive files, or the diff exceeds a size threshold (e.g., &gt;200 lines changed).</p>
+<p>Pseudo-code makes the budget controller explicit (ordering, stop conditions, and escalation points):</p>
+<pre><code class="language-text">// Budget controller for one task inside a batch
+State -&gt; {task_budget, batch_budget, step_count, last_error_class, repeats}
+
+Loop N Times
+  If task_budget &lt;= 0 Then Escalate("Task budget exceeded") Else Continue()
+  If batch_budget &lt;= 0 Then Escalate("Batch budget exceeded") Else Continue()
+
+  Step -&gt; RunTool()
+  step_count -&gt; step_count + 1
+
+  cost -&gt; EstimateCost(Step)
+  task_budget -&gt; task_budget - cost
+  batch_budget -&gt; batch_budget - cost
+
+  error -&gt; ClassifyError(Step)
+  If error == last_error_class Then repeats -&gt; repeats + 1 Else repeats -&gt; 0
+  last_error_class -&gt; error
+
+  If repeats &gt;= 1 Then Escalate("Repeated error") Else Continue()
+  If DetectProgress(Step) == false And step_count &gt;= 6 Then Escalate("No progress") Else Continue()
+  If PredictCostToComplete() &gt; task_budget Then Escalate("Over budget") Else Continue()
+End
+</code></pre>
+<ul>
+<li>If the per-task or batch budget is exceeded:<ul>
+<li>Stop further tool calls.</li>
+<li>Write a short spend-and-status summary (last step, last error, run id).</li>
+<li>Escalate for human review.</li>
+</ul>
+</li>
+<li>Measure (throughput): cost per successful task and time-to-merge.</li>
+<li>Measure (quality): regression rate (e.g., rollback or test failures within 24h) and “wasted spend” (tokens spent on tasks that are abandoned or escalated).</li>
+</ul>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
 <li>Isolation increases safety but adds operational complexity. Default: start with containerized execution + allowlists; revisit if tool latency dominates (e.g., repeated cold starts) and you can prove tighter scoping by repo/path.</li>
@@ -788,6 +851,13 @@
 </li>
 </ul>
 <h2 id="research-directions">Research Directions</h2>
+<ul>
+<li><strong>Deterministic replay scoring</strong>: define a replay score per run (e.g., environment match, tool-version match, output match) and track it over time.</li>
+<li><strong>Replay audit sampling</strong>: pick a weekly sample of “green” runs, replay them with no cache, and record the delta (time, outputs, flake rate).</li>
+<li><strong>Artifact bundle correctness</strong>: treat missing inputs (patch, lockfiles, tool versions, output schema versions, command lines) as a build-breaking error for the infrastructure.</li>
+<li><strong>Redaction guarantees</strong>: measure secret leakage rates by scanning logs and artifacts before persistence, then track false positives/negatives of redaction.</li>
+<li><strong>Cost-to-quality controllers</strong>: test policies that trade off retries, model choice, and tool parallelism against regression rate and cost-to-merge.</li>
+</ul>
 <!-- markdownlint-enable MD022 MD032 -->
 </article>
 </div>
@@ -805,7 +875,7 @@
       Material for MkDocs
     </a>
 <div class="build-timestamp" style="margin-top: 0.5em; font-size: 0.8em;">
-    Last built: 2026-02-24 20:25:11 UTC
+    Last built: 2026-02-25 08:28:23 UTC
   </div>
 </div>
 <div class="md-social">

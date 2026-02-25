@@ -687,12 +687,8 @@
 <li><strong>Verification</strong>: mandatory checks per action class (e.g., tests for code changes).</li>
 <li><strong>Persistence</strong>: ledger entries, trace logs, artifacts.</li>
 </ul>
-<p>The loop stages are the execution path. Budgets, permissions, and evaluation gates are the controls that constrain what can happen at each stage and what evidence is required to stop.</p>
-<p>Treat each loop step as a checkpoint:</p>
-<ul>
-<li>what must be recorded</li>
-<li>what stop condition must be evaluated</li>
-</ul>
+<p>The loop stages are the execution path. Budgets, permissions, and evaluation gates constrain each stage. They also define what evidence is required before stopping.</p>
+<p>Treat each loop step as a checkpoint. Each checkpoint has three parts. Record requirements, stop conditions, and escalation or waiver rules.</p>
 <ol>
 <li>
 <p><strong>Intent</strong>: state the task class and the success condition.</p>
@@ -703,7 +699,12 @@
 </ul>
 </li>
 <li><strong>Stop condition:</strong><ul>
-<li>if success criteria are ambiguous, stop and request clarification</li>
+<li>stop if success criteria are ambiguous</li>
+</ul>
+</li>
+<li><strong>Escalate / waive:</strong><ul>
+<li>request clarification</li>
+<li>do not proceed with edits</li>
 </ul>
 </li>
 </ul>
@@ -712,13 +713,17 @@
 <p><strong>Plan</strong>: enumerate the next 1–3 actions only, each tied to a gate and a budget slice.</p>
 <ul>
 <li><strong>Must record:</strong><ul>
-<li>planned steps</li>
-<li>named gates</li>
-<li>allocated budget slice</li>
+<li>planned steps (1–3)</li>
+<li>named gates for each step</li>
+<li>budget slice per step</li>
 </ul>
 </li>
 <li><strong>Stop condition:</strong><ul>
-<li>if the plan requires tools/paths outside permissions, stop and request escalation</li>
+<li>stop if the plan requires out-of-scope tools or paths</li>
+</ul>
+</li>
+<li><strong>Escalate / waive:</strong><ul>
+<li>request permission escalation before acting</li>
 </ul>
 </li>
 </ul>
@@ -732,7 +737,13 @@
 </ul>
 </li>
 <li><strong>Stop condition:</strong><ul>
-<li>if diff budget or file-touch budget is exceeded, stop and escalate</li>
+<li>stop if diff budget is exceeded</li>
+<li>stop if file-touch budget is exceeded</li>
+</ul>
+</li>
+<li><strong>Escalate / waive:</strong><ul>
+<li>request wider write scope</li>
+<li>or narrow the plan</li>
 </ul>
 </li>
 </ul>
@@ -748,14 +759,17 @@
 </li>
 <li><strong>Stop condition:</strong><ul>
 <li>if a gate fails, iterate</li>
-<li>if no credible gate exists, stop and escalate</li>
+<li>if no credible gate exists, stop</li>
 </ul>
 </li>
-<li><strong>Waiver (only if explicitly recorded):</strong><ul>
+<li><strong>Escalate / waive:</strong><ul>
+<li><strong>Waive only if explicitly recorded:</strong><ul>
 <li>why the gate is not runnable</li>
 <li>what alternative check was run</li>
 <li>what risk remains</li>
-<li>the waiver decision and its rationale</li>
+<li>the waiver decision and rationale</li>
+</ul>
+</li>
 <li>A waiver is not a “pass”; it is a recorded exception.</li>
 </ul>
 </li>
@@ -772,7 +786,12 @@
 </ul>
 </li>
 <li><strong>Stop condition:</strong><ul>
-<li>if persistence fails (cannot write trace), stop; do not continue “blind”</li>
+<li>stop if persistence fails (cannot write trace)</li>
+</ul>
+</li>
+<li><strong>Escalate / waive:</strong><ul>
+<li>do not continue “blind”</li>
+<li>fix persistence or stop</li>
 </ul>
 </li>
 </ul>
@@ -781,22 +800,25 @@
 <p><strong>Stop/iterate</strong>: decide based on evidence and remaining budget.</p>
 <ul>
 <li><strong>Must record:</strong><ul>
-<li>decision</li>
-<li>rationale</li>
-<li>the next action (either “done” or “what to try next”)</li>
+<li>decision (stop vs iterate)</li>
+<li>rationale tied to gate results and budgets</li>
+<li>next action (“done” or the next bounded attempt)</li>
 </ul>
 </li>
 <li><strong>Stop condition:</strong><ul>
-<li>stop on success</li>
+<li>stop on success (named gates satisfied)</li>
 <li>stop when a budget is exhausted</li>
 <li>stop when permissions/scope are insufficient</li>
+</ul>
+</li>
+<li><strong>Escalate / waive:</strong><ul>
+<li>output a handoff note (what evidence exists, what to try next)</li>
 </ul>
 </li>
 </ul>
 </li>
 </ol>
-<p>A diagram is useful here because the stage order is fixed. Budgets, permissions, and gates constrain stages from the side. Focus on (1) the linear stage flow and (2) the constraints that must be satisfied before “stop” is allowed.</p>
-<p>Mermaid mapping of stages to controls and outputs.</p>
+<p>A diagram is useful here because the stage order is fixed. Focus on the linear flow. Also note the side-constraints required before “stop” is allowed.</p>
 <div class="mermaid">flowchart LR
   I[Intent] --&gt; P[Plan] --&gt; A[Act] --&gt; V[Verify] --&gt; R[Record trace] --&gt; S{Stop / iterate}
 
@@ -818,6 +840,32 @@
 <li><strong>Verify</strong> produces pass/fail evidence that drives stop vs iterate.</li>
 <li>Takeaway: “done” is a verification outcome, and trace artifacts are explicit outputs.</li>
 </ul>
+<p>A small pseudo-code sketch helps when you want the branch points and record requirements in a single linear representation. Focus on where budgets are checked, where gates run, and where stopping is permitted.</p>
+<pre><code class="language-text">// Goal: one bounded objective with explicit gates, budgets, and trace artifacts.
+
+Budget -&gt; {iterations_max: N, tool_calls_max: M, diff_lines_max: K}
+LoopCount -&gt; 0
+
+Loop N Times
+  LoopCount -&gt; LoopCount + 1
+
+  Intent(task_class, success_criteria)
+  Plan(next_steps_1_to_3, named_gates, budget_slice)
+
+  Act(minimal_change)
+  Record(files_touched, diff_stats)
+
+  GateResult -&gt; Verify(run_commands_for(named_gates))
+  Record(commands, exit_codes, summary_lines)
+
+  If GateResult == "pass" Then
+    RecordTrace(trace_artifacts, ledger_entry)
+    Stop("success")
+  Else
+    If BudgetExceeded(Budget) Then Stop("budget_exhausted") Else Continue()
+  EndIf
+EndLoop
+</code></pre>
 <p>A compact “must capture” checklist (minimum viable trace).</p>
 <p>This checklist is the smallest set of fields that enables replay, audit, and debugging. It avoids relying on memory or “it seemed fine.”</p>
 <table>
@@ -881,12 +929,12 @@
 <li>Input:<ul>
 <li>failing test case: <code>tests/test_parse.py::test_rejects_empty_input</code></li>
 <li>repro command: <code>python -m mycli parse ""</code></li>
-<li>observed: exit code <code>0</code></li>
+<li>observed exit code: <code>0</code></li>
 <li>expected: non-zero exit code</li>
 <li>budgets:<ul>
-<li>max 3 iterations</li>
-<li>max 10 tool calls</li>
-<li>max 40 lines changed</li>
+<li>iterations: max <code>3</code></li>
+<li>tool calls: max <code>10</code></li>
+<li>lines changed: max <code>40</code></li>
 </ul>
 </li>
 <li>permissions:<ul>
@@ -903,13 +951,14 @@
 <li>
 <p>Localize failure (evidence-first)</p>
 <ul>
-<li>Action: reproduce with the smallest credible check.<ul>
-<li>Command: <code>pytest -k rejects_empty_input</code></li>
+<li>Action:<ul>
+<li>reproduce with the smallest credible check</li>
+<li>command: <code>pytest -k rejects_empty_input</code></li>
 </ul>
 </li>
 <li>Gate:<ul>
 <li>the reproduction must fail in a controlled way</li>
-<li>the failure should match the same assertion and code path</li>
+<li>the failure should hit the same assertion and code path</li>
 </ul>
 </li>
 <li>Record:<ul>
@@ -920,17 +969,26 @@
 <li><code>E       AssertionError: assert 0 != 0</code></li>
 </ul>
 </li>
-<li>test summary line (example): <code>1 failed, 42 deselected in 0.31s</code></li>
+<li>summary line (example): <code>1 failed, 42 deselected in 0.31s</code></li>
 </ul>
 </li>
-<li>Stop rule: if the failure does not reproduce, stop and return a “cannot reproduce” trace (no edits).</li>
+<li>Stop rule:<ul>
+<li>if the failure does not reproduce, stop and return a “cannot reproduce” trace (no edits)</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
 <p>Patch minimal surface (hypothesis-driven)</p>
 <ul>
-<li>Action: implement the smallest boundary check consistent with the hypothesis.</li>
-<li>Hypothesis: empty string is being treated as a valid token stream in <code>src/parser.py</code>.</li>
+<li>Hypothesis:<ul>
+<li>empty string is being treated as a valid token stream in <code>src/parser.py</code></li>
+</ul>
+</li>
+<li>Action:<ul>
+<li>implement the smallest boundary check consistent with the hypothesis</li>
+</ul>
+</li>
 <li>Change:<ul>
 <li>reject empty input at the parse entrypoint</li>
 <li>avoid touching downstream call sites</li>
@@ -946,20 +1004,28 @@
 <li>diff stats (example): <code>src/parser.py | 7 ++++++-</code></li>
 </ul>
 </li>
-<li>Stop rule: if a second file is required, stop and escalate (“write scope too narrow”).</li>
+<li>Stop rule:<ul>
+<li>if a second file is required, stop and escalate (“write scope too narrow”)</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
 <p>Run verification gate (tight but credible)</p>
 <ul>
-<li>Action: rerun the failing test.<ul>
-<li>Command: <code>pytest -k rejects_empty_input</code></li>
-<li>Expected summary (example): <code>1 passed, 42 deselected in 0.28s</code></li>
+<li>Action A:<ul>
+<li>rerun the failing test</li>
+<li>command: <code>pytest -k rejects_empty_input</code></li>
 </ul>
 </li>
-<li>Action: run a small related slice.<ul>
-<li>Command: <code>pytest -k parse</code></li>
-<li>Expected summary (example): <code>12 passed, 0 failed, 31 deselected in 1.07s</code></li>
+<li>Action B:<ul>
+<li>run a small related slice</li>
+<li>command: <code>pytest -k parse</code></li>
+</ul>
+</li>
+<li>Gate:<ul>
+<li>Gate 1: Action A returns exit code <code>0</code></li>
+<li>Gate 2: Action B returns exit code <code>0</code></li>
 </ul>
 </li>
 <li>Record:<ul>
@@ -971,37 +1037,54 @@
 <li>summary 2 (example): <code>12 passed, 0 failed, 31 deselected in 1.07s</code></li>
 </ul>
 </li>
-<li>Stop rule: if Gate 1 passes but Gate 2 fails, treat as “not fixed” and iterate (the patch likely broke a nearby invariant).</li>
+<li>Stop rule:<ul>
+<li>if Gate 1 passes but Gate 2 fails, treat as “not fixed” and iterate</li>
+<li>the likely cause is a nearby invariant break</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
 <p>Record trace (auditable, replayable)</p>
 <ul>
-<li>Action: persist a kernel trace and a ledger entry.</li>
+<li>Action:<ul>
+<li>persist a kernel trace and a ledger entry</li>
+</ul>
+</li>
 <li>Record (minimum):<ul>
 <li>budgets consumed: <code>iterations=1/3</code></li>
 <li>budgets consumed: <code>tool_calls=3/10</code></li>
 <li>budgets consumed: <code>diff_lines=7/40</code></li>
 <li>commands executed + exit codes</li>
-<li>final test summary lines:<ul>
+<li>final test summary line:<ul>
 <li><code>12 passed, 0 failed, 31 deselected in 1.07s</code></li>
 </ul>
 </li>
 </ul>
 </li>
-<li>Stop rule: if trace persistence fails, stop; do not continue with further edits.</li>
+<li>Stop rule:<ul>
+<li>if trace persistence fails, stop; do not continue with further edits</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
 <p>Stop criteria (explicit)</p>
 <ul>
-<li>Stop success: Gate 1 and Gate 2 pass within budget.</li>
-<li>Stop failure: tool-call budget exhausted.</li>
-<li>Stop failure: diff budget exceeded.</li>
-<li>Stop failure: verification indicates a broader refactor is required.</li>
-<li>Stop escalation output: include the next action for a human.<ul>
-<li>Example: “tokenization treats whitespace-only as empty.”</li>
-<li>Example: “requires editing <code>src/lexer.py</code>, outside current write scope.”</li>
+<li>Stop success:<ul>
+<li>Gate 1 and Gate 2 pass within budget</li>
+</ul>
+</li>
+<li>Stop failure:<ul>
+<li>tool-call budget exhausted</li>
+<li>diff budget exceeded</li>
+<li>verification indicates a broader refactor is required</li>
+</ul>
+</li>
+<li>Stop escalation output:<ul>
+<li>include the next action for a human</li>
+<li>example: “tokenization treats whitespace-only as empty.”</li>
+<li>example: “requires editing <code>src/lexer.py</code>, outside current write scope.”</li>
 </ul>
 </li>
 </ul>
@@ -1014,19 +1097,19 @@
 <li>Input:<ul>
 <li>target version: <code>libX 4.2.0 → 4.3.0</code></li>
 <li>constraints:<ul>
-<li>Python <code>&gt;=3.10</code></li>
-<li>cannot change public API</li>
-<li>CI must stay green</li>
+<li>Python: <code>&gt;=3.10</code></li>
+<li>public API: must not change</li>
+<li>CI: must stay green</li>
 </ul>
 </li>
 <li>upgrade guide note:<ul>
-<li>breaking rename <code>OldClient</code> → <code>Client</code></li>
+<li>rename: <code>OldClient</code> → <code>Client</code></li>
 </ul>
 </li>
 <li>budgets:<ul>
-<li>max 4 iterations</li>
-<li>max 15 tool calls</li>
-<li>max 120 lines changed</li>
+<li>iterations: max <code>4</code></li>
+<li>tool calls: max <code>15</code></li>
+<li>lines changed: max <code>120</code></li>
 </ul>
 </li>
 <li>permissions:<ul>
@@ -1044,16 +1127,19 @@
 <li>
 <p>Update manifest (narrow scope)</p>
 <ul>
-<li>Action: bump version constraint in <code>pyproject.toml</code>.</li>
+<li>Action:<ul>
+<li>bump the version constraint in <code>pyproject.toml</code></li>
+</ul>
+</li>
 <li>Record:<ul>
 <li>old constraint (example): <code>libX&gt;=4.2,&lt;4.3</code></li>
 <li>new constraint (example): <code>libX&gt;=4.3,&lt;4.4</code></li>
-<li>diff stats for manifest only (example): <code>pyproject.toml | 1 +-</code></li>
+<li>diff stats (example): <code>pyproject.toml | 1 +-</code></li>
 </ul>
 </li>
 <li>Stop/iterate rule:<ul>
-<li>If the dependency resolver cannot produce a consistent lock, stop with resolver output.</li>
-<li>Do not attempt ad-hoc pinning unless that is explicitly in scope.</li>
+<li>if the resolver cannot produce a consistent lock, stop with resolver output</li>
+<li>do not attempt ad-hoc pinning unless it is explicitly in scope</li>
 </ul>
 </li>
 </ul>
@@ -1061,8 +1147,9 @@
 <li>
 <p>Run a fast build/type gate before full tests</p>
 <ul>
-<li>Gate A (fast): import/type/compile smoke check.<ul>
-<li>Command: <code>python -m compileall src</code></li>
+<li>Gate A (fast):<ul>
+<li>import/type/compile smoke check</li>
+<li>command: <code>python -m compileall src</code></li>
 </ul>
 </li>
 <li>Record:<ul>
@@ -1076,8 +1163,8 @@
 </ul>
 </li>
 <li>Interpretation:<ul>
-<li>If Gate A fails, it is often a missing symbol or incompatible API.</li>
-<li>Remediate before running the full suite.</li>
+<li>if Gate A fails, it is often a missing symbol or incompatible API</li>
+<li>remediate before running the full suite</li>
 </ul>
 </li>
 </ul>
@@ -1087,9 +1174,9 @@
 <ul>
 <li>If <strong>compile/import fails</strong>:<ul>
 <li>Localize:<ul>
-<li>capture the first error site (file + symbol) from the compile output</li>
-<li>example line: <code>***   File "src/integrations/libx.py", line 12</code></li>
-<li>example line: <code>ImportError: cannot import name 'OldClient' from 'libx'</code></li>
+<li>capture the first error site (file + symbol)</li>
+<li>example: <code>***   File "src/integrations/libx.py", line 12</code></li>
+<li>example: <code>ImportError: cannot import name 'OldClient' from 'libx'</code></li>
 </ul>
 </li>
 <li>Patch:<ul>
@@ -1099,7 +1186,7 @@
 </li>
 <li>Verify:<ul>
 <li>rerun Gate A only</li>
-<li>proceed only when it returns exit code <code>0</code></li>
+<li>proceed only if it returns exit code <code>0</code></li>
 </ul>
 </li>
 <li>Budget guard:<ul>
@@ -1113,20 +1200,25 @@
 <ul>
 <li>If <strong>compile passes but tests fail</strong>:<ul>
 <li>Localize:<ul>
-<li>run the smallest failing unit (single file or single test) based on the first failure</li>
+<li>run the smallest failing unit based on the first failure</li>
 <li>example command: <code>pytest tests/test_libx_integration.py -q</code></li>
 <li>example summary: <code>1 failed, 18 passed in 4.92s</code></li>
 </ul>
 </li>
 <li>Patch:<ul>
 <li>address the behavioral change with a targeted adjustment</li>
-<li>record the reason</li>
+<li>record the reason for the change</li>
 <li>example: “libX now defaults timeout=None; set explicit timeout=5.0 in wrapper”</li>
 </ul>
 </li>
 <li>Verify:<ul>
 <li>rerun the failing tests</li>
-<li>proceed to the full suite gate only after the localized failure is cleared</li>
+<li>proceed only after the localized failure is cleared</li>
+</ul>
+</li>
+<li>Budget guard:<ul>
+<li>if more than 5 files are touched, stop and escalate (“requires broader refactor”)</li>
+<li>if cumulative diff exceeds 120 lines, stop and escalate (“exceeds change budget for this kernel”)</li>
 </ul>
 </li>
 </ul>
@@ -1136,8 +1228,9 @@
 <li>
 <p>Run full verification gate (credibility gate)</p>
 <ul>
-<li>Gate B (full): run the test suite (or the project’s standard verification command).<ul>
-<li>Command: <code>pytest</code></li>
+<li>Gate B (full):<ul>
+<li>run the test suite (or the project’s standard verification command)</li>
+<li>command: <code>pytest</code></li>
 </ul>
 </li>
 <li>Record:<ul>
@@ -1158,8 +1251,15 @@
 <li>
 <p>Stop criteria and outputs</p>
 <ul>
-<li>Stop success: Gate A and Gate B pass within budget.</li>
-<li>Stop failure: repeated failures indicate the upgrade exceeds current permission/scope (e.g., requires API redesign), or budgets are exhausted.</li>
+<li>Stop success:<ul>
+<li>Gate A and Gate B pass within budget</li>
+</ul>
+</li>
+<li>Stop failure:<ul>
+<li>repeated failures indicate the upgrade exceeds current scope</li>
+<li>budgets are exhausted before gates pass</li>
+</ul>
+</li>
 <li>Required outputs on stop:<ul>
 <li>change summary:<ul>
 <li>files touched</li>
@@ -1258,7 +1358,7 @@
       Material for MkDocs
     </a>
 <div class="build-timestamp" style="margin-top: 0.5em; font-size: 0.8em;">
-    Last built: 2026-02-24 20:25:10 UTC
+    Last built: 2026-02-25 08:28:23 UTC
   </div>
 </div>
 <div class="md-social">

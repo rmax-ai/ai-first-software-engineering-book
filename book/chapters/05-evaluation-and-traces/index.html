@@ -674,52 +674,52 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 <h2 id="system-breakdown">System Breakdown</h2>
 <ul>
 <li><strong>Trace schema</strong> (minimum viable):<ul>
-<li>task id</li>
-<li>plan<ul>
+<li><code>task_id</code></li>
+<li><code>plan</code><ul>
 <li>intended steps</li>
 <li>stop conditions</li>
 </ul>
 </li>
-<li>tool calls<ul>
+<li><code>tool_calls</code><ul>
 <li>tool name</li>
 <li>arguments</li>
 <li>start/end timestamps</li>
 <li>exit status</li>
 </ul>
 </li>
-<li>tool outputs<ul>
+<li><code>tool_outputs</code><ul>
 <li>stdout/stderr excerpts, or pointers to stored artifacts</li>
 </ul>
 </li>
-<li>diffs<ul>
+<li><code>diffs</code><ul>
 <li>patches applied</li>
 <li>file paths touched</li>
 </ul>
 </li>
-<li>evaluation results<ul>
+<li><code>evaluation_results</code><ul>
 <li>which checks ran</li>
 <li>pass/fail</li>
 <li>key failure signatures</li>
 </ul>
 </li>
-<li>budgets<ul>
+<li><code>budgets</code><ul>
 <li>time</li>
 <li>iteration count</li>
 <li>token/cost limits (if applicable)</li>
 </ul>
 </li>
-<li>stop reason<ul>
+<li><code>stop_reason</code><ul>
 <li>completed</li>
 <li>blocked by gate</li>
 <li>permission denied</li>
 <li>budget exceeded</li>
 </ul>
 </li>
-<li>redaction policy<ul>
+<li><code>redaction_policy</code><ul>
 <li>what is removed or hashed (secrets, tokens, PII, proprietary paths)</li>
 </ul>
 </li>
-<li>environment fingerprint<ul>
+<li><code>environment_fingerprint</code><ul>
 <li>repo URL (if applicable)</li>
 <li>commit SHA</li>
 <li>branch</li>
@@ -727,12 +727,12 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 <li>OS/arch</li>
 </ul>
 </li>
-<li>retry/iteration counters<ul>
+<li><code>retry_counters</code><ul>
 <li>attempt number per step</li>
 <li>total loop count</li>
 </ul>
 </li>
-<li>Query examples (incident review):<ul>
+<li><code>query_examples</code> (incident review)<ul>
 <li>“show all tasks that modified <code>pyproject.toml</code> and failed secret scanning”</li>
 <li>“list failures where <code>tests</code> failed but a patch was still applied”</li>
 <li>“group stop reasons by action class over the last N runs”</li>
@@ -740,6 +740,8 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 </li>
 </ul>
 </li>
+</ul>
+<ul>
 <li><strong>Evaluation types</strong>:<ul>
 <li>correctness: unit/integration/contract tests.</li>
 <li>safety: permission checks, protected paths, secret scanning.</li>
@@ -747,6 +749,8 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 <li>performance: benchmarks, latency/cost budgets.</li>
 </ul>
 </li>
+</ul>
+<ul>
 <li>
 <p><strong>Gating model</strong>: which evaluations are required for which action classes.</p>
 <p>A gating model is only useful if the trace explains the choice.
@@ -765,17 +769,25 @@ In the diagram below, focus on the first safety decision (permission / protected
   E --&gt;|yes| S3["STOP&lt;br/&gt;stop_reason set&lt;br/&gt;record: command + exit_status + failure_signature"]
   E --&gt;|no| F["CONTINUE / COMPLETE&lt;br/&gt;record: evaluation_results + budgets&lt;br/&gt;stop_reason=completed"]
 </div>
-<p>Use this flow as the reference when reading the gating matrix below: every STOP is a first-class outcome.
-  The trace must record enough to explain the stop and replay the same checks.</p>
+<p>The operational rule is simple: the first failing required gate stops the run, and that STOP is a first-class outcome.
+  The trace must record enough structured fields to explain the stop and replay the same checks.</p>
+<p>Use this flow as the reference when reading the gating matrix below: every STOP is a first-class outcome.</p>
 <p>Legend:
   - Diamonds are harness decision points.
   - Every STOP must record enough fields to replay the same checks.</p>
 <p>- Minimal gating matrix (example, stated as rules):</p>
 <pre><code>- read-only (grep/view/list):
-  - safety: require permission check for accessed path(s)
-  - quality: skip; record `skipped_reason: "read_only_action"`
-  - correctness: skip; record `skipped_reason: "read_only_action"`
-  - performance: skip; record `skipped_reason: "read_only_action"`
+  - safety:
+    - require permission check for accessed path(s)
+  - quality:
+    - skip
+    - record `skipped_reason: "read_only_action"`
+  - correctness:
+    - skip
+    - record `skipped_reason: "read_only_action"`
+  - performance:
+    - skip
+    - record `skipped_reason: "read_only_action"`
 
 - patch edit (apply diff to code/docs):
   - safety:
@@ -784,7 +796,8 @@ In the diagram below, focus on the first safety decision (permission / protected
       - stop with `stop_reason: "permission_denied"`
   - quality:
     - require lint/typecheck if repo has config
-    - otherwise record `skipped_reason: "no_config"`
+    - otherwise:
+      - record `skipped_reason: "no_config"`
   - correctness:
     - require targeted tests for touched modules
     - selection order:
@@ -821,47 +834,56 @@ In the diagram below, focus on the first safety decision (permission / protected
       - Trace requirements:
         - record `selection_reason` (example: `touched_ext:.py`)
         - record `detected_stacks` before tie-break (example: `[python,node]`)
-    - Python: `pytest -q`
-    - Node: `npm test`
-    - Go: `go test ./...`
+    - Python:
+      - `pytest -q`
+    - Node:
+      - `npm test`
+    - Go:
+      - `go test ./...`
   - performance:
     - require only when applicable
     - require if any touched path is under `deploy/`
     - require if any touched path is under `prod/`
     - require if the plan declares `latency_budget_ms` or `cost_budget_usd`
-    - otherwise record `skipped_reason: "not_applicable"`
+    - otherwise:
+      - record `skipped_reason: "not_applicable"`
 
 - dependency install (lockfile changes, package adds):
   - safety:
     - require secret scan of the diff and updated lockfile(s)
     - record scan tool name
     - record any hit signatures
-  - safety:
     - require protected-path check for touched files
-    - if blocked, stop with `stop_reason: "permission_denied"`
+    - if blocked:
+      - stop with `stop_reason: "permission_denied"`
   - quality:
     - require lint/typecheck if repo has config
-    - otherwise record `skipped_reason: "no_config"`
+    - otherwise:
+      - record `skipped_reason: "no_config"`
   - correctness:
     - require tests that import the changed dependency
-    - if unknown, select a command using the patch-edit rule
-    - record `selection_reason` for the path taken
+    - if unknown:
+      - select a command using the patch-edit rule
+      - record `selection_reason` for the path taken
   - performance:
     - require only when runtime or deploy files change
-    - examples: `Dockerfile`, `deploy/**`
-    - otherwise record `skipped_reason: "not_applicable"`
+    - examples:
+      - `Dockerfile`
+      - `deploy/**`
+    - otherwise:
+      - record `skipped_reason: "not_applicable"`
 
 - deploy/release (publish, migrate, prod config):
   - safety:
     - require explicit permission grant
     - record grant artifact (id or prompt) in the trace
-  - safety:
     - require secret scan
     - stop on any forbidden hit
     - record hit signatures
   - quality:
     - require lint/typecheck if configured
-    - otherwise record `skipped_reason: "no_config"`
+    - otherwise:
+      - record `skipped_reason: "no_config"`
   - correctness:
     - require full suite or contract tests for release
     - record suite name and command
@@ -874,11 +896,11 @@ In the diagram below, focus on the first safety decision (permission / protected
 <p>Tracing a refactor.</p>
 <ul>
 <li>Record each patch, each test run, and each failure signature.</li>
-<li>Also record the environment fingerprint and exact tool invocations.</li>
-<li>That combination lets a reviewer replay the same sequence.</li>
+<li>Record the environment fingerprint and exact tool invocations so a reviewer can replay the same sequence.</li>
 </ul>
+<p>To attribute the failure quickly, start with <code>stop_reason</code>, then read the failing <code>tool_calls</code> entry (exit status + <code>failure_signature</code>), and finally confirm scope from <code>diffs</code>.</p>
 <p>Pseudo-trace excerpt (illustrative):</p>
-<pre><code>task_id: refactor-auth-2026-02-22-001
+<pre><code class="language-yaml">task_id: refactor-auth-2026-02-22-001
 
 environment:
   repo_sha: a1b2c3d
@@ -900,7 +922,8 @@ tool_calls:
   - tool: bash
     cmd: pytest -q tests/test_auth_client.py::test_retry
     exit_status: 1
-    failure_signature: ImportError: cannot import name 'AuthClient'
+    failure_signature: &gt;
+      ImportError: cannot import name 'AuthClient'
 
 diffs:
   - path: src/auth/client.py
@@ -917,27 +940,24 @@ evaluation_results:
 stop_reason: blocked_by_correctness_gate
 </code></pre>
 <p>Query step using structured fields (one possible workflow):
-- Query: <code>repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"</code>
-- Result (summary):
-  - matching_tasks: 3
-  - last_success_task_id: <code>refactor-auth-2026-02-20-007</code>
-  - last_success_repo_sha: <code>a1b2c3d</code>
-  - common_missing_patch_pattern: diffs do not include any files under <code>src/auth/__init__.py</code> or <code>src/auth/*</code> besides <code>client.py</code></p>
-<p>Decision rule using the query result:</p>
-<ul>
-<li>If <code>last_success_repo_sha</code> matches the current <code>repo_sha</code>:<ul>
-<li>If only <code>client.py</code> was changed, expand patch scope to import sites.</li>
-<li>Update <code>src/auth/__init__.py</code> exports and import usages.</li>
-<li>Rerun <code>pytest -q tests/test_auth_client.py::test_retry</code>.</li>
-</ul>
-</li>
-<li>If <code>last_success_repo_sha</code> differs:<ul>
-<li>Rebase/reset to the pinned <code>repo_sha</code> first.</li>
-<li>Apply the expanded patch.</li>
-<li>Rerun <code>pytest -q tests/test_auth_client.py::test_retry</code>.</li>
-</ul>
-</li>
-</ul>
+1) Query:
+   - <code>repo_sha == "a1b2c3d"</code>
+   - <code>failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'"</code>
+   - <code>diffs.paths CONTAINS "src/auth/client.py"</code>
+2) Result (summary):
+   - matching_tasks: 3
+   - last_success_task_id: <code>refactor-auth-2026-02-20-007</code>
+   - last_success_repo_sha: <code>a1b2c3d</code>
+   - common_missing_patch_pattern: diffs do not include any files under <code>src/auth/__init__.py</code> or <code>src/auth/*</code> besides <code>client.py</code></p>
+<p>Decision rule using the query result:
+1) If <code>last_success_repo_sha</code> matches the current <code>repo_sha</code>:
+   - If only <code>client.py</code> was changed, expand patch scope to import sites.
+   - Update <code>src/auth/__init__.py</code> exports and import usages.
+   - Rerun <code>pytest -q tests/test_auth_client.py::test_retry</code>.
+2) If <code>last_success_repo_sha</code> differs:
+   - Rebase/reset to the pinned <code>repo_sha</code> first.
+   - Apply the expanded patch.
+   - Rerun <code>pytest -q tests/test_auth_client.py::test_retry</code>.</p>
 <p>Attribution using the trace:
 - Model vs tool is not ambiguous here.
 - The patch tool succeeded, and the test runner executed.
@@ -962,25 +982,34 @@ stop_reason: blocked_by_correctness_gate
 </li>
 </ul>
 <ul>
-<li>Detect changes in iteration counts, regression rate, and stop reasons over time.<ul>
-<li>iteration drift:<ul>
-<li>median loop iterations in the most recent 50 runs increases by ≥ 30%</li>
-<li>compare against the baseline’s 50-run median</li>
+<li>Detect changes in iteration counts, regression rate, and stop reasons over time.</li>
 </ul>
-</li>
-<li>regression rate:<ul>
-<li>correctness-gate failure rate in the most recent 50 runs increases by ≥ 5 percentage points</li>
-<li>compare against the baseline’s 50-run rate</li>
-</ul>
-</li>
-<li>stop-reason shift:<ul>
-<li>in the most recent 50 runs, “budget exceeded” becomes the most frequent stop_reason</li>
-<li>baseline window had “completed” as the most frequent stop_reason</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Drift threshold</th>
+<th>Comparison window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iteration drift</td>
+<td>median loop iterations in the most recent 50 runs increases by ≥ 30%</td>
+<td>compare against the baseline’s 50-run median</td>
+</tr>
+<tr>
+<td>regression rate</td>
+<td>correctness-gate failure rate in the most recent 50 runs increases by ≥ 5 percentage points</td>
+<td>compare against the baseline’s 50-run rate</td>
+</tr>
+<tr>
+<td>stop-reason shift</td>
+<td>in the most recent 50 runs, “budget exceeded” becomes the most frequent stop_reason</td>
+<td>baseline window had “completed” as the most frequent stop_reason</td>
+</tr>
+</tbody>
+</table>
 <p>The point is not to predict every future failure. The point is to detect that something changed (model, tool, harness, or repo) and to have enough trace evidence to localize the change.</p>
 <h2 id="trade-offs">Trade-offs</h2>
 <ul>
@@ -991,17 +1020,29 @@ stop_reason: blocked_by_correctness_gate
 <h2 id="failure-modes">Failure Modes</h2>
 <ul>
 <li><strong>Eval gaming</strong>: optimizing for metrics while harming real-world quality.<ul>
-<li>Detect: compare “passes gates” with downstream signals in traces (reverts, follow-up bugfix tasks, repeated failures on adjacent golden tasks); watch for large diffs with minimal test coverage.</li>
+<li>Detect:<ul>
+<li>Compare “passes gates” with downstream trace signals: reverts, follow-up bugfix tasks, repeated failures on adjacent golden tasks.</li>
+<li>Watch for large diffs with minimal test coverage.</li>
+</ul>
+</li>
 <li>Respond: add adversarial or regression tests, strengthen gate definitions (e.g., require touched-module tests), and record coverage/selection rationale in the trace.</li>
 </ul>
 </li>
 <li><strong>Blind spots</strong>: evaluations do not cover critical behaviors.<ul>
-<li>Detect: incidents where traces show “all gates passed” but production-like behavior fails; repeated similar failures without corresponding eval signatures.</li>
+<li>Detect:<ul>
+<li>Incidents where traces show “all gates passed” but production-like behavior fails.</li>
+<li>Repeated similar failures without corresponding eval signatures.</li>
+</ul>
+</li>
 <li>Respond: add contract tests or invariants to the eval suite; introduce risk-based gating (e.g., stricter checks for auth/payment paths) and make the gating decision explicit in the trace.</li>
 </ul>
 </li>
 <li><strong>Un-actionable traces</strong>: logs exist but lack structure, making search and attribution hard.<ul>
-<li>Detect: inability to answer basic questions (“what changed?”, “what ran?”, “why did it stop?”) without reading raw logs; missing environment fingerprint or missing diff records.</li>
+<li>Detect:<ul>
+<li>Inability to answer basic questions (“what changed?”, “what ran?”, “why did it stop?”) without reading raw logs.</li>
+<li>Missing environment fingerprint or missing diff records.</li>
+</ul>
+</li>
 <li>Respond: enforce a minimal trace schema, store normalized fields for queries, and treat “missing trace fields” as an evaluation failure for non-trivial action classes.</li>
 </ul>
 </li>
@@ -1029,7 +1070,7 @@ stop_reason: blocked_by_correctness_gate
       Material for MkDocs
     </a>
 <div class="build-timestamp" style="margin-top: 0.5em; font-size: 0.8em;">
-    Last built: 2026-02-24 20:25:10 UTC
+    Last built: 2026-02-25 08:28:23 UTC
   </div>
 </div>
 <div class="md-social">
