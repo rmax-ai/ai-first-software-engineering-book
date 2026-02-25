@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8466666666666667,
+  "diff_size": 0.0,
+  "drift_score": 0.03671910965445688,
+  "iteration": 383,
+  "planner_focus": [
+    "## Research Directions: remove any trailing '<reminder>...</reminder>' block so the chapter ends at the final deliverable bullet",
+    "## Research Directions: ensure there is no meta/build harness content (e.g., '<sql_tables>...') embedded in the exported chapter markdown",
+    "## Research Directions: keep edits strictly localized to deleting the extraneous block without rewriting the section"
+  ],
+  "timestamp": "2026-02-25T08:23:40Z"
+}

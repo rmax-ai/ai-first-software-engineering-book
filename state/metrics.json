@@ -3,27 +3,29 @@
     "01-paradigm-shift": {
       "latest": {
         "critic": {
-          "clarity_score": 0.94,
-          "decision": "approve",
-          "drift_score": 0.11,
-          "example_density": 0.9,
+          "clarity_score": 0.82,
+          "decision": "refine",
+          "drift_score": 0.18,
+          "example_density": 0.75,
           "failure_modes_present": true,
-          "structure_score": 0.95,
+          "structure_score": 0.9,
           "tradeoff_presence": true,
-          "violations": []
+          "violations": [
+            "Trailing runtime artifact remains: the <reminder>...</reminder> block is still present after ## Research Directions."
+          ]
         },
         "deterministic": {
-          "drift_score": 0.1860222849026369,
+          "drift_score": 0.09013222532285838,
           "passed": false,
-          "similarity_max": 0.7612468236792783
+          "similarity_max": 0.7931826614156613
         },
-        "iteration": 424,
-        "timestamp": "2026-02-24T21:10:36Z",
+        "iteration": 428,
+        "timestamp": "2026-02-24T22:20:33Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
-          "diff_ratio": 0.00904977375565611,
-          "drift_score": 0.1860222849026369
+          "diff_ratio": 0.0,
+          "drift_score": 0.09013222532285838
         }
       }
     },
@@ -32,7 +34,7 @@
         "critic": {
           "clarity_score": 0.94,
           "decision": "approve",
-          "drift_score": 0.05,
+          "drift_score": 0.11,
           "example_density": 0.85,
           "failure_modes_present": true,
           "structure_score": 0.95,
@@ -40,46 +42,46 @@
           "violations": []
         },
         "deterministic": {
-          "drift_score": 0.15321289334447225,
+          "drift_score": 0.09843535435952494,
           "passed": false,
-          "similarity_max": 0.7937721711006903
+          "similarity_max": 0.7976876306948929
         },
-        "iteration": 396,
-        "timestamp": "2026-02-24T21:15:04Z",
+        "iteration": 399,
+        "timestamp": "2026-02-24T22:24:35Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
-          "diff_ratio": 0.027972027972027972,
-          "drift_score": 0.15321289334447225
+          "diff_ratio": 0.0,
+          "drift_score": 0.09843535435952494
         }
       }
     },
     "03-autonomous-kernels": {
       "latest": {
         "critic": {
-          "clarity_score": 0.85,
+          "clarity_score": 0.86,
           "decision": "refine",
           "drift_score": 0.03,
-          "example_density": 0.78,
+          "example_density": 0.82,
           "failure_modes_present": true,
-          "structure_score": 0.9,
+          "structure_score": 0.92,
           "tradeoff_presence": true,
           "violations": [
             "Chapter does not end immediately after the last bullet in ## Research Directions; a trailing <reminder>...</reminder> block remains."
           ]
         },
         "deterministic": {
-          "drift_score": 0.0227765726681128,
+          "drift_score": 0.03145773979107312,
           "passed": false,
-          "similarity_max": 0.749832442201424
+          "similarity_max": 0.747689924967259
         },
-        "iteration": 387,
-        "timestamp": "2026-02-24T21:18:58Z",
+        "iteration": 390,
+        "timestamp": "2026-02-24T22:30:00Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
           "diff_ratio": 0.0,
-          "drift_score": 0.0227765726681128
+          "drift_score": 0.03145773979107312
         }
       }
     },
@@ -88,143 +90,142 @@
         "critic": {
           "clarity_score": 0.9,
           "decision": "approve",
-          "drift_score": 0.2,
-          "example_density": 0.74,
+          "drift_score": 0.02,
+          "example_density": 0.78,
           "failure_modes_present": true,
-          "structure_score": 0.93,
+          "structure_score": 0.94,
           "tradeoff_presence": true,
           "violations": []
         },
         "deterministic": {
-          "drift_score": 0.016623488773747842,
+          "drift_score": 0.014975550122249388,
           "passed": false,
-          "similarity_max": 0.7272045992904261
+          "similarity_max": 0.7256745959223103
         },
-        "iteration": 381,
-        "timestamp": "2026-02-24T21:25:12Z",
+        "iteration": 384,
+        "timestamp": "2026-02-24T22:33:38Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
           "diff_ratio": 0.0,
-          "drift_score": 0.016623488773747842
+          "drift_score": 0.014975550122249388
         }
       }
     },
     "05-evaluation-and-traces": {
       "latest": {
         "critic": {
-          "clarity_score": 0.79,
+          "clarity_score": 0.83,
           "decision": "refine",
           "drift_score": 0.18,
-          "example_density": 0.7,
+          "example_density": 0.72,
           "failure_modes_present": true,
-          "structure_score": 0.84,
+          "structure_score": 0.88,
           "tradeoff_presence": true,
           "violations": [
             "Non-chapter trailing block exists: the <reminder>...</reminder> section appears after the chapter closing marker <!-- markdownlint-enable MD022 MD032 MD007 MD046 -->."
           ]
         },
         "deterministic": {
-          "drift_score": 0.17076637866903657,
+          "drift_score": 0.10104556803995005,
           "passed": false,
-          "similarity_max": 0.7031029650180792
+          "similarity_max": 0.70060000208099
         },
-        "iteration": 382,
-        "timestamp": "2026-02-24T21:33:13Z",
+        "iteration": 385,
+        "timestamp": "2026-02-24T22:38:04Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
-          "diff_ratio": 0.025559105431309903,
-          "drift_score": 0.17076637866903657
+          "diff_ratio": 0.0,
+          "drift_score": 0.10104556803995005
         }
       }
     },
     "06-agent-governance": {
       "latest": {
         "critic": {
-          "clarity_score": 0.87,
+          "clarity_score": 0.86,
           "decision": "refine",
-          "drift_score": 0.11,
+          "drift_score": 0.4,
           "example_density": 0.78,
           "failure_modes_present": true,
-          "structure_score": 0.92,
+          "structure_score": 0.9,
           "tradeoff_presence": true,
           "violations": [
-            "Writer output includes a Mermaid fenced code block despite the run-level instruction 'No code fences'.",
-            "Writer output still contains a trailing `<reminder>...</reminder>` block after ## Research Directions; the chapter should end at the last bullet in that section."
+            "Chapter includes a trailing '<reminder>...</reminder>' block after the final bullet under '## Research Directions' instead of ending at the final deliverable bullet.",
+            "Extraneous meta content ('<sql_tables>...') is present in the chapter body and is not part of the chapter's defined heading structure."
           ]
         },
         "deterministic": {
-          "drift_score": 0.009262526464361327,
+          "drift_score": 0.03671910965445688,
           "passed": false,
-          "similarity_max": 0.7089984254034841
+          "similarity_max": 0.6824529958552679
         },
-        "iteration": 379,
-        "timestamp": "2026-02-24T21:36:01Z",
+        "iteration": 384,
+        "timestamp": "2026-02-25T08:24:33Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
-          "diff_ratio": 0.022099447513812154,
-          "drift_score": 0.009262526464361327
+          "diff_ratio": 0.0,
+          "drift_score": 0.03671910965445688
         }
       }
     },
     "07-production-ai-infrastructure": {
       "latest": {
         "critic": {
-          "clarity_score": 0.91,
+          "clarity_score": 0.85,
           "decision": "refine",
-          "drift_score": 0.05,
-          "example_density": 0.86,
+          "drift_score": 0.3,
+          "example_density": 0.75,
           "failure_modes_present": true,
-          "structure_score": 0.94,
+          "structure_score": 0.9,
           "tradeoff_presence": true,
           "violations": [
-            "Non-chapter content is appended after the chapter body: the '<reminder> ... </reminder>' block appears after the final '## Research Directions' section."
+            "Output includes content after the final chapter line '<!-- markdownlint-enable MD022 MD032 -->' (the appended '<reminder>' block should be excluded)."
           ]
         },
         "deterministic": {
-          "drift_score": 0.30744047619047615,
+          "drift_score": 0.006293670365803534,
           "passed": false,
-          "similarity_max": 0.7382417333886087
+          "similarity_max": 0.7208066614185674
         },
-        "iteration": 381,
-        "timestamp": "2026-02-24T21:38:31Z",
+        "iteration": 386,
+        "timestamp": "2026-02-25T08:17:58Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
           "diff_ratio": 0.0,
-          "drift_score": 0.30744047619047615
+          "drift_score": 0.006293670365803534
         }
       }
     },
     "99-future-directions": {
       "latest": {
         "critic": {
-          "clarity_score": 0.86,
+          "clarity_score": 0.84,
           "decision": "refine",
-          "drift_score": 0.06,
-          "example_density": 0.75,
+          "drift_score": 0.16,
+          "example_density": 0.72,
           "failure_modes_present": true,
           "structure_score": 0.9,
           "tradeoff_presence": true,
           "violations": [
-            "## Concrete Example 2 still says \u201cA diagram helps here\u2026\u201d but there is no Mermaid diagram present in the section.",
-            "Revised chapter includes a \u201c<reminder> \u2026 </reminder>\u201d block at the end that is not part of the chapter content and would violate a plain-markdown chapter format if this file is intended to be published as-is."
+            "Non-chapter block remains at the end: the literal <reminder>...</reminder> section is still present after the chapter content, which violates plain-markdown publishability."
           ]
         },
         "deterministic": {
-          "drift_score": 0.09878635152357784,
+          "drift_score": 0.03782780928543291,
           "passed": false,
-          "similarity_max": 0.7836592308685602
+          "similarity_max": 0.7939411613424207
         },
-        "iteration": 406,
-        "timestamp": "2026-02-24T21:44:52Z",
+        "iteration": 409,
+        "timestamp": "2026-02-25T08:21:53Z",
         "trace_summary": {
           "decision": "refine",
           "deterministic_pass": false,
-          "diff_ratio": 0.08764940239043825,
-          "drift_score": 0.09878635152357784
+          "diff_ratio": 0.0,
+          "drift_score": 0.03782780928543291
         }
       }
     },
@@ -400,5 +401,5 @@
       }
     }
   },
-  "generated_at": "2026-02-24T21:44:52Z"
+  "generated_at": "2026-02-25T08:24:33Z"
 }

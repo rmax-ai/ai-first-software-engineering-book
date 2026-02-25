@@ -1,0 +1,109 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.02; drift_score=0.10"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-24T22:23:37Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.042857142857142816,
+          "harness": 0.10426540284360186,
+          "model": 0.038461538461538436
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.006216006216006216
+      },
+      "timestamp": "2026-02-24T22:23:37Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.057796741660201705,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "For this chapter, define those outcomes in a way that can be measured across repos: - **Regression rate**: fraction of tasks that pass the configured gate and later fail, or are reverted.",
+          "words": 31
+        },
+        {
+          "sentence": "```mermaid flowchart TB TB[Task brief<br/>+ repo state] C[Control plane<br/>policies<br/>budgets<br/>stop conditions] T[Tool plane<br/>patches<br/>commands<br/>structured errors] E[Evaluation plane<br",
+          "words": 88
+        },
+        {
+          "sentence": "If you cannot point to those responsibilities in your implementation, the harness will drift toward \u201cbest effort.\u201d A useful way to operationalize the planes is to name what each plane consumes, what i",
+          "words": 177
+        },
+        {
+          "sentence": "| Category | Field / rule | Purpose | Example failure mode | | --- | --- | --- | --- | | Required fields | `path` | Identify the target file | Wrong path \u2192 cannot apply patch | | Required fields | `ol",
+          "words": 120
+        },
+        {
+          "sentence": "| Error code | Meaning | What the harness should return | | --- | --- | --- | | `NOT_FOUND` | `path` does not exist and `create` is false | A clear message plus allowed path roots (if any) | | `NON_UN",
+          "words": 83
+        },
+        {
+          "sentence": "```mermaid flowchart TB A[Attempt<br/>smallest plausible change] G[Gate<br/>tests + static checks] P{Gate passes?} L[Log<br/>diff id + outputs + exit codes] B{Budget remains<br/>and failure actionable",
+          "words": 67
+        },
+        {
+          "sentence": "```text // One harness iteration Attempt(\"smallest plausible change\") GateResult -> RunGate(\"tests + static checks\") Log(\"diff id\", GateResult, \"stdout/stderr\", \"exit codes\") If GateResult == \"pass\" T",
+          "words": 46
+        },
+        {
+          "sentence": "A minimal `fallback_gate` is narrower and stricter: - typecheck/lint/build must pass (whatever subset is available), and - a targeted command or script (documented in the repo) must run successfully, ",
+          "words": 42
+        }
+      ],
+      "timestamp": "2026-02-24T22:23:37Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/02-harness-engineering.md",
+      "state/ledger/iteration_log/2026-02-24T22-23-37Z__chapter-02-harness-engineering__iter-000398.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/02-harness-engineering/2026-02-24.json"
+    ],
+    "notes": "Kernel refinement iteration 398 for 02-harness-engineering"
+  },
+  "iteration": 3153,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 32621,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 566906
+  },
+  "scope": {
+    "chapters_modified": [
+      "02-harness-engineering"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-24T22:23:37Z"
+}

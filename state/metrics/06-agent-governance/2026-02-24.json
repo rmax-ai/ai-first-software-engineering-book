@@ -82,6 +82,60 @@
         "diff_ratio": 0.022099447513812154,
         "drift_score": 0.009262526464361327
       }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.9,
+        "decision": "refine",
+        "drift_score": 0.02,
+        "example_density": 0.8,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Chapter contains a trailing <reminder>...</reminder> block after ## Research Directions; the chapter should end at the last bullet in that section."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.05988513282048,
+        "passed": false,
+        "similarity_max": 0.6824529958552679
+      },
+      "iteration": 380,
+      "timestamp": "2026-02-24T22:39:28Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.425414364640884,
+        "drift_score": 0.05988513282048
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.9,
+        "decision": "refine",
+        "drift_score": 0.02,
+        "example_density": 0.8,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Chapter contains a trailing <reminder>...</reminder> block after ## Research Directions; the chapter should end at the last bullet in that section."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.05988513282048,
+        "passed": false,
+        "similarity_max": 0.6824529958552679
+      },
+      "iteration": 381,
+      "timestamp": "2026-02-24T22:40:12Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.05988513282048
+      }
     }
   ]
 }

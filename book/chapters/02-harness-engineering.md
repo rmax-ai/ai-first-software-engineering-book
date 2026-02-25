@@ -12,7 +12,14 @@ In this chapter, “predictable” means three things:
 
 When this chapter says “agent,” it means a model operating inside a harnessed loop: tool calls + budgets + gates + logging. The hypothesis is about that loop. The model is treated as an input you hold constant while you change harness strictness.
 
-Hypothesis (falsifiable): for a fixed set of tasks and repositories, tightening the harness reduces regression rate and rework more than swapping between models of similar capability.
+Hypothesis (falsifiable): tightening the harness reduces regression rate and rework. This effect is larger than swapping between models of similar capability, when tasks and repos are held constant.
+
+For this chapter, define those outcomes in a way that can be measured across repos:
+
+- **Regression rate**: fraction of tasks that pass the configured gate and later fail, or are reverted.
+  - Measure in a fixed window. Example windows: next N commits; next full CI run.
+- **Rework**: extra attempts needed to reach a passing gate.
+  - Count attempts beyond the first, under a fixed time and iteration budget.
 
 This is not a model-selection argument. The claim is that, when you hold the model and task conditions constant, harness design is the primary lever that changes reliability outcomes.
 
@@ -42,9 +49,10 @@ If you want evidence for the hypothesis, keep the model constant (or compare mod
   - Patch discipline (diff-only, small changes).
   - Evaluation API (what constitutes pass/fail).
 
-A diagram helps here because the planes are easy to list, but hard to reason about as a system.
-Focus on where constraints enter (control plane).
-Then track where evidence is produced (tool/evaluation planes) and what gets recorded for replay (state plane).
+A diagram helps here because the planes are easy to list, but harder to reason about as a system.
+Focus first on where constraints enter (control plane).
+Then track where evidence is produced (tool and evaluation planes).
+Finally, track what gets recorded for replay (state plane).
 
 ```mermaid
 flowchart TB
@@ -65,15 +73,23 @@ flowchart TB
   E -->|gate results| S
 ```
 
+Legend (how to read arrow labels):
+
+- “typed tool calls” are constrained requests. They are validated before execution.
+- “outputs + structured errors” are raw evidence. They explain what happened and why.
+- “events + diffs + outputs” are replay inputs. They let you reproduce decisions.
+
 Read the diagram as a loop with three distinct roles:
 
 - **Constraints** enter in the control plane (policies, budgets, stop conditions).
 - **Evidence** is produced by the tool and evaluation planes (outputs + pass/fail).
 - **Replay** depends on the state plane capturing enough artifacts to reproduce decisions.
 
-A practical mapping is: the control plane defines constraints.
-The tool/evaluation planes produce evidence, and the state plane records it for replay.
-If you cannot point to those responsibilities in your implementation, your harness will drift toward “best effort” instead of predictable behavior.
+A practical mapping is simple.
+The control plane defines constraints.
+The tool and evaluation planes produce evidence.
+The state plane records enough detail for replay.
+If you cannot point to those responsibilities in your implementation, the harness will drift toward “best effort.”
 
 A useful way to operationalize the planes is to name what each plane consumes, what it produces, and one metric you can track:
 
@@ -84,7 +100,11 @@ A useful way to operationalize the planes is to name what each plane consumes, w
 | Evaluation plane | Decide if work is acceptable based on checks | **Inputs**: test/lint/typecheck/build results; rubrics<br/>**Outputs**: pass/fail + evidence | Gate pass rate (per iteration) |
 | State plane | Record what happened and enable recovery | **Inputs**: events; diffs; tool outputs<br/>**Outputs**: trace; ledger; artifacts for replay | Reproducibility rate (same pass/fail on rerun) |
 
-The “minimal contract surface” is the smallest set of stable interfaces required for repeatability, boundedness, and verifiability. It includes tool schemas (and error codes), patch discipline, and evaluation semantics.
+The “minimal contract surface” is the smallest set of stable interfaces required for repeatability, boundedness, and verifiability. In practice, it is a checklist:
+
+- A tool schema with stable arguments and stable error codes.
+- Patch discipline that keeps changes local (diff-only, bounded by budgets).
+- Gate semantics that define pass/fail and required evidence (what is stored, and where).
 
 Boundary:
 
@@ -151,11 +171,16 @@ A minimal schema sketch can be made scannable by treating it like an interface s
 **Mini-example (connecting the contract to measurable outcomes):**
 
 - Task: “Update `timeout_ms` default from 5000 to 8000.”
-- Without a strict contract: the agent might run a broad search/replace and touch 6 files, including docs and unrelated constants.
+- Without a strict contract:
+  - The agent runs a broad search/replace.
+  - It touches 6 files, including docs and unrelated constants.
 - With the contract and budgets:
-  - The edit is constrained to one file and a small `old_str` anchor.
-  - The harness rejects the attempt if it exceeds, for example, 1 file and 20 changed lines.
-  - Your tracked metrics should shift: **diff locality** stays low (1 file, a few lines), and **revert rate** should drop because the change is less likely to introduce incidental regressions.
+  - Constraint: max 1 file changed per call.
+  - Constraint: max 20 changed lines per call.
+  - Result: the edit is limited to one file, anchored by a small `old_str` block.
+- Metrics you should see move:
+  - **Diff locality**: stays low (1 file, a few lines).
+  - **Revert rate**: drops, because incidental edits are less likely.
 
 **Evaluation (task-level metrics to track):**
 
@@ -188,25 +213,43 @@ flowchart TB
   B -- no --> S
 ```
 
+Pseudo-code makes the loop control explicit. It is useful when you want the order of operations, evidence capture, and stop conditions to be unambiguous.
+
+```text
+// One harness iteration
+Attempt("smallest plausible change")
+GateResult -> RunGate("tests + static checks")
+Log("diff id", GateResult, "stdout/stderr", "exit codes")
+
+If GateResult == "pass" Then Emit("PR-ready output") Else If BudgetRemains() Then Retry("next attempt") Else Stop("failure summary + evidence")
+```
+
 Decision checklist (minimal, explicit):
 
 1. **Pass/fail semantics**
-   - Pass = all configured checks return success (exit code 0), and no policy violations were triggered.
-   - Fail = any check fails, any policy violation occurs, or budgets are exceeded.
+   - Pass = all configured checks return success (exit code 0).
+   - Pass also requires: no policy violations were triggered.
+   - Fail = any check fails.
+   - Fail also includes: any policy violation or budget exceed.
 2. **Retry eligibility**
-   - Retry only when budgets remain and the failure is actionable.
+   - Retry only when budgets remain.
+   - Retry only when the failure is actionable.
    - Otherwise, stop and return a failure summary plus evidence.
 3. **Gate configuration (minimal defaults)**
-   1. Define the full gate: a fixed set of commands, in order (for example: unit tests, then lint/typecheck, then build).
-   2. Define time and iteration budgets: max gate time per iteration and max iterations per task.
-   3. Define evidence requirements: always store exit codes, stdout/stderr (or paths to logs), and the diff identifier.
+   1. Define the full gate as a fixed set of commands, in order.
+   2. Define time and iteration budgets per task.
+   3. Define evidence requirements.
+      - Store exit codes.
+      - Store stdout/stderr (or paths to logs).
+      - Store the diff identifier.
 4. **Fallback gate policy when tests are missing**
    1. Can the repo’s documented test command run successfully in this environment?
       - If yes: use `full_gate`.
    2. If not, can you make tests runnable within the configured budget?
       - If yes: fix within budget, then use `full_gate`.
    3. If you cannot make tests runnable within budget:
-      - Use `fallback_gate` and tighten patch budgets.
+      - Use `fallback_gate`.
+      - Tighten patch budgets.
       - Record which gate was used (`full_gate` vs `fallback_gate`) and why.
 
 A minimal `fallback_gate` is narrower and stricter:
@@ -253,14 +296,32 @@ Decision checklist (recommended defaults and when to relax):
 ## Failure Modes
 
 - **Schema underspecification**: tools accept ambiguous inputs, producing inconsistent outcomes.
-  - How you notice: frequent `NO_MATCH`/`NON_UNIQUE_MATCH`-style failures, large diffs for small tasks, and high variance in outcomes across reruns.
-  - Harness fix: tighten required fields, add validation (uniqueness checks, size budgets), and return structured error codes plus fresh context to guide recovery.
+  - Symptoms:
+    - Frequent `NO_MATCH` and `NON_UNIQUE_MATCH` failures.
+    - Large diffs for small tasks.
+    - High variance across reruns with the same inputs.
+  - Harness response:
+    - Tighten required fields.
+    - Add validation (uniqueness checks and size budgets).
+    - Return structured error codes plus fresh context to guide recovery.
 - **Over-permissive harness**: agents change broad parts of the repo with weak verification.
-  - How you notice: many files touched per task, drift into unrelated directories, and regressions discovered after “completion.”
-  - Harness fix: enforce patch locality budgets, add path allowlists/denylists, and require passing gates before accepting final output.
+  - Symptoms:
+    - Many files touched per task.
+    - Drift into unrelated directories.
+    - Regressions discovered after “completion.”
+  - Harness response:
+    - Enforce patch locality budgets.
+    - Add path allowlists and denylists.
+    - Require passing gates before accepting final output.
 - **Gate bypass**: humans accept outputs without running checks, breaking the feedback loop.
-  - How you notice: “merged without green checks,” missing logs/evidence in the ledger, and recurring regressions that gates would have caught.
-  - Harness fix: make gates non-optional for PR-ready output (policy), require artifacts (logs, diff id, check results) attached to the task, and surface “stop reason” when evidence is missing.
+  - Symptoms:
+    - “Merged without green checks.”
+    - Missing logs or evidence in the ledger.
+    - Recurring regressions that gates would have caught.
+  - Harness response:
+    - Make gates non-optional for PR-ready output (policy).
+    - Require artifacts (logs, diff id, check results) attached to the task.
+    - Surface a stop reason when required evidence is missing.
 
 ## Research Directions
 

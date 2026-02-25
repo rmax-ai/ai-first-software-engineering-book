@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8333333333333334,
+  "diff_size": 0.0,
+  "drift_score": 0.006293670365803534,
+  "iteration": 384,
+  "planner_focus": [
+    "Remove non-chapter appendices by ensuring the emitted markdown ends immediately after the final chapter line",
+    "Preserve current content; make no additional prose changes beyond end-of-chapter hygiene"
+  ],
+  "timestamp": "2026-02-25T08:16:24Z"
+}

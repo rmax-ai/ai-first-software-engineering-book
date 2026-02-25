@@ -80,6 +80,116 @@
         "diff_ratio": 0.00904977375565611,
         "drift_score": 0.1860222849026369
       }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.93,
+        "decision": "refine",
+        "drift_score": 0.2,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.94,
+        "tradeoff_presence": true,
+        "violations": [
+          "## System Breakdown: Mermaid diagram is no longer in a fenced ```mermaid block (now wrapped in <div class=\"mermaid\">), which may break Mermaid rendering and any tooling that expects fenced Mermaid syntax",
+          "Revised chapter includes a trailing <reminder> block after ## Research Directions, which is not part of chapter prose and may fail chapter-quality/style tooling if included in the persisted markdown"
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.07737622207206196,
+        "passed": false,
+        "similarity_max": 0.7902765670973839
+      },
+      "iteration": 425,
+      "timestamp": "2026-02-24T22:03:40Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.273542600896861,
+        "drift_score": 0.07737622207206196
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.8,
+        "decision": "refine",
+        "drift_score": 0.3,
+        "example_density": 0.75,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Trailing runtime artifact remains: the <reminder>...</reminder> block is still present after ## Research Directions.",
+          "Style guard: at least one sentence exceeds 28 words (e.g., the 'Without a trace, attribution is guesswork\u2014you will not know whether...' sentence in ## System Breakdown)."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.09007781194669645,
+        "passed": false,
+        "similarity_max": 0.7934869298606053
+      },
+      "iteration": 426,
+      "timestamp": "2026-02-24T22:18:44Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.06870229007633588,
+        "drift_score": 0.09007781194669645
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.82,
+        "decision": "refine",
+        "drift_score": 0.18,
+        "example_density": 0.75,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Trailing runtime artifact remains: the <reminder>...</reminder> block is still present after ## Research Directions."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.09013222532285838,
+        "passed": false,
+        "similarity_max": 0.7931826614156613
+      },
+      "iteration": 427,
+      "timestamp": "2026-02-24T22:19:46Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.007692307692307693,
+        "drift_score": 0.09013222532285838
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.82,
+        "decision": "refine",
+        "drift_score": 0.18,
+        "example_density": 0.75,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Trailing runtime artifact remains: the <reminder>...</reminder> block is still present after ## Research Directions."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.09013222532285838,
+        "passed": false,
+        "similarity_max": 0.7931826614156613
+      },
+      "iteration": 428,
+      "timestamp": "2026-02-24T22:20:33Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.09013222532285838
+      }
     }
   ]
 }

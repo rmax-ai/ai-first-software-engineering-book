@@ -25,17 +25,20 @@ What governance is / is not:
 - **Policy artifacts**: constitution, agent rules, CI policies.
   - Enforceable rules:
     - “No writes to protected paths without approval token.”
-    - “All tool calls must declare intent and target files.”
+    - “All tool calls must declare intent.”
+    - “All tool calls must declare target files.”
   - Enforcement:
     - Pre-commit or tool-layer policy checks reject disallowed patches.
     - CI re-validates policies on the merge commit.
 - **Permissions**: read/write scopes, protected files, tool allowlists.
   - Enforceable rules:
-    - “Read-only by default; write requires explicit scope.”
+    - “Read-only by default.”
+    - “Write requires explicit scope.”
     - “Network access disabled unless allowlisted per job.”
   - Enforcement:
     - Runtime tool allowlist/denylist.
-    - Repository protected-branch rules and CODEOWNERS coverage for specific paths.
+    - Repository protected-branch rules.
+    - CODEOWNERS coverage for specific paths.
 - **Budgets**: time, iterations, tool calls, diff size, cost ceilings.
   - Enforceable rules:
     - “Max N iterations per task.”
@@ -43,26 +46,33 @@ What governance is / is not:
     - “Stop on repeated failures.”
   - Enforcement:
     - Harness-level counters.
-    - CI policy fails if changes exceed thresholds or if required checkpoints were skipped.
+    - CI policy fails if thresholds are exceeded.
+    - CI policy fails if required checkpoints were skipped.
 - **Review**: mandatory human checkpoints for specific risk classes.
   - Enforceable rules:
-    - “Human approval required for security configs, auth paths, dependency upgrades.”
+    - “Human approval required for security configs.”
+    - “Human approval required for auth paths.”
+    - “Human approval required for dependency upgrades.”
     - “Two-person review for rollback scripts.”
   - Enforcement:
     - CODEOWNERS + branch protection.
-    - CI classifies changes and blocks merge unless approvals match the risk class.
+    - CI classifies changes.
+    - CI blocks merge unless approvals match the risk class.
 - **Audit**: trace retention, searchable logs, change attribution.
   - Enforceable rules:
     - “All tool executions emit structured logs.”
-    - “Each patch links to an agent run id and input prompt.”
+    - “Each patch links to an agent run id.”
+    - “Each patch links to the input prompt.”
   - Enforcement:
     - Log collection in CI artifacts or a central store.
     - Merge requires a commit trailer field `Agent-Run-Id: <run_id>`.
-    - CI validates this trailer case-sensitively.
+    - CI validates the trailer case-sensitively.
     - The key must be exactly `Agent-Run-Id`.
-    - `<run_id>` must be lowercase and match `run_[a-z0-9]{12}`.
+    - `<run_id>` must be lowercase.
+    - `<run_id>` must match `run_[a-z0-9]{12}`.
     - Valid: `Agent-Run-Id: run_3f9c2a1b7d4e`.
-    - Invalid: `agent-run-id: run_3f9c2a1b7d4e`, `Agent-Run-Id: RUN_3F9C2A1B7D4E`.
+    - Invalid: `agent-run-id: run_3f9c2a1b7d4e`.
+    - Invalid: `Agent-Run-Id: RUN_3F9C2A1B7D4E`.
 
 Governance loop (artifacts in parentheses):
 
@@ -72,18 +82,11 @@ Governance loop (artifacts in parentheses):
 4. Review routing and approvals (risk classification / CODEOWNERS / mandatory checkpoints)
 5. Policy update after incidents or near-misses (rule changes + new tests/evals)
 
-A diagram helps here because governance is a loop with repeated checkpoints. In the flow below, focus on two things: where enforcement blocks unsafe actions, and where evidence is captured. Those points determine what reviewers can verify and what can be rolled back safely.
+This is a loop with repeated checkpoints. Focus on two points: where enforcement blocks unsafe actions (step 2), and where evidence is captured (step 3). Those points determine what reviewers can verify and what can be rolled back safely.
 
-```mermaid
-flowchart TB
-  A["1. Policy definition<br/>(constitution / agent rules / CI policies)"]
-  B["2. Enforcement<br/>(tool allowlists / protected paths / CI gates)"]
-  C["3. Telemetry + audit capture<br/>(structured traces / logs / attribution)"]
-  D["4. Review routing + approvals<br/>(risk class / CODEOWNERS / checkpoints)"]
-  E["5. Policy update<br/>(incidents / near-misses / new evals)"]
+Compact view of the loop:
 
-  A --> B --> C --> D --> E --> A
-```
+1 → 2 → 3 → 4 → 5 → 1
 
 Takeaway: steps 2 and 3 are the “hard” parts of governance. Step 2 controls what can happen. Step 3 determines what proof exists afterward, so steps 4 and 5 can block unsafe merges and tighten policy based on observed failures.
 
@@ -98,8 +101,14 @@ Policy text (agent rules / CI policy):
 
 Enforcement point (tool layer + CI):
 
-- Tool layer: rejects any patch touching a protected path unless an approval token is present in the task context (e.g., `APPROVAL=SECURITY-1234`) and the approver identity is recorded.
-- CI: re-checks the merged diff; fails the build if protected paths changed without the recorded approval.
+- Tool layer:
+  - Inspect the proposed diff for touched paths.
+  - If any path matches a protected prefix, require an approval token (e.g., `APPROVAL=SECURITY-1234`).
+  - Require an approver identity to be recorded alongside the token.
+  - If either token or approver identity is missing, reject the patch.
+- CI:
+  - Re-check the merged diff for protected paths.
+  - Fail the build if protected paths changed without recorded approval metadata.
 
 Example attempted edit (input and check):
 
@@ -108,7 +117,8 @@ Example attempted edit (input and check):
 
 Expected rejection message (testable outcome):
 
-- “Rejected: write to protected path `.github/workflows/` requires approval. Provide approval token + approver identity, or move the change to an approved human-owned PR.”
+- “Rejected: write to protected path `.github/workflows/` requires approval.”
+- “Provide approval token + approver identity, or move the change to an approved human-owned PR.”
 
 Remediation path (approval and artifacts produced):
 
@@ -136,9 +146,20 @@ Immediate containment (rollback):
 
 Trace queries (audit-driven investigation):
 
-- Use the audit trail to answer: which tools were invoked, which files were changed, which tests were executed, and whether any approvals were used.
-- Minimum required evidence: a searchable trace that reconstructs the diff, command outputs, and decision points (e.g., “skipped test X due to timeout”).
-- SLO evidence: audit record includes timestamps for detection, rollback initiation, and rollback completion, plus a deployment event id that can be cross-referenced.
+- Use the audit trail to answer:
+  - Which tools were invoked.
+  - Which files were changed.
+  - Which tests were executed.
+  - Whether any approvals were used.
+- Minimum required evidence:
+  - A searchable trace that reconstructs the diff.
+  - Command outputs for tool executions.
+  - Recorded decision points (e.g., “skipped test X due to timeout”).
+- SLO evidence:
+  - Audit record includes detection timestamp.
+  - Audit record includes rollback initiation timestamp.
+  - Audit record includes rollback completion timestamp.
+  - Audit record includes a deployment event id that can be cross-referenced.
 
 Root-cause classification (review-driven):
 

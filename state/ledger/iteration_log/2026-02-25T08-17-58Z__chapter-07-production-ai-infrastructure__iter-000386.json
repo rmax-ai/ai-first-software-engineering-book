@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8333333333333334,
+  "diff_size": 0.0,
+  "drift_score": 0.006293670365803534,
+  "iteration": 386,
+  "planner_focus": [
+    "End-of-chapter hygiene: ensure output terminates at the chapter\u2019s final line",
+    "Prevent external pipeline appendices from leaking into emitted markdown"
+  ],
+  "timestamp": "2026-02-25T08:17:58Z"
+}

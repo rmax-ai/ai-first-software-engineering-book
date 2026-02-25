@@ -4,15 +4,20 @@
 ## Thesis
 Production AI-first systems are distributed systems: they require orchestration, isolation, observability, caching, cost control, and reproducible environments.
 
-Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. If you can reliably run tools and record what happened, you can reproduce runs and improve outcomes even when model behavior varies.
+Hypothesis: operational reliability depends more on the tool/runtime plane than on the model prompt. If you can reliably run tools and record what happened, you can reproduce runs. That lets you improve outcomes even when model behavior varies.
 
 ## Why This Matters
 - Without isolation, tool execution becomes a security and reliability risk.
 - Without observability, failures cannot be attributed or fixed systematically.
 - Without cost controls, autonomy can become economically unstable.
-- Operational signals include: tool-failure rate, replay success rate, mean tool latency, retry rate, and spend per successful task.
+- Operational signals include:
+  - tool-failure rate
+  - replay success rate
+  - mean tool latency
+  - retry rate
+  - spend per successful task
 
-Example targets and alerts (illustrative, not mandates):
+Example targets and alerts (illustrative, not mandates). Use them to seed dashboards and error budgets.
 
 | Metric | Signal to watch | Illustrative alert |
 | --- | --- | --- |
@@ -26,9 +31,11 @@ Example targets and alerts (illustrative, not mandates):
 A diagram helps here because the tool/runtime plane has coupled components. It is not a single service. Focus on the contracts between boxes. Each box should emit stable, versioned signals for replay and debugging.
 
 The point of the diagram is the boundaries. In practice, reliability tends to hinge on three contracts:
-(1) run id propagation across every step,
-(2) versioned, structured tool outputs, and
-(3) a replay bundle that is complete enough to reproduce failures.
+- run id propagation across every step
+- versioned, structured tool outputs
+- a replay bundle that is complete enough to reproduce failures
+
+Legend: solid arrows show work/data flow between planes; dotted arrows show governance or metadata (policy, tagging, and run id storage).
 
 ```mermaid
 flowchart LR
@@ -48,12 +55,25 @@ flowchart LR
 
 Takeaway: reliability comes from strict contracts at each boundary. Record the environment and tool versions, constrain execution, and connect every step to a run id. Then you can replay, attribute failures, and control spend.
 
+Minimum replay bundle (per run id):
+- run id (and attempt number)
+- environment identity (image hash + lockfile)
+- tool name + tool version + output schema version
+- commands and working directory per tool call
+- structured outcomes + pointers to logs and artifacts
+
 - **Execution**: sandboxes/containers, dependency pinning, deterministic runners. Contract: identical inputs produce the same tool environment (image hash + lockfile), with a hard wall-clock timeout per step.
+  - Checklist: image hash, lockfile hash, timeout, runner version.
 - **Tool services**: test runners, build systems, browsers, repo APIs. Contract: every tool call is versioned and returns structured output (exit code, stdout/stderr, and a machine-readable summary).
+  - Checklist: tool version, schema version, exit code, error class.
 - **Orchestration**: queues, concurrency limits, backpressure. Contract: max concurrency is enforced (per repo/org), retries are bounded (count + backoff), and each task carries an idempotency key.
+  - Checklist: run id propagation, idempotency key, retry policy, concurrency cap.
 - **Observability**: traces, metrics, logs; correlation ids. Contract: every task/run has a run id and spans for each tool call, with outcome and duration recorded.
+  - Checklist: trace id, span per tool call, duration, outcome.
 - **Artifacts**: build outputs, diffs, evaluation reports, replay bundles. Contract: store a bundle per run (inputs, tool versions, command lines, logs, diffs, and evaluation result) with a retention policy.
+  - Checklist: replay manifest, checksums, retention policy, access controls.
 - **Security**: secrets handling, network egress controls, least privilege. Contract: allowlists cover tools, filesystem paths, and network egress; secrets are injected only at execution time and never written to artifacts.
+  - Checklist: tool/path/egress allowlists, credential scope, redaction scan.
 
 ## Concrete Example 1
 Sandboxed tool execution for code changes.
@@ -81,6 +101,34 @@ Cost-aware autonomy for a batch of maintenance tasks.
   2. Treat a task as “low-signal” when the same error repeats (e.g., the same stack trace twice).
   3. Treat a task as “low-signal” when predicted cost-to-complete exceeds remaining budget.
   4. Escalate when the change touches production config, security-sensitive files, or the diff exceeds a size threshold (e.g., >200 lines changed).
+
+Pseudo-code makes the budget controller explicit (ordering, stop conditions, and escalation points):
+
+```text
+// Budget controller for one task inside a batch
+State -> {task_budget, batch_budget, step_count, last_error_class, repeats}
+
+Loop N Times
+  If task_budget <= 0 Then Escalate("Task budget exceeded") Else Continue()
+  If batch_budget <= 0 Then Escalate("Batch budget exceeded") Else Continue()
+
+  Step -> RunTool()
+  step_count -> step_count + 1
+
+  cost -> EstimateCost(Step)
+  task_budget -> task_budget - cost
+  batch_budget -> batch_budget - cost
+
+  error -> ClassifyError(Step)
+  If error == last_error_class Then repeats -> repeats + 1 Else repeats -> 0
+  last_error_class -> error
+
+  If repeats >= 1 Then Escalate("Repeated error") Else Continue()
+  If DetectProgress(Step) == false And step_count >= 6 Then Escalate("No progress") Else Continue()
+  If PredictCostToComplete() > task_budget Then Escalate("Over budget") Else Continue()
+End
+```
+
 - If the per-task or batch budget is exceeded:
   - Stop further tool calls.
   - Write a short spend-and-status summary (last step, last error, run id).
@@ -107,7 +155,7 @@ Cost-aware autonomy for a batch of maintenance tasks.
 ## Research Directions
 - **Deterministic replay scoring**: define a replay score per run (e.g., environment match, tool-version match, output match) and track it over time.
 - **Replay audit sampling**: pick a weekly sample of “green” runs, replay them with no cache, and record the delta (time, outputs, flake rate).
-- **Artifact bundle correctness**: treat missing inputs (patch, lockfiles, tool versions, command lines) as a build-breaking error for the infrastructure.
+- **Artifact bundle correctness**: treat missing inputs (patch, lockfiles, tool versions, output schema versions, command lines) as a build-breaking error for the infrastructure.
 - **Redaction guarantees**: measure secret leakage rates by scanning logs and artifacts before persistence, then track false positives/negatives of redaction.
 - **Cost-to-quality controllers**: test policies that trade off retries, model choice, and tool parallelism against regression rate and cost-to-merge.
 <!-- markdownlint-enable MD022 MD032 -->

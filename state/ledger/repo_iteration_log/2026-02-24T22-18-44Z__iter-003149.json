@@ -1,0 +1,117 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.07; drift_score=0.09"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-24T22:18:44Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.07619047619047614,
+          "model": 0.0444444444444444
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.016986301369863014
+      },
+      "timestamp": "2026-02-24T22:18:44Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.05358119190814653,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "```mermaid flowchart TB P[\"Plan<br/>(spec + intent)\"] A[\"Act<br/>(propose patch)\"] T[\"Tools<br/>(apply + run)\"] V[\"Verify<br/>(evals/CI)\"] D{\"Checks pass?\"} S[\"Stop<br/>(ship/merge)\"] X[\"Attribute<br/",
+          "words": 56
+        },
+        {
+          "sentence": "Without a trace, attribution is guesswork\u2014you will not know whether the next action is to clarify the spec, fix a tool issue, change product code, or correct an evaluation.",
+          "words": 30
+        },
+        {
+          "sentence": "Pseudo-code example (loop + trace + attribution): // Goal: run plan\u2192act\u2192verify with trace, then pick the next plan based on attribution Spec -> \"docs/specs/parse-date.md\" Gates -> [\"tests\", \"lint\", \"t",
+          "words": 90
+        },
+        {
+          "sentence": "When to prefer a code-like example here (use cases): - Complex workflows with branching retries (e.g., flaky CI, permissioned tools) where the next action depends on which gate failed.",
+          "words": 30
+        },
+        {
+          "sentence": "Inputs: | Field | Value | | --- | --- | | Spec note path | `docs/specs/parse-date.md` (example) | | Failing test | `tests/test_parse_date.py::test_rejects_empty` | Run evidence: | Field | Value | | --",
+          "words": 96
+        },
+        {
+          "sentence": "- If you hit a fixed budget (N iterations or T minutes), stop and hand off: - the trace record - the smallest reproducible failing case ## Concrete Example 2 Ship a minor API change in a production se",
+          "words": 35
+        },
+        {
+          "sentence": "**Contract + constraints:** | Field | Value | | --- | --- | | Contract/version | `openapi.yaml` (example) | | Compatibility window | \u201ccompatible within v1.x\u201d | | Backward-compat constraints | \u201cno requ",
+          "words": 113
+        },
+        {
+          "sentence": "- Backward-compat outcomes: - contract-test failures introduced (required gate: 0 new failures in required checks) - rollback verification in staging (required gate: exercise rollback successfully at ",
+          "words": 65
+        },
+        {
+          "sentence": "- If you hit a fixed budget (N iterations or T minutes), pause the rollout and escalate with: - the trace report - the smallest reproducible failing case - If any guardrail is violated (protected file",
+          "words": 44
+        },
+        {
+          "sentence": "Quick next-step mapping (use the checklist buckets): - If failures change on rerun or depend on machine state, treat as **tool/runtime** and capture the missing trace before changing code.",
+          "words": 30
+        }
+      ],
+      "timestamp": "2026-02-24T22:18:44Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/01-paradigm-shift.md",
+      "state/ledger/iteration_log/2026-02-24T22-18-44Z__chapter-01-paradigm-shift__iter-000426.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/01-paradigm-shift/2026-02-24.json"
+    ],
+    "notes": "Kernel refinement iteration 426 for 01-paradigm-shift"
+  },
+  "iteration": 3149,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 8335,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 69522
+  },
+  "scope": {
+    "chapters_modified": [
+      "01-paradigm-shift"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-24T22:18:44Z"
+}

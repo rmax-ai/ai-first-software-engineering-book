@@ -14,9 +14,9 @@ It must be **structured**, **queryable**, and **governed** (with provenance) to 
 
 Definition of done for “good memory”:
 
-- **Structure**: every entry has an id, timestamp, type, and source.
-- **Query**: a future engineer can retrieve the right entry with a bounded filter (“show decisions for X” / “show traces for regression Y”).
-- **Governance**: entries can be corrected (superseded) and expire or be redacted under policy.
+- **Structure**: every entry has `id`, `timestamp`, `type`, and `source`.
+- **Query**: decisions and traces are retrievable with bounded filters.
+- **Governance**: entries can be superseded, and can expire or be redacted under policy.
 
 Hypothesis: uncurated memory increases confidence without increasing correctness, by amplifying earlier mistakes.
 
@@ -40,22 +40,24 @@ As you read the diagram, focus on two gates:
 
 ```mermaid
 flowchart TB
-  W["Write event (Write policy)<br/>When to store + required fields"] --> R["Record (minimum schema)<br/>Append-only + provenance + expiry"]
-  R --> I["Index + Rank (Read policy)<br/>Bounded filters + explicit ranking"]
-  I --> V["Verify before acting<br/>Provenance + freshness + re-check reality"]
-  V --> A["Apply next step<br/>Change / fix / decision"]
-  A --> G["Govern (Governance)<br/>Retention / redaction / correction"]
+  W["Write policy<br/>Trigger + required fields"] --> R["Record<br/>Append-only + provenance"]
+  R --> I["Index + rank<br/>Bounded query + scoring"]
+  I --> V["Verify<br/>Provenance + freshness"]
+  V --> A["Act<br/>Change / fix / decide"]
+  A --> G["Govern<br/>Retain / redact / supersede"]
   G --> I
 ```
 
 End-to-end flow (top to bottom, then loop back through governance):
 
-1. **Write event (Write policy)**: decide *when* to store, and enforce required fields.
-2. **Record (minimum schema fields)**: create an append-only record with explicit provenance and (optional) expiry.
-3. **Index + Rank (Read policy)**: retrieve with bounded filters, then rank by explicit rules (including hiding expired entries by default).
-4. **Verify before acting**: check provenance and freshness, then re-check against current reality (often: rerun tests).
-5. **Apply next step**: only after verification passes (change, fix, decision).
-6. **Govern (Governance)**: apply retention/redaction, and correct via explicit superseding; governance feeds back into ranking.
+1. **Write policy**: decide *when* to store, and enforce required fields.
+2. **Record**: create an append-only record with explicit provenance and (optional) expiry.
+3. **Index + rank**: retrieve with bounded filters.
+   Then rank by explicit rules.
+   Hide expired entries by default.
+4. **Verify**: check provenance and freshness, then re-check against current reality (often: rerun tests).
+5. **Act**: only after verification passes (change, fix, decision).
+6. **Govern**: apply retention/redaction, and correct via explicit superseding; governance feeds back into ranking.
 
 Minimum schema fields (and exactly what they power):
 
@@ -90,7 +92,8 @@ That changes what Read returns next time.
 
 Rule-of-thumb for write policy (“store” vs “don’t store”):
 
-- **Store**: decisions, constraints, conventions, and reproducible traces that can be pointed to (command + output snippet + commit/diff hash).
+- **Store**: decisions, constraints, conventions, and reproducible traces.
+  Include a pointer (command + short output snippet + commit/diff hash).
 - **Don’t store**: raw transcripts, personal data, or long tool logs without a bounded retrieval key and an explicit retention/redaction rule.
 
 - **Memory classes**:
@@ -131,24 +134,20 @@ Stored record (template; identifiers are illustrative).
 
 Core schema fields:
 
-| field | value |
-| --- | --- |
-| `id` | `dec-2026-02-22-memory-store-backend` |
-| `timestamp` | `2026-02-22T19:33Z` |
-| `type` | `decision` |
-| `source` | `docs/decisions/dec-2026-02-22-memory-store-backend.md + commit 0123abcd` |
-| `confidence` | `medium (reviewed; not yet load-tested)` |
-| `supersedes` | `[]` |
+- `id`: `dec-2026-02-22-memory-store-backend`
+- `timestamp`: `2026-02-22T19:33Z`
+- `type`: `decision`
+- `source`: `docs/decisions/dec-2026-02-22-memory-store-backend.md + commit 0123abcd`
+- `confidence`: `medium (reviewed; not yet load-tested)`
+- `supersedes`: `[]`
 
 Decision-specific fields:
 
-| field | value |
-| --- | --- |
-| `statement` | “Store project memory as append-only records with explicit superseding, not as an editable wiki page.” |
-| `options_considered` | “Editable wiki page”; “Append-only records + supersedes field”; “No persistence; rely on context only” |
-| `chosen` | “Append-only records + supersedes field” |
-| `constraints` | “Must support redaction; must record provenance pointers; must allow correction.” |
-| `rationale` | “Editable pages hide drift; append-only preserves history and enables explicit correction.” |
+- `statement`: “Store project memory as append-only records with explicit superseding, not as an editable wiki page.”
+- `options_considered`: “Editable wiki page”; “Append-only records + supersedes field”; “No persistence; rely on context only”
+- `chosen`: “Append-only records + supersedes field”
+- `constraints`: “Must support redaction; must record provenance pointers; must allow correction.”
+- `rationale`: “Editable pages hide drift; append-only preserves history and enables explicit correction.”
 
 Operational rule (how confidence should change over time):
 
@@ -171,6 +170,38 @@ Trace-indexed memory stores enough episodic detail to support “find similar fa
 
 Capture → index → retrieve → verify:
 
+A short pseudo-code sketch makes the gates and decision points explicit.
+
+```text
+// Goal: act after bounded retrieval + checks.
+State -> {Filters: {}, Candidates: [], Chosen: null}
+
+// Capture + store (append-only)
+Action(CaptureEvidence(task_id, error_signature, command, output_snippet, diff_hash))
+Action(StoreRecord(id, timestamp, type, source, confidence, valid_through, supersedes))
+
+// Retrieve + rank (bounded)
+Action(BuildFilters(type, time_window, error_signature, files_touched))
+Action(Retrieve(Filters))
+Action(Rank(Candidates, by_freshness, by_confidence, prefer_not_superseded))
+
+// Verify gate before acting
+If ProvenanceReadable(Chosen) And FreshEnough(Chosen) Then Action(Continue()) Else Action(RefineFiltersOrRefreshEvidence())
+If ReproducesNow(Chosen) Then Action(ApplyNextStep(change_or_fix)) Else Action(RefineFiltersOrRefreshEvidence())
+```
+
+Mapping to the workflow:
+
+- `BuildFilters` and `Retrieve` represent bounded retrieval.
+- `Rank` represents explicit ranking (freshness, confidence, not-superseded).
+- `ProvenanceReadable` / `FreshEnough` / `ReproducesNow` represent the verify gate before action.
+
+Use this pattern when ordering matters:
+
+- Debugging recurring CI failures (retrieve similar traces, then re-check reality).
+- Fixing regressions during refactors (avoid acting on stale “known fixes”).
+- Maintaining runbooks that need expiry (`valid_through`) and correction (`supersedes`).
+
 1. **Capture**: store evidence that another engineer can reproduce.
    - Test command and a short failing stack trace snippet.
    - Files changed plus a diff hash.
@@ -182,7 +213,8 @@ Capture → index → retrieve → verify:
    - `timestamp` and resolvable `source` pointers.
 
 3. **Retrieve**: filter tightly, then rank for usefulness.
-   - Example query: “Show traces where `error_signature` matches ‘KeyError: CONFIG’ and `files_touched` includes `settings.py` from the last 30 days.”
+   - Example query:
+     “Show traces where `error_signature` matches ‘KeyError: CONFIG’ and `files_touched` includes `settings.py` from the last 30 days.”
    - Ranking rule: prefer freshest `timestamp`, then higher `confidence`.
    - Default visibility: hide expired `valid_through` entries unless explicitly requested.
    - Prefer “not superseded”: down-rank or hide traces that are superseded by newer records.

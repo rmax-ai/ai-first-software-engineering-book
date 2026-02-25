@@ -83,6 +83,61 @@
         "diff_ratio": 0.0,
         "drift_score": 0.30744047619047615
       }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.88,
+        "decision": "refine",
+        "drift_score": 0.24,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": [
+          "Non-chapter content is appended after the chapter body: the '<reminder> ... </reminder>' block appears after the final '## Research Directions' section.",
+          "Style-guard violation: a sentence in ## Thesis exceeds 40 words (the hypothesis sentence with the em-dash parenthetical)."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.07922265729841349,
+        "passed": false,
+        "similarity_max": 0.721391207760447
+      },
+      "iteration": 382,
+      "timestamp": "2026-02-24T22:44:19Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.5486725663716814,
+        "drift_score": 0.07922265729841349
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.9,
+        "decision": "refine",
+        "drift_score": 0.2,
+        "example_density": 0.9,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": [
+          "Non-chapter content is appended after the chapter body: the '<reminder> ... </reminder>' block appears after the final '## Research Directions' section."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.11343652750866066,
+        "passed": false,
+        "similarity_max": 0.7208066614185674
+      },
+      "iteration": 383,
+      "timestamp": "2026-02-24T22:45:04Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.012422360248447204,
+        "drift_score": 0.11343652750866066
+      }
     }
   ]
 }

@@ -1,0 +1,105 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.43; drift_score=0.06"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-24T22:39:28Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.027027027027026973,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.009708737864077669,
+        "near_duplicate_ngram_ratio": 0.010615711252653927
+      },
+      "timestamp": "2026-02-24T22:39:28Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.06633733239237827,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "- Enforceable rules: - \u201cNo writes to protected paths without approval token.\u201d - \u201cAll tool calls must declare intent.\u201d - \u201cAll tool calls must declare target files.\u201d - Enforcement: - Pre-commit or tool-",
+          "words": 34
+        },
+        {
+          "sentence": "- Enforceable rules: - \u201cHuman approval required for security configs.\u201d - \u201cHuman approval required for auth paths.\u201d - \u201cHuman approval required for dependency upgrades.\u201d - \u201cTwo-person review for rollbac",
+          "words": 30
+        },
+        {
+          "sentence": "- Enforceable rules: - \u201cAll tool executions emit structured logs.\u201d - \u201cEach patch links to an agent run id.\u201d - \u201cEach patch links to the input prompt.\u201d - Enforcement: - Log collection in CI artifacts or",
+          "words": 33
+        },
+        {
+          "sentence": "Expected rejection message (testable outcome): - \u201cRejected: write to protected path `.github/workflows/` requires approval.\u201d - \u201cProvide approval token + approver identity, or move the change to an app",
+          "words": 47
+        },
+        {
+          "sentence": "Root-cause classification (review-driven): - Classify the incident into a governance-relevant bucket, for example: - Missing gate: the regression would have been caught by a specific test that did not",
+          "words": 31
+        },
+        {
+          "sentence": "Policy change (closing the gap): - Update agent rules/CI policy to prevent recurrence, e.g., \u201cChanges touching `config/prod/` must run `smoke-prod` suite,\u201d or \u201cAny change to deployment steps requires ",
+          "words": 54
+        },
+        {
+          "sentence": "Operational metrics to make these trade-offs visible: - Friction cost: median time-to-approval for high-risk changes; escalation rate (% of tasks requiring human intervention); rework rate after polic",
+          "words": 30
+        }
+      ],
+      "timestamp": "2026-02-24T22:39:28Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/06-agent-governance.md",
+      "state/ledger/iteration_log/2026-02-24T22-39-28Z__chapter-06-agent-governance__iter-000380.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/06-agent-governance/2026-02-24.json"
+    ],
+    "notes": "Kernel refinement iteration 380 for 06-agent-governance"
+  },
+  "iteration": 3164,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 9336,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 145661
+  },
+  "scope": {
+    "chapters_modified": [
+      "06-agent-governance"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-24T22:39:28Z"
+}

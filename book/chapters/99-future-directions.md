@@ -38,23 +38,28 @@ These four areas are coupled. Interfaces create portability, and verification en
 
 The dependency chain below makes the coupling explicit. Focus on the arrows. They show what must be versioned and validated before you can compare runs across teams or models.
 
-Dependency chain:
+A diagram helps here because the dependencies are not linear. The arrows show where pressure and constraints flow through the system.
 
-- **Interoperability** → **Verification** (contracts define what can be checked).
-- **Verification** → **Governance** (audit claims determine what shared policies must enforce).
-- **Interoperability** → **Ecosystem risk** (the surface area you expose becomes your supply-chain and update risk).
-- **Ecosystem risk** → **Verification** (risk pressure raises the bar for checks and replayability).
+```mermaid
+flowchart LR
+  I["Interoperability"] -->|"contracts define what can be checked"| V["Verification"]
+  V -->|"audit claims define required policy enforcement"| G["Governance"]
+  I -->|"exposed surface area becomes update risk"| R["Ecosystem risk"]
+  R -->|"risk pressure raises the bar for checks"| V
+```
 
-This is the system-level reason “bigger models” is not the whole story: portable, checkable runs depend on what interfaces you standardize and what verification you can actually enforce.
+Read the diagram left-to-right and then follow the feedback loop from Ecosystem risk back into Verification. The key point is that interoperability increases what you can exchange, but it also increases what you must verify.
 
-Takeaway: you can improve one pillar in isolation, but cross-model portability depends on the whole chain. Interoperability defines what can be exchanged, and verification defines what can be trusted when it is exchanged.
+This is the system-level reason “bigger models” is not the whole story. Portable, checkable runs depend on what interfaces you standardize. They also depend on what verification you can actually enforce.
+
+Takeaway: you can improve one pillar in isolation, but cross-model portability depends on the whole chain. Interoperability defines what can be exchanged. Verification defines what can be trusted when it is exchanged.
 
 - **Interoperability**: shared trace formats, tool schemas, evaluation definitions (traces·schemas·evals).
 - **Verification**: stronger correctness checks, property-based testing, contract enforcement (contract-tests·replay·properties).
 - **Governance at scale**: org-level policies, audit workflows, incident response (policy-registry·audit·runbook).
 - **Ecosystem risks**: prompt/tool supply chain, dependency security, model updates (supply-chain·deps·model-updates).
 
-Note: structured memory fits here as a versioned interface artifact. Treat memory schemas and retention/redaction rules as contracts. Concretely: version the memory record schema, validate writes/reads against it, record memory operations in traces, and enforce retention/redaction as policy gates that are auditable and replay-checkable.
+Note: structured memory fits here as a versioned interface artifact. Treat memory schemas and retention/redaction rules as contracts. Concretely: version the memory record schema. Validate writes and reads against it. Record memory operations in traces. Enforce retention and redaction as policy gates. Make those gates auditable and replay-checkable.
 
 **Artifact map (concrete deliverables):**
 
@@ -103,15 +108,11 @@ Cross-model portability experiment.
 
 Results template (example skeleton):
 
-- Model
-- Tasks
-- Trials (N)
-- Success rate
-- Tool error rate
-- Median tool calls
-- Median turns
-- Timeout/budget-hit rate
-- Top failure signature
+| Model | Tasks | Trials (N) | Success rate | Tool error rate | Median tool calls | Median turns | Timeout/budget-hit rate | Top failure signature |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Model A | (count) | (N) | (x%) | (x%) | (x) | (x) | (x%) | (signature id) |
+| Model B | (count) | (N) | (x%) | (x%) | (x) | (x) | (x%) | (signature id) |
+| Model C | (count) | (N) | (x%) | (x%) | (x) | (x) | (x%) | (signature id) |
 
 **Interpreting disagreements**
 
@@ -132,9 +133,20 @@ Enable independent auditing and regression analysis by exporting traces from one
 
 Trace interchange works best when treated as a checklist of explicit checkpoints. Track where validation occurs, where trace export happens, and what the divergence check is allowed to claim as “verified.”
 
-Trace interchange pipeline:
+A diagram makes sense here because the interchange is a pipeline with one branching decision. Readers should focus on the two gates (Validate and Divergence check) and on what happens when the replay falls outside the declared boundary.
 
-Generate → Validate → Emit trace → Export → Replay → Divergence check → (Audit | Flag failure)
+```mermaid
+flowchart LR
+  A["Generate"] --> B["Validate"]
+  B --> C["Emit trace"]
+  C --> D["Export"]
+  D --> E["Replay"]
+  E --> F{"Divergence check"}
+  F -->|Within boundary| G["Audit"]
+  F -->|Outside boundary| H["Flag failure"]
+```
+
+After you review the diagram, notice the two gating steps: Validate before Export, and Divergence check after Replay. Those gates are what turn a trace into an auditable artifact instead of just a log file.
 
 “Divergence check” means comparing the replayed run to declared constraints. It does not require byte-for-byte identity. Use it when nondeterminism is allowed.
 
@@ -196,35 +208,46 @@ The point is not to standardize everything. Standardize the minimum needed for a
 
 ## Trade-offs
 
-- Standardization improves portability but can slow experimentation.
-- Strong verification increases confidence but can increase compute and engineering effort.
-- More governance improves safety but can reduce developer autonomy.
+- Standardization improves portability, but it can slow experimentation.
+- Strong verification increases confidence, but it can increase compute cost and engineering effort.
+- More governance improves safety, but it can reduce developer autonomy.
+
+These trade-offs are the practical version of the thesis. Interfaces and verification are not “free.” They are operational choices with measurable costs.
 
 **Decision checklist (operational)**
 
 **Standardize**
 
-- Standardize when multiple teams depend on the same tools/traces.
+- Standardize when multiple teams depend on the same tools or traces.
 - Standardize when incidents require cross-team auditing.
 - Standardize when model swaps are frequent.
 - Delay standardization when the interface changes weekly and only one team uses it.
-- Minimum viable standardization threshold (example): when a tool or trace schema has 2+ consuming teams and changes less than once per sprint.
-- In that case, require semantic versioning, a contract test suite, and a changelog entry for every interface change.
-- Assign an explicit owner for each shared interface artifact (tool schema, trace spec, eval definition), with a documented escalation path for breaking changes.
+- Minimum viable standardization threshold (example): a tool or trace schema has 2+ consuming teams and changes less than once per sprint.
+- If you standardize, require semantic versioning.
+- If you standardize, require a contract test suite.
+- If you standardize, require a changelog entry for every interface change.
+- Assign an explicit owner for each shared interface artifact (tool schema, trace spec, eval definition).
+- Document an escalation path for breaking changes.
 
 **Verify**
 
-- Use tests/contracts when failures are frequent, expensive, or safety-critical.
+- Use tests and contracts when failures are frequent, expensive, or safety-critical.
 - Prefer lighter checks for experimental, low-impact components.
-- Still enforce schema validation and basic budgets.
-- Treat contract violations as an operational metric (example target): fewer than 1 contract violation per 1,000 tool calls on shared production tools; exceeding it triggers a rollout pause and an incident review.
+- Still enforce schema validation.
+- Still enforce basic budgets.
+- Treat contract violations as an operational metric.
+- Example target: fewer than 1 contract violation per 1,000 tool calls on shared production tools.
+- Exceeding the target triggers a rollout pause and an incident review.
 
 **Govern**
 
 - Escalate governance when changes affect shared tool contracts, trace schemas, or eval definitions.
 - Keep governance minimal for isolated experiments that do not affect shared artifacts.
 - Set thresholds explicitly: acceptable tool error rate, maximum budget hits per run, and the severity that triggers an incident workflow.
-- Require that breaking changes to shared interfaces include: a MAJOR version bump, a migration note, and a compatibility window (example): support N and N-1 MAJOR versions for core trace tooling for a fixed period before deprecation.
+- Require that breaking changes to shared interfaces include a MAJOR version bump.
+- Require a migration note for breaking changes.
+- Require a compatibility window.
+- Example compatibility window: support N and N-1 MAJOR versions for core trace tooling for a fixed period before deprecation.
 
 ## Failure Modes
 

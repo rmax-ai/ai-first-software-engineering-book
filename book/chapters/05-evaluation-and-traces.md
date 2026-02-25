@@ -16,53 +16,55 @@ They also cannot distinguish harness errors (applied the wrong diff or wrong wor
 
 ## System Breakdown
 - **Trace schema** (minimum viable):
-  - task id
-  - plan
+  - `task_id`
+  - `plan`
     - intended steps
     - stop conditions
-  - tool calls
+  - `tool_calls`
     - tool name
     - arguments
     - start/end timestamps
     - exit status
-  - tool outputs
+  - `tool_outputs`
     - stdout/stderr excerpts, or pointers to stored artifacts
-  - diffs
+  - `diffs`
     - patches applied
     - file paths touched
-  - evaluation results
+  - `evaluation_results`
     - which checks ran
     - pass/fail
     - key failure signatures
-  - budgets
+  - `budgets`
     - time
     - iteration count
     - token/cost limits (if applicable)
-  - stop reason
+  - `stop_reason`
     - completed
     - blocked by gate
     - permission denied
     - budget exceeded
-  - redaction policy
+  - `redaction_policy`
     - what is removed or hashed (secrets, tokens, PII, proprietary paths)
-  - environment fingerprint
+  - `environment_fingerprint`
     - repo URL (if applicable)
     - commit SHA
     - branch
     - tool versions
     - OS/arch
-  - retry/iteration counters
+  - `retry_counters`
     - attempt number per step
     - total loop count
-  - Query examples (incident review):
+  - `query_examples` (incident review)
     - “show all tasks that modified `pyproject.toml` and failed secret scanning”
     - “list failures where `tests` failed but a patch was still applied”
     - “group stop reasons by action class over the last N runs”
+
 - **Evaluation types**:
   - correctness: unit/integration/contract tests.
   - safety: permission checks, protected paths, secret scanning.
   - quality: lint, type checks, formatting, doc checks.
   - performance: benchmarks, latency/cost budgets.
+
 - **Gating model**: which evaluations are required for which action classes.
 
   A gating model is only useful if the trace explains the choice.
@@ -95,10 +97,17 @@ flowchart TB
   - Minimal gating matrix (example, stated as rules):
 
     - read-only (grep/view/list):
-      - safety: require permission check for accessed path(s)
-      - quality: skip; record `skipped_reason: "read_only_action"`
-      - correctness: skip; record `skipped_reason: "read_only_action"`
-      - performance: skip; record `skipped_reason: "read_only_action"`
+      - safety:
+        - require permission check for accessed path(s)
+      - quality:
+        - skip
+        - record `skipped_reason: "read_only_action"`
+      - correctness:
+        - skip
+        - record `skipped_reason: "read_only_action"`
+      - performance:
+        - skip
+        - record `skipped_reason: "read_only_action"`
 
     - patch edit (apply diff to code/docs):
       - safety:
@@ -107,7 +116,8 @@ flowchart TB
           - stop with `stop_reason: "permission_denied"`
       - quality:
         - require lint/typecheck if repo has config
-        - otherwise record `skipped_reason: "no_config"`
+        - otherwise:
+          - record `skipped_reason: "no_config"`
       - correctness:
         - require targeted tests for touched modules
         - selection order:
@@ -144,15 +154,19 @@ flowchart TB
           - Trace requirements:
             - record `selection_reason` (example: `touched_ext:.py`)
             - record `detected_stacks` before tie-break (example: `[python,node]`)
-        - Python: `pytest -q`
-        - Node: `npm test`
-        - Go: `go test ./...`
+        - Python:
+          - `pytest -q`
+        - Node:
+          - `npm test`
+        - Go:
+          - `go test ./...`
       - performance:
         - require only when applicable
         - require if any touched path is under `deploy/`
         - require if any touched path is under `prod/`
         - require if the plan declares `latency_budget_ms` or `cost_budget_usd`
-        - otherwise record `skipped_reason: "not_applicable"`
+        - otherwise:
+          - record `skipped_reason: "not_applicable"`
 
     - dependency install (lockfile changes, package adds):
       - safety:
@@ -160,18 +174,24 @@ flowchart TB
         - record scan tool name
         - record any hit signatures
         - require protected-path check for touched files
-        - if blocked, stop with `stop_reason: "permission_denied"`
+        - if blocked:
+          - stop with `stop_reason: "permission_denied"`
       - quality:
         - require lint/typecheck if repo has config
-        - otherwise record `skipped_reason: "no_config"`
+        - otherwise:
+          - record `skipped_reason: "no_config"`
       - correctness:
         - require tests that import the changed dependency
-        - if unknown, select a command using the patch-edit rule
-        - record `selection_reason` for the path taken
+        - if unknown:
+          - select a command using the patch-edit rule
+          - record `selection_reason` for the path taken
       - performance:
         - require only when runtime or deploy files change
-        - examples: `Dockerfile`, `deploy/**`
-        - otherwise record `skipped_reason: "not_applicable"`
+        - examples:
+          - `Dockerfile`
+          - `deploy/**`
+        - otherwise:
+          - record `skipped_reason: "not_applicable"`
 
     - deploy/release (publish, migrate, prod config):
       - safety:
@@ -182,7 +202,8 @@ flowchart TB
         - record hit signatures
       - quality:
         - require lint/typecheck if configured
-        - otherwise record `skipped_reason: "no_config"`
+        - otherwise:
+          - record `skipped_reason: "no_config"`
       - correctness:
         - require full suite or contract tests for release
         - record suite name and command
@@ -196,6 +217,8 @@ Tracing a refactor.
 
 - Record each patch, each test run, and each failure signature.
 - Record the environment fingerprint and exact tool invocations so a reviewer can replay the same sequence.
+
+To attribute the failure quickly, start with `stop_reason`, then read the failing `tool_calls` entry (exit status + `failure_signature`), and finally confirm scope from `diffs`.
 
 Pseudo-trace excerpt (illustrative):
 
@@ -222,7 +245,8 @@ tool_calls:
   - tool: bash
     cmd: pytest -q tests/test_auth_client.py::test_retry
     exit_status: 1
-    failure_signature: ImportError: cannot import name 'AuthClient'
+    failure_signature: >
+      ImportError: cannot import name 'AuthClient'
 
 diffs:
   - path: src/auth/client.py
@@ -240,7 +264,10 @@ stop_reason: blocked_by_correctness_gate
 ```
 
 Query step using structured fields (one possible workflow):
-1) Query: `repo_sha == "a1b2c3d" AND failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'" AND diffs.paths CONTAINS "src/auth/client.py"`
+1) Query:
+   - `repo_sha == "a1b2c3d"`
+   - `failure_signature CONTAINS "ImportError: cannot import name 'AuthClient'"`
+   - `diffs.paths CONTAINS "src/auth/client.py"`
 2) Result (summary):
    - matching_tasks: 3
    - last_success_task_id: `refactor-auth-2026-02-20-007`

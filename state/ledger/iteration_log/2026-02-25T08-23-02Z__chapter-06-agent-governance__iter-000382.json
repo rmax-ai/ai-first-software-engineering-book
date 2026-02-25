@@ -1,0 +1,12 @@
+{
+  "critic_score": 0.8466666666666667,
+  "diff_size": 0.0,
+  "drift_score": 0.03671910965445688,
+  "iteration": 382,
+  "planner_focus": [
+    "Eliminate the trailing <reminder>...</reminder> block so the chapter ends at the final bullet under ## Research Directions",
+    "Verify the <reminder> block is not present inside the chapter source content (not just in the evaluation wrapper)",
+    "Keep the fix localized to this chapter\u2019s exported markdown"
+  ],
+  "timestamp": "2026-02-25T08:23:02Z"
+}

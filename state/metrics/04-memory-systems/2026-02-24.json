@@ -126,6 +126,84 @@
         "diff_ratio": 0.0,
         "drift_score": 0.016623488773747842
       }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.9,
+        "decision": "refine",
+        "drift_score": 0.03,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.93,
+        "tradeoff_presence": true,
+        "violations": [
+          "Style-guard: Concrete Example 2 pseudo-code block uses a single If/Else line that is likely to exceed 28 words when tokenized.",
+          "Style-guard: In System Breakdown, the sentence \u201cIndex + rank: retrieve with bounded filters, then rank by explicit rules (including hiding expired entries by default).\u201d is likely to exceed 28 words."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.014990210474791973,
+        "passed": false,
+        "similarity_max": 0.7268481769999806
+      },
+      "iteration": 382,
+      "timestamp": "2026-02-24T22:31:40Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.4026548672566372,
+        "drift_score": 0.014990210474791973
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.9,
+        "decision": "approve",
+        "drift_score": 0.02,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.94,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.014975550122249388,
+        "passed": false,
+        "similarity_max": 0.7256745959223103
+      },
+      "iteration": 383,
+      "timestamp": "2026-02-24T22:32:49Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.03529411764705882,
+        "drift_score": 0.014975550122249388
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.9,
+        "decision": "approve",
+        "drift_score": 0.02,
+        "example_density": 0.78,
+        "failure_modes_present": true,
+        "structure_score": 0.94,
+        "tradeoff_presence": true,
+        "violations": []
+      },
+      "deterministic": {
+        "drift_score": 0.014975550122249388,
+        "passed": false,
+        "similarity_max": 0.7256745959223103
+      },
+      "iteration": 384,
+      "timestamp": "2026-02-24T22:33:38Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.014975550122249388
+      }
     }
   ]
 }

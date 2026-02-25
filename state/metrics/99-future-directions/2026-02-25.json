@@ -1,0 +1,88 @@
+{
+  "chapter_id": "99-future-directions",
+  "date": "2026-02-25",
+  "history": [
+    {
+      "critic": {
+        "clarity_score": 0.83,
+        "decision": "refine",
+        "drift_score": 0.18,
+        "example_density": 0.72,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Non-chapter block remains at the end: the literal <reminder>...</reminder> section is still present, which violates plain-markdown publishability.",
+          "Concrete Example 2 repeats the pipeline twice (once as the arrow-delimited line and again in the Mermaid diagram) without adding new information; this is redundant and can be reduced to one representation."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.03777717947957941,
+        "passed": false,
+        "similarity_max": 0.7919161711667158
+      },
+      "iteration": 407,
+      "timestamp": "2026-02-25T08:19:45Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.34901960784313724,
+        "drift_score": 0.03777717947957941
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.84,
+        "decision": "refine",
+        "drift_score": 0.16,
+        "example_density": 0.72,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Non-chapter block remains at the end: the literal <reminder>...</reminder> section is still present after the chapter content, which violates plain-markdown publishability."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.03782780928543291,
+        "passed": false,
+        "similarity_max": 0.7939411613424207
+      },
+      "iteration": 408,
+      "timestamp": "2026-02-25T08:20:56Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.02127659574468085,
+        "drift_score": 0.03782780928543291
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.84,
+        "decision": "refine",
+        "drift_score": 0.16,
+        "example_density": 0.72,
+        "failure_modes_present": true,
+        "structure_score": 0.9,
+        "tradeoff_presence": true,
+        "violations": [
+          "Non-chapter block remains at the end: the literal <reminder>...</reminder> section is still present after the chapter content, which violates plain-markdown publishability."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.03782780928543291,
+        "passed": false,
+        "similarity_max": 0.7939411613424207
+      },
+      "iteration": 409,
+      "timestamp": "2026-02-25T08:21:53Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.03782780928543291
+      }
+    }
+  ]
+}

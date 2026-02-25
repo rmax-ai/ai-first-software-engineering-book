@@ -86,6 +86,88 @@
         "diff_ratio": 0.025559105431309903,
         "drift_score": 0.17076637866903657
       }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.82,
+        "decision": "refine",
+        "drift_score": 0.18,
+        "example_density": 0.72,
+        "failure_modes_present": true,
+        "structure_score": 0.88,
+        "tradeoff_presence": true,
+        "violations": [
+          "Non-chapter trailing block exists: the <reminder>...</reminder> section appears after the chapter closing marker <!-- markdownlint-enable MD022 MD032 MD007 MD046 -->.",
+          "## Concrete Example 1 contains an overlong sentence due to the inline Query expression on the '1) Query: ...' line; it should be split across multiple lines or reformatted to stay under the style-guard sentence length limit."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.10019523130827246,
+        "passed": false,
+        "similarity_max": 0.7027009228911782
+      },
+      "iteration": 383,
+      "timestamp": "2026-02-24T22:36:12Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.2586750788643533,
+        "drift_score": 0.10019523130827246
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.83,
+        "decision": "refine",
+        "drift_score": 0.18,
+        "example_density": 0.72,
+        "failure_modes_present": true,
+        "structure_score": 0.88,
+        "tradeoff_presence": true,
+        "violations": [
+          "Non-chapter trailing block exists: the <reminder>...</reminder> section appears after the chapter closing marker <!-- markdownlint-enable MD022 MD032 MD007 MD046 -->."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.10104556803995005,
+        "passed": false,
+        "similarity_max": 0.70060000208099
+      },
+      "iteration": 384,
+      "timestamp": "2026-02-24T22:37:07Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.01466275659824047,
+        "drift_score": 0.10104556803995005
+      }
+    },
+    {
+      "critic": {
+        "clarity_score": 0.83,
+        "decision": "refine",
+        "drift_score": 0.18,
+        "example_density": 0.72,
+        "failure_modes_present": true,
+        "structure_score": 0.88,
+        "tradeoff_presence": true,
+        "violations": [
+          "Non-chapter trailing block exists: the <reminder>...</reminder> section appears after the chapter closing marker <!-- markdownlint-enable MD022 MD032 MD007 MD046 -->."
+        ]
+      },
+      "deterministic": {
+        "drift_score": 0.10104556803995005,
+        "passed": false,
+        "similarity_max": 0.70060000208099
+      },
+      "iteration": 385,
+      "timestamp": "2026-02-24T22:38:04Z",
+      "trace_summary": {
+        "decision": "refine",
+        "deterministic_pass": false,
+        "diff_ratio": 0.0,
+        "drift_score": 0.10104556803995005
+      }
     }
   ]
 }

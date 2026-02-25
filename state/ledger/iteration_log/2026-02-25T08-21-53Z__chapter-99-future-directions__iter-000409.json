@@ -1,0 +1,10 @@
+{
+  "critic_score": 0.82,
+  "diff_size": 0.0,
+  "drift_score": 0.03782780928543291,
+  "iteration": 409,
+  "planner_focus": [
+    "Remove non-chapter markup that breaks plain-markdown publishability"
+  ],
+  "timestamp": "2026-02-25T08:21:53Z"
+}

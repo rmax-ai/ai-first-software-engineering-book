@@ -43,7 +43,8 @@ Treat each loop step as a checkpoint. Each checkpoint has three parts. Record re
    - **Stop condition:**
      - stop if success criteria are ambiguous
    - **Escalate / waive:**
-     - request clarification; do not proceed with edits
+     - request clarification
+     - do not proceed with edits
 
 2. **Plan**: enumerate the next 1–3 actions only, each tied to a gate and a budget slice.
    - **Must record:**
@@ -63,7 +64,8 @@ Treat each loop step as a checkpoint. Each checkpoint has three parts. Record re
      - stop if diff budget is exceeded
      - stop if file-touch budget is exceeded
    - **Escalate / waive:**
-     - request wider write scope, or narrow the plan
+     - request wider write scope
+     - or narrow the plan
 
 4. **Verify**: run the smallest evaluation that is credible for the task class.
    - **Must record:**
@@ -90,7 +92,8 @@ Treat each loop step as a checkpoint. Each checkpoint has three parts. Record re
    - **Stop condition:**
      - stop if persistence fails (cannot write trace)
    - **Escalate / waive:**
-     - do not continue “blind”; fix persistence or stop
+     - do not continue “blind”
+     - fix persistence or stop
 
 6. **Stop/iterate**: decide based on evidence and remaining budget.
    - **Must record:**
@@ -128,6 +131,35 @@ How to read this diagram:
 - Solid arrows show stage order; dotted arrows show constraints and required checks.
 - **Verify** produces pass/fail evidence that drives stop vs iterate.
 - Takeaway: “done” is a verification outcome, and trace artifacts are explicit outputs.
+
+A small pseudo-code sketch helps when you want the branch points and record requirements in a single linear representation. Focus on where budgets are checked, where gates run, and where stopping is permitted.
+
+```text
+// Goal: one bounded objective with explicit gates, budgets, and trace artifacts.
+
+Budget -> {iterations_max: N, tool_calls_max: M, diff_lines_max: K}
+LoopCount -> 0
+
+Loop N Times
+  LoopCount -> LoopCount + 1
+
+  Intent(task_class, success_criteria)
+  Plan(next_steps_1_to_3, named_gates, budget_slice)
+
+  Act(minimal_change)
+  Record(files_touched, diff_stats)
+
+  GateResult -> Verify(run_commands_for(named_gates))
+  Record(commands, exit_codes, summary_lines)
+
+  If GateResult == "pass" Then
+    RecordTrace(trace_artifacts, ledger_entry)
+    Stop("success")
+  Else
+    If BudgetExceeded(Budget) Then Stop("budget_exhausted") Else Continue()
+  EndIf
+EndLoop
+```
 
 A compact “must capture” checklist (minimum viable trace).
 
@@ -197,14 +229,15 @@ Mini-runbook (a single bounded kernel run):
      - if a second file is required, stop and escalate (“write scope too narrow”)
 
 3. Run verification gate (tight but credible)
-   - Action:
+   - Action A:
      - rerun the failing test
      - command: `pytest -k rejects_empty_input`
-     - expected summary (example): `1 passed, 42 deselected in 0.28s`
-   - Action:
+   - Action B:
      - run a small related slice
      - command: `pytest -k parse`
-     - expected summary (example): `12 passed, 0 failed, 31 deselected in 1.07s`
+   - Gate:
+     - Gate 1: Action A returns exit code `0`
+     - Gate 2: Action B returns exit code `0`
    - Record:
      - command 1: `pytest -k rejects_empty_input`
      - exit code 1: `0`
@@ -320,6 +353,9 @@ Kernel steps with an explicit remediation branch:
      - Verify:
        - rerun the failing tests
        - proceed only after the localized failure is cleared
+     - Budget guard:
+       - if more than 5 files are touched, stop and escalate (“requires broader refactor”)
+       - if cumulative diff exceeds 120 lines, stop and escalate (“exceeds change budget for this kernel”)
 
 4. Run full verification gate (credibility gate)
    - Gate B (full):

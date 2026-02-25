@@ -6,7 +6,7 @@ AI-first software engineering is an architectural inversion. Machine reasoning b
 
 This inversion is practical: reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable loop.
 
-Model capability is what the model can do given fixed tools and gates; harness capability is what the system can reliably produce given a fixed model.
+Model capability is what the model can do given fixed tools and gates. Harness capability is what the system can reliably produce given a fixed model.
 
 A concrete, testable implication (holding the model constant):
 
@@ -18,6 +18,8 @@ Operational definition:
 
 - **Model capability** changes when you swap models while holding tools, constraints, and evaluation constant.
 - **Harness capability** changes when you keep the model constant but alter tools, policies, evaluation gates, or trace capture.
+
+Rule of thumb: if you cannot hold one layer constant while varying the other, you are not measuring “capability”—you are measuring an entangled system.
 
 In this framing, *attribution rate* is a harness outcome. It depends on what evidence you capture and which evaluation gates you run. It is not just a function of model fluency.
 
@@ -38,7 +40,7 @@ This chapter’s claim is a hypothesis: some observed “capability” gains in 
   - The system can attribute regressions to a layer (prompt, tool, code, eval).
   - Autonomy is gated by evaluations and budgets.
 
-A diagram makes the evidence path explicit. Focus on where the trace is recorded. Focus on where the trace is used to decide the next plan.
+A diagram makes the evidence path explicit; focus on where the trace is recorded, and where it is later used to choose the next plan.
 
 ```mermaid
 flowchart TB
@@ -70,9 +72,40 @@ Legend:
 - **Solid arrows** are the operational loop (plan → act → verify).
 - **Dashed arrows** are trace capture and trace usage.
 
-What to look at: trace is recorded during act/tools/verify. It is then used during attribution to decide the next plan.
+Takeaway: trace is recorded during act/tools/verify, then used during attribution to decide the next plan. Without a trace, attribution is guesswork. You will not know whether to clarify the spec, fix a tool issue, change product code, or correct an evaluation.
 
-Takeaway: without a trace, attribution is guesswork. You will not know whether the next action is to clarify the spec, fix a tool issue, change product code, or correct an evaluation.
+Pseudo-code goal: make the ordering and evidence capture explicit, especially where decisions depend on recorded outputs.
+
+Pseudo-code example (loop + trace + attribution):
+
+```text
+    // Goal: run plan→act→verify with trace, then pick the next plan based on attribution
+    Spec -> "docs/specs/parse-date.md"
+    Gates -> ["tests", "lint", "typecheck"]
+    Trace -> []
+
+    Loop MaxIterations Times
+      Plan(Spec)
+      Patch -> Act(propose_change)
+      Results -> Run(Gates)
+      Trace -> Record(Trace, {Patch, Results})
+
+      If AllPass(Results) Then Stop(ship) Else Cause -> Attribute(Results, Trace)
+      If Not AllPass(Results) Then Plan(update_plan_using=Cause) Else Plan(noop)
+```
+
+How the pseudo-code maps to the system:
+
+- `Plan(Spec)` matches the spec/intent artifact that anchors what “correct” means.
+- `Run(Gates)` is the evaluation surface (tests/CI) that turns claims into evidence.
+- `Record(...)` is the harness behavior that makes failures attributable, not just observable.
+- `Attribute(...)` uses the checklist buckets (spec/prompt, tool/runtime, code, eval/CI) to choose the next plan instead of making an unstructured guess.
+
+When to prefer a code-like example here (use cases):
+
+- Complex workflows with branching retries (e.g., flaky CI, permissioned tools) where the next action depends on which gate failed.
+- Multi-stage delivery loops (plan → implement → validate → approve) where you must prove ordering and traceability.
+- Debugging playbooks where you need a repeatable decision procedure, not just narrative guidance.
 
 - **Measurable signals** (to separate model vs harness effects):
   - *Iterations-to-pass* is the number of propose→verify cycles until all required checks pass.
@@ -104,7 +137,8 @@ Refactor a small library function using an agent loop.
 - Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).
 - Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.
 
-Minimal trace record (copyable):
+Minimal trace record (copyable). Keep it short so you can paste it into an issue or PR.
+Record only what you need to reproduce the failure and explain the next step.
 
 Inputs:
 
@@ -153,7 +187,8 @@ Ship a minor API change in a production service.
 - Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.
 - Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.
 
-Minimal trace report (copyable):
+Minimal trace report (copyable). Keep the structure stable so diffs across iterations are easy to scan.
+Prefer short bullet points for outputs; link to longer logs when needed.
 
 **Contract + constraints:**
 
@@ -166,12 +201,10 @@ Minimal trace report (copyable):
 
 **Evidence + outputs:**
 
-| Field | Value |
-| --- | --- |
-| Commands (in order) | `make contract-test`<br/>`npm run lint`<br/>`npm run typecheck`<br/>`./scripts/staging-smoke.sh` |
-| Diff identifier | PR number + commit SHA (e.g., `PR #482`, `def5678`) |
-| Evaluation outputs | failing checks<br/>log paths/links<br/>timestamps (supports time-to-green) |
-| Attribution decisions | per failure: `{spec/prompt, tool/runtime, code, eval/CI}` + evidence |
+- Commands (in order): `make contract-test`, `npm run lint`, `npm run typecheck`, `./scripts/staging-smoke.sh`
+- Diff identifier: PR number + commit SHA (e.g., `PR #482`, `def5678`)
+- Evaluation outputs: failing checks; log paths/links; timestamps (supports time-to-green)
+- Attribution decisions: per failure, `{spec/prompt, tool/runtime, code, eval/CI}` + 1–2 sentences of evidence
 
 Example attribution:
 
@@ -214,10 +247,16 @@ Example attribution:
 
 Use the attribution checklist above to bucket each failure before you change the system. If you skip bucketing, you will often “fix” the wrong layer.
 
+Quick next-step mapping (use the checklist buckets):
+
+- If failures change on rerun or depend on machine state, treat as **tool/runtime** and capture the missing trace before changing code.
+- If failures are deterministic and tied to a diff, treat as **code** and constrain the patch surface before iterating.
+- If a check rejects intended behavior, treat as **eval/CI** and fix the assertion (with evidence) before touching product behavior.
+
 Synthesis: treat machine reasoning as an execution substrate, and treat the harness as the primary lever for reliability. Track the loop metrics above to separate harness effects from model effects and to make failures actionable.
 
 ## Research Directions
 
-- Metrics that separate model improvements from harness improvements.
-- Minimal trace schema that supports attribution and replay.
-- Formal definitions of autonomy envelopes and stop conditions.
+- Metrics that separate model improvements from harness improvements (including confidence bounds and cost).
+- Minimal trace schema that supports attribution and replay without over-collecting sensitive data.
+- Formal definitions of autonomy envelopes and stop conditions that can be enforced as gates.

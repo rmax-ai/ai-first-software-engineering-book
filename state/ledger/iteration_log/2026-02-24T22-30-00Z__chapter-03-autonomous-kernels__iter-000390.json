@@ -1,0 +1,11 @@
+{
+  "critic_score": 0.8666666666666667,
+  "diff_size": 0.0,
+  "drift_score": 0.03145773979107312,
+  "iteration": 390,
+  "planner_focus": [
+    "Remove all trailing non-chapter content after ## Research Directions (the <reminder> block)",
+    "Keep the rest of the chapter unchanged to avoid reintroducing structure or style-guard regressions"
+  ],
+  "timestamp": "2026-02-24T22:30:00Z"
+}

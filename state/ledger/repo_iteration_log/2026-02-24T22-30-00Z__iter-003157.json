@@ -1,0 +1,173 @@
+{
+  "agent_task": "kernel_refine",
+  "artifacts": {
+    "commit_hash": null,
+    "diff_summary": "diff_ratio=0.00; drift_score=0.03"
+  },
+  "evals": {
+    "chapter_quality": {
+      "forbidden_hits": [],
+      "pass": true,
+      "required_missing": [],
+      "scores": {
+        "examples_count": 1.0,
+        "failure_modes": 1.0,
+        "system_breakdown": 1.0,
+        "thesis_clarity": 1.0,
+        "tradeoffs": 1.0
+      },
+      "timestamp": "2026-02-24T22:30:00Z",
+      "total": 1.0
+    },
+    "drift_detection": {
+      "drift_metrics": {
+        "anchor_deltas": {
+          "agent": 0.0,
+          "harness": 0.0,
+          "model": 0.0
+        },
+        "cross_chapter_similarity_hits": []
+      },
+      "hype_hits": [],
+      "pass": true,
+      "repetition_metrics": {
+        "duplicate_sentence_ratio": 0.0,
+        "near_duplicate_ngram_ratio": 0.02157102157102157
+      },
+      "timestamp": "2026-02-24T22:30:00Z"
+    },
+    "style_guard": {
+      "adjective_density": 0.053636733035351485,
+      "forbidden_hits": [],
+      "pass": false,
+      "sentence_length_violations": [
+        {
+          "sentence": "- **Must record:** - intent string - success criteria (e.g., \u201crepro no longer fails\u201d) - **Stop condition:** - stop if success criteria are ambiguous - **Escalate / waive:** - request clarification - d",
+          "words": 30
+        },
+        {
+          "sentence": "- **Must record:** - planned steps (1\u20133) - named gates for each step - budget slice per step - **Stop condition:** - stop if the plan requires out-of-scope tools or paths - **Escalate / waive:** - req",
+          "words": 36
+        },
+        {
+          "sentence": "- **Must record:** - files touched - diff stats (and any migration steps taken) - **Stop condition:** - stop if diff budget is exceeded - stop if file-touch budget is exceeded - **Escalate / waive:** ",
+          "words": 37
+        },
+        {
+          "sentence": "- **Must record:** - exact command(s) - exit codes - summary lines (or pointers/hashes to full logs) - **Stop condition:** - if a gate fails, iterate - if no credible gate exists, stop - **Escalate / ",
+          "words": 65
+        },
+        {
+          "sentence": "- **Must record:** - commands executed - outputs (or pointers) - budgets consumed - permissions exercised - **Stop condition:** - stop if persistence fails (cannot write trace) - **Escalate / waive:**",
+          "words": 31
+        },
+        {
+          "sentence": "- **Must record:** - decision (stop vs iterate) - rationale tied to gate results and budgets - next action (\u201cdone\u201d or the next bounded attempt) - **Stop condition:** - stop on success (named gates sat",
+          "words": 65
+        },
+        {
+          "sentence": "produced .-> R V -->|pass| S V -->|fail| P S -->|iterate| P S -->|stop| End[Exit with summary] ``` How to read this diagram: - Solid arrows show stage order; dotted arrows show constraints and require",
+          "words": 34
+        },
+        {
+          "sentence": "Budget -> {iterations_max: N, tool_calls_max: M, diff_lines_max: K} LoopCount -> 0 Loop N Times LoopCount -> LoopCount + 1 Intent(task_class, success_criteria) Plan(next_steps_1_to_3, named_gates, bud",
+          "words": 63
+        },
+        {
+          "sentence": "It avoids relying on memory or \u201cit seemed fine.\u201d | Loop stage | Budget signal | Permission signal | Verification signal | Persistence artifact | | --- | --- | --- | --- | --- | | intent | remaining it",
+          "words": 90
+        },
+        {
+          "sentence": "- Input: - failing test case: `tests/test_parse.py::test_rejects_empty_input` - repro command: `python -m mycli parse \"\"` - observed exit code: `0` - expected: non-zero exit code - budgets: - iteratio",
+          "words": 54
+        },
+        {
+          "sentence": "Localize failure (evidence-first) - Action: - reproduce with the smallest credible check - command: `pytest -k rejects_empty_input` - Gate: - the reproduction must fail in a controlled way - the failu",
+          "words": 81
+        },
+        {
+          "sentence": "Patch minimal surface (hypothesis-driven) - Hypothesis: - empty string is being treated as a valid token stream in `src/parser.py` - Action: - implement the smallest boundary check consistent with the",
+          "words": 88
+        },
+        {
+          "sentence": "Run verification gate (tight but credible) - Action A: - rerun the failing test - command: `pytest -k rejects_empty_input` - Action B: - run a small related slice - command: `pytest -k parse` - Gate: ",
+          "words": 110
+        },
+        {
+          "sentence": "Record trace (auditable, replayable) - Action: - persist a kernel trace and a ledger entry - Record (minimum): - budgets consumed: `iterations=1/3` - budgets consumed: `tool_calls=3/10` - budgets cons",
+          "words": 61
+        },
+        {
+          "sentence": "Stop criteria (explicit) - Stop success: - Gate 1 and Gate 2 pass within budget - Stop failure: - tool-call budget exhausted - diff budget exceeded - verification indicates a broader refactor is requi",
+          "words": 79
+        },
+        {
+          "sentence": "- Input: - target version: `libX 4.2.0 \u2192 4.3.0` - constraints: - Python: `>=3.10` - public API: must not change - CI: must stay green - upgrade guide note: - rename: `OldClient` \u2192 `Client` - budgets: ",
+          "words": 61
+        },
+        {
+          "sentence": "Update manifest (narrow scope) - Action: - bump the version constraint in `pyproject.toml` - Record: - old constraint (example): `libX>=4.2,<4.3` - new constraint (example): `libX>=4.3,<4.4` - diff st",
+          "words": 63
+        },
+        {
+          "sentence": "Run a fast build/type gate before full tests - Gate A (fast): - import/type/compile smoke check - command: `python -m compileall src` - Record: - exit code - compile summary lines (example): - `Listin",
+          "words": 58
+        },
+        {
+          "sentence": "Remediation branch (compile errors vs failing tests) - If **compile/import fails**: - Localize: - capture the first error site (file + symbol) - example: `*** File \"src/integrations/libx.py\", line 12`",
+          "words": 200
+        },
+        {
+          "sentence": "Run full verification gate (credibility gate) - Gate B (full): - run the test suite (or the project\u2019s standard verification command) - command: `pytest` - Record: - exit code - test summary line (exam",
+          "words": 80
+        },
+        {
+          "sentence": "Stop criteria and outputs - Stop success: - Gate A and Gate B pass within budget - Stop failure: - repeated failures indicate the upgrade exceeds current scope - budgets are exhausted before gates pas",
+          "words": 93
+        },
+        {
+          "sentence": "| Failure mode | Detection signals (operational) | | --- | --- | | Local minima | Same verification failure repeats across iterations.<br>Edits stay confined to the same small area.<br>Diff size incre",
+          "words": 51
+        },
+        {
+          "sentence": "| | Tool thrash | Tool-call count rises while the plan and hypothesis remain unchanged.<br>The same command is rerun without an intervening change that could affect its result.<br>Files touched increa",
+          "words": 37
+        },
+        {
+          "sentence": "| | False confidence | Gates get narrower over time without a recorded waiver and risk note.<br>Fast gates pass, but the credibility gate is repeatedly deferred without an explicit waiver record.<br>S",
+          "words": 48
+        }
+      ],
+      "timestamp": "2026-02-24T22:30:00Z"
+    }
+  },
+  "inputs": {
+    "changed_files": [
+      "book/chapters/03-autonomous-kernels.md",
+      "state/ledger/iteration_log/2026-02-24T22-30-00Z__chapter-03-autonomous-kernels__iter-000390.json",
+      "state/ledger.json",
+      "state/metrics.json",
+      "state/metrics/03-autonomous-kernels/2026-02-24.json"
+    ],
+    "notes": "Kernel refinement iteration 390 for 03-autonomous-kernels"
+  },
+  "iteration": 3157,
+  "outcome": {
+    "decision": "refine",
+    "rationale": "Deterministic eval + critic decision gating.",
+    "status": "refine"
+  },
+  "resource_usage": {
+    "completion_tokens": 67686,
+    "eval_runtime_ms": 0,
+    "prompt_tokens": 1535693
+  },
+  "scope": {
+    "chapters_modified": [
+      "03-autonomous-kernels"
+    ],
+    "governance_modified": false,
+    "patterns_modified": []
+  },
+  "timestamp": "2026-02-24T22:30:00Z"
+}
