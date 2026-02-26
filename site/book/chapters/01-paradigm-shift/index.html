@@ -661,6 +661,7 @@
 <h2 id="thesis">Thesis</h2>
 <p>AI-first software engineering is an architectural inversion. Machine reasoning becomes a primary execution substrate. The harness—tools, constraints, evaluation, and traceability—becomes the primary design surface.</p>
 <p>This inversion is practical: reliability comes from constraints, evaluations, and traces that turn generated changes into a repeatable loop.</p>
+<p>Model capability is what the model can do given fixed tools and gates. Harness capability is what the system can reliably produce given a fixed model.</p>
 <p>A concrete, testable implication (holding the model constant):</p>
 <ol>
 <li>A stronger harness should reduce <em>iterations-to-pass</em>.</li>
@@ -672,6 +673,7 @@
 <li><strong>Model capability</strong> changes when you swap models while holding tools, constraints, and evaluation constant.</li>
 <li><strong>Harness capability</strong> changes when you keep the model constant but alter tools, policies, evaluation gates, or trace capture.</li>
 </ul>
+<p>Rule of thumb: if you cannot hold one layer constant while varying the other, you are not measuring “capability”—you are measuring an entangled system.</p>
 <p>In this framing, <em>attribution rate</em> is a harness outcome. It depends on what evidence you capture and which evaluation gates you run. It is not just a function of model fluency.</p>
 <p>This chapter’s claim is a hypothesis: some observed “capability” gains in practice are attributable to harness engineering rather than model changes.</p>
 <h2 id="why-this-matters">Why This Matters</h2>
@@ -691,7 +693,7 @@
 </ul>
 </li>
 </ul>
-<p>A diagram helps here because the model vs harness distinction changes how evidence moves through the loop. Focus on two points: where the trace is recorded, and where it is used to decide the next plan.</p>
+<p>A diagram makes the evidence path explicit; focus on where the trace is recorded, and where it is later used to choose the next plan.</p>
 <div class="mermaid">flowchart TB
   P["Plan&lt;br/&gt;(spec + intent)"]
   A["Act&lt;br/&gt;(propose patch)"]
@@ -720,13 +722,42 @@
 <li><strong>Solid arrows</strong> are the operational loop (plan → act → verify).</li>
 <li><strong>Dashed arrows</strong> are trace capture and trace usage.</li>
 </ul>
-<p>Takeaway: without a trace, attribution is guesswork. You will not know whether the next action is to clarify the spec, fix a tool issue, change product code, or correct an evaluation.</p>
+<p>Takeaway: trace is recorded during act/tools/verify, then used during attribution to decide the next plan. Without a trace, attribution is guesswork. You will not know whether to clarify the spec, fix a tool issue, change product code, or correct an evaluation.</p>
+<p>Pseudo-code goal: make the ordering and evidence capture explicit, especially where decisions depend on recorded outputs.</p>
+<p>Pseudo-code example (loop + trace + attribution):</p>
+<pre><code class="language-text">    // Goal: run plan→act→verify with trace, then pick the next plan based on attribution
+    Spec -&gt; "docs/specs/parse-date.md"
+    Gates -&gt; ["tests", "lint", "typecheck"]
+    Trace -&gt; []
+
+    Loop MaxIterations Times
+      Plan(Spec)
+      Patch -&gt; Act(propose_change)
+      Results -&gt; Run(Gates)
+      Trace -&gt; Record(Trace, {Patch, Results})
+
+      If AllPass(Results) Then Stop(ship) Else Cause -&gt; Attribute(Results, Trace)
+      If Not AllPass(Results) Then Plan(update_plan_using=Cause) Else Plan(noop)
+</code></pre>
+<p>How the pseudo-code maps to the system:</p>
+<ul>
+<li><code>Plan(Spec)</code> matches the spec/intent artifact that anchors what “correct” means.</li>
+<li><code>Run(Gates)</code> is the evaluation surface (tests/CI) that turns claims into evidence.</li>
+<li><code>Record(...)</code> is the harness behavior that makes failures attributable, not just observable.</li>
+<li><code>Attribute(...)</code> uses the checklist buckets (spec/prompt, tool/runtime, code, eval/CI) to choose the next plan instead of making an unstructured guess.</li>
+</ul>
+<p>When to prefer a code-like example here (use cases):</p>
+<ul>
+<li>Complex workflows with branching retries (e.g., flaky CI, permissioned tools) where the next action depends on which gate failed.</li>
+<li>Multi-stage delivery loops (plan → implement → validate → approve) where you must prove ordering and traceability.</li>
+<li>Debugging playbooks where you need a repeatable decision procedure, not just narrative guidance.</li>
+</ul>
 <ul>
 <li><strong>Measurable signals</strong> (to separate model vs harness effects):<ul>
-<li><em>Iterations-to-pass</em>: number of propose→verify cycles until all required checks pass.</li>
-<li><em>Time-to-green</em>: wall-clock time from first attempt to passing evaluation gates.</li>
-<li><em>Attribution rate</em>: fraction of failures with a clear primary cause.<ul>
-<li>Bucket: prompt/spec vs tool/runtime vs code vs eval.</li>
+<li><em>Iterations-to-pass</em> is the number of propose→verify cycles until all required checks pass.</li>
+<li><em>Time-to-green</em> is the wall-clock time from the first attempt to passing all evaluation gates.</li>
+<li><em>Attribution rate</em> is the fraction of failures with a clear primary cause you can act on.<ul>
+<li>Bucket: spec/prompt vs tool/runtime vs code vs eval/CI.</li>
 </ul>
 </li>
 </ul>
@@ -765,9 +796,8 @@
 <li>Inputs: failing unit test + desired behavior specification (e.g., a short “Given/When/Then” note checked into the repo).</li>
 <li>Loop: propose patch → run tests → inspect diff → record trace (commands + outputs) → stop on pass.</li>
 </ul>
-<ul>
-<li>
-<p>Minimal trace record (copyable):</p>
+<p>Minimal trace record (copyable). Keep it short so you can paste it into an issue or PR.
+Record only what you need to reproduce the failure and explain the next step.</p>
 <p>Inputs:</p>
 <table>
 <thead>
@@ -829,9 +859,9 @@
 </tr>
 </tbody>
 </table>
-<p>Example attribution:
-- <strong>code</strong> — the same test fails deterministically after the diff; reverting the diff restores pass.</p>
-</li>
+<p>Example attribution:</p>
+<ul>
+<li><strong>code</strong> — the same test fails deterministically after the diff; reverting the diff restores pass.</li>
 </ul>
 <ul>
 <li>Measured outputs:<ul>
@@ -861,10 +891,9 @@
 <li>Inputs: API contract + backward-compat constraints + staging environment + a defined rollout/rollback policy.</li>
 <li>Loop: generate migration plan → implement → run contract tests → produce trace report (diff + commands + results) → human approve.</li>
 </ul>
-<ul>
-<li>
-<p>Minimal trace report (copyable):</p>
-<p>Contract + constraints:</p>
+<p>Minimal trace report (copyable). Keep the structure stable so diffs across iterations are easy to scan.
+Prefer short bullet points for outputs; link to longer logs when needed.</p>
+<p><strong>Contract + constraints:</strong></p>
 <table>
 <thead>
 <tr>
@@ -891,36 +920,16 @@
 </tr>
 </tbody>
 </table>
-<p>Evidence + outputs:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Commands (in order)</td>
-<td><code>make contract-test</code><br/><code>npm run lint</code><br/><code>npm run typecheck</code><br/><code>./scripts/staging-smoke.sh</code></td>
-</tr>
-<tr>
-<td>Diff identifier</td>
-<td>PR number + commit SHA (e.g., <code>PR #482</code>, <code>def5678</code>)</td>
-</tr>
-<tr>
-<td>Evaluation outputs</td>
-<td>failing checks<br/>log paths/links<br/>timestamps (supports time-to-green)</td>
-</tr>
-<tr>
-<td>Attribution decisions</td>
-<td>per failure: <code>{spec/prompt, tool/runtime, code, eval/CI}</code> + evidence</td>
-</tr>
-</tbody>
-</table>
-<p>Example attribution:
-- <strong>eval/CI</strong> — contract test rejects an allowed optional field; fixing the assertion changes outcomes without changing API behavior.</p>
-</li>
+<p><strong>Evidence + outputs:</strong></p>
+<ul>
+<li>Commands (in order): <code>make contract-test</code>, <code>npm run lint</code>, <code>npm run typecheck</code>, <code>./scripts/staging-smoke.sh</code></li>
+<li>Diff identifier: PR number + commit SHA (e.g., <code>PR #482</code>, <code>def5678</code>)</li>
+<li>Evaluation outputs: failing checks; log paths/links; timestamps (supports time-to-green)</li>
+<li>Attribution decisions: per failure, <code>{spec/prompt, tool/runtime, code, eval/CI}</code> + 1–2 sentences of evidence</li>
+</ul>
+<p>Example attribution:</p>
+<ul>
+<li><strong>eval/CI</strong> — contract test rejects an allowed optional field; fixing the assertion changes outcomes without changing API behavior.</li>
 </ul>
 <ul>
 <li>Measured outputs:<ul>
@@ -970,13 +979,19 @@
 <li><strong>Unbounded autonomy</strong>: loops run without budgets, causing tool thrash and unclear outcomes.</li>
 <li><strong>Non-attributable failures</strong>: missing traces make regressions un-debuggable.</li>
 </ul>
-<p>Use the attribution checklist above to bucket each failure (spec/prompt vs tool/runtime vs code vs eval/CI) before you change the system. Otherwise the “fix” is likely to target the wrong layer.</p>
+<p>Use the attribution checklist above to bucket each failure before you change the system. If you skip bucketing, you will often “fix” the wrong layer.</p>
+<p>Quick next-step mapping (use the checklist buckets):</p>
+<ul>
+<li>If failures change on rerun or depend on machine state, treat as <strong>tool/runtime</strong> and capture the missing trace before changing code.</li>
+<li>If failures are deterministic and tied to a diff, treat as <strong>code</strong> and constrain the patch surface before iterating.</li>
+<li>If a check rejects intended behavior, treat as <strong>eval/CI</strong> and fix the assertion (with evidence) before touching product behavior.</li>
+</ul>
 <p>Synthesis: treat machine reasoning as an execution substrate, and treat the harness as the primary lever for reliability. Track the loop metrics above to separate harness effects from model effects and to make failures actionable.</p>
 <h2 id="research-directions">Research Directions</h2>
 <ul>
-<li>Metrics that separate model improvements from harness improvements.</li>
-<li>Minimal trace schema that supports attribution and replay.</li>
-<li>Formal definitions of autonomy envelopes and stop conditions.</li>
+<li>Metrics that separate model improvements from harness improvements (including confidence bounds and cost).</li>
+<li>Minimal trace schema that supports attribution and replay without over-collecting sensitive data.</li>
+<li>Formal definitions of autonomy envelopes and stop conditions that can be enforced as gates.</li>
 </ul>
 </article>
 </div>
@@ -994,7 +1009,7 @@
       Material for MkDocs
     </a>
 <div class="build-timestamp" style="margin-top: 0.5em; font-size: 0.8em;">
-    Last built: 2026-02-24 20:25:10 UTC
+    Last built: 2026-02-25 08:28:23 UTC
   </div>
 </div>
 <div class="md-social">
