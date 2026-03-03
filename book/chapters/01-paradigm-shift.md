@@ -40,7 +40,40 @@ This chapter’s claim is a hypothesis: some observed “capability” gains in 
   - The system can attribute regressions to a layer (prompt, tool, code, eval).
   - Autonomy is gated by evaluations and budgets.
 
-A diagram makes the evidence path explicit; focus on where the trace is recorded, and where it is later used to choose the next plan.
+The diagram below maps the full AI-native SDLC lifecycle from intent to delivery. Notice that trace capture runs in parallel throughout, and iteration is a first-class path—not an exception. Compare this to a traditional SDLC where the loop back to planning is costly; here it is the expected path until all gates pass.
+
+```mermaid
+flowchart LR
+  I["Intent<br/>(spec / user request)"]
+  P["Plan<br/>(bounded scope + acceptance criteria)"]
+  X["Tool execution<br/>(propose patch + run tools)"]
+  V["Verification<br/>(tests / lint / CI gates)"]
+  D{"Gates pass?"}
+  S["Ship<br/>(merge / deploy)"]
+  IT["Iterate<br/>(attribute failure → revise plan)"]
+  TR[("Trace<br/>(all artifacts)")]
+
+  I --> P
+  P --> X
+  X --> V
+  V --> D
+  D -- yes --> S
+  D -- no --> IT
+  IT --> P
+
+  X -. record .-> TR
+  V -. record .-> TR
+  IT -. use .-> TR
+```
+
+Legend:
+
+- **Solid arrows** are the lifecycle path (intent → plan → execute → verify → ship or iterate).
+- **Dashed arrows** are trace capture (record) and trace use (attribute).
+
+Takeaway: intent anchors what "correct" means; trace makes every failed gate attributable to a cause; iteration is mechanical, not ad hoc.
+
+The next diagram zooms into the attribution loop; focus on where the trace is recorded, and where it is later used to choose the next plan.
 
 ```mermaid
 flowchart TB
