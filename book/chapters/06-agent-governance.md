@@ -88,6 +88,29 @@ Compact view of the loop:
 
 1 → 2 → 3 → 4 → 5 → 1
 
+The diagram below makes the governance loop concrete. Steps 2 (Enforcement) and 3 (Audit capture) are the critical points: enforcement decides what can happen, and audit capture determines what proof remains afterward—enabling review routing (step 4) to trigger rollback when needed.
+
+```mermaid
+flowchart LR
+  PD["Policy definition<br/>(constitution / agent rules / CI policies)"]
+  EN["Enforcement<br/>(tool allowlists / path checks / CI gates)"]
+  AU["Audit capture<br/>(structured traces / logs / attribution)"]
+  RR["Review routing<br/>(risk classification / CODEOWNERS / approvals)"]
+  PU["Policy update<br/>(rule changes + new tests/evals)"]
+
+  PD --> EN
+  EN --> AU
+  AU --> RR
+  RR --> PU
+  PU --> PD
+```
+
+Legend:
+
+- Each node maps to a numbered step in the loop above.
+- Enforcement (step 2) is the gate that blocks unsafe actions before they land.
+- Audit capture (step 3) is the evidence layer that enables steps 4 and 5 to work.
+
 Takeaway: steps 2 and 3 are the “hard” parts of governance. Step 2 controls what can happen. Step 3 determines what proof exists afterward, so steps 4 and 5 can block unsafe merges and tighten policy based on observed failures.
 
 ## Concrete Example 1
