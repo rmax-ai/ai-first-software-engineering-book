@@ -20,6 +20,7 @@ The working hypothesis is that most reliability gains in real repositories come 
 - `book/glossary.md`: operational definitions used throughout.
 - `evals/`: declarative evaluation rules (quality, drift, and style guardrails).
 - `state/`: iteration state (ledger, version map, metrics).
+- `state/feature_iterations/README.md`: index for incremental-improvements iterations and inbox handoffs.
 
 Governance is defined in:
 
