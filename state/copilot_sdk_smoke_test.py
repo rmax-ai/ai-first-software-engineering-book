@@ -3355,17 +3355,20 @@ def run_usage_examples_duplicate_count_wrapper_helper_newest_long_form_adjacency
     return 0
 
 
+NEWEST_LONG_FORM_ADJACENCY_ORDER_GUARD_MODE = (
+    "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard"
+)
+
+
 def run_usage_examples_duplicate_count_wrapper_helper_newest_long_form_adjacency_order_guard_exact_once_adjacency_order_guard_exact_once_mode() -> int:
     trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
-    newest_long_form_adjacency_order_guard_mode = (
-        "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard"
-    )
+    newest_long_form_adjacency_order_guard_mode = NEWEST_LONG_FORM_ADJACENCY_ORDER_GUARD_MODE
     newest_long_form_adjacency_order_guard_mode_count = trace_summary_mode_names.count(
         newest_long_form_adjacency_order_guard_mode
     )
     assert newest_long_form_adjacency_order_guard_mode_count == 1, (
-        "expected usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard "
-        "to appear exactly once in TRACE_SUMMARY_MODE_SPECS, found "
+        f"expected {newest_long_form_adjacency_order_guard_mode} to appear exactly once in "
+        "TRACE_SUMMARY_MODE_SPECS, found "
         f"{newest_long_form_adjacency_order_guard_mode_count}"
     )
 
@@ -3404,9 +3407,7 @@ def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency
 
 def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_mode() -> int:
     trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
-    adjacency_order_guard_mode = (
-        "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard"
-    )
+    adjacency_order_guard_mode = NEWEST_LONG_FORM_ADJACENCY_ORDER_GUARD_MODE
     paired_uniqueness_guard_mode = (
         "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard-uniqueness-guard"
     )
@@ -3434,9 +3435,7 @@ def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency
 
 def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_mode() -> int:
     trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
-    newest_long_form_adjacency_order_guard_mode = (
-        "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard"
-    )
+    newest_long_form_adjacency_order_guard_mode = NEWEST_LONG_FORM_ADJACENCY_ORDER_GUARD_MODE
     newest_long_form_adjacency_order_guard_mode_count = trace_summary_mode_names.count(
         newest_long_form_adjacency_order_guard_mode
     )
