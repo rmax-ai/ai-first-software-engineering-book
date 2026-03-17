@@ -3355,6 +3355,27 @@ def run_usage_examples_duplicate_count_wrapper_helper_newest_long_form_adjacency
     return 0
 
 
+def run_usage_examples_duplicate_count_wrapper_helper_newest_long_form_adjacency_order_guard_exact_once_adjacency_order_guard_exact_once_mode() -> int:
+    trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
+    newest_long_form_adjacency_order_guard_mode = (
+        "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard"
+    )
+    newest_long_form_adjacency_order_guard_mode_count = trace_summary_mode_names.count(
+        newest_long_form_adjacency_order_guard_mode
+    )
+    assert newest_long_form_adjacency_order_guard_mode_count == 1, (
+        "expected usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard "
+        "to appear exactly once in TRACE_SUMMARY_MODE_SPECS, found "
+        f"{newest_long_form_adjacency_order_guard_mode_count}"
+    )
+
+    print(
+        "PASS: usage-examples-duplicate-count-wrapper-helper-newest-long-form-adjacency-order-guard-exact-once-adjacency-order-guard-exact-once "
+        "mode validates exact-once long-form adjacency-order guard mode appears exactly once"
+    )
+    return 0
+
+
 def run_usage_examples_duplicate_count_wrapper_helper_uniqueness_order_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_adjacency_uniqueness_adjacency_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_order_uniqueness_guard_adjacency_order_guard_uniqueness_guard_adjacency_order_guard_mode() -> int:
     trace_summary_mode_names = [mode_name for mode_name, _mode_handler, _description in TRACE_SUMMARY_MODE_SPECS]
     newest_long_form_mode = (
@@ -3970,6 +3991,11 @@ TRACE_SUMMARY_MODE_SPECS: tuple[tuple[str, TraceSummaryModeHandler, str], ...] =
         "usage-examples-duplicate-count-wrapper-helper-newest-long-form-adjacency-order-guard-exact-once-adjacency-order-guard",
         run_usage_examples_duplicate_count_wrapper_helper_newest_long_form_adjacency_order_guard_exact_once_adjacency_order_guard_mode,
         "deterministic duplicate-count coverage-guard wrapper helper newest long-form adjacency-order guard exact-once adjacency assertion",
+    ),
+    (
+        "usage-examples-duplicate-count-wrapper-helper-newest-long-form-adjacency-order-guard-exact-once-adjacency-order-guard-exact-once",
+        run_usage_examples_duplicate_count_wrapper_helper_newest_long_form_adjacency_order_guard_exact_once_adjacency_order_guard_exact_once_mode,
+        "deterministic duplicate-count coverage-guard wrapper helper newest long-form adjacency-order guard exact-once count assertion",
     ),
     (
         "usage-examples-duplicate-count-wrapper-helper-uniqueness-order-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-adjacency-uniqueness-adjacency-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-order-uniqueness-guard-adjacency-order-guard-uniqueness-guard-adjacency-order-guard-uniqueness-guard",

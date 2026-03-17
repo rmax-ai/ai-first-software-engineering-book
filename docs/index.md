@@ -14,7 +14,8 @@ Welcome to the public documentation for the AI-first software engineering book. 
 1. Chapters are drafted in `book/chapters/` with deterministic loops enforced by `state/kernel.py`.
 2. The MkDocs configuration references the book files directly so every build reflects the latest chapter revisions.
 3. Use `mkdocs build` to produce the static site or `mkdocs serve` for a preview server before deployment.
-4. Keep governance documents (`CONSTITUTION.md`, `AGENTS.md`) and evaluation rules (`evals/`) aligned with the book’s stated principles.
+4. Incremental harness work is published under `state/feature_iterations/`, with `state/feature_iterations/README.md` indexing the current handoff.
+5. Keep governance documents (`CONSTITUTION.md`, `AGENTS.md`) and evaluation rules (`evals/`) aligned with the book’s stated principles.
 
 ## Quick commands
 
@@ -34,4 +35,5 @@ book/patterns/               # Referenced pattern library
 book/glossary.md             # Detailed glossary definitions
 CONSTITUTION.md, AGENTS.md    # Governance that shapes the book process
 evals/*.yaml                 # Evaluation contracts enforced via state/kernel.py
+state/feature_iterations/README.md # Published incremental-improvements index
 ```
